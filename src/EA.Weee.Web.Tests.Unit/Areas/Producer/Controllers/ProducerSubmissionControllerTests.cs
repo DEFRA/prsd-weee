@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Producer.Controllers
 {
     using AutoFixture;
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Api.Client.Models.Pay;
@@ -50,6 +51,7 @@
         private readonly IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryAndCompleteRequest>
             addSignatoryAndCompleteRequestCreator;
         private readonly IPaymentService paymentService;
+        private readonly ConfigurationService configurationService;
 
         public ProducerSubmissionControllerTests()
         {
@@ -68,7 +70,8 @@
             editEeeDataRequestCreator = A.Fake<IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest>>();
             addSignatoryAndCompleteRequestCreator = A.Fake<IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryAndCompleteRequest>>();
             paymentService = A.Fake<IPaymentService>();
-            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator, editRepresentedOrganisationDetailsRequestCreator, () => weeeClient, breadcrumbService, weeeCache, editContactDetailsRequestCreator, serviceOfNoticeRequestCreator, editEeeDataRequestCreator, addSignatoryAndCompleteRequestCreator, paymentService);
+            configurationService = A.Fake<ConfigurationService>();
+            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator, editRepresentedOrganisationDetailsRequestCreator, () => weeeClient, breadcrumbService, weeeCache, editContactDetailsRequestCreator, serviceOfNoticeRequestCreator, editEeeDataRequestCreator, addSignatoryAndCompleteRequestCreator, paymentService, configurationService);
         }
 
         [Fact]
@@ -828,11 +831,14 @@
         public async Task PaymentSuccess_ShouldReturnViewWithCorrectModel()
         {
             // Arrange
+            configurationService.CurrentConfiguration.GovUkPayAmountInPence = 3000;
+
             var reference = TestFixture.Create<string>();
             var organisationId = Guid.NewGuid();
             controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
             {
-                OrganisationData = new OrganisationData { Id = organisationId }
+                OrganisationData = new OrganisationData { Id = organisationId },
+                CurrentSubmission = new SmallProducerSubmissionHistoryData { ComplianceYear = SystemTime.UtcNow.Year }
             };
 
             // Act
@@ -844,6 +850,9 @@
             var model = (PaymentResultModel)result.Model;
             model.PaymentReference.Should().Be(reference);
             model.OrganisationId.Should().Be(organisationId);
+            model.ComplianceYear.Should().Be(controller.SmallProducerSubmissionData.CurrentSubmission.ComplianceYear);
+            model.TotalAmount.Should().Be(configurationService.CurrentConfiguration.GovUkPayAmountInPence / 100);
+            model.TotalAmount.ToString("0.00").Should().Be("30.00");
         }
 
         [Fact]
@@ -855,7 +864,8 @@
             var organisationName = TestFixture.Create<string>();
             controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
             {
-                OrganisationData = new OrganisationData { Id = organisationId }
+                OrganisationData = new OrganisationData { Id = organisationId },
+                CurrentSubmission = new SmallProducerSubmissionHistoryData { ComplianceYear = SystemTime.UtcNow.Year }
             };
 
             A.CallTo(() => weeeCache.FetchOrganisationName(organisationId)).Returns(organisationName);
