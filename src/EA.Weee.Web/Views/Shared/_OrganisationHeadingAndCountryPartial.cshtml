@@ -27,5 +27,16 @@
     </div>
 </div>
 
+@if (Model.IsPreviousSchemeMember)
+{
+    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ProducerRegistrationNumber)">
+        @Html.Gds().LabelFor(m => m.ProducerRegistrationNumber)
+        @Html.Gds().HintParagraph("Please provide your producer registration number (PRN). If you do not know this, then you can find it in the producer public register on gov.uk. Alternatively, you can contact us")
+        @Html.Gds().ValidationMessageFor(m => m.ProducerRegistrationNumber)
+        @Html.Gds().TextBoxFor(m => m.ProducerRegistrationNumber, new { @maxlength = CommonMaxFieldLengths.ProducerRegistrationNumber })
+    </div>
+}
+
+
 
 

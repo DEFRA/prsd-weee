@@ -10,6 +10,7 @@
     using EA.Prsd.Core.Helpers;
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.Organisations.Base;
+    using EA.Weee.Requests.Organisations.DirectRegistrant;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Extensions;
@@ -393,6 +394,8 @@
             var castedModel = model.CastToSpecificViewModel(model);
             var isValid = ValidationModel.ValidateModel(castedModel, ModelState);
 
+            await ValidateProducerRegistrationNumber(model.ProducerRegistrationNumber);
+            
             if (!isValid || !ModelState.IsValid)
             {
                 var countries = await GetCountries();
@@ -428,6 +431,11 @@
                 CompanyName = existingTransaction?.SearchTerm,
                 OrganisationType = existingTransaction != null ? existingTransaction.OrganisationType ?? ExternalOrganisationType.RegisteredCompany : ExternalOrganisationType.RegisteredCompany,
             };
+
+            if (existingTransaction.PreviousRegistration.Value == PreviouslyRegisteredProducerType.YesPreviousSchemeMember)
+            {
+                model.IsPreviousSchemeMember = true;
+            }
 
             model.Address.Countries = await GetCountries();
 
@@ -670,8 +678,8 @@
 
             await transactionService.CaptureData(User.GetAccessToken(), previousRegistrationViewModel);
 
-            var previousRegistration = previousRegistrationViewModel.SelectedValue.GetValueFromDisplayName<YesNoType>();
-            if (previousRegistration == YesNoType.Yes)
+            var previousRegistration = previousRegistrationViewModel.SelectedValue.GetValueFromDisplayName<PreviouslyRegisteredProducerType>();
+            if (previousRegistration == PreviouslyRegisteredProducerType.YesPreviousSmallProducer)
             {
                 return RedirectToAction("Search", "OrganisationRegistration");
             }
@@ -880,6 +888,21 @@
             await transactionService.CaptureData(User.GetAccessToken(), model);
 
             return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName());
+        }
+
+        private async Task ValidateProducerRegistrationNumber(string producerRegistrationNumber)
+        {
+            using (var client = apiClient())
+            {
+                if (!string.IsNullOrWhiteSpace(producerRegistrationNumber))
+                {
+                    var exists = await client.SendAsync(User.GetAccessToken(), new ProducerRegistrationNumberRequest(producerRegistrationNumber));
+                    if (!exists)
+                    {
+                        ModelState.AddModelError(nameof(OrganisationViewModel.ProducerRegistrationNumber), "This producer registration number does not exist");
+                    }
+                }
+            }
         }
     }
 }

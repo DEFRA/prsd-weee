@@ -79,7 +79,7 @@
                 var dataAccess = new PaymentSessionDataAccess(context, userContext);
 
                 var organisation = Domain.Organisation.Organisation.CreateRegisteredCompany("Test Company", "987654321");
-                var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, null, null, null, null, null);
+                var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, null, null, null, null, null, null);
 
                 // Act
                 var result = await dataAccess.GetCurrentInProgressPayment("nonExistentToken", directRegistrant.Id, 2023);
@@ -202,7 +202,7 @@
                 var dataAccess = new PaymentSessionDataAccess(context, userContext);
 
                 var organisation = Domain.Organisation.Organisation.CreateRegisteredCompany("Test Company", "987654321");
-                var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, null, null, null, null, null);
+                var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, null, null, null, null, null, null);
 
                 // Act
                 var result = await dataAccess.GetCurrentRetryPayment(directRegistrant.Id, 2023);

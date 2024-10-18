@@ -17,5 +17,6 @@
         public const int Password = 100;
         public const int Year = 4;
         public const int Tonnage = 22;
+        public const int ProducerRegistrationNumber = 50;
     }
 }

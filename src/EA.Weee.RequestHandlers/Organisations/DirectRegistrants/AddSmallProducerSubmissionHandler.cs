@@ -54,21 +54,28 @@
 
             string producerRegistrationNumber;
 
-            if (existingProducer != null)
+            if (!string.IsNullOrWhiteSpace(directRegistrant.ProducerRegistrationNumber))
             {
-                producerRegistrationNumber = existingProducer.ProducerRegistrationNumber;
+                producerRegistrationNumber = directRegistrant.ProducerRegistrationNumber;
             }
             else
             {
-                var generatedPrn = await generateFromXmlDataAccess.ComputePrns(1);
-
-                producerRegistrationNumber = generatedPrn.Dequeue();
-
-                var exists = await generateFromXmlDataAccess.ProducerRegistrationExists(producerRegistrationNumber);
-
-                if (exists)
+                if (existingProducer != null)
                 {
-                    throw new InvalidOperationException($"Producer number {producerRegistrationNumber} already exists");
+                    producerRegistrationNumber = existingProducer.ProducerRegistrationNumber;
+                }
+                else
+                {
+                    var generatedPrn = await generateFromXmlDataAccess.ComputePrns(1);
+
+                    producerRegistrationNumber = generatedPrn.Dequeue();
+
+                    var exists = await generateFromXmlDataAccess.ProducerRegistrationExists(producerRegistrationNumber);
+
+                    if (exists)
+                    {
+                        throw new InvalidOperationException($"Producer number {producerRegistrationNumber} already exists");
+                    }
                 }
             }
 

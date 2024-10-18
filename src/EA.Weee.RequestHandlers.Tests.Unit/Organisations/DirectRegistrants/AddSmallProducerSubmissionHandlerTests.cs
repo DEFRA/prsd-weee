@@ -187,6 +187,28 @@
                 .MustHaveHappenedOnceExactly();
         }
 
+        [Fact]
+        public async Task HandleAsync_WhenDirectRegistrantHasPRN_UsesThatPRN()
+        {
+            // Arrange
+            var request = new AddSmallProducerSubmission(Guid.NewGuid());
+            var directRegistrant = SetupValidDirectRegistrant(request.DirectRegistrantId);
+            var expectedPrn = "PRN_FROM_REGISTRANT";
+            A.CallTo(() => directRegistrant.ProducerRegistrationNumber).Returns(expectedPrn);
+
+            var addedHistory = A.Fake<DirectProducerSubmissionHistory>();
+            A.CallTo(() => genericDataAccess.Add(A<DirectProducerSubmissionHistory>._))
+                .Invokes((DirectProducerSubmissionHistory h) => addedHistory = h);
+
+            // Act
+            var result = await handler.HandleAsync(request);
+
+            // Assert
+            addedHistory.Should().NotBeNull();
+            addedHistory.DirectProducerSubmission.RegisteredProducer.ProducerRegistrationNumber.Should().Be(expectedPrn);
+            A.CallTo(() => generateFromXmlDataAccess.ComputePrns(A<int>._)).MustNotHaveHappened();
+        }
+
         private DirectRegistrant SetupValidDirectRegistrant(Guid directRegistrantId)
         {
             var directRegistrant = A.Fake<DirectRegistrant>();

@@ -95,6 +95,7 @@
             {
                 "Address.CountryId",
                 nameof(OrganisationViewModel.CompaniesRegistrationNumber),
+                nameof(OrganisationViewModel.ProducerRegistrationNumber),
                 nameof(OrganisationViewModel.CompanyName),
                 nameof(OrganisationViewModel.BusinessTradingName),
                 "Address.WebsiteAddress",
