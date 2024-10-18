@@ -23,7 +23,15 @@
                     {
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" style="width: 30%;" scope="row">Registration status</th>
-                            <td class="govuk-table__cell">@Model.OrganisationViewModel.Status.GetDisplayName()</td>
+
+                            @if (Model.OrganisationViewModel.Status == EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted && Model.OrganisationViewModel.HasPaid)
+                            {
+                                <td class="govuk-table__cell">Registered</td>
+                            }
+                            else
+                            {
+                                <td class="govuk-table__cell">@Model.OrganisationViewModel.Status.GetDisplayName()</td>
+                            }
                         </tr>
 
                         <tr class="govuk-table__row">
