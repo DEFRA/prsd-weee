@@ -936,6 +936,7 @@
         {
             // Arrange
             var model = TestFixture.Build<OrganisationViewModel>().Create();
+            model.ProducerRegistrationNumber = null;
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, authorisedRep).Create();
@@ -983,6 +984,7 @@
         {
             // Arrange
             var model = TestFixture.Build<OrganisationViewModel>().Create();
+            model.ProducerRegistrationNumber = null;
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, YesNoType.Yes).Create();
@@ -1010,6 +1012,7 @@
         {
             // Arrange
             var model = TestFixture.Build<OrganisationViewModel>().Create();
+            model.ProducerRegistrationNumber = null;
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, YesNoType.Yes).Create();
@@ -1041,6 +1044,7 @@
         {
             // Arrange
             var model = TestFixture.Build<OrganisationViewModel>().Create();
+            model.ProducerRegistrationNumber = null;
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, YesNoType.Yes).Create();

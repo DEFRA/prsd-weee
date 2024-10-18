@@ -15,9 +15,9 @@
 
     public class ProducerRegistrationNumberRequestHandler : IRequestHandler<ProducerRegistrationNumberRequest, bool>
     {
-        private readonly GenerateFromXmlDataAccess dataAccess;
+        private readonly IGenerateFromXmlDataAccess dataAccess;
 
-        public ProducerRegistrationNumberRequestHandler(GenerateFromXmlDataAccess dataAccess)
+        public ProducerRegistrationNumberRequestHandler(IGenerateFromXmlDataAccess dataAccess)
         {
             this.dataAccess = dataAccess;
         }

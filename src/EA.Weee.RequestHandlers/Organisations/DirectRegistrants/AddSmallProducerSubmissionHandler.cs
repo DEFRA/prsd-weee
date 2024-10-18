@@ -54,7 +54,7 @@
 
             string producerRegistrationNumber;
 
-            if (directRegistrant.ProducerRegistrationNumber != null)
+            if (!string.IsNullOrWhiteSpace(directRegistrant.ProducerRegistrationNumber))
             {
                 producerRegistrationNumber = directRegistrant.ProducerRegistrationNumber;
             }
