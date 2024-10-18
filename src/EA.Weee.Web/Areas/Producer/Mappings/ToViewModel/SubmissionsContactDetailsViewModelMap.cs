@@ -28,9 +28,9 @@
 
             var result = new ContactDetailsViewModel
             {
-                FirstName = contactData.FirstName,
-                LastName = contactData.LastName,
-                Position = contactData.Position,
+                FirstName = contactData?.FirstName,
+                LastName = contactData?.LastName,
+                Position = contactData?.Position,
                 AddressData = mapper.Map<AddressData, AddressPostcodeRequiredData>(address)
             };
 
