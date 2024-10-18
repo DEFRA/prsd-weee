@@ -9,6 +9,7 @@
     using EA.Weee.Api.Client.Models;
     using EA.Weee.Api.Client.Serlializer;
     using Serilog;
+    using Serilog.Core;
 
     public class CompaniesHouseClient : ICompaniesHouseClient
     {
@@ -16,6 +17,8 @@
         private readonly IJsonSerializer jsonSerializer;
         private readonly IHttpClientWrapper httpClient;
         private readonly IOAuthTokenProvider tokenProvider;
+        private readonly ILogger logger;
+
         private bool disposed;
 
         public CompaniesHouseClient(
@@ -39,14 +42,21 @@
             this.retryPolicy = retryPolicy;
             this.jsonSerializer = jsonSerializer;
             this.tokenProvider = tokenProvider;
+            this.logger = logger;
         }
 
         public async Task<DefraCompaniesHouseApiModel> GetCompanyDetailsAsync(string endpoint, string companyReference)
         {
             Condition.Requires(endpoint).IsNotNullOrWhiteSpace("Endpoint cannot be null or whitespace.");
+
             if (!IsValidCompanyReference(companyReference))
             {
-                return null;
+                logger.Warning("Not calling companies house API invalid reference");
+
+                return new DefraCompaniesHouseApiModel()
+                {
+                    InvalidReference = true
+                };
             }
 
             try
@@ -60,18 +70,18 @@
                         Headers = { { "Authorization", $"Bearer {token}" } }
                     })).ConfigureAwait(false);
 
-                if (response.StatusCode == System.Net.HttpStatusCode.BadRequest || response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    throw new BadRequestException("Companies house bad request");
-                }
-
                 response.EnsureSuccessStatusCode();
                 var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 return jsonSerializer.Deserialize<DefraCompaniesHouseApiModel>(content);
             }
-            catch (BadRequestException)
+            catch (Exception ex)
             {
-                return null;
+                logger.Error($"Error attempting to access companies house API for {companyReference}", ex);
+
+                return new DefraCompaniesHouseApiModel()
+                {
+                    Error = true
+                };
             }
         }
 
