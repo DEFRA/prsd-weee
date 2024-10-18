@@ -187,30 +187,30 @@
                 .MustHaveHappenedOnceExactly();
         }
 
-        //[Fact]
-        //public async Task HandleAsync_WhenDirectRegistrantHasPRN_UsesThatPRN()
-        //{
-        //    // Arrange
-        //    var request = new AddSmallProducerSubmission(Guid.NewGuid());
-        //    var directRegistrant = SetupValidDirectRegistrant(request.DirectRegistrantId);
-        //    var expectedPrn = "PRN_FROM_REGISTRANT";
-        //    directRegistrant.ProducerRegistrationNumber = expectedPrn;
+        [Fact]
+        public async Task HandleAsync_WhenDirectRegistrantHasPRN_UsesThatPRN()
+        {
+            // Arrange
+            var request = new AddSmallProducerSubmission(Guid.NewGuid());
+            var directRegistrant = SetupValidDirectRegistrant(request.DirectRegistrantId);
+            var expectedPrn = "PRN_FROM_REGISTRANT";
+            A.CallTo(() => directRegistrant.ProducerRegistrationNumber).Returns(expectedPrn);
 
-        //    var currentYear = SystemTime.UtcNow.Year;
-        //    directRegistrant.DirectProducerSubmissions.Clear(); // No existing submissions
+            var currentYear = SystemTime.UtcNow.Year;
+            directRegistrant.DirectProducerSubmissions.Clear();
 
-        //    // Act
-        //    var result = await handler.HandleAsync(request);
+            // Act
+            var result = await handler.HandleAsync(request);
 
-        //    // Assert
-        //    var addedHistory = A.Fake<DirectProducerSubmissionHistory>();
-        //    A.CallTo(() => genericDataAccess.Add(A<DirectProducerSubmissionHistory>._))
-        //        .Invokes((DirectProducerSubmissionHistory h) => addedHistory = h);
+            // Assert
+            var addedHistory = A.Fake<DirectProducerSubmissionHistory>();
+            A.CallTo(() => genericDataAccess.Add(A<DirectProducerSubmissionHistory>._))
+                .Invokes((DirectProducerSubmissionHistory h) => addedHistory = h);
 
-        //    addedHistory.Should().NotBeNull();
-        //    addedHistory.DirectProducerSubmission.RegisteredProducer.ProducerRegistrationNumber.Should().Be(expectedPrn);
-        //    A.CallTo(() => generateFromXmlDataAccess.ComputePrns(A<int>._)).MustNotHaveHappened();
-        //}
+            addedHistory.Should().NotBeNull();
+            addedHistory.DirectProducerSubmission.RegisteredProducer.ProducerRegistrationNumber.Should().Be(expectedPrn);
+            A.CallTo(() => generateFromXmlDataAccess.ComputePrns(A<int>._)).MustNotHaveHappened();
+        }
 
         private DirectRegistrant SetupValidDirectRegistrant(Guid directRegistrantId)
         {
