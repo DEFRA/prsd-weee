@@ -76,9 +76,9 @@
 
             // Assert
             A.CallTo(() => httpClient.SendAsync(A<HttpRequestMessage>.That.Matches(
-                r => r.RequestUri.ToString().Contains($"{endpoint}/{companyReference}") &&
-                     r.Headers.Authorization.Scheme == "Bearer" &&
-                     r.Headers.Authorization.Parameter == token), A<CancellationToken>._))
+                    r => r.RequestUri.ToString().Contains($"{endpoint}/{companyReference}") &&
+                         r.Headers.Authorization.Scheme == "Bearer" &&
+                         r.Headers.Authorization.Parameter == token), A<CancellationToken>._))
                 .MustHaveHappenedOnceExactly();
             result.Should().BeEquivalentTo(expectedResult);
         }
@@ -132,6 +132,69 @@
 
             // Assert
             companiesHouseClient.Invoking(c => c.Dispose()).Should().NotThrow();
+        }
+
+        [Fact]
+        public async Task GetCompanyDetailsAsync_WithInvalidCompanyReference_ShouldReturnModelWithInvalidReferenceTrue()
+        {
+            // Arrange
+            const string endpoint = "api/companies";
+            const string companyReference = "invalid123";
+
+            // Act
+            var result = await companiesHouseClient.GetCompanyDetailsAsync(endpoint, companyReference);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.InvalidReference.Should().BeTrue();
+            A.CallTo(() => logger.Warning("Not calling companies house API invalid reference")).MustHaveHappenedOnceExactly();
+            A.CallTo(() => httpClient.SendAsync(A<HttpRequestMessage>._, A<CancellationToken>._)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task GetCompanyDetailsAsync_WhenApiThrowsBadRequestException_ShouldReturnModelWithErrorTrue()
+        {
+            // Arrange
+            const string endpoint = "api/companies";
+            const string companyReference = "12345678";
+            var badRequestException = new Exception("Companies house bad request");
+
+            A.CallTo(() => tokenProvider.GetAccessTokenAsync()).Returns("token");
+            A.CallTo(() => retryPolicy.ExecuteAsync(A<Func<Task<HttpResponseMessage>>>._))
+                .ThrowsAsync(badRequestException);
+
+            // Act
+            var result = await companiesHouseClient.GetCompanyDetailsAsync(endpoint, companyReference);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Error.Should().BeTrue();
+            A.CallTo(() => logger.Error(A<string>.That.Contains($"Error attempting to access companies house API for {companyReference}"),
+                badRequestException)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task GetCompanyDetailsAsync_WhenApiReturnsNonSuccessStatusCode_ShouldThrowException()
+        {
+            // Arrange
+            const string endpoint = "api/companies";
+            const string companyReference = "12345678";
+            var httpResponseMessage = new HttpResponseMessage(System.Net.HttpStatusCode.InternalServerError);
+
+            A.CallTo(() => tokenProvider.GetAccessTokenAsync()).Returns("token");
+            A.CallTo(() => httpClient.SendAsync(A<HttpRequestMessage>._, A<CancellationToken>._))
+                .Returns(httpResponseMessage);
+
+            A.CallTo(() => retryPolicy.ExecuteAsync(A<Func<Task<HttpResponseMessage>>>._))
+                .ReturnsLazily(call =>
+                {
+                    var func = call.GetArgument<Func<Task<HttpResponseMessage>>>(0);
+                    return func();
+                });
+
+            // Act & Assert
+            await companiesHouseClient.Invoking(c => c.GetCompanyDetailsAsync(endpoint, companyReference))
+                .Should().ThrowAsync<HttpRequestException>();
         }
     }
 }
