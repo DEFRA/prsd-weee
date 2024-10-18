@@ -32,10 +32,6 @@
         {
             using (var client = weeeClient())
             {
-                // first make sure that the payment has not 
-                //var submission =
-                //    await client.SendAsync(accessToken, new GetSmallProducerSubmission(directRegistrantId));
-
                 var secureId = secureReturnUrlHelper.GenerateSecureRandomString(directRegistrantId);
                 var returnUrl = string.Format(configurationService.CurrentConfiguration.GovUkPayReturnBaseUrl,
                     directRegistrantId.ToString(), secureId);
@@ -51,7 +47,6 @@
 
                 var idempotencyKey = Guid.NewGuid().ToString();
 
-                // before starting check if there is a payment that may have not completed correctly.
                 var result = await paymentClient.CreatePaymentAsync(idempotencyKey, paymentRequest);
 
                 await client.SendAsync(accessToken, new AddPaymentSessionRequest(directRegistrantId,
