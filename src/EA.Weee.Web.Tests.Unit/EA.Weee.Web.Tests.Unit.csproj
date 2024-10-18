@@ -463,6 +463,7 @@
     <Compile Include="Extensions\ValidateModelTests.cs" />
     <Compile Include="Service\OrganisationTransactionServiceUnitTests.cs" />
     <Compile Include="Service\PaymentReferenceGeneratorUnitTests.cs" />
+    <Compile Include="Service\SubmissionServiceUnitTests.cs" />
     <Compile Include="Service\PaymentServiceUnitTests.cs" />
     <Compile Include="Service\SecureReturnUrlHelperTests.cs" />
     <Compile Include="ViewModels\RecipientWasteStatusFilterViewModelTests.cs" />
