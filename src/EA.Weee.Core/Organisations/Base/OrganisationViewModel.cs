@@ -47,7 +47,7 @@
         {
             var results = new List<ValidationResult>();
 
-            if (IsPreviousSchemeMember)
+            if (IsPreviousSchemeMember && string.IsNullOrWhiteSpace(ProducerRegistrationNumber))
             {
                 results.Add(new ValidationResult("Enter a producer registration number", new[] { nameof(ProducerRegistrationNumber) }));
             }
