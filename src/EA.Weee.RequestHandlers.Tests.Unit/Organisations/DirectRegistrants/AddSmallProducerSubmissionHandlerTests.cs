@@ -196,17 +196,14 @@
             var expectedPrn = "PRN_FROM_REGISTRANT";
             A.CallTo(() => directRegistrant.ProducerRegistrationNumber).Returns(expectedPrn);
 
-            var currentYear = SystemTime.UtcNow.Year;
-            directRegistrant.DirectProducerSubmissions.Clear();
+            var addedHistory = A.Fake<DirectProducerSubmissionHistory>();
+            A.CallTo(() => genericDataAccess.Add(A<DirectProducerSubmissionHistory>._))
+                .Invokes((DirectProducerSubmissionHistory h) => addedHistory = h);
 
             // Act
             var result = await handler.HandleAsync(request);
 
             // Assert
-            var addedHistory = A.Fake<DirectProducerSubmissionHistory>();
-            A.CallTo(() => genericDataAccess.Add(A<DirectProducerSubmissionHistory>._))
-                .Invokes((DirectProducerSubmissionHistory h) => addedHistory = h);
-
             addedHistory.Should().NotBeNull();
             addedHistory.DirectProducerSubmission.RegisteredProducer.ProducerRegistrationNumber.Should().Be(expectedPrn);
             A.CallTo(() => generateFromXmlDataAccess.ComputePrns(A<int>._)).MustNotHaveHappened();
