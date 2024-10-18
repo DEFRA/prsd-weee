@@ -3,6 +3,7 @@
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.DataStandards;
     using EA.Weee.Core.Validation;
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
@@ -46,9 +47,9 @@
         {
             var results = new List<ValidationResult>();
 
-            if (IsPreviousSchemeMember && string.IsNullOrWhiteSpace(ProducerRegistrationNumber))
+            if (IsPreviousSchemeMember)
             {
-                results.Add(new ValidationResult("Please provide a valid producer registration number.", new[] { nameof(ProducerRegistrationNumber) }));
+                results.Add(new ValidationResult("Enter a producer registration number", new[] { nameof(ProducerRegistrationNumber) }));
             }
 
             results.AddRange(ExternalAddressValidator.Validate(Address.CountryId, Address.Postcode, "Address.CountryId", "Address.Postcode"));
