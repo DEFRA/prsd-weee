@@ -90,7 +90,7 @@
             transaction.PreviousRegistration.Should().Be(PreviouslyRegisteredProducerType.YesPreviousSmallProducer);
 
             A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
-                x => x.OrganisationTransactionData.PreviousRegistration.Equals(previousRegistrationModel.SelectedValue.GetValueFromDisplayName<YesNoType>())))).MustHaveHappenedOnceExactly();
+                x => x.OrganisationTransactionData.PreviousRegistration.Equals(previousRegistrationModel.SelectedValue.GetValueFromDisplayName<PreviouslyRegisteredProducerType>())))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
