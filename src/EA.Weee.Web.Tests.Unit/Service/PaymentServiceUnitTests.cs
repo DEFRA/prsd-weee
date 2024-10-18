@@ -130,7 +130,7 @@
         }
 
         [Fact]
-        public async Task CheckInProgressPaymentAsync_ShouldReturnPaymentWhenExistsAndNotFinished()
+        public async Task CheckInProgressPaymentAsync_ShouldReturnPaymentWhenExists()
         {
             // Arrange
             var accessToken = fixture.Create<string>();
@@ -182,46 +182,6 @@
 
             // Assert
             result.Should().Be(expectedResult);
-        }
-
-        [Fact]
-        public async Task CheckInProgressPaymentAsync_ShouldReturnNullWhenPaymentIsFinished()
-        {
-            // Arrange
-            var accessToken = fixture.Create<string>();
-            var directRegistrantId = Guid.NewGuid();
-            var paymentId = fixture.Create<string>();
-            var paymentSessionId = fixture.Create<Guid>();
-
-            var existingPayment = new SubmissionPaymentDetails
-            {
-                PaymentId = paymentId,
-                PaymentSessionId = paymentSessionId
-            };
-
-            A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetInProgressPaymentSessionRequest>._))
-                .Returns(existingPayment);
-
-            var finishedPaymentResult = new PaymentWithAllLinks
-            {
-                PaymentId = paymentId,
-                State = new PaymentState { Status = PaymentStatus.Success, Finished = true }
-            };
-
-            A.CallTo(() => payClient.GetPaymentAsync(paymentId))
-                .Returns(finishedPaymentResult);
-
-            // Act
-            var result = await paymentService.CheckInProgressPaymentAsync(accessToken, directRegistrantId);
-
-            // Assert
-            result.Should().BeNull();
-            A.CallTo(() => weeeClient.SendAsync(accessToken, A<UpdateSubmissionPaymentDetailsRequest>.That.Matches(u =>
-                    u.IsFinalState == finishedPaymentResult.State.IsInFinalState() &&
-                    u.DirectRegistrantId == directRegistrantId &&
-                    u.PaymentSessionId == existingPayment.PaymentSessionId &&
-                    u.PaymentStatus == finishedPaymentResult.State.Status)))
-                .MustHaveHappenedOnceExactly();
         }
     }
 }

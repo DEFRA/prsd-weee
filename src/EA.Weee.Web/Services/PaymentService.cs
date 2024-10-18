@@ -27,31 +27,39 @@
             this.weeeClient = weeeClient;
         }
 
-        public async Task<CreatePaymentResult> CreatePaymentAsync(Guid directRegistrantId, string email, string accessToken)
+        public async Task<CreatePaymentResult> CreatePaymentAsync(Guid directRegistrantId, string email,
+            string accessToken)
         {
-            var secureId = secureReturnUrlHelper.GenerateSecureRandomString(directRegistrantId);
-            var returnUrl = string.Format(configurationService.CurrentConfiguration.GovUkPayReturnBaseUrl, directRegistrantId.ToString(), secureId);
-
-            var paymentRequest = new CreateCardPaymentRequest
-            {
-                Amount = configurationService.CurrentConfiguration.GovUkPayAmountInPence,
-                Description = configurationService.CurrentConfiguration.GovUkPayDescription,
-                Reference = paymentReferenceGenerator.GeneratePaymentReferenceWithSeparators(),
-                ReturnUrl = returnUrl,
-                Email = email 
-            };
-
-            var idempotencyKey = Guid.NewGuid().ToString();
-
-            var result = await paymentClient.CreatePaymentAsync(idempotencyKey, paymentRequest);
-
             using (var client = weeeClient())
             {
-                await client.SendAsync(accessToken, new AddPaymentSessionRequest(directRegistrantId, paymentRequest.Reference, 
-                    secureId, result.PaymentId, paymentRequest.Amount));
-            }
+                // first make sure that the payment has not 
+                //var submission =
+                //    await client.SendAsync(accessToken, new GetSmallProducerSubmission(directRegistrantId));
 
-            return result;
+                var secureId = secureReturnUrlHelper.GenerateSecureRandomString(directRegistrantId);
+                var returnUrl = string.Format(configurationService.CurrentConfiguration.GovUkPayReturnBaseUrl,
+                    directRegistrantId.ToString(), secureId);
+
+                var paymentRequest = new CreateCardPaymentRequest
+                {
+                    Amount = configurationService.CurrentConfiguration.GovUkPayAmountInPence,
+                    Description = configurationService.CurrentConfiguration.GovUkPayDescription,
+                    Reference = paymentReferenceGenerator.GeneratePaymentReferenceWithSeparators(),
+                    ReturnUrl = returnUrl,
+                    Email = email
+                };
+
+                var idempotencyKey = Guid.NewGuid().ToString();
+
+                // before starting check if there is a payment that may have not completed correctly.
+                var result = await paymentClient.CreatePaymentAsync(idempotencyKey, paymentRequest);
+
+                await client.SendAsync(accessToken, new AddPaymentSessionRequest(directRegistrantId,
+                    paymentRequest.Reference,
+                    secureId, result.PaymentId, paymentRequest.Amount));
+         
+                return result;
+            }
         }
 
         public async Task<PaymentWithAllLinks> CheckInProgressPaymentAsync(string accessToken, Guid directRegistrantId)
@@ -77,8 +85,7 @@
                     new UpdateSubmissionPaymentDetailsRequest(directRegistrantId, result.State.Status,
                         payment.PaymentSessionId, result.State.IsInFinalState()));
 
-                // if the current in progress payment has finished will need to start again
-                return result.State.Finished ? null : result;
+                return result;
             }
         }
 
