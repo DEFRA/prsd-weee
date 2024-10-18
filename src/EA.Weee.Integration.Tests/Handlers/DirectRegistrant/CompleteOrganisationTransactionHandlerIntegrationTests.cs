@@ -31,6 +31,7 @@
 
                 var registeredCompanyDetails = fixture.Build<OrganisationViewModel>()
                     .With(r => r.Address, addressData).Create();
+
                 registeredCompanyDetails.ProducerRegistrationNumber = null;
 
                 organisationTransactionData = fixture.Build<OrganisationTransactionData>()
@@ -38,6 +39,7 @@
                     .With(o => o.OrganisationViewModel, registeredCompanyDetails)
                     .With(o => o.ContactDetailsViewModel, contactDetailsViewModel)
                     .With(o => o.PreviousRegistration, PreviouslyRegisteredProducerType.No)
+                    .With(o => o.AuthorisedRepresentative, YesNoType.No)
                     .Without(o => o.PartnerModels)
                     .Without(o => o.SoleTraderViewModel)
                     .Create();
