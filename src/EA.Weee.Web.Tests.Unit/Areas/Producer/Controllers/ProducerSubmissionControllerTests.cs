@@ -1063,5 +1063,31 @@
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionSubmittedAttribute>();
         }
+
+        [Fact]
+        public async Task AppropriateSignatory_Post_ValidModel_ExistingSuccessfulPayment_ShouldRedirectToAlreadySubmittedAndPaid()
+        {
+            // Arrange
+            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            controller.SmallProducerSubmissionData = submissionData;
+
+            var model = TestFixture.Create<AppropriateSignatoryViewModel>();
+            var request = TestFixture.Create<AddSignatoryAndCompleteRequest>();
+            request.DirectRegistrantId = model.DirectRegistrantId = submissionData.DirectRegistrantId;
+
+            var existingPayment = TestFixture.Create<PaymentWithAllLinks>();
+            existingPayment.State = new PaymentState { Status = PaymentStatus.Success };
+
+            A.CallTo(() => addSignatoryAndCompleteRequestCreator.ViewModelToRequest(model)).Returns(request);
+            A.CallTo(() => paymentService.CheckInProgressPaymentAsync(A<string>._, request.DirectRegistrantId)).Returns(Task.FromResult(existingPayment));
+
+            // Act
+            var result = await controller.AppropriateSignatory(model) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("AlreadySubmittedAndPaid");
+            result.RouteValues["controller"].Should().Be("Producer");
+        }
     }
 }
