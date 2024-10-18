@@ -56,7 +56,8 @@
                 ComplianceYear = currentSubmission.DirectProducerSubmission.ComplianceYear,
                 SubmittedDate = currentSubmission.SubmittedDate,
                 PaymentReference = MapPaymentReference(source.DirectProducerSubmission),
-                ProducerRegistrationNumber = source.DirectProducerSubmission.RegisteredProducer.ProducerRegistrationNumber
+                ProducerRegistrationNumber = source.DirectProducerSubmission.RegisteredProducer.ProducerRegistrationNumber,
+                RegisteredProducerId = source.DirectProducerSubmission.RegisteredProducer.Id
             };
         }
 
