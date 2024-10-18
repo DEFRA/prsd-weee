@@ -3,6 +3,7 @@
     using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
+    using System;
     using System.Collections.Generic;
 
     public class SmallProducerSubmissionHistoryData
@@ -46,5 +47,15 @@
         public bool HasPaid {get; set; }
 
         public SubmissionStatus Status { get; set; }
+
+        public DateTime? RegistrationDate { get; set; }
+
+        public DateTime? SubmittedDate { get; set; }
+
+        public string PaymentReference { get; set; }
+
+        public string ProducerRegistrationNumber { get; set; }
+
+        public Guid RegisteredProducerId { get; set; }
     }
 }

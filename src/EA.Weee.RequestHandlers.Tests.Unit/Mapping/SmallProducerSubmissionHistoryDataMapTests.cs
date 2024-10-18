@@ -103,6 +103,93 @@
             result.HasPaid.Should().Be(paymentFinished);
         }
 
+        [Fact]
+        public void Map_SetsRegistrationDateCorrectly_WhenPaymentIsFinished()
+        {
+            var directRegistrant = CreateDirectRegistrant(true);
+            var currentYearSubmission = CreateCurrentYearSubmission(directRegistrant);
+            var expectedDate = new DateTime(2024, 1, 1);
+            A.CallTo(() => currentYearSubmission.PaymentFinished).Returns(true);
+            A.CallTo(() => currentYearSubmission.FinalPaymentSession).Returns(new PaymentSession { UpdatedAt = expectedDate });
+
+            var result = map.Map(new DirectProducerSubmissionSource(directRegistrant, currentYearSubmission));
+
+            result.RegistrationDate.Should().Be(expectedDate);
+        }
+
+        [Fact]
+        public void Map_SetsRegistrationDateToNull_WhenPaymentIsNotFinished()
+        {
+            var directRegistrant = CreateDirectRegistrant(true);
+            var currentYearSubmission = CreateCurrentYearSubmission(directRegistrant);
+            A.CallTo(() => currentYearSubmission.PaymentFinished).Returns(false);
+
+            var result = map.Map(new DirectProducerSubmissionSource(directRegistrant, currentYearSubmission));
+
+            result.RegistrationDate.Should().BeNull();
+        }
+
+        [Fact]
+        public void Map_SetsPaymentReferenceCorrectly_WhenFinalPaymentSessionExists()
+        {
+            var directRegistrant = CreateDirectRegistrant(true);
+            var currentYearSubmission = CreateCurrentYearSubmission(directRegistrant);
+            const string expectedReference = "REF123";
+            A.CallTo(() => currentYearSubmission.FinalPaymentSessionId).Returns(Guid.NewGuid());
+            A.CallTo(() => currentYearSubmission.FinalPaymentSession).Returns(new PaymentSession { PaymentReference = expectedReference });
+
+            var result = map.Map(new DirectProducerSubmissionSource(directRegistrant, currentYearSubmission));
+
+            result.PaymentReference.Should().Be(expectedReference);
+        }
+
+        [Fact]
+        public void Map_SetsPaymentReferenceToEmptyString_WhenNoFinalPaymentSession()
+        {
+            var directRegistrant = CreateDirectRegistrant(true);
+            var currentYearSubmission = CreateCurrentYearSubmission(directRegistrant);
+            A.CallTo(() => currentYearSubmission.FinalPaymentSessionId).Returns(null);
+
+            var result = map.Map(new DirectProducerSubmissionSource(directRegistrant, currentYearSubmission));
+
+            result.PaymentReference.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void Map_SetsSubmittedDateCorrectly()
+        {
+            var directRegistrant = CreateDirectRegistrant(true);
+            var currentYearSubmission = CreateCurrentYearSubmission(directRegistrant);
+            var expectedDate = new DateTime(2024, 1, 1);
+            A.CallTo(() => currentYearSubmission.CurrentSubmission.SubmittedDate).Returns(expectedDate);
+
+            var result = map.Map(new DirectProducerSubmissionSource(directRegistrant, currentYearSubmission));
+
+            result.SubmittedDate.Should().Be(expectedDate);
+        }
+
+        [Fact]
+        public void Map_SetsProducerRegistrationNumberCorrectly()
+        {
+            var directRegistrant = CreateDirectRegistrant(true);
+            var currentYearSubmission = CreateCurrentYearSubmission(directRegistrant);
+            var registeredProducerId = Guid.NewGuid();
+
+            const string expectedRegistrationNumber = "WEE/AB1234CD";
+
+            var registeredProducer = A.Fake<RegisteredProducer>();
+            A.CallTo(() => registeredProducer.ProducerRegistrationNumber).Returns(expectedRegistrationNumber);
+            A.CallTo(() => registeredProducer.ComplianceYear).Returns(2024);
+            A.CallTo(() => registeredProducer.Id).Returns(registeredProducerId);
+
+            A.CallTo(() => currentYearSubmission.RegisteredProducer).Returns(registeredProducer);
+
+            var result = map.Map(new DirectProducerSubmissionSource(directRegistrant, currentYearSubmission));
+
+            result.ProducerRegistrationNumber.Should().Be(expectedRegistrationNumber);
+            result.RegisteredProducerId.Should().Be(registeredProducerId);
+        }
+
         private DirectRegistrant CreateDirectRegistrant(bool hasCurrentYearSubmission)
         {
             var directRegistrant = A.Fake<DirectRegistrant>();
@@ -126,6 +213,7 @@
             var currentYearSubmission = A.Fake<DirectProducerSubmission>();
             A.CallTo(() => currentYearSubmission.ComplianceYear).Returns(SystemTime.UtcNow.Year);
             A.CallTo(() => currentYearSubmission.CurrentSubmission).Returns(A.Fake<DirectProducerSubmissionHistory>());
+            A.CallTo(() => currentYearSubmission.FinalPaymentSession).Returns(A.Fake<PaymentSession>());
             return currentYearSubmission;
         }
 

@@ -10,6 +10,7 @@
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.Domain.Producer;
+    using System;
     using System.Collections.Generic;
 
     internal class SmallProducerSubmissionHistoryDataMap : IMap<DirectProducerSubmissionSource, SmallProducerSubmissionHistoryData>
@@ -51,8 +52,12 @@
                 TonnageData = MapTonnageData(currentSubmission),
                 HasPaid = source.DirectProducerSubmission.PaymentFinished == true,
                 Status = source.DirectProducerSubmission.DirectProducerSubmissionStatus.ToCoreEnumeration<SubmissionStatus>(),
-
-                ComplianceYear = currentSubmission.DirectProducerSubmission.ComplianceYear
+                RegistrationDate = MapRegistrationDate(source.DirectProducerSubmission),
+                ComplianceYear = currentSubmission.DirectProducerSubmission.ComplianceYear,
+                SubmittedDate = currentSubmission.SubmittedDate,
+                PaymentReference = MapPaymentReference(source.DirectProducerSubmission),
+                ProducerRegistrationNumber = source.DirectProducerSubmission.RegisteredProducer.ProducerRegistrationNumber,
+                RegisteredProducerId = source.DirectProducerSubmission.RegisteredProducer.Id
             };
         }
 
@@ -61,6 +66,16 @@
             return currentSubmission.BusinessAddressId.HasValue
                 ? mapper.Map<Address, AddressData>(currentSubmission.BusinessAddress)
                 : mapper.Map<Address, AddressData>(organisation.BusinessAddress);
+        }
+
+        private static string MapPaymentReference(DirectProducerSubmission submission)
+        {
+            return submission.FinalPaymentSessionId.HasValue ? submission.FinalPaymentSession.PaymentReference : string.Empty;
+        }
+
+        private static DateTime? MapRegistrationDate(DirectProducerSubmission submission)
+        {
+            return submission.PaymentFinished == true ? submission.FinalPaymentSession.UpdatedAt : null;
         }
 
         private static string MapBrandNames(DirectProducerSubmissionHistory currentSubmission, DirectRegistrant directRegistrant)
