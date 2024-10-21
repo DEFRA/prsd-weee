@@ -47,8 +47,6 @@
 
         public string PaymentReference { get; set; }
 
-        public string ProducerRegistrationNumber { get; set; }
-
         public bool IsPreviousSchemeMember { get; set; }
 
         [StringLength(CommonMaxFieldLengths.ProducerRegistrationNumber)]
