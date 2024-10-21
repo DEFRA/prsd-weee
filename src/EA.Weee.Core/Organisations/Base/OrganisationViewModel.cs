@@ -2,6 +2,7 @@
 {
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.DataStandards;
+    using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Validation;
     using System;
     using System.Collections.Generic;
@@ -36,6 +37,17 @@
 
         [DisplayName("Organisation type")]
         public ExternalOrganisationType? OrganisationType { get; set; }
+
+        public bool HasPaid { get; set; } = false;
+
+        public SubmissionStatus Status { get; set; }
+        public DateTime? RegistrationDate { get; set; }
+
+        public DateTime? SubmittedDate { get; set; }
+
+        public string PaymentReference { get; set; }
+
+        public string ProducerRegistrationNumber { get; set; }
 
         public bool IsPreviousSchemeMember { get; set; }
 
