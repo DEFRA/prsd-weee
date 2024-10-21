@@ -18,6 +18,7 @@
     using EA.Weee.Web.Areas.Producer.Filters;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.Services.SubmissionService;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using FluentValidation;
     using Infrastructure;
@@ -83,7 +84,7 @@
 
             // Authorization
             builder.RegisterType<WeeeAuthorization>().As<IWeeeAuthorization>();
-
+           
             // External route resolution
             builder.RegisterType<ExternalRouteService>().As<IExternalRouteService>().InstancePerRequest();
 
@@ -123,6 +124,8 @@
             builder.RegisterType<PaymentService>().As<IPaymentService>();
             builder.RegisterType<SecureReturnUrlHelper>().As<ISecureReturnUrlHelper>();
             builder.RegisterType<PaymentReferenceGenerator>().As<IPaymentReferenceGenerator>();
+
+            builder.RegisterType<SubmissionService>().As<ISubmissionService>();
 
             return builder.Build();
         }
