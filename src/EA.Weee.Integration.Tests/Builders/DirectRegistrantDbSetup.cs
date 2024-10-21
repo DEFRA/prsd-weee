@@ -50,5 +50,12 @@
 
             return this;
         }
+
+        public DirectRegistrantDbSetup WithPrn(string prn)
+        {
+            ObjectInstantiator<DirectRegistrant>.SetProperty(o => o.ProducerRegistrationNumber, prn, instance);
+
+            return this;
+        }
     }
 }

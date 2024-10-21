@@ -16,14 +16,18 @@
     public class ProducerRegistrationNumberRequestHandler : IRequestHandler<ProducerRegistrationNumberRequest, bool>
     {
         private readonly IGenerateFromXmlDataAccess dataAccess;
+        private readonly IWeeeAuthorization authorization;
 
-        public ProducerRegistrationNumberRequestHandler(IGenerateFromXmlDataAccess dataAccess)
+        public ProducerRegistrationNumberRequestHandler(IGenerateFromXmlDataAccess dataAccess, IWeeeAuthorization authorization)
         {
             this.dataAccess = dataAccess;
+            this.authorization = authorization;
         }
 
         public async Task<bool> HandleAsync(ProducerRegistrationNumberRequest request)
         {
+            authorization.EnsureCanAccessExternalArea();
+
             return await dataAccess.SchemeProducerRegistrationExists(request.ProducerRegistrationNumber);
         }
     }
