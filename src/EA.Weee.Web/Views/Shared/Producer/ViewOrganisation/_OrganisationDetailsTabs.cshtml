@@ -8,7 +8,7 @@
 @using EA.Weee.Web.Areas.Producer.ViewModels
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.Helpers
-
+@using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
 @model OrganisationDetailsTabsViewModel
 
 @{
@@ -20,7 +20,14 @@
     var controller = Model.IsInternal ? "ProducerSubmission" : "Producer";
 }
 
-@(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.SmallProducerSubmissionData.OrganisationData.Id))))
+@if (Model.IsInternal)
+{
+    @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.ProducersController>(a => a.Search(SearchTypeEnum.SmallProducer))))
+}
+else
+{
+    @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.SmallProducerSubmissionData.OrganisationData.Id))))
+}
 
 <header class="hgroup">
     <h1 class="govuk-heading-l">@title</h1>
