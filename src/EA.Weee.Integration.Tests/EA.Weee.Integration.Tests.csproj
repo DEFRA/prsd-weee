@@ -252,7 +252,6 @@
     <Compile Include="CommonTestQueryProcessor.cs" />
     <Compile Include="DatabaseSeeder.cs" />
     <Compile Include="DatabaseSeedingException.cs" />
-    <Compile Include="Handlers\DirectRegistrant\ProducerRegistrationNumberRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\DirectRegistrant\UpdateSubmissionPaymentDetailsRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\DirectRegistrant\ValidateAndGetSubmissionPaymentHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\DirectRegistrant\GetInProgressPaymentSessionRequestHandlerIntegrationTests.cs" />
