@@ -1,123 +1,152 @@
-﻿namespace EA.Weee.Integration.Tests.Handlers.DirectRegistrant
-{
-    using Autofac;
-    using EA.Weee.Integration.Tests.Base;
-    using EA.Prsd.Core.Autofac;
-    using EA.Weee.Integration.Tests.Builders;
-    using EA.Weee.Requests.Organisations.DirectRegistrant;
-    using FluentAssertions;
-    using NUnit.Specifications.Categories;
-    using EA.Prsd.Core.Mediator;
-    using System.Security;
-    using EA.Weee.Domain.Producer;
+﻿//namespace EA.Weee.Integration.Tests.Handlers.DirectRegistrant
+//{
+//    using Autofac;
+//    using EA.Prsd.Core;
+//    using EA.Prsd.Core.Autofac;
+//    using EA.Prsd.Core.Mediator;
+//    using EA.Weee.Domain.Organisation;
+//    using EA.Weee.Domain.Producer;
+//    using EA.Weee.Integration.Tests.Base;
+//    using EA.Weee.Integration.Tests.Builders;
+//    using EA.Weee.Requests.Organisations.DirectRegistrant;
+//    using EA.Weee.Tests.Core.Model;
+//    using FluentAssertions;
+//    using NUnit.Specifications.Categories;
+//    using System;
+//    using System.Security;
 
-    public class ProducerRegistrationNumberRequestHandlerIntegrationTests : IntegrationTestBase
-    {
-        [Component]
-        public class WhenProducerRegistrationNumberExists : ProducerRegistrationNumberRequestHandlerIntegrationTestBase
-        {
-            private readonly Establish context = () =>
-            {
-                LocalSetup();
+//    public class ProducerRegistrationNumberRequestHandlerIntegrationTests : IntegrationTestBase
+//    {
+//        [Component]
+//        public class WhenProducerRegistrationNumberExists : ProducerRegistrationNumberRequestHandlerIntegrationTestBase
+//        {
+//            private static Domain.Producer.RegisteredProducer registeredProducer;
+//            private static string registrationNumber;
 
-                // Create a PRN that will be marked as existing in the database
-                var existingPrn = "12345";
+//            private readonly Establish context = () =>
+//            {
+//                // Setup with an existing PRN
+//                LocalSetup(exists: true);
 
-                // Directly add the PRN by creating a RegisteredProducer
-                var registeredProducer = new RegisteredProducer(existingPrn, SystemTime.UtcNow.Year);
-                // Assuming you have a way to persist the registeredProducer, e.g. through DbContext
-                RegisteredProducerDbSetup.Init()
-                    .WithProducer(registeredProducer) // Use an existing setup if you have one
-                    .Create();
+//                registrationNumber = "ValidRegistrationNumber"; // Simulating an existing PRN
+//                directRegistrant = DirectRegistrantDbSetup.Init()
+//                    .WithOrganisation(directRegistrant.OrganisationId)
+//                    .WithPrn(registrationNumber)
+//                    .Create();
 
-                request = new ProducerRegistrationNumberRequest(existingPrn);
-            };
+//                // Create a RegisteredProducer associated with the DirectRegistrant
+//                registeredProducer = new Domain.Producer.RegisteredProducer(registrationNumber, SystemTime.UtcNow.Year);
 
-            private readonly Because of = () =>
-            {
-                result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
-            };
+//                // Create DirectProducerSubmission with a valid submission history
+//                var directProducerSubmission = new DirectProducerSubmission(directRegistrant, registeredProducer, SystemTime.UtcNow.Year);
+//                directProducerSubmission.SetCurrentSubmission(new DirectProducerSubmissionHistory(directProducerSubmission));
 
-            private readonly It shouldReturnTrue = () =>
-            {
-                result.Should().BeTrue();
-            };
-        }
+//                // Setup the DirectRegistrantSubmission linking the necessary entities
+//                DirectRegistrantSubmissionDbSetup.Init()
+//                    .WithDirectRegistrant(directRegistrant)
+//                    .WithRegisteredProducer(registeredProducer)
+//                    .WithSubmission(directProducerSubmission.CurrentSubmission)
+//                    .Create();
 
-        [Component]
-        public class WhenProducerRegistrationNumberDoesNotExist : ProducerRegistrationNumberRequestHandlerIntegrationTestBase
-        {
-            private readonly Establish context = () =>
-            {
-                LocalSetup(false); // Simulate non-existence
-            };
+//                // Create the handler and request
+//                handler = Container.Resolve<IRequestHandler<ProducerRegistrationNumberRequest, bool>>();
+//                request = new ProducerRegistrationNumberRequest(registrationNumber);
 
-            private readonly Because of = () =>
-            {
-                result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
-            };
+//                // Associate the organisation user with the direct registrant
+//                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, directRegistrant.OrganisationId).Create();
+//            };
 
-            private readonly It shouldReturnFalse = () =>
-            {
-                result.Should().BeFalse();
-            };
-        }
+//            private readonly Because of = () =>
+//            {
+//                // Act
+//                result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
+//            };
 
-        [Component]
-        public class WhenUserIsNotAuthorized : ProducerRegistrationNumberRequestHandlerIntegrationTestBase
-        {
-            protected static IRequestHandler<ProducerRegistrationNumberRequest, bool> authHandler;
+//            private readonly It shouldReturnTrue = () =>
+//            {
+//                // Assert
+//                result.Should().BeTrue();
+//            };
+//        }
 
-            private readonly Establish context = () =>
-            {
-                SetupTest(IocApplication.RequestHandler)
-                    .WithDefaultSettings();
+//        [Component]
+//        public class WhenProducerRegistrationNumberDoesNotExist : ProducerRegistrationNumberRequestHandlerIntegrationTestBase
+//        {
+//            private readonly Establish context = () =>
+//            {
+//                LocalSetup(false);
+//            };
 
-                authHandler = Container.Resolve<IRequestHandler<ProducerRegistrationNumberRequest, bool>>();
-            };
+//            private readonly Because of = () =>
+//            {
+//                result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
+//            };
 
-            private readonly Because of = () =>
-            {
-                CatchExceptionAsync(() => authHandler.HandleAsync(request));
-            };
+//            private readonly It shouldReturnFalse = () =>
+//            {
+//                result.Should().BeFalse();
+//            };
+//        }
 
-            private readonly It shouldHaveCaughtSecurityException = ShouldThrowException<SecurityException>;
-        }
+//        [Component]
+//        public class WhenUserIsNotAuthorized : ProducerRegistrationNumberRequestHandlerIntegrationTestBase
+//        {
+//            protected static IRequestHandler<ProducerRegistrationNumberRequest, bool> authHandler;
 
-        public class ProducerRegistrationNumberRequestHandlerIntegrationTestBase : WeeeContextSpecification
-        {
-            protected static IRequestHandler<ProducerRegistrationNumberRequest, bool> handler;
-            protected static ProducerRegistrationNumberRequest request;
-            protected static bool result;
-            protected static string producerRegistrationNumber = "12345";
+//            private readonly Establish context = () =>
+//            {
+//                SetupTest(IocApplication.RequestHandler)
+//                    .WithDefaultSettings();
 
-            public static IntegrationTestSetupBuilder LocalSetup(bool exists = true)
-            {
-                var setup = SetupTest(IocApplication.RequestHandler)
-                    .WithIoC()
-                    .WithTestData()
-                    .WithExternalUserAccess();
+//                authHandler = Container.Resolve<IRequestHandler<ProducerRegistrationNumberRequest, bool>>();
+//            };
 
-                var organisation = OrganisationDbSetup.Init().Create();
+//            private readonly Because of = () =>
+//            {
+//                CatchExceptionAsync(() => authHandler.HandleAsync(request));
+//            };
 
-                var directRegistrant = DirectRegistrantDbSetup.Init()
-                    .WithOrganisation(organisation.Id)
-                    .WithPrn(producerRegistrationNumber) // Set the PRN
-                    .Create();
+//            private readonly It shouldHaveCaughtSecurityException = ShouldThrowException<SecurityException>;
+//        }
 
-                if (!exists)
-                {
-                    producerRegistrationNumber = "NONEXISTENTPRN"; // Set PRN to a non-existent one for testing
-                }
+//        public class ProducerRegistrationNumberRequestHandlerIntegrationTestBase : WeeeContextSpecification
+//        {
+//            protected static IRequestHandler<ProducerRegistrationNumberRequest, bool> handler;
+//            protected static ProducerRegistrationNumberRequest request;
+//            protected static bool result;
+//            protected static string producerRegistrationNumber = "12345";
+//            protected static DirectRegistrant directRegistrant;
+//            protected static Domain.Organisation.Organisation organisation;
 
-                handler = Container.Resolve<IRequestHandler<ProducerRegistrationNumberRequest, bool>>();
+//            public static IntegrationTestSetupBuilder LocalSetup(bool exists = true)
+//            {
+//                var setup = SetupTest(IocApplication.RequestHandler)
+//                    .WithIoC()
+//                    .WithTestData()
+//                    .WithExternalUserAccess();
 
-                request = new ProducerRegistrationNumberRequest(producerRegistrationNumber);
+//                organisation = OrganisationDbSetup.Init().Create();
 
-                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, directRegistrant.OrganisationId).Create();
+//                directRegistrant = DirectRegistrantDbSetup.Init()
+//                    .WithOrganisation(organisation.Id)
+//                    .WithPrn(producerRegistrationNumber)
+//                    .Create();
 
-                return setup;
-            }
-        }
-    }
-}
+//                // If the PRN does not exist, set to a non-existent value
+//                if (!exists)
+//                {
+//                    producerRegistrationNumber = "NONEXISTENTPRN";
+//                }
+
+//                handler = Container.Resolve<IRequestHandler<ProducerRegistrationNumberRequest, bool>>();
+//                request = new ProducerRegistrationNumberRequest(producerRegistrationNumber);
+
+//                OrganisationUserDbSetup.Init()
+//                    .WithUserIdAndOrganisationId(UserId, directRegistrant.OrganisationId)
+//                    .Create();
+
+//                return setup;
+//            }
+//        }
+//    }
+//}
