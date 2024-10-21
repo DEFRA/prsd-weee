@@ -20,6 +20,7 @@
     using Services;
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
@@ -394,7 +395,7 @@
             var castedModel = model.CastToSpecificViewModel(model);
             var isValid = ValidationModel.ValidateModel(castedModel, ModelState);
 
-            await ValidateProducerRegistrationNumber(model.ProducerRegistrationNumber);
+            await ValidateProducerRegistrationNumber(model);
             
             if (!isValid || !ModelState.IsValid)
             {
@@ -890,19 +891,31 @@
             return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName());
         }
 
-        private async Task ValidateProducerRegistrationNumber(string producerRegistrationNumber)
+        private async Task<IEnumerable<ValidationResult>> ValidateProducerRegistrationNumber(OrganisationViewModel model)
         {
-            using (var client = apiClient())
+            var results = new List<ValidationResult>();
+
+            if (model.IsPreviousSchemeMember && string.IsNullOrWhiteSpace(model.ProducerRegistrationNumber))
             {
-                if (!string.IsNullOrWhiteSpace(producerRegistrationNumber))
+                results.Add(new ValidationResult("Enter a producer registration number", new[] { nameof(model.ProducerRegistrationNumber) }));
+                ModelState.AddModelError(nameof(model.ProducerRegistrationNumber), "Enter a producer registration number");
+            }
+            else
+            {
+                using (var client = apiClient())
                 {
-                    var exists = await client.SendAsync(User.GetAccessToken(), new ProducerRegistrationNumberRequest(producerRegistrationNumber));
-                    if (!exists)
+                    if (!string.IsNullOrWhiteSpace(model.ProducerRegistrationNumber))
                     {
-                        ModelState.AddModelError(nameof(OrganisationViewModel.ProducerRegistrationNumber), "This producer registration number does not exist");
+                        var exists = await client.SendAsync(User.GetAccessToken(), new ProducerRegistrationNumberRequest(model.ProducerRegistrationNumber));
+                        if (!exists)
+                        {
+                            ModelState.AddModelError(nameof(OrganisationViewModel.ProducerRegistrationNumber), "This producer registration number does not exist");
+                        }
                     }
                 }
             }
+
+            return results;
         }
     }
 }

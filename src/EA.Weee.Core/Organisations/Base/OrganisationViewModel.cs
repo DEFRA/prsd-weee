@@ -47,11 +47,6 @@
         {
             var results = new List<ValidationResult>();
 
-            if (IsPreviousSchemeMember && string.IsNullOrWhiteSpace(ProducerRegistrationNumber))
-            {
-                results.Add(new ValidationResult("Enter a producer registration number", new[] { nameof(ProducerRegistrationNumber) }));
-            }
-
             results.AddRange(ExternalAddressValidator.Validate(Address.CountryId, Address.Postcode, "Address.CountryId", "Address.Postcode"));
 
             return results;
