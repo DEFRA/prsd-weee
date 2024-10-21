@@ -173,12 +173,21 @@
         {
             var directRegistrant = CreateDirectRegistrant(true);
             var currentYearSubmission = CreateCurrentYearSubmission(directRegistrant);
+            var registeredProducerId = Guid.NewGuid();
+
             const string expectedRegistrationNumber = "WEE/AB1234CD";
-            A.CallTo(() => currentYearSubmission.RegisteredProducer).Returns(new RegisteredProducer(expectedRegistrationNumber, 2024));
+
+            var registeredProducer = A.Fake<RegisteredProducer>();
+            A.CallTo(() => registeredProducer.ProducerRegistrationNumber).Returns(expectedRegistrationNumber);
+            A.CallTo(() => registeredProducer.ComplianceYear).Returns(2024);
+            A.CallTo(() => registeredProducer.Id).Returns(registeredProducerId);
+
+            A.CallTo(() => currentYearSubmission.RegisteredProducer).Returns(registeredProducer);
 
             var result = map.Map(new DirectProducerSubmissionSource(directRegistrant, currentYearSubmission));
 
             result.ProducerRegistrationNumber.Should().Be(expectedRegistrationNumber);
+            result.RegisteredProducerId.Should().Be(registeredProducerId);
         }
 
         private DirectRegistrant CreateDirectRegistrant(bool hasCurrentYearSubmission)
