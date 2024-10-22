@@ -47,17 +47,26 @@
 
         public string PaymentReference { get; set; }
 
-        public string ProducerRegistrationNumber { get; set; }
+        public bool IsPreviousSchemeMember { get; set; }
+
+        [StringLength(CommonMaxFieldLengths.ProducerRegistrationNumber)]
+        [DisplayName("Producer registration number")]
+        public virtual string ProducerRegistrationNumber { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            return ExternalAddressValidator.Validate(Address.CountryId, Address.Postcode, "Address.CountryId", "Address.Postcode");
+            var results = new List<ValidationResult>();
+
+            results.AddRange(ExternalAddressValidator.Validate(Address.CountryId, Address.Postcode, "Address.CountryId", "Address.Postcode"));
+
+            return results;
         }
 
         public static IEnumerable<string> ValidationMessageDisplayOrder => new List<string>
         {
             "Address.CountryId",
             nameof(CompaniesRegistrationNumber),
+            nameof(ProducerRegistrationNumber),
             nameof(CompanyName),
             nameof(BusinessTradingName),
             "Address.WebsiteAddress",
