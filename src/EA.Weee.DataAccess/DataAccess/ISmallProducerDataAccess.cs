@@ -9,5 +9,7 @@
         Task<DirectProducerSubmission> GetCurrentDirectRegistrantSubmissionByComplianceYear(Guid directRegistrantId, int complianceYear);
 
         Task<DirectRegistrant> GetDirectRegistrantByOrganisationId(Guid organisationId);
+
+        Task<DirectProducerSubmission> GetCurrentDirectRegistrantSubmissionById(Guid directProducerSubmissionId);
     }
 }
