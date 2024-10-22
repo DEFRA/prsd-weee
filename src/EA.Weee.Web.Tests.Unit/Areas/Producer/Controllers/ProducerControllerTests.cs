@@ -19,6 +19,7 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.Services.SubmissionService;
     using FakeItEasy;
     using FluentAssertions;
     using Services;
@@ -39,6 +40,7 @@
         private readonly IMapper mapper;
         private readonly IMvcTemplateExecutor templateExecutor;
         private readonly IPdfDocumentProvider pdfDocumentProvider;
+        private readonly ISubmissionService submissionService;
 
         public ProducerControllerTests()
         {
@@ -48,12 +50,15 @@
             templateExecutor = A.Fake<IMvcTemplateExecutor>();
             pdfDocumentProvider = A.Fake<IPdfDocumentProvider>();
 
+            submissionService = A.Fake<ISubmissionService>();
+
             controller = new ProducerController(
                breadcrumb, 
                weeeCache, 
                mapper,
                templateExecutor,
-               pdfDocumentProvider);
+               pdfDocumentProvider,
+               submissionService);
         }
 
         [Fact]
@@ -190,7 +195,10 @@
         {
             controller.SmallProducerSubmissionData = new Core.DirectRegistrant.SmallProducerSubmissionData
             {
-                SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>() { { 2024, TestFixture.Create<SmallProducerSubmissionHistoryData>() }, },
+                SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>()
+                {
+                    { 2024, TestFixture.Build<SmallProducerSubmissionHistoryData>().With(s => s.Status, SubmissionStatus.Submitted).Create() },
+                },
                 OrganisationData = new OrganisationData
                 {
                     Id = organisationId,
@@ -314,6 +322,60 @@
         }
 
         [Fact]
+        public void TaskList_Get_ShouldHaveSmallProducerSubmissionSubmittedAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerController).GetMethod("TaskList");
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionSubmittedAttribute>();
+        }
+
+        [Fact]
+        public void AlreadySubmittedAndPaid_Get_ReturnView()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            const int complianceYear = 2024;
+
+            controller.SmallProducerSubmissionData = new Core.DirectRegistrant.SmallProducerSubmissionData
+            {
+                OrganisationData = new OrganisationData
+                {
+                    Id = id
+                },
+                CurrentSubmission = new SmallProducerSubmissionHistoryData()
+                {
+                    ComplianceYear = complianceYear
+                }
+            };
+
+            // Act
+            var result = controller.AlreadySubmittedAndPaid() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Model.Should().BeOfType<AlreadySubmittedAndPaidViewModel>();
+
+            var model = result.Model as AlreadySubmittedAndPaidViewModel;
+            model.OrganisationId.Should().Be(id);
+            model.ComplianceYear.Should().Be(complianceYear);
+
+            result.ViewName.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void AlreadySubmittedAndPaid_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerController).GetMethod("AlreadySubmittedAndPaid");
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
         public async Task CheckAnswers_Get_ShouldReturnViewWithMappedModel()
         {
             // Arrange
@@ -377,81 +439,7 @@
 
             var view = (await controller.OrganisationDetails()) as ViewResult;
 
-            view.ViewName.Should().Be("ViewOrganisation/OrganisationDetails");
-        }
-
-        [Fact]
-        public async Task OrganisationDetails_ReturnViewModelAndMapsData()
-        {
-            SetupDefaultControllerData();
-
-            var organisationData = controller.SmallProducerSubmissionData.OrganisationData;
-
-            var result = (await controller.OrganisationDetails()) as ViewResult;
-
-            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
-
-            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
-
-            model.Should().NotBeNull();
-            model.OrganisationViewModel.Should().NotBeNull();
-
-            A.CallTo(() => mapper
-                            .Map<SubmissionsYearDetails, OrganisationViewModel>(
-                A<SubmissionsYearDetails>.That.Matches(x => x.Year == null && x.SmallProducerSubmissionData == controller.SmallProducerSubmissionData)))
-                .MustHaveHappenedOnceExactly();
-        }
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData(2024)]
-        public async Task OrganisationDetails_ReturnViewModelAndMapsDataForYear(int? year)
-        {
-            SetupDefaultControllerData();
-
-            var organisationData = controller.SmallProducerSubmissionData.OrganisationData;
-
-            var result = (await controller.OrganisationDetails(year)) as ViewResult;
-
-            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
-
-            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
-
-            model.Should().NotBeNull();
-            model.OrganisationViewModel.Should().NotBeNull();
-
-            A.CallTo(() => mapper
-                            .Map<SubmissionsYearDetails, OrganisationViewModel>(
-                A<SubmissionsYearDetails>.That.Matches(x => x.Year == year && x.SmallProducerSubmissionData == controller.SmallProducerSubmissionData)))
-                .MustHaveHappenedOnceExactly();
-        }
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData(2024)]
-        public async Task OrganisationDetails_SetViewBreadcrumb(int? year)
-        {
-            SetupDefaultControllerData();
-
-            var expected = "org name";
-
-            A.CallTo(() => weeeCache
-            .FetchOrganisationName(controller.SmallProducerSubmissionData.OrganisationData.Id))
-                .Returns(expected);
-
-            var result = (await controller.OrganisationDetails(year)) as ViewResult;
-
-            if (year.HasValue)
-            {
-                Assert.Equal(breadcrumb.ExternalActivity, ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
-            }
-            else
-            {
-                Assert.Equal(breadcrumb.ExternalActivity, ProducerSubmissionConstant.ViewOrganisation);
-            }
-
-            Assert.Equal(breadcrumb.OrganisationId, controller.SmallProducerSubmissionData.OrganisationData.Id);
-            Assert.Equal(breadcrumb.ExternalOrganisation, expected);
+            view.ViewName.Should().Be("Producer/ViewOrganisation/OrganisationDetails");
         }
 
         [Fact]
@@ -461,81 +449,7 @@
 
             var view = (await controller.ContactDetails()) as ViewResult;
 
-            view.ViewName.Should().Be("ViewOrganisation/ContactDetails");
-        }
-
-        [Fact]
-        public async Task ContactDetails_ReturnViewModelAndMapsData()
-        {
-            SetupDefaultControllerData();
-
-            var organisationData = controller.SmallProducerSubmissionData.OrganisationData;
-
-            var result = (await controller.ContactDetails()) as ViewResult;
-
-            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
-
-            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
-
-            model.Should().NotBeNull();
-            model.ContactDetailsViewModel.Should().NotBeNull();
-
-            A.CallTo(() => mapper
-                            .Map<SubmissionsYearDetails, ContactDetailsViewModel>(
-                A<SubmissionsYearDetails>.That.Matches(x => x.Year == null && x.SmallProducerSubmissionData == controller.SmallProducerSubmissionData)))
-                .MustHaveHappenedOnceExactly();
-        }
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData(2024)]
-        public async Task ContactDetails_ReturnViewModelAndMapsDataForYear(int? year)
-        {
-            SetupDefaultControllerData();
-
-            var organisationData = controller.SmallProducerSubmissionData.OrganisationData;
-
-            var result = (await controller.ContactDetails(year)) as ViewResult;
-
-            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
-
-            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
-
-            model.Should().NotBeNull();
-            model.ContactDetailsViewModel.Should().NotBeNull();
-
-            A.CallTo(() => mapper
-                            .Map<SubmissionsYearDetails, ContactDetailsViewModel>(
-                A<SubmissionsYearDetails>.That.Matches(x => x.Year == year && x.SmallProducerSubmissionData == controller.SmallProducerSubmissionData)))
-                .MustHaveHappenedOnceExactly();
-        }
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData(2024)]
-        public async Task ContactDetails_SetViewBreadcrumb(int? year)
-        {
-            SetupDefaultControllerData();
-
-            var expected = "org name";
-
-            A.CallTo(() => weeeCache
-            .FetchOrganisationName(controller.SmallProducerSubmissionData.OrganisationData.Id))
-                .Returns(expected);
-
-            var result = (await controller.ContactDetails(year)) as ViewResult;
-
-            if (year.HasValue)
-            {
-                Assert.Equal(breadcrumb.ExternalActivity, ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
-            }
-            else
-            {
-                Assert.Equal(breadcrumb.ExternalActivity, ProducerSubmissionConstant.ViewOrganisation);
-            }
-
-            Assert.Equal(breadcrumb.OrganisationId, controller.SmallProducerSubmissionData.OrganisationData.Id);
-            Assert.Equal(breadcrumb.ExternalOrganisation, expected);
+            view.ViewName.Should().Be("Producer/ViewOrganisation/ContactDetails");
         }
 
         [Fact]
@@ -556,39 +470,68 @@
 
             var view = (await controller.ServiceOfNoticeDetails()) as ViewResult;
 
-            view.ViewName.Should().Be("ViewOrganisation/ServiceOfNoticeDetails");
+            view.ViewName.Should().Be("Producer/ViewOrganisation/ServiceOfNoticeDetails");
         }
 
-        [Fact]
-        public async Task ServiceOfNoticeDetails_ReturnViewModelAndMapsData()
+        [Theory]
+        [InlineData(null)]
+        [InlineData(2004)]
+        public async Task OrganisationDetails_ReturnViewModelAndCallsService(int? year)
         {
             SetupDefaultControllerData();
 
-            var organisationData = controller.SmallProducerSubmissionData.OrganisationData;
+            var expcted = new OrganisationDetailsTabsViewModel();
+            expcted.OrganisationViewModel = new OrganisationViewModel();
 
-            var result = (await controller.ServiceOfNoticeDetails()) as ViewResult;
+            A.CallTo(() => this.submissionService.OrganisationDetails(year)).Returns(expcted);
+
+            var result = (await controller.OrganisationDetails(year)) as ViewResult;
 
             var viewResult = result.Should().BeOfType<ViewResult>().Subject;
 
             var model = viewResult.Model as OrganisationDetailsTabsViewModel;
 
             model.Should().NotBeNull();
-            model.ServiceOfNoticeViewModel.Should().NotBeNull();
-
-            A.CallTo(() => mapper
-                            .Map<SubmissionsYearDetails, ServiceOfNoticeViewModel>(
-                A<SubmissionsYearDetails>.That.Matches(x => x.Year == null && x.SmallProducerSubmissionData == controller.SmallProducerSubmissionData)))
-                .MustHaveHappenedOnceExactly();
+            model.OrganisationViewModel.Should().NotBeNull();
+            A.CallTo(() => this.submissionService.OrganisationDetails(year)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
         [InlineData(null)]
-        [InlineData(2024)]
-        public async Task ServiceOfNoticeDetails_ReturnViewModelAndMapsDataForYear(int? year)
+        [InlineData(2004)]
+        public async Task ContactDetails_ReturnViewModelAndCallsService(int? year)
         {
             SetupDefaultControllerData();
 
-            var organisationData = controller.SmallProducerSubmissionData.OrganisationData;
+            var expcted = new OrganisationDetailsTabsViewModel();
+            expcted.ContactDetailsViewModel = new ContactDetailsViewModel();
+
+            A.CallTo(() => this.submissionService.ContactDetails(year)).Returns(expcted);
+
+            var result = (await controller.ContactDetails(year)) as ViewResult;
+
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+
+            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
+
+            model.Should().NotBeNull();
+            model.ContactDetailsViewModel.Should().NotBeNull();
+            A.CallTo(() => this.submissionService.ContactDetails(year)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false)).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(2004)]
+        public async Task ServiceOfNotice_ReturnViewModelAndCallsService(int? year)
+        {
+            SetupDefaultControllerData();
+
+            var expcted = new OrganisationDetailsTabsViewModel();
+            expcted.ServiceOfNoticeViewModel = new ServiceOfNoticeViewModel();
+
+            A.CallTo(() => this.submissionService.ServiceOfNoticeDetails(year)).Returns(expcted);
 
             var result = (await controller.ServiceOfNoticeDetails(year)) as ViewResult;
 
@@ -598,39 +541,58 @@
 
             model.Should().NotBeNull();
             model.ServiceOfNoticeViewModel.Should().NotBeNull();
-
-            A.CallTo(() => mapper
-                            .Map<SubmissionsYearDetails, ServiceOfNoticeViewModel>(
-                A<SubmissionsYearDetails>.That.Matches(x => x.Year == year && x.SmallProducerSubmissionData == controller.SmallProducerSubmissionData)))
-                .MustHaveHappenedOnceExactly();
+            A.CallTo(() => this.submissionService.ServiceOfNoticeDetails(year)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
         [InlineData(null)]
-        [InlineData(2024)]
-        public async Task ServiceOfNoticeDetails_SetViewBreadcrumb(int? year)
+        [InlineData(2004)]
+        public async Task RepresentedOrganisationDetails_ReturnViewModelAndCallsService(int? year)
         {
             SetupDefaultControllerData();
 
-            var expected = "org name";
+            var expcted = new OrganisationDetailsTabsViewModel();
+            expcted.RepresentingCompanyDetailsViewModel = new RepresentingCompanyDetailsViewModel();
 
-            A.CallTo(() => weeeCache
-            .FetchOrganisationName(controller.SmallProducerSubmissionData.OrganisationData.Id))
-                .Returns(expected);
+            A.CallTo(() => this.submissionService.RepresentedOrganisationDetails(year)).Returns(expcted);
 
-            var result = (await controller.ServiceOfNoticeDetails(year)) as ViewResult;
+            var result = (await controller.RepresentedOrganisationDetails(year)) as ViewResult;
 
-            if (year.HasValue)
-            {
-                Assert.Equal(breadcrumb.ExternalActivity, ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
-            }
-            else
-            {
-                Assert.Equal(breadcrumb.ExternalActivity, ProducerSubmissionConstant.ViewOrganisation);
-            }
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
 
-            Assert.Equal(breadcrumb.OrganisationId, controller.SmallProducerSubmissionData.OrganisationData.Id);
-            Assert.Equal(breadcrumb.ExternalOrganisation, expected);
+            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
+
+            model.Should().NotBeNull();
+            model.RepresentingCompanyDetailsViewModel.Should().NotBeNull();
+
+            A.CallTo(() => this.submissionService.RepresentedOrganisationDetails(year)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false)).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(2004)]
+        public async Task TotalEEEDetails_ReturnViewModelAndCallsService(int? year)
+        {
+            SetupDefaultControllerData();
+
+            var expcted = new OrganisationDetailsTabsViewModel();
+            expcted.EditEeeDataViewModel = new EditEeeDataViewModel();
+
+            A.CallTo(() => this.submissionService.TotalEEEDetails(year)).Returns(expcted);
+
+            var result = (await controller.TotalEEEDetails(year)) as ViewResult;
+
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+
+            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
+
+            model.Should().NotBeNull();
+            model.EditEeeDataViewModel.Should().NotBeNull();
+
+            A.CallTo(() => this.submissionService.TotalEEEDetails(year)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -651,81 +613,7 @@
 
             var view = (await controller.RepresentedOrganisationDetails()) as ViewResult;
 
-            view.ViewName.Should().Be("ViewOrganisation/RepresentedOrganisationDetails");
-        }
-
-        [Fact]
-        public async Task RepresentedOrganisationDetails_ReturnViewModelAndMapsData()
-        {
-            SetupDefaultControllerData();
-
-            var organisationData = controller.SmallProducerSubmissionData.OrganisationData;
-
-            var result = (await controller.RepresentedOrganisationDetails()) as ViewResult;
-
-            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
-
-            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
-
-            model.Should().NotBeNull();
-            model.RepresentingCompanyDetailsViewModel.Should().NotBeNull();
-
-            A.CallTo(() => mapper
-                            .Map<SubmissionsYearDetails, RepresentingCompanyDetailsViewModel>(
-                A<SubmissionsYearDetails>.That.Matches(x => x.Year == null && x.SmallProducerSubmissionData == controller.SmallProducerSubmissionData)))
-                .MustHaveHappenedOnceExactly();
-        }
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData(2024)]
-        public async Task RepresentedOrganisationDetails_ReturnViewModelAndMapsDataForYear(int? year)
-        {
-            SetupDefaultControllerData();
-
-            var organisationData = controller.SmallProducerSubmissionData.OrganisationData;
-
-            var result = (await controller.RepresentedOrganisationDetails(year)) as ViewResult;
-
-            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
-
-            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
-
-            model.Should().NotBeNull();
-            model.RepresentingCompanyDetailsViewModel.Should().NotBeNull();
-
-            A.CallTo(() => mapper
-                            .Map<SubmissionsYearDetails, RepresentingCompanyDetailsViewModel>(
-                A<SubmissionsYearDetails>.That.Matches(x => x.Year == year && x.SmallProducerSubmissionData == controller.SmallProducerSubmissionData)))
-                .MustHaveHappenedOnceExactly();
-        }
-
-        [Theory]
-        [InlineData(null)]
-        [InlineData(2024)]
-        public async Task RepresentedOrganisationDetails_SetViewBreadcrumb(int? year)
-        {
-            SetupDefaultControllerData();
-
-            var expected = "org name";
-
-            A.CallTo(() => weeeCache
-            .FetchOrganisationName(controller.SmallProducerSubmissionData.OrganisationData.Id))
-                .Returns(expected);
-
-            var result = (await controller.RepresentedOrganisationDetails(year)) as ViewResult;
-
-            if (year.HasValue)
-            {
-                Assert.Equal(breadcrumb.ExternalActivity, ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
-            }
-            else
-            {
-                Assert.Equal(breadcrumb.ExternalActivity, ProducerSubmissionConstant.ViewOrganisation);
-            }
-
-            Assert.Equal(breadcrumb.OrganisationId, controller.SmallProducerSubmissionData.OrganisationData.Id);
-            Assert.Equal(breadcrumb.ExternalOrganisation, expected);
+            view.ViewName.Should().Be("Producer/ViewOrganisation/RepresentedOrganisationDetails");
         }
 
         [Fact]
@@ -746,81 +634,62 @@
 
             var view = (await controller.TotalEEEDetails()) as ViewResult;
 
-            view.ViewName.Should().Be("ViewOrganisation/TotalEEEDetails");
+            view.ViewName.Should().Be("Producer/ViewOrganisation/TotalEEEDetails");
         }
 
         [Fact]
-        public async Task TotalEEEDetails_ReturnViewModelAndMapsData()
+        public async Task TotalEEEDetails_IfNoSubmittedSubmissions_RedirectToOrganisationHasNoSubmissions()
         {
             SetupDefaultControllerData();
+            SetupInCompleteSubmission();
 
-            var organisationData = controller.SmallProducerSubmissionData.OrganisationData;
+            var result = (await controller.TotalEEEDetails(2000)) as RedirectToRouteResult;
 
-            var result = (await controller.TotalEEEDetails()) as ViewResult;
-
-            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
-
-            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
-
-            model.Should().NotBeNull();
-            model.EditEeeDataViewModel.Should().NotBeNull();
-
-            A.CallTo(() => mapper
-                            .Map<SubmissionsYearDetails, EditEeeDataViewModel>(
-                A<SubmissionsYearDetails>.That.Matches(x => x.Year == null && x.SmallProducerSubmissionData == controller.SmallProducerSubmissionData)))
-                .MustHaveHappenedOnceExactly();
+            result.RouteValues["action"].Should().Be("OrganisationHasNoSubmissions");
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData(2024)]
-        public async Task TotalEEEDetails_ReturnViewModelAndMapsDataForYear(int? year)
+        [Fact]
+        public async Task RepresentedOrganisationDetails_IfNoSubmittedSubmissions_RedirectToOrganisationHasNoSubmissions()
         {
             SetupDefaultControllerData();
+            SetupInCompleteSubmission();
 
-            var organisationData = controller.SmallProducerSubmissionData.OrganisationData;
+            var result = (await controller.RepresentedOrganisationDetails(2000)) as RedirectToRouteResult;
 
-            var result = (await controller.TotalEEEDetails(year)) as ViewResult;
-
-            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
-
-            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
-
-            model.Should().NotBeNull();
-            model.EditEeeDataViewModel.Should().NotBeNull();
-
-            A.CallTo(() => mapper
-                            .Map<SubmissionsYearDetails, EditEeeDataViewModel>(
-                A<SubmissionsYearDetails>.That.Matches(x => x.Year == year && x.SmallProducerSubmissionData == controller.SmallProducerSubmissionData)))
-                .MustHaveHappenedOnceExactly();
+            result.RouteValues["action"].Should().Be("OrganisationHasNoSubmissions");
         }
 
-        [Theory]
-        [InlineData(null)]
-        [InlineData(2024)]
-        public async Task TotalEEEDetails_SetViewBreadcrumb(int? year)
+        [Fact]
+        public async Task ServiceOfNoticeDetails_IfNoSubmittedSubmissions_RedirectToOrganisationHasNoSubmissions()
         {
             SetupDefaultControllerData();
+            SetupInCompleteSubmission();
 
-            var expected = "org name";
+            var result = (await controller.ServiceOfNoticeDetails(2000)) as RedirectToRouteResult;
 
-            A.CallTo(() => weeeCache
-            .FetchOrganisationName(controller.SmallProducerSubmissionData.OrganisationData.Id))
-                .Returns(expected);
+            result.RouteValues["action"].Should().Be("OrganisationHasNoSubmissions");
+        }
 
-            var result = (await controller.TotalEEEDetails(year)) as ViewResult;
+        [Fact]
+        public async Task ContactDetails_IfNoSubmittedSubmissions_RedirectToOrganisationHasNoSubmissions()
+        {
+            SetupDefaultControllerData();
+            SetupInCompleteSubmission();
 
-            if (year.HasValue)
-            {
-                Assert.Equal(breadcrumb.ExternalActivity, ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
-            }
-            else
-            {
-                Assert.Equal(breadcrumb.ExternalActivity, ProducerSubmissionConstant.ViewOrganisation);
-            }
+            var result = (await controller.ContactDetails(2000)) as RedirectToRouteResult;
 
-            Assert.Equal(breadcrumb.OrganisationId, controller.SmallProducerSubmissionData.OrganisationData.Id);
-            Assert.Equal(breadcrumb.ExternalOrganisation, expected);
+            result.RouteValues["action"].Should().Be("OrganisationHasNoSubmissions");
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_IfNoSubmittedSubmissions_RedirectToOrganisationHasNoSubmissions()
+        {
+            SetupDefaultControllerData();
+            SetupInCompleteSubmission();
+
+            var result = (await controller.OrganisationDetails(2000)) as RedirectToRouteResult;
+
+            result.RouteValues["action"].Should().Be("OrganisationHasNoSubmissions");
         }
 
         [Fact]
@@ -873,6 +742,15 @@
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
             methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        private void SetupInCompleteSubmission()
+        {
+            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>();
+            controller.SmallProducerSubmissionData.SubmissionHistory.Add(2000, new SmallProducerSubmissionHistoryData()
+            {
+                Status = SubmissionStatus.InComplete
+            });
         }
     }
 }

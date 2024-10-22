@@ -16,5 +16,7 @@
         Task<RegisteredProducer> GetProducerRegistration(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber);
 
         bool HasPreviousAmendmentCharge(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber);
+
+        Task<DirectRegistrant> GetDirectRegistrantByRegistration(string producerRegistrationNumber);
     }
 }
