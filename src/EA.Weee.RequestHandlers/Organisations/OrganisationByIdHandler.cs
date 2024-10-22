@@ -86,7 +86,7 @@
         private async Task SetIsRepresentingCompany(OrganisationData organisationData, Guid organisationId)
         {
             organisationData.IsRepresentingCompany = await context.DirectRegistrants
-                .AnyAsync(d => d.AuthorisedRepresentativeId.HasValue);
+                .AnyAsync(d => d.AuthorisedRepresentativeId.HasValue && d.OrganisationId == organisationId);
         }
 
         private async Task SetDirectRegistrants(OrganisationData organisationData, Guid organisationId)
