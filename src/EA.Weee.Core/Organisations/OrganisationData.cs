@@ -56,5 +56,7 @@
         public bool IsBalancingScheme { get; set; }
 
         public List<DirectRegistrantInfo> DirectRegistrants { get; set; } = new List<DirectRegistrantInfo>();
+
+        public bool IsRepresentingCompany {get; set; }
     }
 }

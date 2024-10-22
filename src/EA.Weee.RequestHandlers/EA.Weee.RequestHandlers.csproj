@@ -175,7 +175,9 @@
     <Compile Include="Organisations\DirectRegistrants\ProducerRegistrationNumberRequestHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddSignatoryAndCompleteRequestHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddPaymentSessionRequestHandler.cs" />
+    <Compile Include="Organisations\DirectRegistrants\AddRepresentingCompanyHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\GetInProgressPaymentSessionRequestHandler.cs" />
+    <Compile Include="Organisations\DirectRegistrants\RepresentingCompanyHelper.cs" />
     <Compile Include="Organisations\DirectRegistrants\ValidateAndGetSubmissionPaymentHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\UpdateSubmissionPaymentDetailsRequestHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\SubmissionRequestHandlerBase.cs" />

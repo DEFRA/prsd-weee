@@ -109,31 +109,7 @@
             {
                 var country = await weeeContext.Countries.SingleAsync(c => c.Id == organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.CountryId);
 
-                var producerAddress = new ProducerAddress(
-                    organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Address1,
-                    string.Empty,
-                    organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Address2 ?? string.Empty,
-                    organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.TownOrCity,
-                    string.Empty,
-                    organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.CountyOrRegion ?? string.Empty,
-                    country,
-                    organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Postcode);
-
-                var producerContact = new ProducerContact(string.Empty,
-                    string.Empty,
-                    string.Empty,
-                    organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Telephone,
-                    string.Empty,
-                    string.Empty,
-                    organisationTransactionData.RepresentingCompanyDetailsViewModel.Address.Email,
-                    producerAddress);
-
-                //producerContact.IsOverseas
-
-                authorisedRepresentative = new AuthorisedRepresentative(
-                    organisationTransactionData.RepresentingCompanyDetailsViewModel.CompanyName,
-                    organisationTransactionData.RepresentingCompanyDetailsViewModel.BusinessTradingName,
-                    producerContact);
+                authorisedRepresentative = RepresentingCompanyHelper.CreateRepresentingCompany(organisationTransactionData.RepresentingCompanyDetailsViewModel, country);
             }
 
             return authorisedRepresentative;
