@@ -73,9 +73,7 @@
                     return this.RedirectToAction(nameof(OrganisationController.RepresentingCompanies), typeof(OrganisationController).GetControllerName(), new { organisationId = pcsId, area = string.Empty });
                 }
 
-                var defaultDirectRegistrant = organisationDetails.DirectRegistrants.FirstOrDefault();
-
-                var model = new ChooseActivityViewModel(activities) { OrganisationId = pcsId, DirectRegistrantId = defaultDirectRegistrant?.DirectRegistrantId };
+                var model = new ChooseActivityViewModel(activities) { OrganisationId = pcsId, DirectRegistrantId = directRegistrantId };
 
                 await SetBreadcrumb(pcsId, null, false);
 
