@@ -18,6 +18,7 @@
     using EA.Weee.Web.Areas.Producer.Filters;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.Services.SubmissionService;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using FluentValidation;
     using Infrastructure;
@@ -75,6 +76,7 @@
             builder.RegisterType<WeeeCache>()
                 .As<IWeeeCache>()
                 .As<ISearchResultProvider<ProducerSearchResult>>()
+                .As<ISearchResultProvider<SmallProducerSearchResult>>()
                 .As<ISearchResultProvider<OrganisationSearchResult>>();
 
             // Breadcrumb
@@ -82,13 +84,17 @@
 
             // Authorization
             builder.RegisterType<WeeeAuthorization>().As<IWeeeAuthorization>();
-
+           
             // External route resolution
             builder.RegisterType<ExternalRouteService>().As<IExternalRouteService>().InstancePerRequest();
 
             // We're going to use the simple producer searcher.
             builder.RegisterType<SimpleProducerSearcher>()
                 .As<ISearcher<ProducerSearchResult>>()
+                .InstancePerRequest();
+
+            builder.RegisterType<SimpleSmallProducerSearcher>()
+                .As<ISearcher<SmallProducerSearchResult>>()
                 .InstancePerRequest();
 
             // We're going to use the fuzzy organisation searcher.
@@ -118,6 +124,8 @@
             builder.RegisterType<PaymentService>().As<IPaymentService>();
             builder.RegisterType<SecureReturnUrlHelper>().As<ISecureReturnUrlHelper>();
             builder.RegisterType<PaymentReferenceGenerator>().As<IPaymentReferenceGenerator>();
+
+            builder.RegisterType<SubmissionService>().As<ISubmissionService>();
 
             return builder.Build();
         }

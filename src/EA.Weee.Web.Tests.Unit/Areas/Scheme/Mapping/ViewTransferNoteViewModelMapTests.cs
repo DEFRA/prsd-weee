@@ -652,7 +652,7 @@
                 TestFixture.Build<TransferEvidenceNoteData>()
                     .With(x => x.ApprovedTransfererDetails, string.Empty)
                     .With(x => x.ApprovedRecipientDetails, string.Empty)
-                    .With(x => x.TransferredOrganisationData, CreateOrganisationData(true))
+                    .With(x => x.TransferredOrganisationData, CreateOrganisationData(false))
                     .Create(),
                 false);
 

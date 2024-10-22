@@ -36,7 +36,7 @@
             @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { @class = "govuk-button" })
         </p>
         <p>
-            <a href="@(Url.UrlFor<ProducersController>(a => a.Search()))">Back</a>
+            <a href="@(Url.UrlFor<ProducersController>(a => a.Search(null)))">Back</a>
         </p>
     
     </section>

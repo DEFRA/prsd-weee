@@ -4,6 +4,7 @@
     using Core.Organisations;
     using Core.Scheme;
     using Core.Users;
+    using EA.Prsd.Core;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Scheme;
@@ -29,7 +30,6 @@
     using Weee.Requests.Users.GetManageableOrganisationUsers;
     using Xunit;
     using AddressData = EA.Weee.Core.Shared.AddressData;
-
     public class HomeControllerTests
     {
         private readonly IWeeeClient weeeClient = A.Fake<IWeeeClient>();
@@ -2047,7 +2047,12 @@
         {
             var organisationId = Guid.NewGuid();
             var directRegistrantId = Guid.NewGuid();
-            var organisationData = new OrganisationData { DirectRegistrantId = directRegistrantId };
+
+            var directRegistrant = new DirectRegistrantInfo { DirectRegistrantId = directRegistrantId, YearSubmissionStarted = false };
+            var organisationData = new OrganisationData
+            {
+                DirectRegistrants = new List<DirectRegistrantInfo> { directRegistrant }
+            };
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
@@ -2064,23 +2069,49 @@
             var organisationId = Guid.NewGuid();
             var directRegistrantId = Guid.NewGuid();
 
-            var organisationData = new OrganisationData { DirectRegistrantId = directRegistrantId };
+            var directRegistrant = new DirectRegistrantInfo { DirectRegistrantId = directRegistrantId, YearSubmissionStarted = false };
+            var organisationData = new OrganisationData
+            {
+                DirectRegistrants = new List<DirectRegistrantInfo> { directRegistrant }
+            };
 
             var activities = await HomeController().GetActivities(organisationId, organisationData);
 
             Assert.Contains(ProducerSubmissionConstant.HistoricProducerRegistrationSubmission, activities);
-            Assert.Contains(ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission, activities);
+            Assert.Contains(ProducerSubmissionConstant.NewProducerRegistrationSubmission, activities);
             Assert.Contains(ProducerSubmissionConstant.ViewOrganisation, activities);
         }
 
         [Fact]
-        public async Task ChooseActivityPOST_NewContinueProducerRegistration_ShouldRedirectToProducerTaskList()
+        public async Task ChooseActivityPOST_NewProducerRegistration_ShouldRedirectToProducerTaskList()
         {
             var organisationId = Guid.NewGuid();
             var directRegistrantId = Guid.NewGuid();
             var model = new ChooseActivityViewModel
             {
-                SelectedValue = ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission,
+                SelectedValue = ProducerSubmissionConstant.NewProducerRegistrationSubmission,
+                OrganisationId = organisationId,
+                DirectRegistrantId = directRegistrantId
+            };
+
+            var result = await HomeController().ChooseActivity(model) as RedirectToRouteResult;
+
+            Assert.NotNull(result);
+            Assert.Equal("TaskList", result.RouteValues["action"]);
+            Assert.Equal("Producer", result.RouteValues["controller"]);
+            Assert.Equal("Producer", result.RouteValues["area"]);
+            Assert.Equal(organisationId, result.RouteValues["organisationId"]);
+            Assert.Equal(directRegistrantId, result.RouteValues["directRegistrantId"]);
+        }
+
+        [Fact]
+        public async Task ChooseActivityPOST_ContinueProducerRegistration_ShouldRedirectToProducerTaskList()
+        {
+            var organisationId = Guid.NewGuid();
+            var directRegistrantId = Guid.NewGuid();
+            var model = new ChooseActivityViewModel
+            {
+                SelectedValue = ProducerSubmissionConstant.ContinueProducerRegistrationSubmission,
                 OrganisationId = organisationId,
                 DirectRegistrantId = directRegistrantId
             };
@@ -2100,12 +2131,16 @@
         {
             var organisationId = Guid.NewGuid();
             var directRegistrantId = Guid.NewGuid();
+            var date = SystemTime.UtcNow.Year;
+
             var model = new ChooseActivityViewModel
             {
                 SelectedValue = ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
                 OrganisationId = organisationId,
                 DirectRegistrantId = directRegistrantId
             };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(date, 1, 1));
 
             var result = await HomeController().ChooseActivity(model) as RedirectToRouteResult;
 
@@ -2115,6 +2150,9 @@
             Assert.Equal("Producer", result.RouteValues["area"]);
             Assert.Equal(organisationId, result.RouteValues["organisationId"]);
             Assert.Equal(directRegistrantId, result.RouteValues["directRegistrantId"]);
+            Assert.Equal(date, result.RouteValues["year"]);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

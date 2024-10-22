@@ -23,6 +23,7 @@
     using EA.Weee.Web.Services.Caching;
     using System;
     using System.Collections.Generic;
+    using System.Configuration;
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
@@ -45,6 +46,7 @@
         private readonly IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryAndCompleteRequest>
             addSignatoryAndCompleteRequestCreator;
         private readonly IPaymentService paymentService;
+        private readonly ConfigurationService configurationService;
 
         public ProducerSubmissionController(IMapper mapper,
             IRequestCreator<EditOrganisationDetailsViewModel, EditOrganisationDetailsRequest> editOrganisationDetailsRequestCreator,
@@ -57,7 +59,8 @@
             IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest> serviceOfNoticeRequestCreator,
             IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator,
             IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryAndCompleteRequest> addSignatoryRequestCreator, 
-            IPaymentService paymentService)
+            IPaymentService paymentService,
+            ConfigurationService configuration)
         {
             this.mapper = mapper;
             this.editOrganisationDetailsRequestCreator = editOrganisationDetailsRequestCreator;
@@ -70,6 +73,7 @@
             this.editEeeDataRequestCreator = editEeeDataRequestCreator;
             this.addSignatoryAndCompleteRequestCreator = addSignatoryRequestCreator;
             this.paymentService = paymentService;
+            this.configurationService = configuration;
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
@@ -80,7 +84,8 @@
         }
 
         [HttpGet]
-        [SmallProducerSubmissionContext]
+        [SmallProducerSubmissionContext(Order = 1)]
+        [SmallProducerSubmissionSubmitted(Order = 2)]
         public async Task<ActionResult> EditOrganisationDetails(bool? redirectToCheckAnswers = false)
         {
             var source = new SmallProducerSubmissionMapperData()
@@ -134,7 +139,8 @@
         }
 
         [HttpGet]
-        [SmallProducerSubmissionContext]
+        [SmallProducerSubmissionContext(Order = 1)]
+        [SmallProducerSubmissionSubmitted(Order = 2)]
         public async Task<ActionResult> EditEeeeData(bool? redirectToCheckAnswers = false)
         {
             var source = new SmallProducerSubmissionMapperData()
@@ -178,7 +184,8 @@
         }
 
         [HttpGet]
-        [SmallProducerSubmissionContext]
+        [SmallProducerSubmissionContext(Order = 1)]
+        [SmallProducerSubmissionSubmitted(Order = 2)]
         public async Task<ActionResult> ServiceOfNotice(bool? sameAsOrganisationAddress, bool? redirectToCheckAnswers = false)
         {
             var source = new SmallProducerSubmissionMapperData()
@@ -248,7 +255,8 @@
         }
 
         [HttpGet]
-        [SmallProducerSubmissionContext]
+        [SmallProducerSubmissionContext(Order = 1)]
+        [SmallProducerSubmissionSubmitted(Order = 2)]
         public async Task<ActionResult> EditRepresentedOrganisationDetails(bool? redirectToCheckAnswers = false)
         {
             var source = new SmallProducerSubmissionMapperData()
@@ -295,7 +303,8 @@
         }
 
         [HttpGet]
-        [SmallProducerSubmissionContext]
+        [SmallProducerSubmissionContext(Order = 1)]
+        [SmallProducerSubmissionSubmitted(Order = 2)]
         public async Task<ActionResult> EditContactDetails(bool? redirectToCheckAnswers = false)
         {
             var source = new SmallProducerSubmissionMapperData()
@@ -416,7 +425,9 @@
             var model = new PaymentResultModel()
             {
                 PaymentReference = reference,
-                OrganisationId = SmallProducerSubmissionData.OrganisationData.Id
+                OrganisationId = SmallProducerSubmissionData.OrganisationData.Id,
+                ComplianceYear = SmallProducerSubmissionData.CurrentSubmission.ComplianceYear,
+                TotalAmount = configurationService.CurrentConfiguration.GovUkPayAmountInPence / 100
             };
 
             await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
