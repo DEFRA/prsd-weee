@@ -45,7 +45,7 @@
 
             var representingCompany = await CreateRepresentingCompany(request.RepresentingCompanyDetailsViewModel);
 
-            var directRegistrant = DirectRegistrant.CreateDirectRegistrant(existingDirectRegistrant.Organisation, existingDirectRegistrant.BrandName, existingDirectRegistrant.Contact, existingDirectRegistrant.Address, representingCompany, existingDirectRegistrant.AdditionalCompanyDetails.ToList());
+            var directRegistrant = DirectRegistrant.CreateDirectRegistrant(existingDirectRegistrant.Organisation, existingDirectRegistrant.BrandName, existingDirectRegistrant.Contact, existingDirectRegistrant.Address, representingCompany, existingDirectRegistrant.AdditionalCompanyDetails.ToList(), null);
 
             var newRegistrant = await genericDataAccess.Add(directRegistrant);
 
