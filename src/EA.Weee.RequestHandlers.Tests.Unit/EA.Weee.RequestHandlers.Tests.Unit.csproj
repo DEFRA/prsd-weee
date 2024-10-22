@@ -510,10 +510,6 @@
       <Project>{d38ea5ef-f9f5-480c-ae0a-214122559426}</Project>
       <Name>EA.Prsd.Core</Name>
     </ProjectReference>
-    <ProjectReference Include="..\EA.Weee.Api.Client\EA.Weee.Api.Client.csproj">
-      <Project>{B772429D-709E-4978-B105-A54606ACC29A}</Project>
-      <Name>EA.Weee.Api.Client</Name>
-    </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Core.Tests.Unit\EA.Weee.Core.Tests.Unit.csproj">
       <Project>{10930E82-4985-4F92-8C5A-65D15F0176BE}</Project>
       <Name>EA.Weee.Core.Tests.Unit</Name>
