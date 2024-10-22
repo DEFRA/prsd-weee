@@ -2051,16 +2051,9 @@
             var organisationId = Guid.NewGuid();
             var directRegistrantId = Guid.NewGuid();
 
-            var directRegistrant = new DirectRegistrantInfo { DirectRegistrantId = directRegistrantId, YearSubmissionStarted = false };
-            var organisationData = new OrganisationData
-            {
-                DirectRegistrants = new List<DirectRegistrantInfo> { directRegistrant }
-            };
-
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._)).Returns(true);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._)).Returns(organisationData);
 
-            var result = await HomeController().ChooseActivity(organisationId) as ViewResult;
+            var result = await HomeController().ChooseActivity(organisationId, directRegistrantId) as ViewResult;
 
             var model = result.Model as ChooseActivityViewModel;
             Assert.Equal(directRegistrantId, model.DirectRegistrantId);
