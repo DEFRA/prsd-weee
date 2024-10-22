@@ -61,9 +61,9 @@
 
         public virtual ICollection<AdditionalCompanyDetails> AdditionalCompanyDetails { get; set; }
 
-        public static DirectRegistrant CreateDirectRegistrant(Organisation organisation, BrandName brandName, Contact contactDetails, Address contactAddress, AuthorisedRepresentative representingCompany, List<AdditionalCompanyDetails> additionalCompanyDetails)
+        public static DirectRegistrant CreateDirectRegistrant(Organisation organisation, BrandName brandName, Contact contactDetails, Address contactAddress, AuthorisedRepresentative representingCompany, List<AdditionalCompanyDetails> additionalCompanyDetails, string producerRegistrationNumber)
         {
-            return new DirectRegistrant(organisation, brandName, contactDetails, contactAddress, representingCompany, additionalCompanyDetails);
+            return new DirectRegistrant(organisation, brandName, contactDetails, contactAddress, representingCompany, additionalCompanyDetails, producerRegistrationNumber);
         }
     }
 }

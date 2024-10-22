@@ -414,6 +414,7 @@
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddSignatoryAndCompleteRequestHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddPaymentSessionRequestHandlerTests.cs" />
+    <Compile Include="Organisations\DirectRegistrants\ProducerRegistrationNumberRequestHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddRepresentingCompanyHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\EditEeeDataRequestHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\EditRepresentedOrganisationDetailsRequestHandlerTests.cs" />
