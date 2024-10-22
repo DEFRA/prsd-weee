@@ -27,11 +27,11 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly ISystemDataDataAccess systemDataAccess;
+        private readonly ISmallProducerDataAccess smallProducerDataAccess;
         private readonly WeeeContext weeeContext;
         private readonly EditOrganisationDetailsRequestHandler handler;
         private readonly Guid directRegistrantId = Guid.NewGuid();
         private readonly Guid countryId = Guid.NewGuid();
-        private readonly Guid userId = Guid.NewGuid();
         private readonly Country country;
 
         public EditOrganisationDetailsRequestHandlerTests()
@@ -40,6 +40,7 @@
             genericDataAccess = A.Fake<IGenericDataAccess>();
             weeeContext = A.Fake<WeeeContext>();
             systemDataAccess = A.Fake<ISystemDataDataAccess>();
+            smallProducerDataAccess = A.Fake<ISmallProducerDataAccess>();
 
             A.CallTo(() => systemDataAccess.GetSystemDateTime()).Returns(SystemTime.UtcNow);
 
@@ -54,7 +55,8 @@
                 authorization,
                 genericDataAccess,
                 weeeContext,
-                systemDataAccess);
+                systemDataAccess,
+                smallProducerDataAccess);
         }
 
         [Fact]
@@ -117,6 +119,10 @@
             var directRegistrant = new DirectRegistrant();
             A.CallTo(() => genericDataAccess.GetById<DirectRegistrant>(request.DirectRegistrantId))
                 .Returns(Task.FromResult(directRegistrant));
+
+            A.CallTo(() =>
+                smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(directRegistrantId,
+                    SystemTime.UtcNow.Year)).Returns<DirectProducerSubmission>(null);
 
             // Act & Assert
             await Assert.ThrowsAsync<InvalidOperationException>(() => handler.HandleAsync(request));
@@ -238,6 +244,10 @@
 
             A.CallTo(() => genericDataAccess.GetById<DirectRegistrant>(directRegistrantId))
                 .Returns(Task.FromResult(directRegistrant));
+
+            A.CallTo(() =>
+                smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(directRegistrantId,
+                    SystemTime.UtcNow.Year)).Returns(directProducerSubmissionCurrentYear);
 
             return directRegistrant;
         }

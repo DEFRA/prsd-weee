@@ -618,6 +618,10 @@
     <Compile Include="Areas\Producer\ViewModels\EditContactDetailsViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\CheckAnswersViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\PaymentResultModel.cs" />
+    <Compile Include="ViewModels\Organisation\Mapping\ToViewModel\RepresentingCompaniesViewModelMap.cs" />
+    <Compile Include="ViewModels\Organisation\Mapping\ToViewModel\RepresentingCompaniesViewModelMapSource.cs" />
+    <Compile Include="ViewModels\Organisation\RepresentingCompany.cs" />
+    <Compile Include="ViewModels\Organisation\RepresentingCompaniesViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\ServiceOfNoticeViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\SellingTechniqueViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\EditEeeDataViewModel.cs" />
@@ -1152,6 +1156,8 @@
     <Content Include="Views\Shared\Producer\ViewOrganisation\TotalEEEDetails.cshtml" />
     <Content Include="Areas\Admin\Views\ProducerSubmission\AddPaymentDetails.cshtml" />
     <Content Include="Areas\Admin\Views\ProducerSubmission\RemoveSubmission.cshtml" />
+    <Content Include="Views\Organisation\RepresentingCompanies.cshtml" />
+    <Content Include="Views\Organisation\RepresentingOrganisation.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
@@ -1977,6 +1983,7 @@
     <Content Include="Views\Shared\_SearchFilterButtonsPartial.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SubmittedDatesFiltersViewModel.cshtml" />
     <Content Include="Views\Shared\_OrganisationAddressCountryPartial.cshtml" />
+    <Content Include="Views\Shared\_RepresentingCompanyPartial.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
