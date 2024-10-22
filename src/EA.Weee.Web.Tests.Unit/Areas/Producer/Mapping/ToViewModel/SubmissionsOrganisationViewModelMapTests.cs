@@ -59,6 +59,12 @@
                 result.BusinessTradingName.Should().Be(source.SmallProducerSubmissionData.SubmissionHistory[year.Value].TradingName);
                 result.CompanyName.Should().Be(source.SmallProducerSubmissionData.SubmissionHistory[year.Value].CompanyName);
                 result.CompaniesRegistrationNumber.Should().Be(source.SmallProducerSubmissionData.SubmissionHistory[year.Value].CompanyRegistrationNumber);
+                result.Status.Should().Be(source.SmallProducerSubmissionData.SubmissionHistory[year.Value].Status);
+                result.HasPaid.Should().Be(source.SmallProducerSubmissionData.SubmissionHistory[year.Value].HasPaid);
+                result.RegistrationDate.Should().Be(source.SmallProducerSubmissionData.SubmissionHistory[year.Value].RegistrationDate);
+                result.SubmittedDate.Should().Be(source.SmallProducerSubmissionData.SubmissionHistory[year.Value].SubmittedDate);
+                result.PaymentReference.Should().Be(source.SmallProducerSubmissionData.SubmissionHistory[year.Value].PaymentReference);
+                result.ProducerRegistrationNumber.Should().Be(source.SmallProducerSubmissionData.SubmissionHistory[year.Value].ProducerRegistrationNumber);
             }
             else
             {
@@ -106,7 +112,7 @@
         {
             // Arrange
             var producerSubmission = fixture.Create<SmallProducerSubmissionData>();
-            producerSubmission.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>() 
+            producerSubmission.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>()
             {
                 { 2024, fixture.Create<SmallProducerSubmissionHistoryData>() }
             };
