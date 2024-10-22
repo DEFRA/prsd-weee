@@ -3,7 +3,7 @@
 @using MvcNavigationHelpers
 @model EA.Weee.Web.ViewModels.OrganisationRegistration.PreviousRegistrationViewModel
 @{
-    ViewBag.Title = "Have you previously been registered as a small producer?";
+    ViewBag.Title = "Have you previously been registered as a producer?";
 }
 
 
@@ -22,13 +22,16 @@
             </h1>
         </header>
 
-        <p class="govuk-body">If you have been a member of a producer compliance scheme (PCS) or have been previously registered directly as a small producer you will need to select ‘Yes’ and find your organisation.</p>
+        <p class="govuk-body">Please indicate if you have previously been a member of a producer compliance scheme (PCS) or have previously been registered directly 
+            as a small producer. If you have previously been registered as a small producer, you will be asked to find your organisation.  
+            If you have never previously been registered, click 'No'.
+        </p>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
             @this.WeeeGds().RadioButtonsFor(
                 m => m.SelectedValue,
                 Model.PossibleValues,
-                "Select if you have previously registered as a small producer",
+                "Select if you have previously registered as a producer",
                 RadioButtonLegend.VisuallyHidden,
                 RadioButtonLayout.Stacked)
         </div>
