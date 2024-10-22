@@ -159,5 +159,15 @@
 
             return existsProducerSubmissions || existsRegisteredProducers;
         }
+
+        public async Task<bool> SchemeProducerRegistrationExists(string producerRegistrationNumber)
+        {
+            var existsProducerSubmissions = await context
+                .RegisteredProducers
+                .Where(rp => rp.CurrentSubmission != null)
+                .AnyAsync(rp => rp.ProducerRegistrationNumber == producerRegistrationNumber);
+
+            return existsProducerSubmissions;
+        }
     }
 }

@@ -2,7 +2,9 @@
 {
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.DataStandards;
+    using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Validation;
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
@@ -30,11 +32,22 @@
         public string CompaniesRegistrationNumber { get; set; }
 
         [StringLength(CommonMaxFieldLengths.DefaultString)]
-        [DisplayName("If you are registering as an authorised representative of a non-UK established organisation, enter the brands they place on the market.")]
+        [DisplayName("If you are registering as an Authorised Representative of a non-UK established organisation, enter the brands they place on the market.")]
         public string EEEBrandNames { get; set; }
 
         [DisplayName("Organisation type")]
         public ExternalOrganisationType? OrganisationType { get; set; }
+
+        public bool HasPaid { get; set; } = false;
+
+        public SubmissionStatus Status { get; set; }
+        public DateTime? RegistrationDate { get; set; }
+
+        public DateTime? SubmittedDate { get; set; }
+
+        public string PaymentReference { get; set; }
+
+        public string ProducerRegistrationNumber { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

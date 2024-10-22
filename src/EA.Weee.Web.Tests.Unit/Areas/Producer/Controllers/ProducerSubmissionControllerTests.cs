@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Producer.Controllers
 {
     using AutoFixture;
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Api.Client.Models.Pay;
@@ -50,6 +51,7 @@
         private readonly IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryAndCompleteRequest>
             addSignatoryAndCompleteRequestCreator;
         private readonly IPaymentService paymentService;
+        private readonly ConfigurationService configurationService;
 
         public ProducerSubmissionControllerTests()
         {
@@ -68,7 +70,8 @@
             editEeeDataRequestCreator = A.Fake<IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest>>();
             addSignatoryAndCompleteRequestCreator = A.Fake<IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryAndCompleteRequest>>();
             paymentService = A.Fake<IPaymentService>();
-            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator, editRepresentedOrganisationDetailsRequestCreator, () => weeeClient, breadcrumbService, weeeCache, editContactDetailsRequestCreator, serviceOfNoticeRequestCreator, editEeeDataRequestCreator, addSignatoryAndCompleteRequestCreator, paymentService);
+            configurationService = A.Fake<ConfigurationService>();
+            controller = new ProducerSubmissionController(mapper, editOrganisationDetailsRequestCreator, editRepresentedOrganisationDetailsRequestCreator, () => weeeClient, breadcrumbService, weeeCache, editContactDetailsRequestCreator, serviceOfNoticeRequestCreator, editEeeDataRequestCreator, addSignatoryAndCompleteRequestCreator, paymentService, configurationService);
         }
 
         [Fact]
@@ -828,11 +831,14 @@
         public async Task PaymentSuccess_ShouldReturnViewWithCorrectModel()
         {
             // Arrange
+            configurationService.CurrentConfiguration.GovUkPayAmountInPence = 3000;
+
             var reference = TestFixture.Create<string>();
             var organisationId = Guid.NewGuid();
             controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
             {
-                OrganisationData = new OrganisationData { Id = organisationId }
+                OrganisationData = new OrganisationData { Id = organisationId },
+                CurrentSubmission = new SmallProducerSubmissionHistoryData { ComplianceYear = SystemTime.UtcNow.Year }
             };
 
             // Act
@@ -844,6 +850,9 @@
             var model = (PaymentResultModel)result.Model;
             model.PaymentReference.Should().Be(reference);
             model.OrganisationId.Should().Be(organisationId);
+            model.ComplianceYear.Should().Be(controller.SmallProducerSubmissionData.CurrentSubmission.ComplianceYear);
+            model.TotalAmount.Should().Be(configurationService.CurrentConfiguration.GovUkPayAmountInPence / 100);
+            model.TotalAmount.ToString("0.00").Should().Be("30.00");
         }
 
         [Fact]
@@ -855,7 +864,8 @@
             var organisationName = TestFixture.Create<string>();
             controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
             {
-                OrganisationData = new OrganisationData { Id = organisationId }
+                OrganisationData = new OrganisationData { Id = organisationId },
+                CurrentSubmission = new SmallProducerSubmissionHistoryData { ComplianceYear = SystemTime.UtcNow.Year }
             };
 
             A.CallTo(() => weeeCache.FetchOrganisationName(organisationId)).Returns(organisationName);
@@ -1002,6 +1012,56 @@
 
             // Act & Assert
             await Assert.ThrowsAsync<InvalidOperationException>(() => controller.AppropriateSignatory(model));
+        }
+
+        [Fact]
+        public void EditOrganisationDetails_Get_ShouldHaveSmallProducerSubmissionSubmittedAttribute1()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("EditOrganisationDetails", new[] { typeof(bool?) });
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionSubmittedAttribute>();
+        }
+
+        [Fact]
+        public void EditContactDetails_Get_ShouldHaveSmallProducerSubmissionSubmittedAttribute2()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("EditContactDetails", new[] { typeof(bool?) });
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionSubmittedAttribute>();
+        }
+
+        [Fact]
+        public void ServiceOfNotice_Get_ShouldHaveSmallProducerSubmissionSubmittedAttribute3()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("ServiceOfNotice", new[] { typeof(bool?), typeof(bool?) });
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionSubmittedAttribute>();
+        }
+
+        [Fact]
+        public void EditRepresentedOrganisationDetails_Get_ShouldHaveSmallProducerSubmissionSubmittedAttribute4()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("EditRepresentedOrganisationDetails", new[] { typeof(bool?) });
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionSubmittedAttribute>();
+        }
+
+        [Fact]
+        public void EditEeeeData_Get_ShouldHaveSmallProducerSubmissionSubmittedAttribute5()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("EditEeeeData", new[] { typeof(bool?) });
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionSubmittedAttribute>();
         }
     }
 }

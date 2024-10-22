@@ -67,7 +67,11 @@
 
                 var activities = await GetActivities(pcsId, organisationDetails);
 
-                var model = new ChooseActivityViewModel(activities) { OrganisationId = pcsId, DirectRegistrantId = organisationDetails.DirectRegistrantId};
+                Guid? defaultDirectRegistrantId = organisationDetails.DirectRegistrants
+                    .FirstOrDefault(dr => dr.YearSubmissionStarted)?.DirectRegistrantId
+                    ?? organisationDetails.DirectRegistrants.FirstOrDefault()?.DirectRegistrantId;
+
+                var model = new ChooseActivityViewModel(activities) { OrganisationId = pcsId, DirectRegistrantId = defaultDirectRegistrantId };
 
                 await SetBreadcrumb(pcsId, null, false);
 
@@ -138,7 +142,21 @@
                 if (organisationDetails.HasDirectRegistrant)
                 {
                     activities.Add(ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
-                    activities.Add(ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+
+                    var firstRegistrant = organisationDetails.DirectRegistrants.FirstOrDefault();
+
+                    if (firstRegistrant != null)
+                    {
+                        if (firstRegistrant.YearSubmissionStarted)
+                        {
+                            activities.Add(ProducerSubmissionConstant.ContinueProducerRegistrationSubmission);
+                        }
+                        else
+                        {
+                            activities.Add(ProducerSubmissionConstant.NewProducerRegistrationSubmission);
+                        }
+                    }
+
                     activities.Add(ProducerSubmissionConstant.ViewOrganisation);
                 }
             }
@@ -269,14 +287,25 @@
                     return this.RedirectToAction("Index", "ManageEvidenceNotes", new { pcsId = viewModel.OrganisationId});
                 }
 
-                if (viewModel.SelectedValue == ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission)
+                if (viewModel.SelectedValue == ProducerSubmissionConstant.NewProducerRegistrationSubmission)
+                {
+                    return this.RedirectToAction(nameof(ProducerController.TaskList), typeof(ProducerController).GetControllerName(), new { area = "Producer", organisationId = viewModel.OrganisationId, directRegistrantId = viewModel.DirectRegistrantId });
+                }
+
+                if (viewModel.SelectedValue == ProducerSubmissionConstant.ContinueProducerRegistrationSubmission)
                 {
                     return this.RedirectToAction(nameof(ProducerController.TaskList), typeof(ProducerController).GetControllerName(), new { area = "Producer", organisationId = viewModel.OrganisationId, directRegistrantId = viewModel.DirectRegistrantId });
                 }
 
                 if (viewModel.SelectedValue == ProducerSubmissionConstant.HistoricProducerRegistrationSubmission)
                 {
-                    return this.RedirectToAction(nameof(ProducerController.Submissions), typeof(ProducerController).GetControllerName(), new { area = "Producer", organisationId = viewModel.OrganisationId, directRegistrantId = viewModel.DirectRegistrantId });
+                    using (var client = apiClient())
+                    {
+                        var systemTime = new GetApiUtcDate();
+                        var date = await client.SendAsync(User.GetAccessToken(), systemTime);
+
+                        return this.RedirectToAction(nameof(ProducerController.Submissions), typeof(ProducerController).GetControllerName(), new { area = "Producer", organisationId = viewModel.OrganisationId, directRegistrantId = viewModel.DirectRegistrantId, year = date.Year });
+                    }
                 }
 
                 if (viewModel.SelectedValue == ProducerSubmissionConstant.ViewOrganisation)
