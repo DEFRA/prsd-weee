@@ -63,7 +63,7 @@
 
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" style="width: 30%;" scope="row">Payment reference</th>
-                            <td class="govuk-table__cell">Payment reference</td>
+                            <td class="govuk-table__cell">@Model.OrganisationViewModel.PaymentReference</td>
                         </tr>
                     }
 
@@ -129,7 +129,7 @@
         @if (Model.IsInternal && (Model.OrganisationViewModel.Status != EA.Weee.Core.DirectRegistrant.SubmissionStatus.InComplete
     && Model.OrganisationViewModel.Status != EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted))
         {
-            @(this.WeeeGds().Button("Return submission to user"));
+            @(this.WeeeGds().Button("Return producer registration to user"));
         }
     </div>
 
