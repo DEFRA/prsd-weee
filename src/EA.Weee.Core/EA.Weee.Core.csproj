@@ -338,6 +338,7 @@
     <Compile Include="Organisations\TonnageType.cs" />
     <Compile Include="Organisations\ExternalOrganisationType.cs" />
     <Compile Include="Organisations\OrganisationTransactionData.cs" />
+    <Compile Include="PaymentDetails\OfflinePaymentDetails.cs" />
     <Compile Include="Scheme\CategoryValues.cs" />
     <Compile Include="Search\RegisteredProducerSearchResult.cs" />
     <Compile Include="Search\Simple\SimpleSmallProducerSearcher.cs" />
