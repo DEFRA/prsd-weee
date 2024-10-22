@@ -4,6 +4,7 @@
     using Core.Shared;
     using DataAccess.StoredProcedure;
     using EA.Prsd.Core;
+    using EA.Weee.Core.Constants;
     using Prsd.Core.Mediator;
     using Requests.Admin.Reports;
     using Security;
@@ -49,6 +50,14 @@
             {
                 fileName = string.Format("{0}_{1}_producerEEE_{2:ddMMyyyy_HHmm}.csv",
                     request.ComplianceYear,
+                    obligationType,
+                    SystemTime.UtcNow);
+            }
+            else if (request.SchemeId == DirectRegistrantFixedIdConstant.DirectRegistrantFixedId)
+            {
+                fileName = string.Format("{0}_{1}_{2}_producerEEE_{3:ddMMyyyy_HHmm}.csv",
+                    request.ComplianceYear,
+                    DirectRegistrantFixedIdConstant.DirectRegistrant,
                     obligationType,
                     SystemTime.UtcNow);
             }
