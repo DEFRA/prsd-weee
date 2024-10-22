@@ -11,7 +11,7 @@
 
     @if (!Model.ShowLinkToCreateOrJoinOrganisation)
     {
-        if (Model.DirectRegistrantId.HasValue)
+        if (Model.IsRepresentingCompany)
         {
             @(this.WeeeGds().BackLink(@Url.Action("RepresentingCompanies", "Organisation", new { organisationId = Model.OrganisationId, area = "" })))
         }
@@ -35,6 +35,7 @@
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.DirectRegistrantId)
         @Html.HiddenFor(m => m.SchemeId)
+        @Html.HiddenFor(m => m.IsRepresentingCompany)
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ActivityOptions">
             @Html.Gds().ValidationMessageFor(m => m.SelectedValue)
