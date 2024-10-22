@@ -1,11 +1,15 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Api.Client;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
+    using EA.Weee.Requests.Admin;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
     using EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview;
     using EA.Weee.Web.Areas.Producer.Filters;
+    using EA.Weee.Web.Areas.Producer.Mappings.ToRequest;
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Infrastructure;
@@ -28,14 +32,15 @@
         private readonly IMvcTemplateExecutor templateExecutor;
         private readonly IPdfDocumentProvider pdfDocumentProvider;
         private readonly ISubmissionService submissionService;
-
+        private readonly Func<IWeeeClient> apiClient;
         public ProducerSubmissionController(
             BreadcrumbService breadcrumb,
             IWeeeCache cache,
             IMapper mapper,
             IMvcTemplateExecutor templateExecutor,
             IPdfDocumentProvider pdfDocumentProvider,
-            ISubmissionService submissionService)
+            ISubmissionService submissionService,
+            Func<IWeeeClient> apiClient)
         {
             this.breadcrumb = breadcrumb;
             this.cache = cache;
@@ -124,9 +129,26 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> AddPaymentDetails()
+        public async Task<ActionResult> AddPaymentDetails(Guid directProducerSubmissionId)
         {
-            return View();
+            using (var client = apiClient())
+            {
+                var paymentDetails = await client.SendAsync(User.GetAccessToken(), new GetPaymentDetails(directProducerSubmissionId));
+            }
+
+            var vm = new PaymentDetailsViewModel 
+            {
+            ConfirmPaymentMade = true,
+            PaymentDetailsDescription = paymentDetails.Description,
+            };
+
+            return View(vm);
+        }
+
+        [HttpPost]
+        public async Task<ActionResult> AddPaymentDetails(PaymentDetailsViewModel model)
+        {
+            return View(model);
         }
 
         [HttpGet]
