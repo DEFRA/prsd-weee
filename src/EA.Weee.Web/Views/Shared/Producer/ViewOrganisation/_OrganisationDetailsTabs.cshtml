@@ -14,7 +14,7 @@
 @{
     var hasYear = Model.Year != null;
 
-    var @title = hasYear ? "Producer registration submissions" : "View organisation details";
+    var @title = hasYear ? "Producer registrations" : "View organisation details";
 
     var area = Model.IsInternal ? "Admin" : "Producer";
     var controller = Model.IsInternal ? "ProducerSubmission" : "Producer";
@@ -60,7 +60,7 @@ else
 @if (Model.IsInternal)
 {
     <p>
-        @Html.ActionLink("Remove " + Model.Year + " submission", "RemoveSubmission", "ProducerSubmission", null, new { @class = "govuk-link" })
+        @Html.ActionLink("Remove " + Model.Year + " producer submission", "RemoveSubmission", "ProducerSubmission", null, new { @class = "govuk-link" })
     </p>
 }
 

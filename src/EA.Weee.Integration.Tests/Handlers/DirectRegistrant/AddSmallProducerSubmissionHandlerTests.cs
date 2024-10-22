@@ -106,6 +106,53 @@
             private readonly It shouldHaveCaughtArgumentException = ShouldThrowException<SecurityException>;
         }
 
+        [Component]
+        public class WhenICreateANewProducerSubmissionWhereDirectRegistrantPrnExists : AddSmallProducerSubmissionHandlerTestsBase
+        {
+            private static RegisteredProducer registeredProducer;
+            private static string registrationNumber;
+            private static string expectedPrn = "12345";
+
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+               directRegistrant = DirectRegistrantDbSetup.Init()
+                 .WithOrganisation(directRegistrant.OrganisationId)
+                 .WithPrn(expectedPrn)
+                 .Create();
+
+                registrationNumber = "test";
+                registeredProducer = new RegisteredProducer(registrationNumber, 2000);
+
+                DirectRegistrantSubmissionDbSetup.Init()
+                    .WithDirectRegistrant(directRegistrant)
+                    .WithRegisteredProducer(registeredProducer)
+                    .Create();
+
+                OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, directRegistrant.OrganisationId).Create();
+
+                request = new AddSmallProducerSubmission(directRegistrant.Id);
+            };
+
+            private readonly Because of = () =>
+            {
+                result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
+            };
+
+            private readonly It shouldHaveCompletedTheTransaction = () =>
+            {
+                var submission = Query.GetDirectProducerSubmissionById(result);
+                submission.RegisteredProducer.Should().NotBeNull();
+                submission.RegisteredProducer.ProducerRegistrationNumber.Should().Be(expectedPrn);
+                submission.RegisteredProducer.ComplianceYear.Should().Be(SystemTime.UtcNow.Year);
+                submission.DirectRegistrantId.Should().Be(directRegistrant.Id);
+                submission.ComplianceYear.Should().Be(SystemTime.UtcNow.Year);
+                submission.CurrentSubmission.Should().NotBeNull();
+                submission.SubmissionHistory.Count.Should().Be(1);
+            };
+        }
+
         public class AddSmallProducerSubmissionHandlerTestsBase : WeeeContextSpecification
         {
             protected static IRequestHandler<AddSmallProducerSubmission, Guid> handler;
