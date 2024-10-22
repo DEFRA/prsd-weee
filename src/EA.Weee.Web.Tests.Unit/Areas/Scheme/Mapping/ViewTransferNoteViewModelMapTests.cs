@@ -650,7 +650,7 @@
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
                 TestFixture.Build<TransferEvidenceNoteData>()
-                    .With(x => x.ApprovedTransfererDetails, string.Empty)
+                    .With(x => x.ApprovedTransfererDetails, "approved details")
                     .With(x => x.ApprovedRecipientDetails, string.Empty)
                     .With(x => x.TransferredOrganisationData, CreateOrganisationData(false))
                     .Create(),
