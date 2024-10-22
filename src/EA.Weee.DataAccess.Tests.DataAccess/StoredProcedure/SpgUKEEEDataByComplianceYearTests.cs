@@ -134,8 +134,8 @@
 
                 var amounts1 = new List<DirectRegistrantHelper.EeeOutputAmountData>
                 {
-                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 123.456m, ObligationType = Domain.Obligation.ObligationType.B2C },
-                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 123.456m, ObligationType = Domain.Obligation.ObligationType.B2B }, // Should be excluded as B2B
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 456.789m, ObligationType = Domain.Obligation.ObligationType.B2C },
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 222.111m, ObligationType = Domain.Obligation.ObligationType.B2B }, // Should be excluded as B2B
                     new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C }
                 };
 
@@ -235,34 +235,11 @@
                 var schemeElement = results.ElementAt(0);
                 schemeElement.Category.Should().Be("01. Large household appliances");
                 schemeElement.Q1B2CEEE.Should().Be(123.457m);
-                schemeElement.TotalB2BEEE.Should().Be(123.456m);
-                schemeElement.Q4B2BEEE.Should().Be(123.456m);
-                schemeElement.Q4B2CEEE.Should().Be(123.456m);
-                schemeElement.TotalB2CEEE.Should().Be(246.913m);
+                schemeElement.Q4B2BEEE.Should().Be(222.111m);
+                schemeElement.TotalB2BEEE.Should().Be(222.111m);
+                schemeElement.Q4B2CEEE.Should().Be(456.789m);
+                schemeElement.TotalB2CEEE.Should().Be(580.246m);
             }
-        }
-
-        private void AssertEeeElementData(
-            ProducerEeeCsvData element,
-            Domain.Organisation.Organisation organisation,
-            Domain.Producer.RegisteredProducer registeredProducer,
-            Domain.Country country,
-            Dictionary<string, decimal> expectedAmounts,
-            decimal expectedTotalTonnage)
-        {
-            foreach (var pair in expectedAmounts)
-            {
-                var property = pair.Key;
-                var amount = pair.Value;
-                element.GetType().GetProperty(property).GetValue(element).Should().Be(amount);
-            }
-
-            CheckAllPropertiesAreNull(element, new List<string>(expectedAmounts.Keys));
-            element.ProducerCountry.Should().Be(country.Name);
-            element.PRN.Should().Be(registeredProducer.ProducerRegistrationNumber);
-            element.SchemeName.Should().Be("Direct registrant");
-            element.ProducerName.Should().Be(organisation.OrganisationName);
-            element.TotalTonnage.Should().Be(expectedTotalTonnage);
         }
 
         private void CheckAllPropertiesAreNull(ProducerEeeCsvData csvData, List<string> excludeProperties)
