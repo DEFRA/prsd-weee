@@ -68,12 +68,14 @@
 
                 var activities = await GetActivities(pcsId, organisationDetails, directRegistrantId);
 
+                // if this is an organisation that is just doing small producer submissions, and it is a representing company redirect to screen to allow selection of company
                 if (organisationDetails.IsRepresentingCompany && activities.Count == 4 && !directRegistrantId.HasValue)
                 {
                     return this.RedirectToAction(nameof(OrganisationController.RepresentingCompanies), typeof(OrganisationController).GetControllerName(), new { organisationId = pcsId, area = string.Empty });
                 }
 
-                var model = new ChooseActivityViewModel(activities) { OrganisationId = pcsId, DirectRegistrantId = directRegistrantId };
+                var defaultDirectRegistrant = organisationDetails.DirectRegistrants.FirstOrDefault();
+                var model = new ChooseActivityViewModel(activities) { IsRepresentingCompany = organisationDetails.IsRepresentingCompany, OrganisationId = pcsId, DirectRegistrantId = directRegistrantId ?? defaultDirectRegistrant?.DirectRegistrantId };
 
                 await SetBreadcrumb(pcsId, null, false);
 
