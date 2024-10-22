@@ -352,6 +352,33 @@
             result.IsRepresentingCompany.Should().BeTrue();
         }
 
+        [Fact]
+        public async Task HandleAsync_GivenOtherOrganisationRepresentsCompanies_IsRepresentingCompanyShouldBeFalse()
+        {
+            // Arrange
+            var organisation = GetOrganisationWithId(organisationId);
+            var expectedReturnValue = new OrganisationData();
+            A.CallTo(() => map.Map(A<Organisation>._)).Returns(expectedReturnValue);
+
+            var directRegistrant = A.Fake<DirectRegistrant>();
+            var directRegistrantId = Guid.NewGuid();
+
+            A.CallTo(() => directRegistrant.Id).Returns(directRegistrantId);
+            A.CallTo(() => directRegistrant.OrganisationId).Returns(Guid.NewGuid()); // Different organization
+            A.CallTo(() => directRegistrant.AuthorisedRepresentativeId).Returns(new Guid());
+
+            var directRegistrants = new List<DirectRegistrant> { directRegistrant };
+            A.CallTo(() => context.DirectRegistrants).Returns(dbHelper.GetAsyncEnabledDbSet(directRegistrants));
+
+            var message = new GetOrganisationInfo(organisationId);
+
+            // Act
+            var result = await handler.HandleAsync(message);
+
+            // Assert
+            result.IsRepresentingCompany.Should().BeFalse();
+        }
+
         private Organisation GetOrganisationWithId(Guid id)
         {
             var organisation = A.Fake<Organisation>();
