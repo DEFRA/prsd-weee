@@ -139,18 +139,19 @@
 
         [AdminSmallProducerSubmissionContext]
         [HttpGet]
-        public async Task<ActionResult> RemoveSubmission(Guid registeredProducerId, string registrationNumber, int year)
+        public async Task<ActionResult> RemoveSubmission(string registrationNumber, int year)
         {
+            var submission = this.SmallProducerSubmissionData.SubmissionHistory[year];
             var selectedValue = string.Empty;
             var model = new ConfirmRemovalViewModel
             {
                 SelectedValue = selectedValue,
                 Producer = new ProducerDetailsScheme
                 {
-                    ComplianceYear = year,
-                    ProducerName = this.SmallProducerSubmissionData.OrganisationData.OrganisationName,
+                    ComplianceYear = submission.ComplianceYear,
+                    ProducerName = submission.CompanyName,
                     RegistrationNumber = registrationNumber,
-                    RegisteredProducerId = registeredProducerId
+                    RegisteredProducerId = submission.RegisteredProducerId
                 }
             };
 
