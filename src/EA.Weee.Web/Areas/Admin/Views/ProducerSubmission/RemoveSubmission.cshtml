@@ -24,7 +24,7 @@
         @Html.Gds().ValidationSummary()
 
         @Html.HiddenFor(m => m.Producer.RegistrationNumber, new { id = "registrationNumber" })
-        @Html.HiddenFor(m => m.Producer.RegisteredProducerId, new { id = "registeredProducerId" })
+        @Html.HiddenFor(m => m.Producer.ComplianceYear, new { id = "year" })
 
         <p class="govuk-body govuk-!-margin-bottom-0">The following registration will no longer be available on WEEE.</p>
 
