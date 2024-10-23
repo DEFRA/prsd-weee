@@ -1,9 +1,11 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.Admin;
     using EA.Weee.Core.DirectRegistrant;
-    using EA.Weee.Core.Organisations;
+    using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
     using EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview;
     using EA.Weee.Web.Areas.Producer.Filters;
     using EA.Weee.Web.Areas.Producer.ViewModels;
@@ -13,11 +15,14 @@
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.Services.SubmissionService;
+    using EA.Weee.Web.ViewModels.OrganisationRegistration;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using EA.Weee.Api.Client;
+    using EA.Weee.Requests.Admin;
 
     public class ProducerSubmissionController : AdminController
     {
@@ -129,10 +134,55 @@
             return View();
         }
 
+        [AdminSmallProducerSubmissionContext]
         [HttpGet]
-        public async Task<ActionResult> RemoveSubmission()
+        public async Task<ActionResult> RemoveSubmission(string registrationNumber, int? year = null)
         {
-            return View();
+            var selectedValue = string.Empty;
+            var model = new ConfirmRemovalViewModel
+            {
+                SelectedValue = selectedValue,
+                Producer = new ProducerDetailsScheme
+                {
+                    ProducerName = this.SmallProducerSubmissionData.OrganisationData.OrganisationName,
+                    RegistrationNumber = registrationNumber
+                }
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RemoveSubmission(ConfirmRemovalViewModel viewModel)
+        {
+            if (this.ModelState.IsValid)
+            {
+                if (viewModel.SelectedValue == "Yes")
+                {
+                    //soft remove
+                    return RedirectToAction(nameof(ProducerSubmissionController.Removed),
+                        new { viewModel.Producer.RegistrationNumber });
+                }
+                else
+                {
+                    return RedirectToAction(nameof(ProducerSubmissionController.Submissions),
+                        new { viewModel.Producer.RegistrationNumber });
+                }
+            }
+            else
+            {
+                return this.View(viewModel);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Removed(string registrationNumber)
+        {
+            return View(new RemovedViewModel
+            {
+                RegistrationNumber = registrationNumber
+            });
         }
 
         private ActionResult RedirectToOrganisationHasNoSubmissions()
