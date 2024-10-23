@@ -40,5 +40,8 @@
 
         [DefaultValue(180)]
         public int GovUkPayWindowMinutes { get; set; }
+
+        [DefaultValue(true)]
+        public bool GovUkPayMopUpJobEnabled { get; set; }
     }
 }
