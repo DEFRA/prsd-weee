@@ -51,6 +51,8 @@
 
             model.RegistrationNumber = registrationNumber;
 
+            model.IsAdmin = new ClaimsPrincipal(User).HasClaim(p => p.Value == Claims.InternalAdmin);
+
             return View("Producer/ViewOrganisation/OrganisationDetails", model);
         }
 
