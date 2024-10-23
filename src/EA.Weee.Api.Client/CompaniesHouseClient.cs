@@ -1,20 +1,23 @@
 ﻿namespace EA.Weee.Api.Client
 {
+    using System;
+    using System.IdentityModel;
+    using System.Linq;
+    using System.Net.Http;
+    using System.Threading.Tasks;
     using CuttingEdge.Conditions;
     using EA.Weee.Api.Client.Models;
     using EA.Weee.Api.Client.Serlializer;
     using Serilog;
-    using System;
-    using System.IdentityModel;
-    using System.Linq;
-    using System.Security.Cryptography.X509Certificates;
-    using System.Threading.Tasks;
+    using Serilog.Core;
 
     public class CompaniesHouseClient : ICompaniesHouseClient
     {
         private readonly IRetryPolicyWrapper retryPolicy;
         private readonly IJsonSerializer jsonSerializer;
         private readonly IHttpClientWrapper httpClient;
+        private readonly IOAuthTokenProvider tokenProvider;
+        private readonly ILogger logger;
 
         private bool disposed;
 
@@ -24,21 +27,22 @@
             IRetryPolicyWrapper retryPolicy,
             IJsonSerializer jsonSerializer,
             HttpClientHandlerConfig config,
-            X509Certificate2 certificate,
-            ILogger logger)
+            ILogger logger,
+            IOAuthTokenProvider tokenProvider)
         {
             Condition.Requires(baseUrl).IsNotNullOrWhiteSpace();
             Condition.Requires(httpClientFactory).IsNotNull();
             Condition.Requires(retryPolicy).IsNotNull();
             Condition.Requires(jsonSerializer).IsNotNull();
             Condition.Requires(config).IsNotNull();
-            Condition.Requires(certificate).IsNotNull();
             Condition.Requires(logger).IsNotNull();
+            Condition.Requires(tokenProvider).IsNotNull();
 
-            this.httpClient = httpClientFactory.CreateHttpClientWithCertificate(baseUrl, config, logger, certificate);
-            
+            this.httpClient = httpClientFactory.CreateHttpClient(baseUrl, config, logger);
             this.retryPolicy = retryPolicy;
             this.jsonSerializer = jsonSerializer;
+            this.tokenProvider = tokenProvider;
+            this.logger = logger;
         }
 
         public async Task<DefraCompaniesHouseApiModel> GetCompanyDetailsAsync(string endpoint, string companyReference)
@@ -47,26 +51,37 @@
 
             if (!IsValidCompanyReference(companyReference))
             {
-                return null;
+                logger.Warning("Not calling companies house API invalid reference");
+
+                return new DefraCompaniesHouseApiModel()
+                {
+                    InvalidReference = true
+                };
             }
 
             try
             {
-                var response = await retryPolicy.ExecuteAsync(() =>
-                    httpClient.GetAsync($"{endpoint}/{companyReference}")).ConfigureAwait(false);
+                var token = await tokenProvider.GetAccessTokenAsync();
+                var requestUri = $"{endpoint}/{companyReference}";
 
-                if (response.StatusCode == System.Net.HttpStatusCode.BadRequest || response.StatusCode == System.Net.HttpStatusCode.NotFound)
-                {
-                    throw new BadRequestException($"Companies house bad request");
-                }
+                var response = await retryPolicy.ExecuteAsync(() =>
+                    httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Get, requestUri)
+                    {
+                        Headers = { { "Authorization", $"Bearer {token}" } }
+                    })).ConfigureAwait(false);
 
                 response.EnsureSuccessStatusCode();
                 var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
                 return jsonSerializer.Deserialize<DefraCompaniesHouseApiModel>(content);
             }
-            catch (BadRequestException)
+            catch (Exception ex)
             {
-                return null;
+                logger.Error($"Error attempting to access companies house API for {companyReference}", ex);
+
+                return new DefraCompaniesHouseApiModel()
+                {
+                    Error = true
+                };
             }
         }
 
@@ -89,7 +104,7 @@
             }
             if (disposing)
             {
-                // Dispose of any disposable fields if necessary
+                (httpClient as IDisposable)?.Dispose();
             }
             disposed = true;
         }
