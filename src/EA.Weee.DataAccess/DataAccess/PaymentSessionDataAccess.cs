@@ -1,9 +1,10 @@
 ﻿namespace EA.Weee.DataAccess.DataAccess
 {
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
-    using EA.Prsd.Core.Mediator;
     using EA.Weee.Domain.Producer;
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
@@ -51,6 +52,17 @@
         public async Task<PaymentSession> GetByIdAsync(Guid paymentSessionId)
         {
             return await weeeContext.PaymentSessions.FirstOrDefaultAsync(p => p.Id == paymentSessionId);
+        }
+
+        public async Task<List<PaymentSession>> GetIncompletePaymentSessions(int windowMinutes, int lastProcessMinutes)
+        {
+            var threeHoursAgo = SystemTime.UtcNow.AddMinutes(windowMinutes);
+            var lastProcessed = SystemTime.UtcNow.AddMinutes(lastProcessMinutes);
+
+            return await weeeContext.PaymentSessions
+                .Where(p => !p.InFinalState && (p.CreatedAt < threeHoursAgo) &&
+                            (p.LastProcessedAt == null || p.LastProcessedAt < lastProcessed))
+                .ToListAsync();
         }
     }
 }
