@@ -56,7 +56,7 @@
 
                                 @if (true)
                                 {
-                                    <div style="float: right"> @Html.ActionLink("Add payment details", "AddPaymentDetails", "ProducerSubmission", null, new { @class = "govuk-link" })</div>
+                                    <div style="float: right"> @Html.ActionLink("Add payment details", "AddPaymentDetails", "ProducerSubmission", new { directProducerSubmissionId = Model.OrganisationViewModel.DirectProducerSubmissionId }, new { @class = "govuk-link" })</div>
                                 }
                             </td>
                         </tr>

@@ -30,10 +30,13 @@
         {
             authorization.EnsureCanAccessInternalArea();
 
-            DirectProducerSubmission g = await dataAccess.GetById<DirectProducerSubmission>(request.DirectProducerSubmissionId);
+            var submission = await dataAccess.GetById<DirectProducerSubmission>(request.DirectProducerSubmissionId);
 
-            return new OfflinePaymentDetails { 
-            ConfirmPaymentMade = g.m
+            return new OfflinePaymentDetails
+            {
+                PaymentDetailsDescription = submission.ManualPaymentDetails,
+                PaymentMethod = submission.ManualPaymentMethod,
+                PaymentRecievedDate = submission.ManualPaymentReceivedDate
             };
         }
     }
