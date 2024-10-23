@@ -27,5 +27,7 @@
         int GovUkPayLastProcessedMinutes { get; set; }
 
         int GovUkPayWindowMinutes { get; set; }
+
+        bool GovUkPayMopUpJobEnabled { get; set; }
     }
 }
