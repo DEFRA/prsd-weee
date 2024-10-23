@@ -407,6 +407,11 @@
             }
             else
             {
+                if (existingPaymentInProgress.State.Status == PaymentStatus.Success)
+                {
+                    return RedirectToAction(nameof(ProducerController.AlreadySubmittedAndPaid), typeof(ProducerController).GetControllerName());
+                }
+
                 nextUrl = existingPaymentInProgress.Links.NextUrl.Href;
             }
 

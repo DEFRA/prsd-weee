@@ -15,7 +15,7 @@
 
         public IEnumerable<SelectListItem> ComplianceYears { get; set; }
 
-        [DisplayName("PCS name")]
+        [DisplayName("PCS name or direct registrants")]
         public Guid? SelectedSchemeId { get; set; }
 
         public IEnumerable<SelectListItem> Schemes { get; set; }

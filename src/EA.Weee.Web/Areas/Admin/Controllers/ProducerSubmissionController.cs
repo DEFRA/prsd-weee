@@ -3,11 +3,14 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.DirectRegistrant;
+    using EA.Weee.Core.Organisations;
+    using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
     using EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview;
     using EA.Weee.Web.Areas.Producer.Filters;
+    using EA.Weee.Web.Authorization;
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Infrastructure;
@@ -19,6 +22,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
@@ -37,7 +41,7 @@
 
         public ProducerSubmissionController(
             BreadcrumbService breadcrumb,
-            Func<IWeeeClient> apiClient,
+			Func<IWeeeClient> apiClient,
             IWeeeCache cache,
             IMapper mapper,
             IMvcTemplateExecutor templateExecutor,
@@ -45,7 +49,7 @@
             ISubmissionService submissionService)
         {
             this.breadcrumb = breadcrumb;
-            this.apiClient = apiClient;
+ 			this.apiClient = apiClient;
             this.cache = cache;
             this.mapper = mapper;
             this.templateExecutor = templateExecutor;
@@ -63,6 +67,7 @@
 
             model.RegistrationNumber = registrationNumber;
 
+			model.IsAdmin = new ClaimsPrincipal(User).HasClaim(p => p.Value == Claims.InternalAdmin);
             return View("Producer/ViewOrganisation/OrganisationDetails", model);
         }
 
@@ -74,6 +79,7 @@
 
             var model = await submissionService.OrganisationDetails(year);
 
+			model.IsAdmin = new ClaimsPrincipal(User).HasClaim(p => p.Value == Claims.InternalAdmin);
             model.RegistrationNumber = registrationNumber;
 
             return View("Producer/ViewOrganisation/OrganisationDetails", model);
@@ -137,7 +143,7 @@
             return View();
         }
 
-        [AdminSmallProducerSubmissionContext]
+		[AdminSmallProducerSubmissionContext]
         [HttpGet]
         public async Task<ActionResult> RemoveSubmission(string registrationNumber, int year)
         {
@@ -157,7 +163,7 @@
 
             return View(model);
         }
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RemoveSubmission(ConfirmRemovalViewModel viewModel)

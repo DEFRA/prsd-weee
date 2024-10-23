@@ -271,6 +271,7 @@
     <Compile Include="Admin\Obligations\SchemeObligationsDataProcessorTests.cs" />
     <Compile Include="Admin\Obligations\SubmitSchemeObligationsHandlerTests.cs" />
     <Compile Include="Admin\Obligations\SubmitSchemeObligationTests.cs" />
+    <Compile Include="Admin\Reports\GetProducerEeeDataCsvDataAccessTests.cs" />
     <Compile Include="Admin\Reports\GetSchemesWithObligationOrEvidenceByComplianceYearHandlerTests.cs" />
     <Compile Include="Admin\Search\FetchSmallProducerSearchResultsForCacheHandlerUnitTests.cs" />
     <Compile Include="Factories\ReturnFactoryTests.cs" />
@@ -414,6 +415,8 @@
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddSignatoryAndCompleteRequestHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddPaymentSessionRequestHandlerTests.cs" />
+    <Compile Include="Organisations\DirectRegistrants\ProducerRegistrationNumberRequestHandlerTests.cs" />
+    <Compile Include="Organisations\DirectRegistrants\AddRepresentingCompanyHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\EditEeeDataRequestHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\EditRepresentedOrganisationDetailsRequestHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\EditContactDetailsRequestHandlerTests.cs" />

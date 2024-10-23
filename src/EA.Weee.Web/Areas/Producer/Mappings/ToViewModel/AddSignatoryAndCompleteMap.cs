@@ -5,7 +5,7 @@
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.ViewModels.Shared;
 
-    public class AddSignatoryAndCompleteMap : IMap<SmallProducerSubmissionData, AppropriateSignatoryViewModel>
+    public class RepresentingCompaniesViewModelMap : IMap<SmallProducerSubmissionData, AppropriateSignatoryViewModel>
     {
         public AppropriateSignatoryViewModel Map(SmallProducerSubmissionData source)
         {

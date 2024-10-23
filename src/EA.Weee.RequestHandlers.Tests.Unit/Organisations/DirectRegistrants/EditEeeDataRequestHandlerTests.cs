@@ -28,6 +28,7 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
         private readonly ISystemDataDataAccess systemDataAccess;
+        private readonly ISmallProducerDataAccess smallProducerDataAccess;
         private readonly EditEeeDataRequestHandler handler;
         private readonly Guid directRegistrantId = Guid.NewGuid();
         private DirectProducerSubmission directProducerSubmission;
@@ -38,8 +39,9 @@
             genericDataAccess = A.Fake<IGenericDataAccess>();
             weeeContext = A.Fake<WeeeContext>();
             systemDataAccess = A.Fake<ISystemDataDataAccess>();
+            smallProducerDataAccess = A.Fake<ISmallProducerDataAccess>();
 
-            handler = new EditEeeDataRequestHandler(authorization, genericDataAccess, weeeContext, systemDataAccess);
+            handler = new EditEeeDataRequestHandler(authorization, genericDataAccess, weeeContext, systemDataAccess, smallProducerDataAccess);
         }
 
         [Fact]
@@ -215,6 +217,10 @@
 
             A.CallTo(() => genericDataAccess.GetById<DirectRegistrant>(directRegistrantId))
                 .Returns(Task.FromResult(directRegistrant));
+
+            A.CallTo(() =>
+                smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(directRegistrantId,
+                    SystemTime.UtcNow.Year)).Returns(directProducerSubmission);
 
             return directRegistrant;
         }
