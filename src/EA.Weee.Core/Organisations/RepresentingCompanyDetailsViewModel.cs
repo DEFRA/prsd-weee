@@ -13,10 +13,11 @@ namespace EA.Weee.Core.Organisations
 
         [Required]
         [DisplayName("Producer name")]
-        [StringLength(CommonMaxFieldLengths.DefaultString)]
+        [StringLength(EnvironmentAgencyMaxFieldLengths.ProducerName)]
         public string CompanyName { get; set; }
 
         [DisplayName("Trading name")]
+        [StringLength(EnvironmentAgencyMaxFieldLengths.ProducerTradingName)]
         public string BusinessTradingName { get; set; }
 
         public RepresentingCompanyAddressData Address { get; set; } = new RepresentingCompanyAddressData();
