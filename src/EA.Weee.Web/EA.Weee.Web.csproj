@@ -1159,6 +1159,7 @@
     <Content Include="Views\Organisation\RepresentingCompanies.cshtml" />
     <Content Include="Views\Organisation\RepresentingOrganisation.cshtml" />
     <Content Include="Areas\Admin\Views\ProducerSubmission\ReturnProducerRegistration.cshtml" />
+    <Content Include="Areas\Admin\Views\ProducerSubmission\Removed.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
