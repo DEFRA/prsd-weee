@@ -25,6 +25,8 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
         private readonly IGenerateFromXmlDataAccess generateFromXmlDataAccess;
+        private readonly ISmallProducerDataAccess smallProducerDataAccess;
+        private DirectProducerSubmission directProducerSubmission;
         private readonly AddSmallProducerSubmissionHandler handler;
 
         public AddSmallProducerSubmissionHandlerTests()
@@ -33,6 +35,7 @@
             genericDataAccess = A.Fake<IGenericDataAccess>();
             weeeContext = A.Fake<WeeeContext>();
             generateFromXmlDataAccess = A.Fake<IGenerateFromXmlDataAccess>();
+            smallProducerDataAccess = A.Fake<ISmallProducerDataAccess>();
             var systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(new DateTime(SystemTime.UtcNow.Year,
@@ -43,7 +46,8 @@
                 genericDataAccess,
                 weeeContext,
                 generateFromXmlDataAccess,
-                systemDataDataAccess);
+                systemDataDataAccess,
+                smallProducerDataAccess);
         }
 
         [Fact]
@@ -142,7 +146,10 @@
             var directRegistrant = SetupValidDirectRegistrant(request.DirectRegistrantId);
             var currentYear = SystemTime.UtcNow.Year;
             var currentYearSubmission = new DirectProducerSubmission(directRegistrant, A.Fake<RegisteredProducer>(), currentYear);
-            directRegistrant.DirectProducerSubmissions.Add(currentYearSubmission);
+
+            A.CallTo(() =>
+                smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(A<Guid>._,
+                    SystemTime.UtcNow.Year)).Returns(currentYearSubmission);
 
             // Act & Assert
             await Assert.ThrowsAsync<InvalidOperationException>(
@@ -167,6 +174,7 @@
             A.CallTo(() => genericDataAccess.Add(A<DirectProducerSubmissionHistory>._))
                 .WhenArgumentsMatch(args => ((DirectProducerSubmissionHistory)args[0]).DirectProducerSubmission.RegisteredProducer.ProducerRegistrationNumber == "EXISTING_PRN")
                 .MustHaveHappenedOnceExactly();
+            result.InvalidCache.Should().BeFalse();
         }
 
         [Fact]
@@ -185,6 +193,30 @@
             A.CallTo(() => genericDataAccess.Add(A<DirectProducerSubmissionHistory>._))
                 .WhenArgumentsMatch(args => ((DirectProducerSubmissionHistory)args[0]).DirectProducerSubmission.RegisteredProducer.ProducerRegistrationNumber == "NEW_PRN")
                 .MustHaveHappenedOnceExactly();
+            result.InvalidCache.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task HandleAsync_WhenDirectRegistrantHasPRN_UsesThatPRN()
+        {
+            // Arrange
+            var request = new AddSmallProducerSubmission(Guid.NewGuid());
+            var directRegistrant = SetupValidDirectRegistrant(request.DirectRegistrantId);
+            var expectedPrn = "PRN_FROM_REGISTRANT";
+            A.CallTo(() => directRegistrant.ProducerRegistrationNumber).Returns(expectedPrn);
+
+            var addedHistory = A.Fake<DirectProducerSubmissionHistory>();
+            A.CallTo(() => genericDataAccess.Add(A<DirectProducerSubmissionHistory>._))
+                .Invokes((DirectProducerSubmissionHistory h) => addedHistory = h);
+
+            // Act
+            var result = await handler.HandleAsync(request);
+
+            // Assert
+            addedHistory.Should().NotBeNull();
+            addedHistory.DirectProducerSubmission.RegisteredProducer.ProducerRegistrationNumber.Should().Be(expectedPrn);
+            A.CallTo(() => generateFromXmlDataAccess.ComputePrns(A<int>._)).MustNotHaveHappened();
+            result.InvalidCache.Should().BeFalse();
         }
 
         private DirectRegistrant SetupValidDirectRegistrant(Guid directRegistrantId)
@@ -194,6 +226,10 @@
 
             A.CallTo(() => genericDataAccess.GetById<DirectRegistrant>(directRegistrantId))
                 .Returns(Task.FromResult(directRegistrant));
+
+            A.CallTo(() =>
+                smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(directRegistrantId,
+                    SystemTime.UtcNow.Year)).Returns<DirectProducerSubmission>(null);
 
             return directRegistrant;
         }
