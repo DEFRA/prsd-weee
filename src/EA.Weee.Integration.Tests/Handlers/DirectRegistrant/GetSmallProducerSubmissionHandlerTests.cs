@@ -42,19 +42,19 @@
         [Component]
         public class WhenUserIsNotAuthorised : GetSmallProducerSubmissionHandlerTestsBase
         {
-            protected static IRequestHandler<AddSmallProducerSubmission, Guid> authHandler;
+            protected static IRequestHandler<GetSmallProducerSubmission, SmallProducerSubmissionData> authHandler;
 
             private readonly Establish context = () =>
             {
                 SetupTest(IocApplication.RequestHandler)
                     .WithDefaultSettings();
 
-                authHandler = Container.Resolve<IRequestHandler<AddSmallProducerSubmission, Guid>>();
+                authHandler = Container.Resolve<IRequestHandler<GetSmallProducerSubmission, SmallProducerSubmissionData>>();
             };
 
             private readonly Because of = () =>
             {
-                CatchExceptionAsync(() => authHandler.HandleAsync(new AddSmallProducerSubmission(Guid.NewGuid())));
+                CatchExceptionAsync(() => authHandler.HandleAsync(new GetSmallProducerSubmission(Guid.NewGuid())));
             };
 
             private readonly It shouldHaveCaughtArgumentException = ShouldThrowException<SecurityException>;
