@@ -25,5 +25,7 @@
         public ChooseActivityViewModel(List<string> activites) : base(activites)
         {
         }
+
+        public bool IsRepresentingCompany { get; set; }
     }
 }

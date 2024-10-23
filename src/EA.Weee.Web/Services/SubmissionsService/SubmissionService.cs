@@ -117,9 +117,7 @@
 
             if (isInternal)
             {
-                breadcrumb.InternalOrganisation = org;
                 breadcrumb.InternalActivity = activity;
-                breadcrumb.OrganisationId = organisationId;
             }
             else
             {

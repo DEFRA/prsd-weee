@@ -1,17 +1,18 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Api.Client;
     using Base;
     using Core.Admin;
     using Core.Scheme;
     using Core.Shared;
+    using EA.Weee.Core.Constants;
+    using EA.Weee.Web.Constant;
     using Infrastructure;
     using Services;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using ViewModels.Home;
     using Weee.Requests.Admin;
     using Weee.Requests.Admin.GetActiveComplianceYears;
@@ -68,13 +69,22 @@
             }
         }
 
-        protected async Task<List<SchemeData>> FetchSchemes()
+        protected async Task<List<SchemeData>> FetchSchemes(bool includeDirectRegistrant = false)
         {
             var request = new GetSchemes(GetSchemes.FilterType.ApprovedOrWithdrawn);
+            var schemesList = new List<SchemeData>();
+
             using (var client = ApiClient())
             {
-                return await client.SendAsync(User.GetAccessToken(), request);
+                schemesList = await client.SendAsync(User.GetAccessToken(), request);
             }
+
+            if (includeDirectRegistrant)
+            {
+                schemesList.Add(new SchemeData() { SchemeName = DirectRegistrantFixedIdConstant.DirectRegistrant, Id = DirectRegistrantFixedIdConstant.DirectRegistrantFixedId });
+            }
+
+            return schemesList;
         }
 
         protected async Task<List<SchemeData>> FetchSchemesWithObligationOrEvidence(int complianceYear)

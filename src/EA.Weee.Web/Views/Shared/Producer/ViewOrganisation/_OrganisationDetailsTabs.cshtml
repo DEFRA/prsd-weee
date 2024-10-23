@@ -14,7 +14,7 @@
 @{
     var hasYear = Model.Year != null;
 
-    var @title = hasYear ? "Producer registration submissions" : "View organisation details";
+    var @title = hasYear ? "Producer registrations" : "View organisation details";
 
     var area = Model.IsInternal ? "Admin" : "Producer";
     var controller = Model.IsInternal ? "ProducerSubmission" : "Producer";
@@ -26,7 +26,7 @@
 }
 else
 {
-    @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.SmallProducerSubmissionData.OrganisationData.Id))))
+    @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.SmallProducerSubmissionData.OrganisationData.Id, null))))
 }
 
 <header class="hgroup">
@@ -57,7 +57,7 @@ else
     </p>
 }
 
-@if (Model.IsInternal)
+@if (Model.ShowRemoveButton)
 {
     <p>
         @Html.ActionLink("Remove " + Model.Year + " submission", "RemoveSubmission", "ProducerSubmission", new { registrationNumber = Model.RegistrationNumber, year = Model.Year }, new { @class = "govuk-link" })

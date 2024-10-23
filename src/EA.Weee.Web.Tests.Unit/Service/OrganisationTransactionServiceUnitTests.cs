@@ -77,7 +77,7 @@
         {
             // Arrange
             const string accessToken = "test-token";
-            var previousRegistrationModel = new PreviousRegistrationViewModel { SelectedValue = "Yes" };
+            var previousRegistrationModel = new PreviousRegistrationViewModel { SelectedValue = "Yes, I have previously been registered directly as a small producer" };
             var transaction = new OrganisationTransactionData();
 
             A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetUserOrganisationTransaction>.Ignored))
@@ -87,10 +87,10 @@
             await organisationService.CaptureData(accessToken, previousRegistrationModel);
 
             // Assert
-            transaction.PreviousRegistration.Should().Be(YesNoType.Yes);
+            transaction.PreviousRegistration.Should().Be(PreviouslyRegisteredProducerType.YesPreviousSmallProducer);
 
             A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddUpdateOrganisationTransaction>.That.Matches(
-                x => x.OrganisationTransactionData.PreviousRegistration.Equals(previousRegistrationModel.SelectedValue.GetValueFromDisplayName<YesNoType>())))).MustHaveHappenedOnceExactly();
+                x => x.OrganisationTransactionData.PreviousRegistration.Equals(previousRegistrationModel.SelectedValue.GetValueFromDisplayName<PreviouslyRegisteredProducerType>())))).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

@@ -9,6 +9,7 @@
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Core.Search;
+    using EA.Weee.Requests.Organisations.DirectRegistrant;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Constant;
@@ -865,7 +866,8 @@
         }
 
         [Theory]
-        [InlineData("Yes", "Search")]
+        [InlineData("Yes, I have previously been a member of a producer compliance scheme", "AuthorisedRepresentative")]
+        [InlineData("Yes, I have previously been registered directly as a small producer", "Search")]
         [InlineData("No", "AuthorisedRepresentative")]
         public async Task PreviousRegistration_Post_WhenModelValid_CapturesDataAndRedirectsToType(string selectedValue,
             string action)
@@ -890,7 +892,7 @@
             // Arrange
             var organisationTransactionData = new OrganisationTransactionData()
             {
-                PreviousRegistration = YesNoType.Yes,
+                PreviousRegistration = PreviouslyRegisteredProducerType.YesPreviousSmallProducer,
                 SearchTerm = "Test Company"
             };
 
@@ -905,7 +907,7 @@
             result.ViewName.Should().BeNullOrWhiteSpace();
             var model = result.Model as PreviousRegistrationViewModel;
             model.Should().NotBeNull();
-            model.SelectedValue.Should().Be("Yes");
+            model.SelectedValue.Should().Be("Yes, I have previously been registered directly as a small producer");
         }
 
         [Fact]
@@ -935,6 +937,8 @@
         {
             // Arrange
             var model = TestFixture.Build<OrganisationViewModel>().Create();
+            model.ProducerRegistrationNumber = null;
+            model.IsPreviousSchemeMember = false;
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, authorisedRep).Create();
@@ -982,6 +986,8 @@
         {
             // Arrange
             var model = TestFixture.Build<OrganisationViewModel>().Create();
+            model.ProducerRegistrationNumber = null;
+            model.IsPreviousSchemeMember = false;
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, YesNoType.Yes).Create();
@@ -1009,6 +1015,8 @@
         {
             // Arrange
             var model = TestFixture.Build<OrganisationViewModel>().Create();
+            model.ProducerRegistrationNumber = null;
+            model.IsPreviousSchemeMember = false;
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, YesNoType.Yes).Create();
@@ -1040,6 +1048,8 @@
         {
             // Arrange
             var model = TestFixture.Build<OrganisationViewModel>().Create();
+            model.ProducerRegistrationNumber = null;
+            model.IsPreviousSchemeMember = false;
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, YesNoType.Yes).Create();
@@ -1083,6 +1093,16 @@
                     weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
                 .Returns(countries);
 
+            var existingTransaction = new OrganisationTransactionData
+            {
+                OrganisationType = ExternalOrganisationType.RegisteredCompany,
+                SearchTerm = null, 
+                PreviousRegistration = PreviouslyRegisteredProducerType.No
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(existingTransaction);
+
             // Act
             var result = await controller.OrganisationDetails() as ViewResult;
 
@@ -1104,8 +1124,10 @@
             var existingTransaction = new OrganisationTransactionData
             {
                 OrganisationType = organisationType,
-                SearchTerm = TestFixture.Create<string>()
+                SearchTerm = TestFixture.Create<string>(),
+                PreviousRegistration = PreviouslyRegisteredProducerType.YesPreviousSchemeMember,
             };
+
             A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
                 .Returns(existingTransaction);
 
@@ -1123,6 +1145,36 @@
             resultViewModel.CompanyName.Should().Be(existingTransaction.SearchTerm);
             resultViewModel.Address.Countries.Should().BeEquivalentTo(countries);
             resultViewModel.OrganisationType.Should().Be(organisationType);
+        }
+
+        [Theory]
+        [InlineData(PreviouslyRegisteredProducerType.YesPreviousSchemeMember, true)]
+        [InlineData(PreviouslyRegisteredProducerType.YesPreviousSmallProducer, false)]
+        [InlineData(PreviouslyRegisteredProducerType.No, false)]
+        public async Task OrganisationDetails_Get_ReturnsFalseSchemeMemberWhenPreviousRegistrationIsFalse(PreviouslyRegisteredProducerType previousRegistration, bool value)
+        {
+            // Arrange
+            var countries = SetupCountries();
+            var existingTransaction = new OrganisationTransactionData
+            {
+                OrganisationType = ExternalOrganisationType.RegisteredCompany,
+                SearchTerm = TestFixture.Create<string>(),
+                PreviousRegistration = previousRegistration
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(existingTransaction);
+
+            // Act
+            var result = await controller.OrganisationDetails() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeNullOrWhiteSpace();
+
+            var resultViewModel = result.Model as OrganisationViewModel;
+            resultViewModel.Should().NotBeNull();
+            resultViewModel.IsPreviousSchemeMember.Should().Be(value);
         }
 
         [Theory]
@@ -1336,8 +1388,10 @@
                 OrganisationViewModel = new OrganisationViewModel
                 {
                     CompanyName = "Existing Company",
-                    CompaniesRegistrationNumber = "12345678"
-                }
+                    CompaniesRegistrationNumber = "12345678",
+                },
+
+                PreviousRegistration = PreviouslyRegisteredProducerType.No
             };
 
             A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
@@ -1987,6 +2041,124 @@
 
             var resultModel = result.Model as OrganisationsFoundViewModel;
             resultModel.Should().BeEquivalentTo(viewModel);
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_Post_PreviousSchemeMember_NoProducerRegistrationNumber_AddsError()
+        {
+            // Arrange
+            var model = TestFixture.Build<OrganisationViewModel>().Create();
+            model.ProducerRegistrationNumber = string.Empty;
+            model.IsPreviousSchemeMember = true;
+            model.OrganisationType = ExternalOrganisationType.RegisteredCompany;
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.AuthorisedRepresentative, YesNoType.No)
+                .Create();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProducerRegistrationNumberRequest>._))
+                .Returns(Task.FromResult(false));
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.OrganisationDetails(model) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+            controller.ModelState.IsValid.Should().BeFalse();
+            controller.ModelState["ProducerRegistrationNumber"].Errors.Should().ContainSingle()
+                .Which.ErrorMessage.Should().Be("Enter a producer registration number");
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_Post_PreviousSchemeMember_ValidProducerRegistrationNumber_DoesNotAddError()
+        {
+            // Arrange
+            var model = TestFixture.Build<OrganisationViewModel>().Create();
+            model.ProducerRegistrationNumber = "ValidRegistrationNumber";
+            model.IsPreviousSchemeMember = true;
+            model.OrganisationType = ExternalOrganisationType.RegisteredCompany;
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.AuthorisedRepresentative, YesNoType.No)
+                .Create();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProducerRegistrationNumberRequest>._))
+                .Returns(Task.FromResult(true));
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.OrganisationDetails(model) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("RegistrationComplete");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+            controller.ModelState.IsValid.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_Post_PreviousSchemeMember_InvalidProducerRegistrationNumber_AddsError()
+        {
+            // Arrange
+            var model = TestFixture.Build<OrganisationViewModel>().Create();
+            model.ProducerRegistrationNumber = "InvalidRegistrationNumber";
+            model.IsPreviousSchemeMember = true;
+            model.OrganisationType = ExternalOrganisationType.RegisteredCompany;
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.AuthorisedRepresentative, YesNoType.No)
+                .Create();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProducerRegistrationNumberRequest>._))
+                .Returns(Task.FromResult(false));
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.OrganisationDetails(model) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+            controller.ModelState.IsValid.Should().BeFalse();
+            controller.ModelState["ProducerRegistrationNumber"].Errors.Should().ContainSingle()
+                .Which.ErrorMessage.Should().Be("This producer registration number does not exist");
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_Post_NotPreviousSchemeMember_ProducerRegistrationNumber_NoError()
+        {
+            // Arrange
+            var model = TestFixture.Build<OrganisationViewModel>().Create();
+            model.ProducerRegistrationNumber = "ValidRegistrationNumber";
+            model.IsPreviousSchemeMember = false;
+            model.OrganisationType = ExternalOrganisationType.RegisteredCompany;
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.AuthorisedRepresentative, YesNoType.No)
+                .Create();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProducerRegistrationNumberRequest>._))
+                .Returns(Task.FromResult(true));
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.OrganisationDetails(model) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("RegistrationComplete");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+            controller.ModelState.IsValid.Should().BeTrue();
         }
     }
 }

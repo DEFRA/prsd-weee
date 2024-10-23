@@ -34,7 +34,7 @@
 
             var contact = new Domain.Organisation.Contact("first name", "last name", "position");
 
-            var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, brandNames, contact, null, authorisedRepresentative, null);
+            var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, brandNames, contact, null, authorisedRepresentative, null, null);
 
             var registeredProducer = new Domain.Producer.RegisteredProducer(prn, complianceYear);
 

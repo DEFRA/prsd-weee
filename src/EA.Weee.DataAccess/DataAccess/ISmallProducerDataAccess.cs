@@ -7,5 +7,7 @@
     public interface ISmallProducerDataAccess
     {
         Task<DirectProducerSubmission> GetCurrentDirectRegistrantSubmissionByComplianceYear(Guid directRegistrantId, int complianceYear);
+
+        Task<DirectRegistrant> GetDirectRegistrantByOrganisationId(Guid organisationId);
     }
 }
