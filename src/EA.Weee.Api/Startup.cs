@@ -93,8 +93,11 @@ namespace EA.Weee.Api
                 .UseSqlServerStorage("Weee.DefaultConnection");
 
             HangfireBootstrapper.Instance.Start();
-            
-            RecurringJob.AddOrUpdate<PaymentsJob>("payments-job", job => job.Execute(Guid.NewGuid()), configurationService.CurrentConfiguration.GovUkPayMopUpJobSchedule);
+
+            if (configurationService.CurrentConfiguration.GovUkPayMopUpJobEnabled)
+            {
+                RecurringJob.AddOrUpdate<PaymentsJob>("payments-job", job => job.Execute(Guid.NewGuid()), configurationService.CurrentConfiguration.GovUkPayMopUpJobSchedule);
+            }
 
             DiagnosticSourceDisposer.DisposeDiagnosticSourceEventSource();
         }

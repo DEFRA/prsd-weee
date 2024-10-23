@@ -15,26 +15,30 @@
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(c =>
+            var configurationService = new ConfigurationService();
+            if (configurationService.CurrentConfiguration.GovUkPayMopUpJobEnabled)
             {
-                var cc = c.Resolve<IComponentContext>();
-                var config = cc.Resolve<AppConfiguration>();
-                var httpClient = cc.Resolve<IHttpClientWrapperFactory>();
-                var retryPolicy = cc.Resolve<IRetryPolicyWrapper>();
-                var jsonSerializer = cc.Resolve<IJsonSerializer>();
-                var logger = cc.Resolve<ILogger>();
-                
-                var httpClientHandlerConfig = new HttpClientHandlerConfig
+                builder.Register(c =>
                 {
-                    ProxyEnabled = config.ProxyEnabled,
-                    ProxyUseDefaultCredentials = config.ProxyUseDefaultCredentials,
-                    ProxyWebAddress = config.ProxyWebAddress,
-                    ByPassProxyOnLocal = config.ByPassProxyOnLocal
-                };
+                    var cc = c.Resolve<IComponentContext>();
+                    var config = cc.Resolve<AppConfiguration>();
+                    var httpClient = cc.Resolve<IHttpClientWrapperFactory>();
+                    var retryPolicy = cc.Resolve<IRetryPolicyWrapper>();
+                    var jsonSerializer = cc.Resolve<IJsonSerializer>();
+                    var logger = cc.Resolve<ILogger>();
 
-                return new PayClient(config.GovUkPayBaseUrl, config.GovUkPayApiKey, httpClient, retryPolicy,
-                    jsonSerializer, httpClientHandlerConfig, logger);
-            }).As<IPayClient>();
+                    var httpClientHandlerConfig = new HttpClientHandlerConfig
+                    {
+                        ProxyEnabled = config.ProxyEnabled,
+                        ProxyUseDefaultCredentials = config.ProxyUseDefaultCredentials,
+                        ProxyWebAddress = config.ProxyWebAddress,
+                        ByPassProxyOnLocal = config.ByPassProxyOnLocal
+                    };
+
+                    return new PayClient(config.GovUkPayBaseUrl, config.GovUkPayApiKey, httpClient, retryPolicy,
+                        jsonSerializer, httpClientHandlerConfig, logger);
+                }).As<IPayClient>();
+            }
         }
     }
 }
