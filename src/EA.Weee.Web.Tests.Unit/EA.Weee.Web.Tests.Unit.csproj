@@ -613,6 +613,7 @@
     <Compile Include="ViewModels\ListOfSchemeNotesViewModelBaseTests.cs" />
     <Compile Include="ViewModels\ListOfNotesViewModelBaseTests.cs" />
     <Compile Include="ViewModels\RadioButtonStringCollectionViewModelTests.cs" />
+    <Compile Include="ViewModels\OrganisationDetailsTabsViewModelTests.cs" />
     <Compile Include="ViewModels\UserCreationViewModelTests.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnsToReturnsViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToReturnsListRedirectOptionsMapTests.cs" />

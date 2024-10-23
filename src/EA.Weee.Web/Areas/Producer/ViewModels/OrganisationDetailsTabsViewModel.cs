@@ -20,6 +20,22 @@
 
         public bool IsInternal { get; set; } = false;
 
+        public bool IsRegistered
+        {
+            get
+            {
+                return this.OrganisationViewModel.Status == EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted && this.OrganisationViewModel.HasPaid;
+            }
+        }
+
+        public bool ShowReturnRegistrationToUser
+        {
+            get
+            {
+                return this.IsInternal && (IsRegistered || this.OrganisationViewModel.Status == EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted);
+            }
+        }
+
         public string RegistrationNumber { get; set; }
 
         public OrganisationDetailsDisplayOption ActiveOption { get; set; }
