@@ -9,18 +9,18 @@
 @section main_content
 {
 
-    @if (!Model.ShowLinkToCreateOrJoinOrganisation)
+    @if (Model.IsRepresentingCompany)
     {
-        if (Model.IsRepresentingCompany)
-        {
-            @(this.WeeeGds().BackLink(@Url.Action("RepresentingCompanies", "Organisation", new { organisationId = Model.OrganisationId, area = "" })))
-        }
-        else
+        @(this.WeeeGds().BackLink(@Url.Action("RepresentingCompanies", "Organisation", new { organisationId = Model.OrganisationId, area = "" })))
+    }
+    else
+    {
+        if (!Model.ShowLinkToCreateOrJoinOrganisation)
         {
             @(this.WeeeGds().BackLink(@Url.Action("Index", "Organisation", new { @area = "" })))
         }
-
     }
+
 
     @using (Html.BeginForm(actionName: "ChooseActivity", controllerName: "Home", method: FormMethod.Post))
     {
