@@ -15,9 +15,9 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        <p>Your report will contain the latest details registered for each producer based on the criteria you select. All producer details provided by the PCS in their XML file will be available.</p>
+        <p class="govuk-body">Your report will contain the latest details registered for each producer based on the criteria you select. All producer details provided in their registration will be available.</p>
 
-        <p>Select the relevant criteria for your report. Your results will be provided as a CSV file download.</p>
+        <p class="govuk-body">Select the relevant criteria for your report. Your results will be provided as a CSV file download.</p>
 
         @Html.Partial("_ReportSearchFilters")
 
