@@ -135,6 +135,12 @@
             return View();
         }
 
+        [HttpGet]
+        public async Task<ActionResult> ReturnProducerRegistration()
+        {
+            return View();
+        }
+
         private ActionResult RedirectToOrganisationHasNoSubmissions()
         {
             return RedirectToAction("OrganisationHasNoSubmissions");
