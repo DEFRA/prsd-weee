@@ -103,7 +103,7 @@
             var result = await handler.HandleAsync(request);
             
             // Assert
-            result.FileName.Should().Be("2016_Direct registrant_B2B_producerEEE_02012016_1112.csv");
+            result.FileName.Should().Be("2016_Direct registrants_B2B_producerEEE_02012016_1112.csv");
 
             SystemTime.Unfreeze();
         }
