@@ -300,6 +300,7 @@
     <Compile Include="Configuration\DiagnosticSourceDisposer.cs" />
     <Compile Include="Configuration\Logging\LoggerConfig.cs" />
     <Compile Include="Constants\DateTimeConstants.cs" />
+    <Compile Include="Constants\DirectRegistrantFixedIdConstant.cs" />
     <Compile Include="Constants\UkCountry.cs" />
     <Compile Include="DirectRegistrant\AdditionalCompanyDetailsData.cs" />
     <Compile Include="DirectRegistrant\AuthorisedRepresentitiveData.cs" />
