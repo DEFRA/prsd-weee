@@ -447,6 +447,14 @@
             return View();
         }
 
+        [HttpPost]
+        [ActionName("PaymentFailure")]
+        [SmallProducerSubmissionContext]
+        public async Task<ActionResult> RetryPayment()
+        {
+            return await RedirectToNextUrl();
+        }
+
         public ActionResult BackToPrevious(bool? redirectToCheckAnswers)
         {
             if (redirectToCheckAnswers == true)

@@ -23,6 +23,7 @@
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
+    using Org.BouncyCastle.Asn1.Ocsp;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -898,6 +899,52 @@
             // Assert
             result.Should().BeOfType<ViewResult>();
         }
+
+        [Fact]
+        public async Task RetryPayment_Post_ShouldRedirectToNextUrl()
+        {
+            // Arrange
+            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            controller.SmallProducerSubmissionData = submissionData;
+
+            var model = TestFixture.Create<AppropriateSignatoryViewModel>();
+            var request = TestFixture.Create<AddSignatoryAndCompleteRequest>();
+            request.DirectRegistrantId = model.DirectRegistrantId = submissionData.DirectRegistrantId;
+
+            var createPaymentResult = TestFixture.Create<CreatePaymentResult>();
+            createPaymentResult.Links = TestFixture.Create<PaymentLinks>();
+            createPaymentResult.Links.NextUrl = TestFixture.Create<Link>();
+            createPaymentResult.Links.NextUrl.Href = TestFixture.Create<string>();
+
+            A.CallTo(() => addSignatoryAndCompleteRequestCreator.ViewModelToRequest(model)).Returns(request);
+            A.CallTo(() => paymentService.CheckInProgressPaymentAsync(A<string>._, request.DirectRegistrantId)).Returns(Task.FromResult((PaymentWithAllLinks)null));
+            A.CallTo(() => paymentService.CreatePaymentAsync(request.DirectRegistrantId, A<string>._, A<string>._)).Returns(createPaymentResult);
+            A.CallTo(() => paymentService.ValidateExternalUrl(createPaymentResult.Links.NextUrl.Href)).Returns(true);
+
+            // Act
+            var result = await controller.AppropriateSignatory(model) as RedirectResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => paymentService.CheckInProgressPaymentAsync(A<string>._, request.DirectRegistrantId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => paymentService.CreatePaymentAsync(request.DirectRegistrantId, A<string>._, A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => weeeCache.InvalidateOrganisationNameCache(model.OrganisationId))
+                .MustHaveHappenedOnceExactly();
+            A.CallTo(() => paymentService.ValidateExternalUrl(createPaymentResult.Links.NextUrl.Href)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void RetryPayment_ShouldHaveSmallProducerSubmissionContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("RetryPayment");
+
+            // Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
+        }
+
         [Fact]
         public async Task EditEeeData_Get_ShouldReturnViewWithMappedModel()
         {
