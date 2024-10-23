@@ -271,6 +271,7 @@
     <Compile Include="Admin\Obligations\SchemeObligationsDataProcessorTests.cs" />
     <Compile Include="Admin\Obligations\SubmitSchemeObligationsHandlerTests.cs" />
     <Compile Include="Admin\Obligations\SubmitSchemeObligationTests.cs" />
+    <Compile Include="Admin\Reports\GetProducerEeeDataCsvDataAccessTests.cs" />
     <Compile Include="Admin\Reports\GetSchemesWithObligationOrEvidenceByComplianceYearHandlerTests.cs" />
     <Compile Include="Admin\Search\FetchSmallProducerSearchResultsForCacheHandlerUnitTests.cs" />
     <Compile Include="Factories\ReturnFactoryTests.cs" />
