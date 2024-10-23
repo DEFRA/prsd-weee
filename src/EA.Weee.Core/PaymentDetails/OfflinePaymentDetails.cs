@@ -1,16 +1,14 @@
-﻿using System;
-
-namespace EA.Weee.Core.PaymentDetails
+﻿namespace EA.Weee.Core.PaymentDetails
 {
+    using System;
     public class OfflinePaymentDetails
     {
         public string PaymentMethod { get; set; }
 
-        public DateTime PaymentRecievedDate { get; set; }
+        public DateTime? PaymentRecievedDate { get; set; }
 
         public string PaymentDetailsDescription { get; set; }
 
-     
-        public bool ConfirmPaymentMade { get; set; }
+        public string RegistrationNumber { get; set; }
     }
 }

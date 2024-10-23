@@ -6,7 +6,7 @@
 
     public class PaymentDetailsViewModel
     {
-        public string RegistrationNumber { get; set; }
+        public Guid DirectProducerSubmissionId { get; set; }
 
         [Required]
         [DisplayName("Payment method")]

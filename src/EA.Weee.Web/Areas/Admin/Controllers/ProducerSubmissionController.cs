@@ -4,6 +4,7 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
+    using EA.Weee.Core.PaymentDetails;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
@@ -48,6 +49,7 @@
             this.templateExecutor = templateExecutor;
             this.pdfDocumentProvider = pdfDocumentProvider;
             this.submissionService = submissionService;
+            this.apiClient = apiClient;
         }
 
         [AdminSmallProducerSubmissionContext]
@@ -131,24 +133,25 @@
         [HttpGet]
         public async Task<ActionResult> AddPaymentDetails(Guid directProducerSubmissionId)
         {
-            using (var client = apiClient())
-            {
-                var paymentDetails = await client.SendAsync(User.GetAccessToken(), new GetPaymentDetails(directProducerSubmissionId));
-            }
-
-            var vm = new PaymentDetailsViewModel 
-            {
-            ConfirmPaymentMade = true,
-            PaymentDetailsDescription = paymentDetails.Description,
-            };
-
-            return View(vm);
+            var model = new PaymentDetailsViewModel { DirectProducerSubmissionId = directProducerSubmissionId };
+            return View(model);
         }
 
         [HttpPost]
         public async Task<ActionResult> AddPaymentDetails(PaymentDetailsViewModel model)
         {
-            return View(model);
+            var details = await GetPaymentDetails(model);
+
+            return RedirectToAction("OrganisationDetails", new { registrationNumber = details.RegistrationNumber });
+        }
+
+        private async Task<OfflinePaymentDetails> GetPaymentDetails(PaymentDetailsViewModel model)
+        {
+            using (var client = apiClient())
+            {
+                return await client.SendAsync(User.GetAccessToken(),
+                    new AddPaymentDetails(model.PaymentMethod, DateTime.UtcNow, model.PaymentDetailsDescription, model.DirectProducerSubmissionId));
+            }
         }
 
         [HttpGet]
