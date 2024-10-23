@@ -28,6 +28,7 @@
     {
         public SmallProducerSubmissionData SmallProducerSubmissionData;
         private readonly BreadcrumbService breadcrumb;
+        private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeCache cache;
         private readonly IMapper mapper;
         private readonly IMvcTemplateExecutor templateExecutor;
@@ -36,6 +37,7 @@
 
         public ProducerSubmissionController(
             BreadcrumbService breadcrumb,
+            Func<IWeeeClient> apiClient,
             IWeeeCache cache,
             IMapper mapper,
             IMvcTemplateExecutor templateExecutor,
@@ -43,6 +45,7 @@
             ISubmissionService submissionService)
         {
             this.breadcrumb = breadcrumb;
+            this.apiClient = apiClient;
             this.cache = cache;
             this.mapper = mapper;
             this.templateExecutor = templateExecutor;
@@ -134,22 +137,20 @@
             return View();
         }
 
-        [AdminSmallProducerSubmissionContext]
         [HttpGet]
-        public async Task<ActionResult> RemoveSubmission(string registrationNumber, int? year = null)
+        public async Task<ActionResult> RemoveSubmission(Guid registeredProducerId)
         {
-            var selectedValue = string.Empty;
-            var model = new ConfirmRemovalViewModel
-            {
-                SelectedValue = selectedValue,
-                Producer = new ProducerDetailsScheme
-                {
-                    ProducerName = this.SmallProducerSubmissionData.OrganisationData.OrganisationName,
-                    RegistrationNumber = registrationNumber
-                }
-            };
+            ProducerDetailsScheme producerDetailsScheme = await FetchProducerDetailsScheme(registeredProducerId);
 
-            return View(model);
+            if (!producerDetailsScheme.CanRemoveProducer)
+            {
+                return new HttpForbiddenResult();
+            }
+
+            return View(new ConfirmRemovalViewModel
+            {
+                Producer = producerDetailsScheme
+            });
         }
 
         [HttpPost]
@@ -188,6 +189,15 @@
         private ActionResult RedirectToOrganisationHasNoSubmissions()
         {
             return RedirectToAction("OrganisationHasNoSubmissions");
+        }
+
+        private async Task<ProducerDetailsScheme> FetchProducerDetailsScheme(Guid registeredProducerId)
+        {
+            using (IWeeeClient client = apiClient())
+            {
+                GetProducerDetailsByRegisteredProducerId request = new GetProducerDetailsByRegisteredProducerId(registeredProducerId);
+                return await client.SendAsync(User.GetAccessToken(), request);
+            }
         }
     }
 }
