@@ -51,8 +51,7 @@
                 throw new InvalidOperationException($"Producer submission for compliance year {systemDateTime.Year} already exists");
             }
 
-            var existingProducer = directRegistrant.DirectProducerSubmissions.Where(c => c.RegisteredProducer.ComplianceYear != systemDateTime.Year)
-                .Select(r => r.RegisteredProducer).FirstOrDefault();
+            var existingProducer = directRegistrant.DirectProducerSubmissions.Select(r => r.RegisteredProducer).FirstOrDefault();
 
             string producerRegistrationNumber;
 
