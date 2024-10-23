@@ -137,20 +137,24 @@
             return View();
         }
 
+        [AdminSmallProducerSubmissionContext]
         [HttpGet]
-        public async Task<ActionResult> RemoveSubmission(Guid registeredProducerId)
+        public async Task<ActionResult> RemoveSubmission(Guid registeredProducerId, string registrationNumber, int year)
         {
-            ProducerDetailsScheme producerDetailsScheme = await FetchProducerDetailsScheme(registeredProducerId);
-
-            if (!producerDetailsScheme.CanRemoveProducer)
+            var selectedValue = string.Empty;
+            var model = new ConfirmRemovalViewModel
             {
-                return new HttpForbiddenResult();
-            }
+                SelectedValue = selectedValue,
+                Producer = new ProducerDetailsScheme
+                {
+                    ComplianceYear = year,
+                    ProducerName = this.SmallProducerSubmissionData.OrganisationData.OrganisationName,
+                    RegistrationNumber = registrationNumber,
+                    RegisteredProducerId = registeredProducerId
+                }
+            };
 
-            return View(new ConfirmRemovalViewModel
-            {
-                Producer = producerDetailsScheme
-            });
+            return View(model);
         }
 
         [HttpPost]
@@ -161,7 +165,17 @@
             {
                 if (viewModel.SelectedValue == "Yes")
                 {
-                    //soft remove
+                    RemoveSmallProducerResult result;
+                    using (IWeeeClient client = apiClient())
+                    {
+                        result = await client.SendAsync(User.GetAccessToken(), new RemoveSmallProducer(viewModel.Producer.RegisteredProducerId));
+                    }
+
+                    if (result.InvalidateProducerSearchCache)
+                    {
+                        await cache.InvalidateProducerSearch();
+                    }
+
                     return RedirectToAction(nameof(ProducerSubmissionController.Removed),
                         new { viewModel.Producer.RegistrationNumber });
                 }
@@ -189,15 +203,6 @@
         private ActionResult RedirectToOrganisationHasNoSubmissions()
         {
             return RedirectToAction("OrganisationHasNoSubmissions");
-        }
-
-        private async Task<ProducerDetailsScheme> FetchProducerDetailsScheme(Guid registeredProducerId)
-        {
-            using (IWeeeClient client = apiClient())
-            {
-                GetProducerDetailsByRegisteredProducerId request = new GetProducerDetailsByRegisteredProducerId(registeredProducerId);
-                return await client.SendAsync(User.GetAccessToken(), request);
-            }
         }
     }
 }
