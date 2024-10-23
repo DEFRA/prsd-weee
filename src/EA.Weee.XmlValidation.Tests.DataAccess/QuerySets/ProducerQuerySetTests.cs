@@ -1,13 +1,16 @@
-﻿namespace EA.Weee.XmlValidation.Tests.DataAccess.BusinessValidation.Rules.QuerySets
+﻿namespace EA.Weee.XmlValidation.Tests.DataAccess.QuerySets
 {
-    using Domain.Obligation;
+    using EA.Weee.DataAccess;
+    using EA.Weee.Domain.Obligation;
+    using EA.Weee.Domain.Producer;
+    using EA.Weee.Tests.Core;
     using EA.Weee.Tests.Core.Model;
+    using EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.QuerySets;
+    using EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.QuerySets.Queries.Producer;
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using Weee.DataAccess;
-    using XmlValidation.BusinessValidation.MemberRegistration.QuerySets;
-    using XmlValidation.BusinessValidation.MemberRegistration.QuerySets.Queries.Producer;
+    using System.Threading.Tasks;
     using Xunit;
     using Assert = Xunit.Assert;
 
@@ -175,14 +178,14 @@
                 memberUpload1.ComplianceYear = 2015;
                 memberUpload1.IsSubmitted = true;
 
-                ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
+                Weee.Tests.Core.Model.ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "AAAAAAA");
                 producer1.UpdatedDate = new DateTime(2015, 1, 1);
 
                 MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme);
                 memberUpload2.ComplianceYear = 2015;
                 memberUpload2.IsSubmitted = true;
 
-                ProducerSubmission producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAAAA");
+                Weee.Tests.Core.Model.ProducerSubmission producer2 = helper.CreateProducerAsCompany(memberUpload2, "AAAAAAA");
                 producer2.UpdatedDate = new DateTime(2015, 1, 2);
 
                 database.Model.SaveChanges();
@@ -280,6 +283,30 @@
         }
 
         [Fact]
+        public async Task GetAllRegistrationNumbersWithSmallProducerSubmission_ReturnsDistinctRegistrationNumbers()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                var (_, country) = DirectRegistrantHelper.SetupCommonTestData(database);
+
+                var complianceYear = 2060;
+
+                var (organisation1, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(database, "My company", "WEE/AG48365JN", complianceYear - 1);
+
+                var submission1 = await DirectRegistrantHelper.CreateSubmission(database, directRegistrant1, registeredProducer1, complianceYear, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete);
+
+                ProducerQuerySet querySet = ProducerQuerySet(database.WeeeContext);
+
+                // Act
+                List<string> results = querySet.GetAllRegistrationNumbers();
+
+                // Assert
+                Assert.NotNull(results);
+                Assert.Equal(1, results.Count(r => r == "WEE/AG48365JN"));
+            }
+        }
+
+        [Fact]
         public void GetProducerForOtherSchemeAndObligationType_ForAnotherSchemeSameObligationType_ReturnsAnotherSchemeProducer()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
@@ -360,11 +387,11 @@
                 memberUpload1.ComplianceYear = 2015;
                 memberUpload1.IsSubmitted = true;
 
-                ProducerSubmission companyProducer1 = helper.CreateProducerAsCompany(memberUpload1, "AA");
+                Weee.Tests.Core.Model.ProducerSubmission companyProducer1 = helper.CreateProducerAsCompany(memberUpload1, "AA");
 
-                ProducerSubmission companyProducer2 = helper.CreateProducerAsCompany(memberUpload1, "BB");
+                Weee.Tests.Core.Model.ProducerSubmission companyProducer2 = helper.CreateProducerAsCompany(memberUpload1, "BB");
 
-                ProducerSubmission companyProducer3 = helper.CreateProducerAsCompany(memberUpload1, "AA");
+                Weee.Tests.Core.Model.ProducerSubmission companyProducer3 = helper.CreateProducerAsCompany(memberUpload1, "AA");
 
                 database.Model.SaveChanges();
 
