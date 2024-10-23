@@ -130,6 +130,9 @@
                 InFinalState = false,
                 PaymentId = paymentId,
                 DirectProducerSubmission = new DirectProducerSubmission()
+                {
+                    PaymentFinished = false
+                }
             };
 
             var incompletePayments = new List<PaymentSession>()
@@ -138,8 +141,12 @@
             };
 
             var paymentStatus = TestFixture.Build<PaymentWithAllLinks>()
-                .With(p => p.State, new Api.Client.Models.Pay.PaymentState() { Finished = true, Status = PaymentStatus.Success }).Create();
-            
+                .With(p => p.State, new Api.Client.Models.Pay.PaymentState()
+                {
+                    Finished = false,
+                    Status = PaymentStatus.Created
+                }).Create();
+
             A.CallTo(() => paymentSessionDataAccess.GetByIdAsync(payment.Id))
                 .Returns(payment);
             A.CallTo(() => payClient.GetPaymentAsync(payment.PaymentId))
@@ -152,8 +159,10 @@
 
             // Assert
             payment.Status.Should().Be(paymentStatus.State.Status.ToDomainEnumeration<PaymentState>());
-            payment.InFinalState.Should().BeTrue();
+            payment.InFinalState.Should().BeFalse(); 
             payment.LastProcessedAt.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(10));
+            payment.DirectProducerSubmission.FinalPaymentSession.Should().BeNull(); 
+            payment.DirectProducerSubmission.PaymentFinished.Should().BeFalse(); 
             A.CallTo(() => context.SaveChangesAsync(default)).MustHaveHappenedOnceExactly();
         }
 
