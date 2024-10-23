@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
 {
     using Core.DirectRegistrant;
-    using Domain.Producer;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.RequestHandlers.Shared;
@@ -12,23 +11,25 @@
     internal class GetSmallProducerSubmissionHandler : IRequestHandler<GetSmallProducerSubmission, SmallProducerSubmissionData>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IGenericDataAccess genericDataAccess;
         private readonly ISmallProducerSubmissionService smallProducerSubmissionService;
+        private readonly ISmallProducerDataAccess smallProducerDataAccess;
 
         public GetSmallProducerSubmissionHandler(
             IWeeeAuthorization authorization,
-            IGenericDataAccess genericDataAccess,
-            ISmallProducerSubmissionService smallProducerSubmissionService)
+            ISmallProducerSubmissionService smallProducerSubmissionService,
+            ISmallProducerDataAccess smallProducerDataAccess)
         {
             this.authorization = authorization;
-            this.genericDataAccess = genericDataAccess;
             this.smallProducerSubmissionService = smallProducerSubmissionService;
+            this.smallProducerDataAccess = smallProducerDataAccess;
         }
 
         public async Task<SmallProducerSubmissionData> HandleAsync(GetSmallProducerSubmission request)
         {
             authorization.EnsureCanAccessExternalArea();
-            var directRegistrant = await genericDataAccess.GetById<DirectRegistrant>(request.DirectRegistrantId);
+
+            var directRegistrant = await smallProducerDataAccess.GetById(request.DirectRegistrantId);
+
             authorization.EnsureOrganisationAccess(directRegistrant.OrganisationId);
 
             return await smallProducerSubmissionService.GetSmallProducerSubmissionData(directRegistrant);
