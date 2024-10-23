@@ -1603,7 +1603,7 @@
             // Assert
             var fileResult = result as FileResult;
             fileResult.Should().NotBeNull();
-            fileResult.FileDownloadName.Should().Be("2015_Direct registrant_producerdetails_31122016_2359.csv");
+            fileResult.FileDownloadName.Should().Be("2015_Direct registrants_producerdetails_31122016_2359.csv");
         }
 
         [Fact]
