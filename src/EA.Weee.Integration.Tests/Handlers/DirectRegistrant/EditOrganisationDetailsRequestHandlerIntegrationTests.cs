@@ -4,6 +4,7 @@
     using AutoFixture;
     using Base;
     using EA.Prsd.Core;
+    using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain;
     using EA.Weee.Integration.Tests.Builders;
@@ -122,7 +123,7 @@
         public class EditOrganisationDetailsRequestHandlerIntegrationTestBase : WeeeContextSpecification
         {
             protected static IRequestHandler<EditOrganisationDetailsRequest, bool> handler;
-            protected static IRequestHandler<AddSmallProducerSubmission, Guid> createSubmissionHandler;
+            protected static IRequestHandler<AddSmallProducerSubmission, AddSmallProducerSubmissionResult> createSubmissionHandler;
             protected static Fixture fixture;
             protected static Domain.Producer.DirectRegistrant directRegistrant;
             protected static Domain.Producer.DirectProducerSubmission directProducerSubmission;
@@ -141,7 +142,7 @@
                     .Create();
 
                 handler = Container.Resolve<IRequestHandler<EditOrganisationDetailsRequest, bool>>();
-                createSubmissionHandler = Container.Resolve<IRequestHandler<AddSmallProducerSubmission, Guid>>();
+                createSubmissionHandler = Container.Resolve<IRequestHandler<AddSmallProducerSubmission, AddSmallProducerSubmissionResult>>();
 
                 fixture = new Fixture();
 
