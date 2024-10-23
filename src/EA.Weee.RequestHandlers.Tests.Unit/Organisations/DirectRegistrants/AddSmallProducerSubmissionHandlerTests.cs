@@ -174,6 +174,7 @@
             A.CallTo(() => genericDataAccess.Add(A<DirectProducerSubmissionHistory>._))
                 .WhenArgumentsMatch(args => ((DirectProducerSubmissionHistory)args[0]).DirectProducerSubmission.RegisteredProducer.ProducerRegistrationNumber == "EXISTING_PRN")
                 .MustHaveHappenedOnceExactly();
+            result.InvalidCache.Should().BeFalse();
         }
 
         [Fact]
@@ -192,6 +193,7 @@
             A.CallTo(() => genericDataAccess.Add(A<DirectProducerSubmissionHistory>._))
                 .WhenArgumentsMatch(args => ((DirectProducerSubmissionHistory)args[0]).DirectProducerSubmission.RegisteredProducer.ProducerRegistrationNumber == "NEW_PRN")
                 .MustHaveHappenedOnceExactly();
+            result.InvalidCache.Should().BeTrue();
         }
 
         [Fact]
@@ -214,6 +216,7 @@
             addedHistory.Should().NotBeNull();
             addedHistory.DirectProducerSubmission.RegisteredProducer.ProducerRegistrationNumber.Should().Be(expectedPrn);
             A.CallTo(() => generateFromXmlDataAccess.ComputePrns(A<int>._)).MustNotHaveHappened();
+            result.InvalidCache.Should().BeFalse();
         }
 
         private DirectRegistrant SetupValidDirectRegistrant(Guid directRegistrantId)
