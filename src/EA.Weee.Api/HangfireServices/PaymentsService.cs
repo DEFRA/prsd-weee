@@ -1,7 +1,10 @@
 ﻿namespace EA.Weee.Api.HangfireServices
 {
+    using Azure.Core;
+    using EA.Prsd.Core.Mediator;
     using EA.Weee.Api.Client;
     using EA.Weee.Api.Services;
+    using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Helpers;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
@@ -82,6 +85,12 @@
                         {
                             freshPayment.Status = status.State.Status.ToDomainEnumeration<PaymentState>();
                             freshPayment.InFinalState = status.State.IsInFinalState();
+
+                            if (status.State.IsInFinalState())
+                            {
+                                freshPayment.DirectProducerSubmission.FinalPaymentSession = freshPayment;
+                                freshPayment.DirectProducerSubmission.PaymentFinished = status.State.Status == PaymentStatus.Success;
+                            }
                         }
                         else 
                         {
@@ -91,7 +100,6 @@
                             logger.Information($"Payment {payment.PaymentId} not found in GOV.UK pay. Setting it to error. Job ID: {jobId}");
                         }
 
-                        freshPayment.DirectProducerSubmission.FinalPaymentSession = freshPayment;
                         freshPayment.LastProcessedAt = DateTime.UtcNow;
                         
                         context.SetCurrentJobId(jobId);

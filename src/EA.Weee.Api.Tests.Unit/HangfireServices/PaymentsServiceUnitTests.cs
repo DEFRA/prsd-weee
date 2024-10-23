@@ -194,5 +194,80 @@
             payment.LastProcessedAt.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(10));
             A.CallTo(() => context.SaveChangesAsync(default)).MustHaveHappenedOnceExactly();
         }
+        [Fact]
+        public async Task ProcessPayment_WhenPaymentSuccessful_ShouldSetPaymentFinished()
+        {
+            // Arrange
+            var jobId = Guid.NewGuid();
+            const string paymentId = "ref";
+
+            var payment = new PaymentSession()
+            {
+                InFinalState = false,
+                PaymentId = paymentId,
+                DirectProducerSubmission = new DirectProducerSubmission()
+            };
+
+            var incompletePayments = new List<PaymentSession>() { payment };
+
+            var paymentStatus = TestFixture.Build<PaymentWithAllLinks>()
+                .With(p => p.State, new Api.Client.Models.Pay.PaymentState()
+                {
+                    Finished = true,
+                    Status = PaymentStatus.Success
+                }).Create();
+
+            A.CallTo(() => paymentSessionDataAccess.GetByIdAsync(payment.Id))
+                .Returns(payment);
+            A.CallTo(() => payClient.GetPaymentAsync(payment.PaymentId))
+                .Returns(paymentStatus);
+            A.CallTo(() => paymentSessionDataAccess.GetIncompletePaymentSessions(A<int>._, A<int>._))
+                .Returns(incompletePayments);
+
+            // Act
+            await paymentsService.RunMopUpJob(jobId);
+
+            // Assert
+            payment.DirectProducerSubmission.PaymentFinished.Should().BeTrue();
+            payment.DirectProducerSubmission.FinalPaymentSession.Should().Be(payment);
+        }
+
+        [Fact]
+        public async Task ProcessPayment_WhenPaymentFailed_ShouldNotSetPaymentFinished()
+        {
+            // Arrange
+            var jobId = Guid.NewGuid();
+            const string paymentId = "ref";
+
+            var payment = new PaymentSession()
+            {
+                InFinalState = false,
+                PaymentId = paymentId,
+                DirectProducerSubmission = new DirectProducerSubmission()
+            };
+
+            var incompletePayments = new List<PaymentSession>() { payment };
+
+            var paymentStatus = TestFixture.Build<PaymentWithAllLinks>()
+                .With(p => p.State, new Api.Client.Models.Pay.PaymentState()
+                {
+                    Finished = true,
+                    Status = PaymentStatus.Failed
+                }).Create();
+
+            A.CallTo(() => paymentSessionDataAccess.GetByIdAsync(payment.Id))
+                .Returns(payment);
+            A.CallTo(() => payClient.GetPaymentAsync(payment.PaymentId))
+                .Returns(paymentStatus);
+            A.CallTo(() => paymentSessionDataAccess.GetIncompletePaymentSessions(A<int>._, A<int>._))
+                .Returns(incompletePayments);
+
+            // Act
+            await paymentsService.RunMopUpJob(jobId);
+
+            // Assert
+            payment.DirectProducerSubmission.PaymentFinished.Should().BeFalse();
+            payment.DirectProducerSubmission.FinalPaymentSession.Should().Be(payment);
+        }
     }
 }
