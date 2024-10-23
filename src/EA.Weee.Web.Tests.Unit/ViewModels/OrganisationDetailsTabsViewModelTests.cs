@@ -59,5 +59,21 @@
 
             model.ShowReturnRegistrationToUser.Should().Be(true);
         }
+
+        [Theory]
+        [InlineData(true, true, true)]
+        [InlineData(true, false, false)]
+        [InlineData(false, true, false)]
+        [InlineData(false, false, false)]
+        public void TabView_HidesShowsRemoveButton(bool isAdmin, bool isInternal, bool expected)
+        {
+            var model = new OrganisationDetailsTabsViewModel();
+            model.OrganisationViewModel = new OrganisationViewModel { };
+
+            model.IsAdmin = isAdmin;
+            model.IsInternal = isInternal;
+
+            model.ShowRemoveButton.Should().Be(expected);
+        }
     }
 }

@@ -20,6 +20,16 @@
 
         public bool IsInternal { get; set; } = false;
 
+        public bool IsAdmin { get; set; } = false;
+
+        public bool ShowRemoveButton
+        {
+            get
+            {
+                return this.IsAdmin && this.IsInternal;
+            }
+        }
+
         public bool IsRegistered
         {
             get

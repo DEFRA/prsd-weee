@@ -17,12 +17,13 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using System.Web.UI.WebControls;
     using Web.Areas.Admin.Controllers.Base;
     using Xunit;
-
+  
     public class ProducerSubmissionControllerUnitTests : SimpleUnitTestBase
     {
         private readonly EA.Weee.Web.Areas.Admin.Controllers.ProducerSubmissionController controller;
@@ -82,6 +83,10 @@
         {
             SetupDefaultControllerData();
 
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, "InternalAdmin") }, "TestAuthentication"));
+            controller.ControllerContext = A.Fake<ControllerContext>();
+            A.CallTo(() => controller.ControllerContext.HttpContext.User).Returns(user);
+
             var expcted = new OrganisationDetailsTabsViewModel();
             expcted.OrganisationViewModel = new OrganisationViewModel();
 
@@ -92,7 +97,7 @@
             var viewResult = result.Should().BeOfType<ViewResult>().Subject;
 
             var model = viewResult.Model as OrganisationDetailsTabsViewModel;
-        
+
             model.RegistrationNumber.Should().Be("reg");
             model.Should().NotBeNull();
             model.OrganisationViewModel.Should().NotBeNull();
@@ -101,6 +106,82 @@
 
             A.CallTo(() => this.submissionService.OrganisationDetails(year)).MustHaveHappenedOnceExactly();
             A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, true)).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(2004)]
+        public async Task Submissions_ReturnViewModelAndCallsService(int? year)
+        {
+            SetupDefaultControllerData();
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, "InternalAdmin") }, "TestAuthentication"));
+            controller.ControllerContext = A.Fake<ControllerContext>();
+            A.CallTo(() => controller.ControllerContext.HttpContext.User).Returns(user);
+
+            var expcted = new OrganisationDetailsTabsViewModel();
+            expcted.OrganisationViewModel = new OrganisationViewModel();
+
+            A.CallTo(() => this.submissionService.Submissions(year)).Returns(expcted);
+
+            var result = (await controller.Submissions("reg", year)) as ViewResult;
+
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+
+            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
+
+            model.RegistrationNumber.Should().Be("reg");
+            model.Should().NotBeNull();
+            model.OrganisationViewModel.Should().NotBeNull();
+
+            result.ViewName.Should().Be("Producer/ViewOrganisation/OrganisationDetails");
+
+            A.CallTo(() => this.submissionService.Submissions(year)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, true)).MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData("InternalAdmin", true)]
+        [InlineData("", false)]
+        public async Task OrganisationDetails_ReturnViewModelWithCorrectClaims(string role, bool isAdmin)
+        {
+            int? year = 2004;
+
+            SetupDefaultControllerData();
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, role) }, "TestAuthentication"));
+            controller.ControllerContext = A.Fake<ControllerContext>();
+            A.CallTo(() => controller.ControllerContext.HttpContext.User).Returns(user);
+
+            var result = (await controller.OrganisationDetails("reg", year)) as ViewResult;
+
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+
+            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
+
+            model.IsAdmin.Should().Be(isAdmin);
+        }
+
+        [Theory]
+        [InlineData("InternalAdmin", true)]
+        [InlineData("", false)]
+        public async Task Submissions_ReturnViewModelWithCorrectClaims(string role, bool isAdmin)
+        {
+            int? year = 2004;
+
+            SetupDefaultControllerData();
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, role) }, "TestAuthentication"));
+            controller.ControllerContext = A.Fake<ControllerContext>();
+            A.CallTo(() => controller.ControllerContext.HttpContext.User).Returns(user);
+
+            var result = (await controller.Submissions("reg", year)) as ViewResult;
+
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+
+            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
+
+            model.IsAdmin.Should().Be(isAdmin);
         }
 
         [Theory]
