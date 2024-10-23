@@ -3,6 +3,7 @@
     using Autofac;
     using AutoFixture;
     using Base;
+    using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain;
     using EA.Weee.Integration.Tests.Builders;
@@ -11,7 +12,6 @@
     using NUnit.Specifications.Categories;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mediator;
-    using System;
     using System.Linq;
     using System.Security;
 
@@ -73,7 +73,7 @@
         public class ServiceOfNoticeRequestHandlerIntegrationTestBase : WeeeContextSpecification
         {
             protected static IRequestHandler<ServiceOfNoticeRequest, bool> handler;
-            protected static IRequestHandler<AddSmallProducerSubmission, Guid> createSubmissionHandler;
+            protected static IRequestHandler<AddSmallProducerSubmission, AddSmallProducerSubmissionResult> createSubmissionHandler;
             protected static Fixture fixture;
             protected static Domain.Producer.DirectRegistrant directRegistrant;
             protected static ServiceOfNoticeRequest request;
@@ -91,7 +91,7 @@
                     .Create();
 
                 handler = Container.Resolve<IRequestHandler<ServiceOfNoticeRequest, bool>>();
-                createSubmissionHandler = Container.Resolve<IRequestHandler<AddSmallProducerSubmission, Guid>>();
+                createSubmissionHandler = Container.Resolve<IRequestHandler<AddSmallProducerSubmission, AddSmallProducerSubmissionResult>>();
 
                 fixture = new Fixture();
 
