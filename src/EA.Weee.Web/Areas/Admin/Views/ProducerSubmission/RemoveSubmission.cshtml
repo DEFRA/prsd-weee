@@ -23,7 +23,8 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        @Html.HiddenFor(m => m.Producer.RegistrationNumber, new { id = "RegistrationNumber" })
+        @Html.HiddenFor(m => m.Producer.RegistrationNumber, new { id = "registrationNumber" })
+        @Html.HiddenFor(m => m.Producer.RegisteredProducerId, new { id = "registeredProducerId" })
 
         <p class="govuk-body govuk-!-margin-bottom-0">The following registration will no longer be available on WEEE.</p>
 
