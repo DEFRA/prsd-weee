@@ -60,7 +60,7 @@ else
 @if (Model.IsInternal)
 {
     <p>
-        @Html.ActionLink("Remove " + Model.Year + " submission", "RemoveSubmission", "ProducerSubmission", null, new { @class = "govuk-link" })
+        @Html.ActionLink("Remove " + Model.Year + " submission", "RemoveSubmission", "ProducerSubmission", new { registeredProducerId = Model.SmallProducerSubmissionData.CurrentSubmission.RegisteredProducerId }, new { @class = "govuk-link" })
     </p>
 }
 
