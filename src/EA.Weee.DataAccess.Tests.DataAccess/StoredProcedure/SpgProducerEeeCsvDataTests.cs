@@ -44,7 +44,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                var results = await db.StoredProcedures.SpgProducerEeeCsvData(2000, null, "B2C");
+                var results = await db.StoredProcedures.SpgProducerEeeCsvData(2000, null, "B2C", false);
 
                 //Assert
                 Assert.NotNull(results);
@@ -90,7 +90,7 @@
 
                 // Act
                 var results =
-                    await db.StoredProcedures.SpgProducerEeeCsvData(2000, null, "B2C");
+                    await db.StoredProcedures.SpgProducerEeeCsvData(2000, null, "B2C", false);
 
                 // Assert
                 Assert.Single(results);
@@ -260,7 +260,8 @@
                 List<ProducerEeeCsvData> results = await wrapper.WeeeContext.StoredProcedures.SpgProducerEeeCsvData(
                     2099,
                     null,
-                    "B2C");
+                    "B2C",
+                    false);
 
                 // Assert
                 Assert.NotNull(results);
@@ -427,7 +428,8 @@
                 List<ProducerEeeCsvData> results = await wrapper.WeeeContext.StoredProcedures.SpgProducerEeeCsvData(
                     2099,
                     scheme1.Id,
-                    "B2C");
+                    "B2C",
+                    false);
 
                 // Assert
                 Assert.NotNull(results);
@@ -439,8 +441,10 @@
             }
         }
 
-        [Fact]
-        public async Task Execute_WithDirectRegistrantSubmissions_ReturnsResults()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task Execute_WithDirectRegistrantSubmissions_ReturnsResults(bool directRegistrantFilter)
         {
             using (var wrapper = new DatabaseWrapper())
             {
@@ -544,28 +548,44 @@
                 dataReturn1.SetCurrentVersion(version1);
                 await wrapper.WeeeContext.SaveChangesAsync();
 
-                var results = await wrapper.WeeeContext.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, "B2C");
+                var results = await wrapper.WeeeContext.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, "B2C", directRegistrantFilter);
 
                 results.Should().NotBeNull();
-                results.Count.Should().Be(3);
 
-                var schemeElement = results.ElementAt(0);
-                schemeElement.SchemeName.Should().Be(scheme1.SchemeName);
-                schemeElement.ApprovalNumber.Should().Be(scheme1.ApprovalNumber);
-                schemeElement.Cat1Q1.Should().Be(123.457m);
-                schemeElement.TotalTonnage.Should().Be(123.457m);
-                schemeElement.PRN.Should().Be(schemeRegisteredProducer1.ProducerRegistrationNumber);
+                if (directRegistrantFilter)
+                {
+                    results.Count.Should().Be(2);
 
-                var expectedAmounts1 = new Dictionary<string, decimal> { { "Cat1Q4", 123.456m }, { "Cat4Q4", 2m } };
-                AssertEeeElementData(results.ElementAt(1), organisation1, registeredProducer1, country, expectedAmounts1, 125.456m);
+                    var expectedAmounts1 = new Dictionary<string, decimal> { { "Cat1Q4", 123.456m }, { "Cat4Q4", 2m } };
+                    AssertEeeElementData(results.ElementAt(0), organisation1, registeredProducer1, country, expectedAmounts1, 125.456m);
 
-                var expectedAmounts2 = new Dictionary<string, decimal> { { "Cat8Q4", 4.456m } };
-                AssertEeeElementData(results.ElementAt(2), organisation2, registeredProducer2, country, expectedAmounts2, 4.456m);
+                    var expectedAmounts2 = new Dictionary<string, decimal> { { "Cat8Q4", 4.456m } };
+                    AssertEeeElementData(results.ElementAt(1), organisation2, registeredProducer2, country, expectedAmounts2, 4.456m);
+                }
+                else
+                {
+                    results.Count.Should().Be(3);
+
+                    var schemeElement = results.ElementAt(0);
+                    schemeElement.SchemeName.Should().Be(scheme1.SchemeName);
+                    schemeElement.ApprovalNumber.Should().Be(scheme1.ApprovalNumber);
+                    schemeElement.Cat1Q1.Should().Be(123.457m);
+                    schemeElement.TotalTonnage.Should().Be(123.457m);
+                    schemeElement.PRN.Should().Be(schemeRegisteredProducer1.ProducerRegistrationNumber);
+
+                    var expectedAmounts1 = new Dictionary<string, decimal> { { "Cat1Q4", 123.456m }, { "Cat4Q4", 2m } };
+                    AssertEeeElementData(results.ElementAt(1), organisation1, registeredProducer1, country, expectedAmounts1, 125.456m);
+
+                    var expectedAmounts2 = new Dictionary<string, decimal> { { "Cat8Q4", 4.456m } };
+                    AssertEeeElementData(results.ElementAt(2), organisation2, registeredProducer2, country, expectedAmounts2, 4.456m);
+                }
             }
         }
 
-        [Fact]
-        public async Task Execute_WithDirectRegistrantSubmissionsWithIncorrectStatus_ReturnsEmptyResults()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task Execute_WithDirectRegistrantSubmissionsWithIncorrectStatus_ReturnsEmptyResults(bool directRegistrantFilter)
         {
             using (var wrapper = new DatabaseWrapper())
             {
@@ -580,7 +600,7 @@
                 };
                 await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant, registeredProducer, complianceYear + 1, amounts, DirectProducerSubmissionStatus.Incomplete);
 
-                var results = await wrapper.WeeeContext.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, "B2C");
+                var results = await wrapper.WeeeContext.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, "B2C", directRegistrantFilter);
 
                 results.Should().NotBeNull();
                 results.Should().BeEmpty();
@@ -602,7 +622,7 @@
                 };
                 await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant, registeredProducer, 1000, amounts, DirectProducerSubmissionStatus.Complete);
 
-                var results = await wrapper.WeeeContext.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, "B2C");
+                var results = await wrapper.WeeeContext.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, "B2C", false);
 
                 results.Should().NotBeNull();
                 results.Should().BeEmpty();

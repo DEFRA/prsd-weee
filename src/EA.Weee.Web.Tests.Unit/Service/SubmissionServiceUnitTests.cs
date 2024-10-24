@@ -25,9 +25,7 @@
 
     public class SubmissionServiceUnitTests : SimpleUnitTestBase
     {
-        private readonly Fixture fixture;
-
-        private ISubmissionService service;
+        private readonly ISubmissionService service;
         private readonly BreadcrumbService breadcrumb;
         private readonly IWeeeCache weeeCache;
         private readonly IMapper mapper;
