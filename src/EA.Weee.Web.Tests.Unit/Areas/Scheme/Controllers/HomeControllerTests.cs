@@ -20,6 +20,7 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using TestHelpers;
@@ -2321,6 +2322,113 @@
             result.Should().BeOfType<ViewResult>()
                 .Which.Model.Should().BeOfType<ChooseActivityViewModel>()
                 .Which.DirectRegistrantId.Should().Be(directRegistrantId);
+        }
+
+        [Fact]
+        public async Task ChooseActivity_WithNoDirectRegistrantId_SetsDefaultFromOrganisation()
+        {
+            // Arrange
+            var pcsId = Guid.NewGuid();
+            var defaultDirectRegistrantId = Guid.NewGuid();
+            var organisationDetails = new OrganisationData
+            {
+                DirectRegistrants = new List<DirectRegistrantInfo>()
+                {
+                    new DirectRegistrantInfo { DirectRegistrantId = defaultDirectRegistrantId }
+                }
+            };
+
+            SetupCommonFakes(organisationDetails);
+            var controller = HomeController();
+
+            // Act
+            var result = await controller.ChooseActivity(pcsId);
+
+            // Assert
+            result.Should().BeOfType<ViewResult>()
+                .Which.Model.Should().BeOfType<ChooseActivityViewModel>()
+                .Which.DirectRegistrantId.Should().Be(defaultDirectRegistrantId);
+        }
+
+        [Fact]
+        public async Task ChooseActivity_WithProvidedDirectRegistrantId_UsesThatInsteadOfDefault()
+        {
+            // Arrange
+            var pcsId = Guid.NewGuid();
+            var providedDirectRegistrantId = Guid.NewGuid();
+            var defaultDirectRegistrantId = Guid.NewGuid();
+            var organisationDetails = new OrganisationData
+            {
+                DirectRegistrants = new List<DirectRegistrantInfo>()
+                {
+                    new DirectRegistrantInfo { DirectRegistrantId = defaultDirectRegistrantId }
+                }
+            };
+
+            SetupCommonFakes(organisationDetails);
+            var controller = HomeController();
+
+            // Act
+            var result = await controller.ChooseActivity(pcsId, providedDirectRegistrantId);
+
+            // Assert
+            result.Should().BeOfType<ViewResult>()
+                .Which.Model.Should().BeOfType<ChooseActivityViewModel>()
+                .Which.DirectRegistrantId.Should().Be(providedDirectRegistrantId);
+        }
+
+        [Fact]
+        public async Task ChooseActivity_WithNoDirectRegistrants_DirectRegistrantIdShouldBeNull()
+        {
+            // Arrange
+            var pcsId = Guid.NewGuid();
+            var organisationDetails = new OrganisationData();
+
+            SetupCommonFakes(organisationDetails);
+            var controller = HomeController();
+
+            // Act
+            var result = await controller.ChooseActivity(pcsId);
+
+            // Assert
+            result.Should().BeOfType<ViewResult>()
+                .Which.Model.Should().BeOfType<ChooseActivityViewModel>()
+                .Which.DirectRegistrantId.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task ChooseActivity_SetsIsRepresentingCompanyFromOrganisationDetails()
+        {
+            // Arrange
+            var pcsId = Guid.NewGuid();
+            var organisationDetails = new OrganisationData
+            {
+                IsRepresentingCompany = true
+            };
+
+            SetupCommonFakes(organisationDetails);
+            var controller = HomeController();
+
+            // Act
+            var result = await controller.ChooseActivity(pcsId);
+
+            // Assert
+            result.Should().BeOfType<ViewResult>()
+                .Which.Model.Should().BeOfType<ChooseActivityViewModel>()
+                .Which.IsRepresentingCompany.Should().BeTrue();
+        }
+
+        private void SetupCommonFakes(OrganisationData organisationDetails)
+        {
+            A.CallTo(() => weeeClient.SendAsync(
+                    A<string>._,
+                    A<VerifyOrganisationExists>._))
+                .Returns(true);
+
+            A.CallTo(() => weeeClient.SendAsync(
+                    A<string>._,
+                    A<GetOrganisationInfo>._))
+                .Returns(organisationDetails);
         }
     }
 }
