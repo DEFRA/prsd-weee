@@ -18,6 +18,7 @@
     using System.Web.Mvc;
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Requests.Admin.DirectRegistrants;
 
     public class ProducerSubmissionController : AdminController
     {
@@ -175,7 +176,7 @@
                     }
 
                     return RedirectToAction(nameof(ProducerSubmissionController.Removed),
-                        new { producerName = viewModel.Producer.ProducerName, year = viewModel.Producer.ComplianceYear });
+                        new { registrationNumber = viewModel.Producer.RegistrationNumber, producerName = viewModel.Producer.ProducerName, year = viewModel.Producer.ComplianceYear });
                 }
                 else
                 {
@@ -190,10 +191,11 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Removed(string producerName, int year)
+        public async Task<ActionResult> Removed(string registrationNumber, string producerName, int year)
         {
             return View(new RemovedViewModel
             {
+                RegistrationNumber = registrationNumber,
                 ProducerName = producerName,
                 ComplianceYear = year
             });
@@ -205,15 +207,15 @@
         {
             using (IWeeeClient client = apiClient())
             {
-                var isAssociatedWithAnotherScheme = await client.SendAsync(User.GetAccessToken(),
-                    new IsProducerRegisteredForComplianceYear(model.RegistrationNumber, model.ComplianceYear));
-
-                if (isAssociatedWithAnotherScheme)
+                this.SmallProducerSubmissionData = await client.SendAsync(User.GetAccessToken(), new GetSmallProducerSubmissionByRegistrationNumber(model.RegistrationNumber));
+                
+                if (SmallProducerSubmissionData.AnySubmissionSubmitted)
                 {
-                    return RedirectToAction("Details", new { model.RegistrationNumber });
+                    return RedirectToAction(nameof(ProducerSubmissionController.Submissions),
+                        new { model.RegistrationNumber });
                 }
 
-                return RedirectToAction("Search");
+                return RedirectToOrganisationHasNoSubmissions();
             }
         }
 
