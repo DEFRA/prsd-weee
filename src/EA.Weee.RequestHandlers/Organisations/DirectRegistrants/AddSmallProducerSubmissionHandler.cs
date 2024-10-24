@@ -3,6 +3,7 @@
     using DataAccess;
     using Domain.Producer;
     using EA.Prsd.Core.Mediator;
+    using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
@@ -11,7 +12,7 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    internal class AddSmallProducerSubmissionHandler : IRequestHandler<AddSmallProducerSubmission, Guid>
+    internal class AddSmallProducerSubmissionHandler : IRequestHandler<AddSmallProducerSubmission, AddSmallProducerSubmissionResult>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
@@ -33,7 +34,7 @@
             this.smallProducerDataAccess = smallProducerDataAccess;
         }
 
-        public async Task<Guid> HandleAsync(AddSmallProducerSubmission request)
+        public async Task<AddSmallProducerSubmissionResult> HandleAsync(AddSmallProducerSubmission request)
         { 
             authorization.EnsureCanAccessExternalArea();
 
@@ -55,7 +56,7 @@
                 .Select(r => r.RegisteredProducer).FirstOrDefault();
 
             string producerRegistrationNumber;
-
+            var invalidateCache = false;
             if (!string.IsNullOrWhiteSpace(directRegistrant.ProducerRegistrationNumber))
             {
                 producerRegistrationNumber = directRegistrant.ProducerRegistrationNumber;
@@ -73,7 +74,7 @@
                     producerRegistrationNumber = generatedPrn.Dequeue();
 
                     var exists = await generateFromXmlDataAccess.ProducerRegistrationExists(producerRegistrationNumber);
-
+                    invalidateCache = true;
                     if (exists)
                     {
                         throw new InvalidOperationException($"Producer number {producerRegistrationNumber} already exists");
@@ -92,7 +93,7 @@
 
             await weeeContext.SaveChangesAsync();
 
-            return directRegistrantSubmission.Id;
+            return new AddSmallProducerSubmissionResult(invalidateCache, directRegistrantSubmission.Id);
         }
     }
 }
