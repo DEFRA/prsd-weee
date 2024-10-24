@@ -150,7 +150,7 @@
 
         [HttpGet]
         [SmallProducerSubmissionSubmitted(Order = 2)]
-        [SmallProducerSubmissionContext]
+        [SmallProducerSubmissionContext(Order = 1)]
         public async Task<ActionResult> CheckAnswers()
         {
             var source = new SmallProducerSubmissionMapperData()
