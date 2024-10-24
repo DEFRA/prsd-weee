@@ -13,8 +13,7 @@
     @using (Html.BeginForm())
     {
         @Html.AntiForgeryToken()
-        @Html.HiddenFor(m => m.ProducerName)
-        @Html.HiddenFor(m => m.ComplianceYear)
+        @Html.HiddenFor(m => m.RegistrationNumber)
 
         <p>You have successfully removed the producer registration for '@Model.ProducerName', for @Model.ComplianceYear.</p>
 
