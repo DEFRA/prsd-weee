@@ -4,17 +4,17 @@
     using Prsd.Core.Mediator;
     using System;
 
-    public class AddPaymentDetails : IRequest<OfflinePaymentDetails>
+    public class AddPaymentDetails : IRequest<ManualPaymentResult>
     {
         public Guid DirectProducerSubmissionId { get; set; }
 
         public string PaymentMethod { get; set; }
 
-        public DateTime? PaymentRecievedDate { get; set; }
+        public DateTimeInput PaymentRecievedDate { get; set; }
 
         public string PaymentDetailsDescription { get; set; }
 
-        public AddPaymentDetails(string paymentMethod, DateTime? paymentRecievedDate, string paymentDetails, Guid directProducerSubmissionId)
+        public AddPaymentDetails(string paymentMethod, DateTimeInput paymentRecievedDate, string paymentDetails, Guid directProducerSubmissionId)
         {
             PaymentMethod = paymentMethod;
             PaymentRecievedDate = paymentRecievedDate;

@@ -4,7 +4,7 @@
     using Prsd.Core.Mediator;
     using System;
 
-    public class GetPaymentDetails : IRequest<OfflinePaymentDetails>
+    public class GetPaymentDetails : IRequest<ManualPaymentResult>
     {
         public Guid DirectProducerSubmissionId { get; set; }
 

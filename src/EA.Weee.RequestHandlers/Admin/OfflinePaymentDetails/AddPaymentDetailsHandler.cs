@@ -13,7 +13,7 @@
     using System;
     using System.Threading.Tasks;
 
-    public class AddPaymentDetailsHandler : IRequestHandler<Requests.Admin.AddPaymentDetails, OfflinePaymentDetails>
+    public class AddPaymentDetailsHandler : IRequestHandler<Requests.Admin.AddPaymentDetails, ManualPaymentResult>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess dataAccess;
@@ -34,7 +34,7 @@
             this.schemeMap = schemeMap;
         }
 
-        public async Task<OfflinePaymentDetails> HandleAsync(Requests.Admin.AddPaymentDetails request)
+        public async Task<ManualPaymentResult> HandleAsync(Requests.Admin.AddPaymentDetails request)
         {
             authorization.EnsureCanAccessInternalArea();
 
@@ -43,18 +43,15 @@
             submission.ManualPaymentMadeByUserId = userContext.UserId.ToString();
             submission.ManualPaymentDetails = request.PaymentDetailsDescription;
             submission.ManualPaymentMethod = request.PaymentMethod;
-            submission.ManualPaymentReceivedDate = request.PaymentRecievedDate;
+            submission.ManualPaymentReceivedDate = request.PaymentRecievedDate.ToDateTime();
             submission.PaymentFinished = true;
-            submission.FinalPaymentSession.UpdatedAt = DateTime.UtcNow;
 
             await context.SaveChangesAsync();
 
-            return new OfflinePaymentDetails
+            return new ManualPaymentResult
             {
                 RegistrationNumber = submission.RegisteredProducer.ProducerRegistrationNumber,
-                PaymentDetailsDescription = submission.ManualPaymentDetails,
-                PaymentMethod = submission.ManualPaymentMethod,
-                PaymentRecievedDate = submission.ManualPaymentReceivedDate
+                ComplianceYear = submission.ComplianceYear
             };
         }
     }

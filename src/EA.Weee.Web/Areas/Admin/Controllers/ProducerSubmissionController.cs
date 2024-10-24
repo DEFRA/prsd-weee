@@ -140,17 +140,22 @@
         [HttpPost]
         public async Task<ActionResult> AddPaymentDetails(PaymentDetailsViewModel model)
         {
-            var details = await GetPaymentDetails(model);
+            if (ModelState.IsValid == false)
+            {
+                return View(model);
+            }
 
-            return RedirectToAction("OrganisationDetails", new { registrationNumber = details.RegistrationNumber });
+            var details = await SendPaymentDetails(model);
+
+            return RedirectToAction(nameof(OrganisationDetails), new { registrationNumber = details.RegistrationNumber, year = details.ComplianceYear });
         }
 
-        private async Task<OfflinePaymentDetails> GetPaymentDetails(PaymentDetailsViewModel model)
+        private async Task<ManualPaymentResult> SendPaymentDetails(PaymentDetailsViewModel model)
         {
             using (var client = apiClient())
             {
                 return await client.SendAsync(User.GetAccessToken(),
-                    new AddPaymentDetails(model.PaymentMethod, DateTime.UtcNow, model.PaymentDetailsDescription, model.DirectProducerSubmissionId));
+                    new AddPaymentDetails(model.PaymentMethod, model.PaymentRecievedDate, model.PaymentDetailsDescription, model.DirectProducerSubmissionId));
             }
         }
 

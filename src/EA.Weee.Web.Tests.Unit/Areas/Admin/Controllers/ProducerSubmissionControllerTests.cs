@@ -2,6 +2,7 @@
 {
     using AutoFixture;
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Api.Client;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
@@ -33,6 +34,8 @@
         private readonly IMvcTemplateExecutor templateExecutor;
         private readonly IPdfDocumentProvider pdfDocumentProvider;
         private readonly ISubmissionService submissionService;
+        private readonly Func<IWeeeClient> apiClient;
+        private readonly IWeeeClient client;
 
         public ProducerSubmissionControllerUnitTests()
         {
@@ -41,6 +44,9 @@
             mapper = A.Fake<IMapper>();
             templateExecutor = A.Fake<IMvcTemplateExecutor>();
             pdfDocumentProvider = A.Fake<IPdfDocumentProvider>();
+            client = A.Fake<IWeeeClient>();
+            mapper = A.Fake<IMapper>();
+            apiClient = () => client;
 
             submissionService = A.Fake<ISubmissionService>();
 
@@ -50,7 +56,8 @@
                mapper,
                templateExecutor,
                pdfDocumentProvider,
-               submissionService);
+               submissionService,
+               apiClient);
         }
 
         [Fact]

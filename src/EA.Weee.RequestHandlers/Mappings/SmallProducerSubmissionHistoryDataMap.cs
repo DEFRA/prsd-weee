@@ -76,8 +76,7 @@
 
         private static DateTime? MapRegistrationDate(DirectProducerSubmission submission)
         {
-            //FinalPaymentSession is null here
-            return submission.PaymentFinished == true ? submission.FinalPaymentSession?.UpdatedAt : null;
+            return submission.PaymentFinished == true ? submission.FinalPaymentSession?.UpdatedAt ?? submission.ManualPaymentReceivedDate : null;
         }
 
         private static string MapBrandNames(DirectProducerSubmissionHistory currentSubmission, DirectRegistrant directRegistrant)
