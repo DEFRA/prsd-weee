@@ -118,7 +118,7 @@
                     .WithContactAddress(address.Id)
                     .WithContact(contact.Id)
                     .WithBrandName("new brand")
-                    .WithAuthorisedRep(authedRepSubmission.Id)
+                    .WithAuthorisedRep(authedRepSubmission)
                     .WithDirectProducerSubmission(directProducerSubmission).Create();
 
                 Query.UpdateCurrentProducerSubmission(directProducerSubmission.Id, directProducerSubmissionHistory.Id);
