@@ -433,6 +433,16 @@
         }
 
         [Fact]
+        public void CheckAnswers_Get_ShouldHaveSmallProducerSubmissionSubmittedAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerController).GetMethod("CheckAnswers");
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionSubmittedAttribute>();
+        }
+
+        [Fact]
         public async Task OrganisationDetails_ReturnOrganisationDetailsView()
         {
             SetupDefaultControllerData();
@@ -742,6 +752,43 @@
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
             methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void ProducerController_ShouldHaveAuthorizeRouteClaimsAttribute()
+        {
+            // Arrange
+            var typeInfo = typeof(ProducerController);
+
+            // Act
+            var attribute = (AuthorizeRouteClaimsAttribute)Attribute.GetCustomAttribute(typeInfo, typeof(AuthorizeRouteClaimsAttribute));
+
+            // Assert
+            attribute.Should().NotBeNull();
+
+            var routeIdParamField = typeof(AuthorizeRouteClaimsAttribute)
+                .GetField("routeIdParam", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var claimsField = typeof(AuthorizeRouteClaimsAttribute)
+                .GetField("claims", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+            var routeIdParam = (string)routeIdParamField.GetValue(attribute);
+            var claims = (string[])claimsField.GetValue(attribute);
+
+            routeIdParam.Should().Be("directRegistrantId");
+            claims.Should().Contain(WeeeClaimTypes.DirectRegistrantAccess);
+        }
+
+        [Fact]
+        public void ProducerController_ShouldHaveOutputCacheAttribute()
+        {
+            // Arrange
+            var typeInfo = typeof(ProducerController);
+
+            // Act & Assert
+            typeInfo.Should().BeDecoratedWith<OutputCacheAttribute>(attr =>
+                attr.NoStore == true &&
+                attr.Duration == 0 &&
+                attr.VaryByParam == "None");
         }
 
         private void SetupInCompleteSubmission()
