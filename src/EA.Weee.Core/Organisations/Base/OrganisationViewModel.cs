@@ -52,7 +52,7 @@
         public bool IsPreviousSchemeMember { get; set; }
 
         [StringLength(CommonMaxFieldLengths.ProducerRegistrationNumber)]
-        [DisplayName("Producer registration number")]
+        [DisplayName("Producer registration number (PRN)")]
         public virtual string ProducerRegistrationNumber { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)

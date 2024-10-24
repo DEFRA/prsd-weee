@@ -8,10 +8,14 @@
     using System.Web.Mvc;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Web.Areas.Producer.Controllers;
+    using EA.Weee.Web.Services.Caching;
 
     public class SmallProducerSubmissionContextAttribute : ActionFilterAttribute
     {
         public Func<IWeeeClient> Client { get; set; }
+
+        public IWeeeCache Cache { get; set; }
+
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             if (!context.RouteData.Values.TryGetValue("directRegistrantId", out var directRegistrantIdActionParameter))
@@ -34,8 +38,13 @@
 
                     if (data?.CurrentSubmission == null)
                     {
-                        await client.SendAsync(context.HttpContext.User.GetAccessToken(), new AddSmallProducerSubmission(guidDirectRegistrantId));
+                        var addSubmissionResult = await client.SendAsync(context.HttpContext.User.GetAccessToken(), new AddSmallProducerSubmission(guidDirectRegistrantId));
 
+                        if (addSubmissionResult.InvalidCache)
+                        {
+                            await Cache.InvalidateSmallProducerSearch();
+                        }
+                        
                         data = await client.SendAsync(context.HttpContext.User.GetAccessToken(), new GetSmallProducerSubmission(guidDirectRegistrantId));
                     }
 

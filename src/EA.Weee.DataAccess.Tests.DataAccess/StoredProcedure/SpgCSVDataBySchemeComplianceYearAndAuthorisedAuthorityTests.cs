@@ -44,7 +44,7 @@
                 // Act
                 List<MembersDetailsCsvData> results =
                     await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false,
-                        false, scheme1.Id, scheme1.CompetentAuthorityId);
+                        false, scheme1.Id, scheme1.CompetentAuthorityId, false);
 
                 // Assert
                 Assert.NotNull(results);
@@ -80,7 +80,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null);
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null, false);
 
                 // Assert
                 Assert.NotNull(results);
@@ -113,7 +113,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null);
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null, false);
 
                 // Assert
                 Assert.NotNull(results);
@@ -150,7 +150,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null);
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null, false);
 
                 // Assert
                 Assert.NotNull(results);
@@ -187,7 +187,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null);
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null, false);
 
                 // Assert
                 Assert.NotNull(results);
@@ -231,7 +231,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null);
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null, false);
                 // Assert
                 Assert.NotNull(results);
                 Assert.Single(results);
@@ -275,7 +275,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false);
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, null, null, false);
 
                 // Assert
                 Assert.NotNull(results);
@@ -315,7 +315,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null);
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null, false);
 
                 // Assert
                 Assert.NotNull(results);
@@ -360,7 +360,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, true, false, scheme1.Id, null);
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, true, false, scheme1.Id, null, false);
 
                 // Assert
                 Assert.NotNull(results);
@@ -407,7 +407,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null);
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null, false);
 
                 // Assert
                 Assert.NotNull(results);
@@ -442,7 +442,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme.Id, null);
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme.Id, null, false);
 
                 // Assert
                 Assert.NotNull(results);
@@ -477,7 +477,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, true, scheme.Id, null);
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, true, scheme.Id, null, false);
 
                 // Assert
                 Assert.NotNull(results);
@@ -513,7 +513,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, true, true, scheme.Id, null);
+                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, true, true, scheme.Id, null, false);
 
                 // Assert
                 Assert.NotNull(results);
@@ -524,8 +524,10 @@
             }
         }
 
-        [Fact]
-        public async Task Execute_WithDirectRegistrantSubmissions_ReturnsResults()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task Execute_WithDirectRegistrantSubmissions_ReturnsResults(bool filterDirectRegistrant)
         {
             using (var wrapper = new DatabaseWrapper())
             {
@@ -637,12 +639,20 @@
                 dataReturn1.SetCurrentVersion(version1);
                 await wrapper.WeeeContext.SaveChangesAsync();
 
-                List<MembersDetailsCsvData> results = await wrapper.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(complianceYear, true, true, null, null);
+                List<MembersDetailsCsvData> results = await wrapper.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(complianceYear, true, true, null, null, filterDirectRegistrant);
 
-                var schemeResult = results.ElementAt(0);
-                schemeResult.ApprovalNumber.Should().Be("WEE/AH7453NF/SCH");
+                var assertionSmallProducerStartIndex = 1;
+                if (filterDirectRegistrant)
+                {
+                    assertionSmallProducerStartIndex = 0;
+                }
+                else
+                {
+                    var schemeResult = results.ElementAt(0);
+                    schemeResult.ApprovalNumber.Should().Be("WEE/AH7453NF/SCH");
+                }
 
-                var result1 = results.ElementAt(1);
+                var result1 = results.ElementAt(assertionSmallProducerStartIndex);
                 result1.CompanyName.Should().Be("My company 2");
                 result1.SchemeName.Should().Be("Direct registrant");
                 result1.TradingName.Should().BeNullOrWhiteSpace();
@@ -725,7 +735,7 @@
                 result1.DateRegistered.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
                 result1.BrandNames.Should().Be("brand name");
 
-                var result2 = results.ElementAt(2);
+                var result2 = results.ElementAt(assertionSmallProducerStartIndex + 1);
                 result2.CompanyName.Should().Be("My company");
                 result2.SchemeName.Should().Be("Direct registrant");
                 result2.TradingName.Should().BeNullOrWhiteSpace();
