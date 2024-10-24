@@ -552,7 +552,6 @@
     </Compile>
     <Compile Include="Areas\Admin\Controllers\Base\AdminBreadcrumbBaseController.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\PaymentDetailsViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\Producers\UKGOVDate.cs" />
     <Compile Include="Services\SubmissionsService\ISubmissionService.cs" />
     <Compile Include="Areas\Admin\Controllers\ProducerSubmissionController.cs" />
     <Compile Include="Services\SubmissionsService\SubmissionService.cs" />
