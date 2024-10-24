@@ -59,6 +59,8 @@
             model.RegistrationNumber = registrationNumber;
 
             model.IsAdmin = new ClaimsPrincipal(User).HasClaim(p => p.Value == Claims.InternalAdmin);
+            model.IsAdmin = true;
+            model.IsInternal = true;
             return View("Producer/ViewOrganisation/OrganisationDetails", model);
         }
 
@@ -175,7 +177,7 @@
                     }
 
                     return RedirectToAction(nameof(ProducerSubmissionController.Removed),
-                        new { viewModel.Producer.ProducerName, viewModel.Producer.ComplianceYear });
+                        new { producerName = viewModel.Producer.ProducerName, year = viewModel.Producer.ComplianceYear });
                 }
                 else
                 {

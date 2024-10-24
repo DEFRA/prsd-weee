@@ -16,7 +16,7 @@
         @Html.HiddenFor(m => m.ProducerName)
         @Html.HiddenFor(m => m.ComplianceYear)
 
-        <p>You have successfully removed the producer registration for @Model.ProducerName, for @Model.ComplianceYear.</p>
+        <p>You have successfully removed the producer registration for '@Model.ProducerName', for @Model.ComplianceYear.</p>
 
         @(this.WeeeGds().Submit("Continue"))
     }
