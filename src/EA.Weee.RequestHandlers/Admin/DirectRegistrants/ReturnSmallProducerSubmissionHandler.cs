@@ -1,17 +1,17 @@
-﻿using EA.Weee.Domain.Organisation;
-using EA.Weee.Domain.Producer;
-
-namespace EA.Weee.RequestHandlers.Admin.DirectRegistrants
+﻿namespace EA.Weee.RequestHandlers.Admin.DirectRegistrants
 {
-    using Core.DirectRegistrant;
     using EA.Prsd.Core.Mediator;
+    using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
+    using EA.Weee.Domain.DataReturns;
+    using EA.Weee.Domain.Organisation;
+    using EA.Weee.Domain.Producer;
     using EA.Weee.RequestHandlers.Shared;
     using EA.Weee.Requests.Admin.DirectRegistrants;
-    using Security;
-    using System.Threading.Tasks;
-    using System;
     using EA.Weee.Security;
+    using Security;
+    using System;
+    using System.Threading.Tasks;
 
     internal class ReturnSmallProducerSubmissionHandler : IRequestHandler<ReturnSmallProducerSubmission, Guid>
     {
@@ -19,16 +19,18 @@ namespace EA.Weee.RequestHandlers.Admin.DirectRegistrants
         private readonly IRegisteredProducerDataAccess registeredProducerDataAccess;
         private readonly ISmallProducerSubmissionService smallProducerSubmissionService;
         private readonly ISmallProducerDataAccess smallProducerDataAccess;
+        private readonly WeeeContext weeeContext;
 
         public ReturnSmallProducerSubmissionHandler(
             IWeeeAuthorization authorization,
             IRegisteredProducerDataAccess registeredProducerDataAccess,
-            ISmallProducerSubmissionService smallProducerSubmissionService, ISmallProducerDataAccess smallProducerDataAccess)
+            ISmallProducerSubmissionService smallProducerSubmissionService, ISmallProducerDataAccess smallProducerDataAccess, WeeeContext weeeContext)
         {
             this.authorization = authorization;
             this.registeredProducerDataAccess = registeredProducerDataAccess;
             this.smallProducerSubmissionService = smallProducerSubmissionService;
             this.smallProducerDataAccess = smallProducerDataAccess;
+            this.weeeContext = weeeContext;
         }
 
         public async Task<Guid> HandleAsync(ReturnSmallProducerSubmission request)
@@ -40,15 +42,14 @@ namespace EA.Weee.RequestHandlers.Admin.DirectRegistrants
                 await smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionById(
                     request.DirectProducerSubmissionId);
 
-            if (submission.DirectProducerSubmissionStatus != Domain.Producer.DirectProducerSubmissionStatus.Complete)
+            if (submission == null || submission.DirectProducerSubmissionStatus != DirectProducerSubmissionStatus.Complete)
             {
                 throw new InvalidOperationException("submission status invalid");
             }
 
-            var currentSubmissionHistory = submission.CurrentSubmission;
-
             var newSubmissionHistory = new DirectProducerSubmissionHistory(submission);
 
+            var currentSubmissionHistory = submission.CurrentSubmission;
             var contactAddress = currentSubmissionHistory.ContactAddress;
             var businessAddress = currentSubmissionHistory.BusinessAddress;
             var contact = currentSubmissionHistory.Contact;
@@ -131,10 +132,38 @@ namespace EA.Weee.RequestHandlers.Admin.DirectRegistrants
 
                 var newAuthorisedRepresentative = new AuthorisedRepresentative(authorisedRep.OverseasProducerName, authorisedRep.OverseasProducerTradingName, producerContact);
 
-                newSubmissionHistory.AddOrUpdateAuthorisedRepresentative(newAuthorisedRepresentative); ;
+                newSubmissionHistory.AddOrUpdateAuthorisedRepresentative(newAuthorisedRepresentative);
             }
-            // create a new record submission history record based on the submitted
 
+            if (currentSubmissionHistory.EeeOutputReturnVersion != null)
+            {
+                foreach (var eeeOutputAmount in currentSubmissionHistory.EeeOutputReturnVersion.EeeOutputAmounts)
+                {
+                    newSubmissionHistory.EeeOutputReturnVersion = new EeeOutputReturnVersion();
+                    newSubmissionHistory.EeeOutputReturnVersion.EeeOutputAmounts.Add(new EeeOutputAmount(eeeOutputAmount.ObligationType, eeeOutputAmount.WeeeCategory, eeeOutputAmount.Tonnage, eeeOutputAmount.RegisteredProducer));
+                }
+            }
+
+            if (currentSubmissionHistory.BrandName != null)
+            {
+                newSubmissionHistory.AddOrUpdateBrandName(currentSubmissionHistory.BrandName);
+            }
+
+            newSubmissionHistory.CompanyName = currentSubmissionHistory.CompanyName;
+            newSubmissionHistory.TradingName = currentSubmissionHistory.TradingName;
+            newSubmissionHistory.CompanyRegistrationNumber = currentSubmissionHistory.CompanyRegistrationNumber;
+            newSubmissionHistory.SellingTechniqueType = currentSubmissionHistory.SellingTechniqueType;
+
+            weeeContext.DirectProducerSubmissionHistories.Add(newSubmissionHistory);
+
+            await weeeContext.SaveChangesAsync();
+
+            submission.DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Returned;
+            submission.SetCurrentSubmission(newSubmissionHistory);
+
+            await weeeContext.SaveChangesAsync();
+
+            return submission.Id;
         }
     }
 }

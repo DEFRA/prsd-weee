@@ -1,11 +1,12 @@
 ﻿namespace EA.Weee.Integration.Tests.Builders
 {
     using Base;
+    using EA.Weee.Domain.DataReturns;
+    using EA.Weee.Domain.Organisation;
     using EA.Weee.Domain.Producer;
     using EA.Weee.Domain.Producer.Classfication;
     using EA.Weee.Tests.Core;
     using System;
-    using EA.Weee.Domain.DataReturns;
 
     public class DirectRegistrantSubmissionHistoryDbSetup : DbTestDataBuilder<DirectProducerSubmissionHistory, DirectRegistrantSubmissionHistoryDbSetup>
     {
@@ -13,9 +14,9 @@
         {
             instance = new DirectProducerSubmissionHistory
             {
-                CompanyName = "new company name",
-                TradingName = "new trading name",
-                CompanyRegistrationNumber = "12345678"
+                CompanyName = Faker.Company.Name(),
+                TradingName = Faker.Company.Name(),
+                CompanyRegistrationNumber = Faker.RandomNumber.Next(0, 10).ToString()
             };
 
             return instance;
@@ -56,9 +57,9 @@
             return this;
         }
 
-        public DirectRegistrantSubmissionHistoryDbSetup WithAuthorisedRep(Guid authorisedRepId)
+        public DirectRegistrantSubmissionHistoryDbSetup WithAuthorisedRep(AuthorisedRepresentative authorisedRep)
         {
-            ObjectInstantiator<DirectProducerSubmissionHistory>.SetProperty(o => o.AuthorisedRepresentativeId, authorisedRepId, instance);
+            ObjectInstantiator<DirectProducerSubmissionHistory>.SetProperty(o => o.AuthorisedRepresentative, authorisedRep, instance);
 
             return this;
         }
@@ -73,6 +74,13 @@
         public DirectRegistrantSubmissionHistoryDbSetup WithEeeData(EeeOutputReturnVersion outputReturnVersion)
         {
             ObjectInstantiator<DirectProducerSubmissionHistory>.SetProperty(o => o.EeeOutputReturnVersion, outputReturnVersion, instance);
+
+            return this;
+        }
+
+        public DirectRegistrantSubmissionHistoryDbSetup WithAppropriateSignatory(Contact appropriateSignatory)
+        {
+            ObjectInstantiator<DirectProducerSubmissionHistory>.SetProperty(o => o.AppropriateSignatory, appropriateSignatory, instance);
 
             return this;
         }
