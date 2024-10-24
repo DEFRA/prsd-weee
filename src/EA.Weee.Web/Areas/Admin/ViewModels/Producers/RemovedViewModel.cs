@@ -7,5 +7,6 @@
         public int ComplianceYear { get; set; }
 
         public string SchemeName { get; set; }
+        public string ProducerName { get; set; }
     }
 }
