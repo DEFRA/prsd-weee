@@ -448,6 +448,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         [ActionName("PaymentFailure")]
         [SmallProducerSubmissionContext]
         public async Task<ActionResult> RetryPayment()

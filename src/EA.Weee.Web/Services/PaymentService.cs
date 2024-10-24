@@ -107,6 +107,16 @@
                     throw new InvalidOperationException($"ProcessPaymentResultAsync invalid token {payment.ErrorMessage}");
                 }
 
+                if (payment.PaymentFinished)
+                {
+                    return new PaymentResult()
+                    {
+                        PaymentReference = payment.PaymentReference,
+                        DirectRegistrantId = payment.DirectRegistrantId,
+                        Status = payment.PaymentStatus
+                    };
+                }
+
                 var result = await paymentClient.GetPaymentAsync(payment.PaymentId);
 
                 if (result != null)
