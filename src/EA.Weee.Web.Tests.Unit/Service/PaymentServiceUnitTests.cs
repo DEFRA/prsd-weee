@@ -286,7 +286,8 @@
                 DirectRegistrantId = directRegistrantId,
                 PaymentId = fixture.Create<string>(),
                 PaymentSessionId = Guid.NewGuid(),
-                PaymentReference = fixture.Create<string>()
+                PaymentReference = fixture.Create<string>(),
+                PaymentFinished = false 
             };
 
             A.CallTo(() => weeeClient.SendAsync(accessToken, A<ValidateAndGetSubmissionPayment>._))
@@ -316,6 +317,42 @@
                     r.PaymentSessionId == payment.PaymentSessionId &&
                     r.IsFinalState == paymentResult.State.IsInFinalState())))
                 .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandlePaymentReturnAsync_ShouldReturnPaymentResultDirectlyWhenPaymentFinished()
+        {
+            // Arrange
+            var accessToken = fixture.Create<string>();
+            var token = fixture.Create<string>();
+            var directRegistrantId = Guid.NewGuid();
+
+            A.CallTo(() => secureReturnUrlHelper.ValidateSecureRandomString(token))
+                .Returns((true, directRegistrantId));
+
+            var payment = new SubmissionPaymentDetails
+            {
+                DirectRegistrantId = directRegistrantId,
+                PaymentId = fixture.Create<string>(),
+                PaymentReference = fixture.Create<string>(),
+                PaymentFinished = true,
+                PaymentStatus = PaymentStatus.Success
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<ValidateAndGetSubmissionPayment>._))
+                .Returns(payment);
+
+            // Act
+            var result = await paymentService.HandlePaymentReturnAsync(accessToken, token);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.DirectRegistrantId.Should().Be(directRegistrantId);
+            result.PaymentReference.Should().Be(payment.PaymentReference);
+            result.Status.Should().Be(PaymentStatus.Success);
+
+            A.CallTo(() => payClient.GetPaymentAsync(A<string>._))
+                .MustNotHaveHappened();
         }
     }
 }

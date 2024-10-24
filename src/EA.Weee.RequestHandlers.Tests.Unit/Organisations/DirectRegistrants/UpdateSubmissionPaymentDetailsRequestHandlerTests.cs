@@ -223,11 +223,11 @@
             await handler.HandleAsync(request);
 
             // Assert
-            currentYearSubmission.PaymentFinished.Should().BeNull();
+            currentYearSubmission.PaymentFinished.Should().BeFalse();
 
             request = CreateValidRequest(isFinalState: true, paymentStatus: PaymentStatus.Failed);
             await handler.HandleAsync(request);
-            currentYearSubmission.PaymentFinished.Should().BeNull();
+            currentYearSubmission.PaymentFinished.Should().BeFalse();
         }
 
         private UpdateSubmissionPaymentDetailsRequest CreateValidRequest(bool isFinalState = false, PaymentStatus paymentStatus = PaymentStatus.Success)
