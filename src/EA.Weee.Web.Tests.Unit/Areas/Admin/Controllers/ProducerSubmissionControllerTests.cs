@@ -2,6 +2,7 @@
 {
     using AutoFixture;
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Api.Client;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
@@ -27,6 +28,7 @@
     public class ProducerSubmissionControllerUnitTests : SimpleUnitTestBase
     {
         private readonly EA.Weee.Web.Areas.Admin.Controllers.ProducerSubmissionController controller;
+        private readonly IWeeeClient weeeClient;
         private readonly IWeeeCache weeeCache;
         private readonly BreadcrumbService breadcrumb;
         private readonly Guid organisationId = Guid.NewGuid();
@@ -38,6 +40,7 @@
         public ProducerSubmissionControllerUnitTests()
         {
             breadcrumb = A.Fake<BreadcrumbService>();
+            weeeClient = A.Fake<IWeeeClient>();
             weeeCache = A.Fake<IWeeeCache>();
             mapper = A.Fake<IMapper>();
             templateExecutor = A.Fake<IMvcTemplateExecutor>();
@@ -47,6 +50,7 @@
 
             controller = new EA.Weee.Web.Areas.Admin.Controllers.ProducerSubmissionController(
                breadcrumb,
+               () => weeeClient,
                weeeCache,
                mapper,
                templateExecutor,
