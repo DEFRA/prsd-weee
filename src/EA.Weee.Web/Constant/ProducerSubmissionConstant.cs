@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.Web.Constant
 {
+    using System;
+
     public static class ProducerSubmissionConstant
     {
         public static string HistoricProducerRegistrationSubmission = "Producer registration submissions";
