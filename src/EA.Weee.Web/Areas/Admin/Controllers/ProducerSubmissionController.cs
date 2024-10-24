@@ -136,6 +136,7 @@
             return View();
         }
 
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         [AdminSmallProducerSubmissionContext]
         [HttpGet]
         public ActionResult RemoveSubmission(string registrationNumber, int year)
@@ -191,6 +192,7 @@
             }
         }
 
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         [HttpGet]
         public ActionResult Removed(string registrationNumber, string producerName, int year)
         {

@@ -7,6 +7,8 @@
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Tests.Core;
+    using EA.Weee.Web.Areas.Admin.Controllers;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
     using EA.Weee.Web.Areas.Producer.Filters;
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Infrastructure;
@@ -298,6 +300,42 @@
 
             A.CallTo(() => this.submissionService.TotalEEEDetails(year)).MustHaveHappenedOnceExactly();
             A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, true)).MustHaveHappenedOnceExactly();
+        }
+
+        public async Task RemoveSubmission_Get_ReturnAndPopulatesViewModel()
+        {
+            // Arrange
+            SetupDefaultControllerData();
+
+            string registrationNumber = "reg"; 
+            int year = 2024;
+            var submission = controller.SmallProducerSubmissionData.SubmissionHistory[year];
+
+            // Act
+            var result = controller.RemoveSubmission(registrationNumber, year) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+            result.Model.Should().NotBeNull();
+
+            var viewModel = result.Model as ConfirmRemovalViewModel;
+
+            viewModel.Producer.RegistrationNumber.Should().Be(registrationNumber); 
+            viewModel.Producer.ComplianceYear.Should().Be(year);
+            viewModel.Producer.ProducerName.Should().Be(submission.CompanyName);
+            viewModel.Producer.RegisteredProducerId.Should().Be(submission.RegisteredProducerId);
+        }
+
+        [Fact]
+        public void RemoveSubmission_Get_ShouldHaveContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("RemoveSubmission", new[] { typeof(string), typeof(int) });
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<AdminSmallProducerSubmissionContextAttribute>();
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
         }
 
         private void SetupDefaultControllerData()
