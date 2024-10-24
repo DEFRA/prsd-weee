@@ -28,6 +28,7 @@
     using System.Web.Mvc;
 
     [AuthorizeRouteClaims("directRegistrantId", WeeeClaimTypes.DirectRegistrantAccess)]
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
     public class ProducerController : ExternalSiteController
     {
         public SmallProducerSubmissionData SmallProducerSubmissionData;
@@ -148,7 +149,8 @@
         }
 
         [HttpGet]
-        [SmallProducerSubmissionContext]
+        [SmallProducerSubmissionSubmitted(Order = 2)]
+        [SmallProducerSubmissionContext(Order = 1)]
         public async Task<ActionResult> CheckAnswers()
         {
             var source = new SmallProducerSubmissionMapperData()
