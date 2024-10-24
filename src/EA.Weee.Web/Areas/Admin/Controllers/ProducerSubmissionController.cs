@@ -19,6 +19,7 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Admin.DirectRegistrants;
+    using EA.Weee.Web.Filters;
 
     public class ProducerSubmissionController : AdminController
     {
@@ -137,7 +138,7 @@
 
         [AdminSmallProducerSubmissionContext]
         [HttpGet]
-        public async Task<ActionResult> RemoveSubmission(string registrationNumber, int year)
+        public ActionResult RemoveSubmission(string registrationNumber, int year)
         {
             var submission = this.SmallProducerSubmissionData.SubmissionHistory[year];
             var selectedValue = string.Empty;
@@ -191,7 +192,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> Removed(string registrationNumber, string producerName, int year)
+        public ActionResult Removed(string registrationNumber, string producerName, int year)
         {
             return View(new RemovedViewModel
             {
@@ -201,6 +202,7 @@
             });
         }
 
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Removed(RemovedViewModel model)
