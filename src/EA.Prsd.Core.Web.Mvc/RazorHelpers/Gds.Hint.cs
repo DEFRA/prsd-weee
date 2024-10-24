@@ -27,7 +27,7 @@
         private static TagBuilder CreateHintTag(string hintText, string id, string tagName)
         {
             var hint = new TagBuilder(tagName);
-            hint.AddCssClass("form-hint");
+            hint.AddCssClass("govuk-hint");
             hint.SetInnerText(hintText);
             if (!string.IsNullOrWhiteSpace(id))
             {

@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Core.Configuration.Logging
 {
     using Serilog;
+    using Serilog.Events;
     using System.Configuration;
 
     public static class LoggerConfig
@@ -19,6 +20,8 @@
 
             Log.Logger = new LoggerConfiguration()
                 .MinimumLevel.Information()
+                .MinimumLevel.Override("IdentityServer3", LogEventLevel.Error)
+                .MinimumLevel.Override("Hangfire", LogEventLevel.Error)
                 .WriteTo.MSSqlServer(
                     connectionString: connectionString,
                     schemaName: schemaName,

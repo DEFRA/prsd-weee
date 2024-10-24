@@ -3,24 +3,22 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.DirectRegistrant;
-    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.PaymentDetails;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
     using EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview;
     using EA.Weee.Web.Areas.Producer.Filters;
-    using EA.Weee.Web.Areas.Producer.Mappings.ToRequest;
-    using EA.Weee.Web.Areas.Producer.ViewModels;
-    using EA.Weee.Web.Constant;
+    using EA.Weee.Web.Authorization;
+    using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.Services.SubmissionService;
     using System;
-    using System.Collections.Generic;
-    using System.Linq;
+    using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
@@ -62,6 +60,8 @@
 
             model.RegistrationNumber = registrationNumber;
 
+            model.IsAdmin = new ClaimsPrincipal(User).HasClaim(p => p.Value == Claims.InternalAdmin);
+
             return View("Producer/ViewOrganisation/OrganisationDetails", model);
         }
 
@@ -72,6 +72,8 @@
             submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
 
             var model = await submissionService.OrganisationDetails(year);
+
+            model.IsAdmin = new ClaimsPrincipal(User).HasClaim(p => p.Value == Claims.InternalAdmin);
 
             model.RegistrationNumber = registrationNumber;
 
@@ -131,6 +133,7 @@
         }
 
         [HttpGet]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> AddPaymentDetails(Guid directProducerSubmissionId)
         {
             var model = new PaymentDetailsViewModel { DirectProducerSubmissionId = directProducerSubmissionId };
@@ -138,6 +141,7 @@
         }
 
         [HttpPost]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> AddPaymentDetails(PaymentDetailsViewModel model)
         {
             if (ModelState.IsValid == false)
@@ -161,6 +165,12 @@
 
         [HttpGet]
         public async Task<ActionResult> RemoveSubmission()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> ReturnProducerRegistration()
         {
             return View();
         }

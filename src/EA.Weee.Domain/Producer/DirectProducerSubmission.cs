@@ -18,7 +18,7 @@
 
         public virtual Guid RegisteredProducerId { get; set; }
         
-        public virtual bool? PaymentFinished { get; set; }
+        public virtual bool PaymentFinished { get; set; }
 
         public virtual int ComplianceYear { get; set; }
 
