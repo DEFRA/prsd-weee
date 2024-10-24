@@ -6,9 +6,14 @@
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
+    using EA.Weee.Core.PaymentDetails;
+    using EA.Weee.Requests.Admin;
+    using EA.Weee.Security;
     using EA.Weee.Tests.Core;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
     using EA.Weee.Web.Areas.Producer.Filters;
     using EA.Weee.Web.Areas.Producer.ViewModels;
+    using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.Services;
@@ -301,6 +306,83 @@
 
             A.CallTo(() => this.submissionService.TotalEEEDetails(year)).MustHaveHappenedOnceExactly();
             A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, true)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task AddPaymentDetails_Get_ReturnViewModel()
+        {
+            SetupDefaultControllerData();
+
+            var directProducerSubmissionId = Guid.NewGuid();
+
+            var view = (await controller.AddPaymentDetails(directProducerSubmissionId)) as ViewResult;
+
+            view.Model.Should().BeOfType<PaymentDetailsViewModel>();
+            (view.Model as PaymentDetailsViewModel).DirectProducerSubmissionId.Should().Be(directProducerSubmissionId);
+        }
+
+        [Fact]
+        public void AddPaymentDetails_Post_DecoratesWithAuthorizeInternalClaimsAttribute()
+        {
+            var methodInfo = typeof(EA.Weee.Web.Areas.Admin.Controllers.ProducerSubmissionController)
+                .GetMethod("AddPaymentDetails", new[] { typeof(PaymentDetailsViewModel) });
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
+        }
+
+        [Fact]
+        public void AddPaymentDetails_Get_DecoratesWithAuthorizeInternalClaimsAttribute()
+        {
+            var methodInfo = typeof(EA.Weee.Web.Areas.Admin.Controllers.ProducerSubmissionController)
+                .GetMethod("AddPaymentDetails", new[] { typeof(Guid) });
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
+        }
+
+        [Fact]
+        public async Task AddPaymentDetails_Post_ReturnsRouteValuesAndCallsClient()
+        {
+            SetupDefaultControllerData();
+
+            var directProducerSubmissionId = Guid.NewGuid();
+
+            var vm = new PaymentDetailsViewModel()
+            {
+                ConfirmPaymentMade = true,
+                DirectProducerSubmissionId = directProducerSubmissionId,
+
+                PaymentDetailsDescription = "des",
+                PaymentMethod = "meth",
+                PaymentRecievedDate = new Core.PaymentDetails.DateTimeInput { Day = 01, Month = 10, Year = 1989 }
+            };
+
+            var payresult = new ManualPaymentResult
+            {
+                ComplianceYear = 2004,
+                RegistrationNumber = "reg"
+            };
+
+            A.CallTo(() => client.SendAsync(A<string>._,
+                A<AddPaymentDetails>.That.Matches(s => s.PaymentMethod == vm.PaymentMethod
+                && s.PaymentRecievedDate == vm.PaymentRecievedDate
+                && s.PaymentDetailsDescription == vm.PaymentDetailsDescription
+                && s.DirectProducerSubmissionId == vm.DirectProducerSubmissionId)))
+               .Returns(payresult);
+
+            var view = (await controller.AddPaymentDetails(vm)) as RedirectToRouteResult;
+
+            view.RouteValues["registrationNumber"].Should().Be(payresult.RegistrationNumber);
+            view.RouteValues["year"].Should().Be(payresult.ComplianceYear);
+            view.RouteValues["action"].Should().Be("OrganisationDetails");
+
+            A.CallTo(() => client.SendAsync(A<string>._,
+                A<AddPaymentDetails>.That.Matches(s => s.PaymentMethod == vm.PaymentMethod
+                && s.PaymentRecievedDate == vm.PaymentRecievedDate
+                && s.PaymentDetailsDescription == vm.PaymentDetailsDescription
+                && s.DirectProducerSubmissionId == vm.DirectProducerSubmissionId)))
+                .MustHaveHappenedOnceExactly();
         }
 
         private void SetupDefaultControllerData()
