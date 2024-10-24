@@ -59,8 +59,6 @@
             model.RegistrationNumber = registrationNumber;
 
             model.IsAdmin = new ClaimsPrincipal(User).HasClaim(p => p.Value == Claims.InternalAdmin);
-            model.IsAdmin = true;
-            model.IsInternal = true;
             return View("Producer/ViewOrganisation/OrganisationDetails", model);
         }
 
@@ -199,6 +197,24 @@
                 ProducerName = producerName,
                 ComplianceYear = year
             });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Removed(RemovedViewModel model)
+        {
+            using (IWeeeClient client = apiClient())
+            {
+                var isAssociatedWithAnotherScheme = await client.SendAsync(User.GetAccessToken(),
+                    new IsProducerRegisteredForComplianceYear(model.RegistrationNumber, model.ComplianceYear));
+
+                if (isAssociatedWithAnotherScheme)
+                {
+                    return RedirectToAction("Details", new { model.RegistrationNumber });
+                }
+
+                return RedirectToAction("Search");
+            }
         }
 
         private ActionResult RedirectToOrganisationHasNoSubmissions()
