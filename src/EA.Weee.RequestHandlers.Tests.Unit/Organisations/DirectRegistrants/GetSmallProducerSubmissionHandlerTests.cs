@@ -20,19 +20,18 @@
     public class GetSmallProducerSubmissionHandlerTests : SimpleUnitTestBase
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IGenericDataAccess genericDataAccess;
         private readonly ISmallProducerSubmissionService smallProducerSubmissionService;
         private readonly GetSmallProducerSubmissionHandler handler;
         private readonly Guid directRegistrantId = Guid.NewGuid();
+        private readonly ISmallProducerDataAccess smallProducerDataAccess;
 
         public GetSmallProducerSubmissionHandlerTests()
         {
             authorization = A.Fake<IWeeeAuthorization>();
-            genericDataAccess = A.Fake<IGenericDataAccess>();
-   
             smallProducerSubmissionService = A.Fake<ISmallProducerSubmissionService>();
+            smallProducerDataAccess = A.Fake<ISmallProducerDataAccess>();
 
-            handler = new GetSmallProducerSubmissionHandler(authorization, genericDataAccess, smallProducerSubmissionService);
+            handler = new GetSmallProducerSubmissionHandler(authorization, smallProducerSubmissionService, smallProducerDataAccess);
         }
 
         [Fact]
@@ -90,7 +89,7 @@
             A.CallTo(() => directRegistrant.Organisation).Returns(A.Fake<Organisation>());
             A.CallTo(() => directRegistrant.Id).Returns(directRegistrantId);
 
-            A.CallTo(() => genericDataAccess.GetById<DirectRegistrant>(directRegistrantId))
+            A.CallTo(() => smallProducerDataAccess.GetById(directRegistrantId))
                 .Returns(Task.FromResult(directRegistrant));
 
             return directRegistrant;

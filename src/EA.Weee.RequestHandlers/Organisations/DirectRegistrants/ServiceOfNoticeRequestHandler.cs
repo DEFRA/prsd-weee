@@ -13,34 +13,22 @@
     using System.Threading.Tasks;
 
     internal class 
-        ServiceOfNoticeRequestHandler : IRequestHandler<ServiceOfNoticeRequest, bool>
+        ServiceOfNoticeRequestHandler : SubmissionRequestHandlerBase, IRequestHandler<ServiceOfNoticeRequest, bool>
     {
-        private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
-        private readonly ISystemDataDataAccess systemDataDataAccess;
 
         public ServiceOfNoticeRequestHandler(IWeeeAuthorization authorization,
-            IGenericDataAccess genericDataAccess, WeeeContext weeeContext, ISystemDataDataAccess systemDataDataAccess)
+            IGenericDataAccess genericDataAccess, WeeeContext weeeContext, ISystemDataDataAccess systemDataDataAccess, ISmallProducerDataAccess smallProducerDataAccess) : base(authorization, genericDataAccess, systemDataDataAccess, smallProducerDataAccess)
         {
-            this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
             this.weeeContext = weeeContext;
-            this.systemDataDataAccess = systemDataDataAccess;
         }
 
         public async Task<bool> HandleAsync(ServiceOfNoticeRequest request)
         {
-            authorization.EnsureCanAccessExternalArea();
+            var currentYearSubmission = await Get(request.DirectRegistrantId);
 
-            var directRegistrant = await genericDataAccess.GetById<DirectRegistrant>(request.DirectRegistrantId);
-
-            authorization.EnsureOrganisationAccess(directRegistrant.OrganisationId);
-
-            var systemDate = await systemDataDataAccess.GetSystemDateTime();
-
-            var currentYearSubmission = directRegistrant.DirectProducerSubmissions.First(r => r.ComplianceYear == systemDate.Year);
-            
             var country = await weeeContext.Countries.SingleAsync(c => c.Id == request.Address.CountryId);
 
             request.Address.CountryName = country.Name;
