@@ -35,25 +35,24 @@
                 throw new InvalidOperationException();
             }
 
-            // Get the enum fields if present.
-            var fields = typeof(T).GetFields(BindingFlags.Public | BindingFlags.Static);
-            var fieldNames = new List<string>();
+            // Get the enum fields and sort them by their actual enum values
+            var fields = typeof(T).GetFields(BindingFlags.Public | BindingFlags.Static)
+                .OrderBy(f => Convert.ToInt32(Enum.Parse(typeof(T), f.Name)));
 
+            var fieldNames = new List<string>();
             foreach (var field in fields)
             {
-                bool selectThisValue = selectedValue != null && selectedValue.Equals(field.Name, StringComparison.InvariantCultureIgnoreCase);
+                var selectThisValue = selectedValue != null &&
+                                      selectedValue.Equals(field.Name, StringComparison.InvariantCultureIgnoreCase);
 
-                // Get the display attributes for the enum.
-                var displayAttribute = (DisplayAttribute)field.GetCustomAttributes(typeof(DisplayAttribute)).SingleOrDefault();
-
-                // Set field name to either the enum name or the display name.
+                var displayAttribute = (DisplayAttribute)field.GetCustomAttributes(typeof(DisplayAttribute))
+                    .SingleOrDefault();
                 var name = (displayAttribute == null) ? field.Name : displayAttribute.Name;
 
                 if (selectThisValue)
                 {
                     selectedValue = name;
                 }
-
                 fieldNames.Add(name);
             }
 

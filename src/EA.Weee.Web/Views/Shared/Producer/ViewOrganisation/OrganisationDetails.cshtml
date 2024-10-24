@@ -24,7 +24,7 @@
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" style="width: 30%;" scope="row">Registration status</th>
 
-                            @if (Model.OrganisationViewModel.Status == EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted && Model.OrganisationViewModel.HasPaid)
+                            @if (Model.IsRegistered)
                             {
                                 <td class="govuk-table__cell">Registered</td>
                             }
@@ -54,7 +54,7 @@
                             <td class="govuk-table__cell">
                                 @(Model.OrganisationViewModel.HasPaid ? "Paid" : "Not paid")
 
-                                @if (Model.OrganisationViewModel.HasPaid)
+                                @if (Model.OrganisationViewModel.HasPaid == false)
                                 {
                                     <div style="float: right"> @Html.ActionLink("Add payment details", "AddPaymentDetails", "ProducerSubmission", null, new { @class = "govuk-link" })</div>
                                 }
@@ -126,10 +126,11 @@
 
         </div>
 
-        @if (Model.IsInternal && (Model.OrganisationViewModel.Status != EA.Weee.Core.DirectRegistrant.SubmissionStatus.InComplete
-    && Model.OrganisationViewModel.Status != EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted))
+        @if (Model.ShowReturnRegistrationToUser)
         {
-            @(this.WeeeGds().Button("Return producer registration to user"));
+            <div class="govuk-button-group govuk-!-padding-top-3">
+                @(this.WeeeGds().GovUkButtonLink("Return producer registration to user", "ReturnProducerRegistration"))
+            </div>
         }
     </div>
 

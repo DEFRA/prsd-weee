@@ -31,6 +31,8 @@
 
         Task InvalidateSchemeCache(Guid id);
 
+        Task InvalidateSmallProducerSearch();
+
         Task<AatfData> FetchAatfData(Guid organisationId, Guid aatfId);
 
         Task InvalidateSchemePublicInfoCache(Guid organisationId);
