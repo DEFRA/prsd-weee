@@ -1155,5 +1155,43 @@
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
         }
+
+        [Fact]
+        public void ProducerSubmissionController_ShouldHaveAuthorizeRouteClaimsAttribute()
+        {
+            // Arrange
+            var typeInfo = typeof(ProducerSubmissionController);
+
+            // Act
+            var attribute = typeInfo.GetCustomAttributes(typeof(AuthorizeRouteClaimsAttribute), false)
+                                     .FirstOrDefault() as AuthorizeRouteClaimsAttribute;
+
+            // Assert
+            attribute.Should().NotBeNull(); // Check that the attribute is present
+
+            var routeIdParamField = typeof(AuthorizeRouteClaimsAttribute)
+                .GetField("routeIdParam", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var claimsField = typeof(AuthorizeRouteClaimsAttribute)
+                .GetField("claims", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+            var routeIdParam = (string)routeIdParamField.GetValue(attribute);
+            var claims = (string[])claimsField.GetValue(attribute);
+
+            routeIdParam.Should().Be("directRegistrantId");
+            claims.Should().Contain(WeeeClaimTypes.DirectRegistrantAccess);
+        }
+
+        [Fact]
+        public void ProducerSubmissionController_ShouldHaveOutputCacheAttribute()
+        {
+            // Arrange
+            var typeInfo = typeof(ProducerSubmissionController);
+
+            // Act & Assert
+            typeInfo.Should().BeDecoratedWith<OutputCacheAttribute>(attr =>
+                attr.NoStore == true &&
+                attr.Duration == 0 &&
+                attr.VaryByParam == "None");
+        }
     }
 }
