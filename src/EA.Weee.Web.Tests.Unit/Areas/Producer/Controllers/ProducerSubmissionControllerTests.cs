@@ -1135,5 +1135,25 @@
             result.RouteValues["action"].Should().Be("AlreadySubmittedAndPaid");
             result.RouteValues["controller"].Should().Be("Producer");
         }
+
+        [Fact]
+        public void AppropriateSignatory_Get_ShouldHaveSmallProducerSubmissionSubmittedAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("AppropriateSignatory", Type.EmptyTypes);
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionSubmittedAttribute>();
+        }
+
+        [Fact]
+        public void AppropriateSignatory_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("AppropriateSignatory", Type.EmptyTypes);
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
+        }
     }
 }
