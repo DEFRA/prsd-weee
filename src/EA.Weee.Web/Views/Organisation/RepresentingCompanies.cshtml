@@ -10,7 +10,10 @@
 
 @section full_main_content
 {
-    @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Controllers.OrganisationController>(a => a.Index())))
+    @if (Model.ShowBackButton)
+    {
+        @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Controllers.OrganisationController>(a => a.Index())))
+    }
 
     @using (Html.BeginForm())
     {
