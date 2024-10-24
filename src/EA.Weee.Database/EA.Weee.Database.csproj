@@ -418,12 +418,11 @@
     <Content Include="scripts\Update\Release 7\Sprint4\20241002-1348-add-missing-foreign-key.sql" />
     <Content Include="scripts\Update\Release 7\Sprint5\20241010-1030-payment-session-update.sql" />
     <Content Include="scripts\Update\Release 7\Sprint5\20241008-1610-hangfire.sql" />
-    
-    
     <Content Include="scripts\Update\Release 7\Sprint4\20241002-1011-move-status.sql" />
     <Content Include="scripts\Update\Release 7\Sprint5\20241016-1206-get-obligation-type-function.sql" />
     <Content Include="scripts\Update\Release 7\Sprint5\20241016-1207-producer-register-report.sql" />
     <Content Include="scripts\Update\Release 7\Sprint6\20241022-1113-producer-eee-sp-update-direct-registrant.sql" />
+    <Content Include="scripts\Update\Release 7\Sprint6\20241024-0954-update-payment-finished.sql" />
     <Content Include="scripts\Update\Release 7\Sprint6\20241022-1348-producer-details-sp-update-direct-registrant.sql" />
     <Content Include="scripts\Update\Release 7\Sprint6\20241017-1102-producer-eee-sp-update.sql" />
     <Content Include="scripts\Update\Release 7\Sprint6\20241017-1016-add-prn-tabe-tidy.sql" />
