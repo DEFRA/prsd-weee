@@ -154,15 +154,6 @@
             return RedirectToAction(nameof(OrganisationDetails), new { registrationNumber = details.RegistrationNumber, year = details.ComplianceYear });
         }
 
-        private async Task<ManualPaymentResult> SendPaymentDetails(PaymentDetailsViewModel model)
-        {
-            using (var client = apiClient())
-            {
-                return await client.SendAsync(User.GetAccessToken(),
-                    new AddPaymentDetails(model.PaymentMethod, model.PaymentRecievedDate, model.PaymentDetailsDescription, model.DirectProducerSubmissionId));
-            }
-        }
-
         [HttpGet]
         public async Task<ActionResult> RemoveSubmission()
         {
@@ -178,6 +169,15 @@
         private ActionResult RedirectToOrganisationHasNoSubmissions()
         {
             return RedirectToAction("OrganisationHasNoSubmissions");
+        }
+
+        private async Task<ManualPaymentResult> SendPaymentDetails(PaymentDetailsViewModel model)
+        {
+            using (var client = apiClient())
+            {
+                return await client.SendAsync(User.GetAccessToken(),
+                    new AddPaymentDetails(model.PaymentMethod, model.PaymentRecievedDate, model.PaymentDetailsDescription, model.DirectProducerSubmissionId));
+            }
         }
     }
 }

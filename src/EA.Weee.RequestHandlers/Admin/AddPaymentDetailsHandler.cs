@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Admin.GetSchemes
+﻿namespace EA.Weee.RequestHandlers.Admin
 {
     using Core.Scheme;
     using Domain.Scheme;
@@ -7,6 +7,7 @@
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.Producer;
+    using EA.Weee.Security;
     using Prsd.Core.Mapper;
     using Prsd.Core.Mediator;
     using Security;
@@ -19,10 +20,8 @@
         private readonly IGenericDataAccess dataAccess;
         private readonly IUserContext userContext;
         private readonly WeeeContext context;
-        private readonly IMap<Scheme, SchemeData> schemeMap;
 
         public AddPaymentDetailsHandler(IWeeeAuthorization authorization, 
-            IMap<Scheme, SchemeData> schemeMap, 
             IGenericDataAccess genericDataAccess,
             IUserContext userContext,
             WeeeContext context)
@@ -31,12 +30,12 @@
             this.dataAccess = genericDataAccess;
             this.userContext = userContext;
             this.context = context;
-            this.schemeMap = schemeMap;
         }
 
         public async Task<ManualPaymentResult> HandleAsync(Requests.Admin.AddPaymentDetails request)
         {
             authorization.EnsureCanAccessInternalArea();
+            authorization.EnsureUserInRole(Roles.InternalAdmin);
 
             var submission = await dataAccess.GetById<DirectProducerSubmission>(request.DirectProducerSubmissionId);
 
