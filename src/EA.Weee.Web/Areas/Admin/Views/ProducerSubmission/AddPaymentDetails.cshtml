@@ -38,6 +38,9 @@
                     <fieldset class="govuk-fieldset" role="group" aria-describedby="passport-issued-hint">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             @Html.Gds().LabelFor(m => m.PaymentRecievedDate, false)
+                            @Html.Gds().ValidationMessageFor(m => m.PaymentRecievedDate.Day)
+                            @Html.Gds().ValidationMessageFor(m => m.PaymentRecievedDate.Month)
+                            @Html.Gds().ValidationMessageFor(m => m.PaymentRecievedDate.Year)
                         </legend>
                         <div id="passport-issued-hint" class="govuk-hint">
                             For example, 27 3 2007
@@ -58,7 +61,7 @@
                             <div class="govuk-date-input__item">
                                 <div class="govuk-form-group">
                                     @Html.Gds().LabelFor(m => m.PaymentRecievedDate.Year, false)
-                                    @Html.TextBoxFor(m => m.PaymentRecievedDate.Year, new { @maxlength = 2, @class = "govuk-input govuk-date-input__input govuk-input--width-4" })
+                                    @Html.TextBoxFor(m => m.PaymentRecievedDate.Year, new { @maxlength = 4, @class = "govuk-input govuk-date-input__input govuk-input--width-4" })
                                 </div>
                             </div>
                         </div>
@@ -66,16 +69,17 @@
                 </div>
             </div>
 
-            <div class="govuk-grid-column-full govuk-!-margin-bottom-3">
+            <div class="govuk-grid-column-full">
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PaymentDetailsDescription)">
                     @Html.Gds().LabelFor(m => m.PaymentDetailsDescription)
                     @Html.Gds().ValidationMessageFor(m => m.PaymentDetailsDescription)
-                    @Html.Gds().TextAreaFor(m => m.PaymentDetailsDescription)
+                    @Html.Gds().TextAreaFor(m => m.PaymentDetailsDescription, new { @maxlength = 2000 })
                 </div>
             </div>
 
-            <div class="govuk-grid-column-full">
+            <div class="govuk-grid-column-full govuk-!-margin-bottom-5">
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ConfirmPaymentMade)">
+                    @Html.Gds().ValidationMessageFor(m => m.ConfirmPaymentMade)
                     <div class="govuk-!-padding-bottom-1">
                         @Html.Gds().CheckBoxFrontEndFor(m => m.ConfirmPaymentMade, System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(new { @id = "ConfirmPaymentMade", @class = "govuk-checkboxes__input" }), "Confirm Payment Made")
                     </div>

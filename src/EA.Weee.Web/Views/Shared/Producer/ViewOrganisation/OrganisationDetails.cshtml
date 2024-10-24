@@ -54,7 +54,7 @@
                             <td class="govuk-table__cell">
                                 @(Model.OrganisationViewModel.HasPaid ? "Paid" : "Not paid")
 
-                                @if (true)
+                                @if (Model.OrganisationViewModel.HasPaid == false)
                                 {
                                     <div style="float: right"> @Html.ActionLink("Add payment details", "AddPaymentDetails", "ProducerSubmission", new { directProducerSubmissionId = Model.OrganisationViewModel.DirectProducerSubmissionId }, new { @class = "govuk-link" })</div>
                                 }

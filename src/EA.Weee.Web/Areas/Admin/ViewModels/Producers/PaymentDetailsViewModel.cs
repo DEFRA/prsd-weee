@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Producers
 {
+    using EA.Weee.Core.PaymentDetails;
     using System;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
@@ -14,12 +15,14 @@
 
         [Required]
         [DisplayName("Payment recieved date")]
-        public UKGOVDate PaymentRecievedDate { get; set; }
+        public DateTimeInput PaymentRecievedDate { get; set; }
 
         [DisplayName("Payment details")]
         public string PaymentDetailsDescription { get; set; }
 
         [DisplayName("Confirm this payment has been made")]
+        [Required]
+        [Range(typeof(bool), "true", "true", ErrorMessage = "Confirm this payment has been made is required")]
         public bool ConfirmPaymentMade { get; set; }
     }
 }
