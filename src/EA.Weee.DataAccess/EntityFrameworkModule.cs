@@ -41,9 +41,7 @@
 
             builder.RegisterAssemblyTypes(ThisAssembly).AsClosedTypesOf(typeof(IEventHandler<>));
 
-            builder.RegisterType<RegisteredProducerDataAccess>().As<IRegisteredProducerDataAccess>()
-                .InstancePerRequest();
-
+            builder.RegisterTypeByEnvironment<RegisteredProducerDataAccess, IRegisteredProducerDataAccess>(environment);
             builder.RegisterTypeByEnvironment<QuarterWindowTemplateDataAccess, IQuarterWindowTemplateDataAccess>(environment);
 
             builder.RegisterType<ProducerSubmissionDataAccess>().As<IProducerSubmissionDataAccess>()
