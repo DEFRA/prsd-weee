@@ -57,7 +57,8 @@
                 SubmittedDate = currentSubmission.SubmittedDate,
                 PaymentReference = MapPaymentReference(source.DirectProducerSubmission),
                 ProducerRegistrationNumber = source.DirectProducerSubmission.RegisteredProducer.ProducerRegistrationNumber,
-                RegisteredProducerId = source.DirectProducerSubmission.RegisteredProducer.Id
+                RegisteredProducerId = source.DirectProducerSubmission.RegisteredProducer.Id,
+                DirectProducerSubmissionId = source.DirectProducerSubmission.Id
             };
         }
 
@@ -75,7 +76,7 @@
 
         private static DateTime? MapRegistrationDate(DirectProducerSubmission submission)
         {
-            return submission.PaymentFinished == true ? submission.FinalPaymentSession.UpdatedAt : null;
+            return submission.PaymentFinished == true ? submission.FinalPaymentSession?.UpdatedAt ?? submission.ManualPaymentReceivedDate : null;
         }
 
         private static string MapBrandNames(DirectProducerSubmissionHistory currentSubmission, DirectRegistrant directRegistrant)

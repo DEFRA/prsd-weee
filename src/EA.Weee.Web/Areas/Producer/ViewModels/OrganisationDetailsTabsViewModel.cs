@@ -22,7 +22,7 @@
 
         public bool IsAdmin { get; set; } = false;
 
-        public bool ShowRemoveButton
+        public bool IsInternalAdmin
         {
             get
             {
@@ -42,7 +42,7 @@
         {
             get
             {
-                return this.IsInternal && (IsRegistered || this.OrganisationViewModel.Status == EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted);
+                return this.IsInternalAdmin && (IsRegistered || this.OrganisationViewModel.Status == EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted);
             }
         }
 

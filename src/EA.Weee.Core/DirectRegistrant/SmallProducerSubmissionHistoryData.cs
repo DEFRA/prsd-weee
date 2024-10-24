@@ -57,5 +57,7 @@
         public string ProducerRegistrationNumber { get; set; }
 
         public Guid RegisteredProducerId { get; set; }
+
+        public Guid DirectProducerSubmissionId { get; set; }
     }
 }

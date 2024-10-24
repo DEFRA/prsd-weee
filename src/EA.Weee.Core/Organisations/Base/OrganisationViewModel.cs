@@ -47,6 +47,8 @@
 
         public string PaymentReference { get; set; }
 
+        public Guid DirectProducerSubmissionId { get; set; }
+
         public bool IsPreviousSchemeMember { get; set; }
 
         [StringLength(CommonMaxFieldLengths.ProducerRegistrationNumber)]

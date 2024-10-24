@@ -232,6 +232,7 @@
     <Compile Include="Admin\Aatf\GetAatfApprovalDateChangeStatusTests.cs" />
     <Compile Include="Admin\Aatf\GetAatfComplianceYearsByAatfIdHandlerTests.cs" />
     <Compile Include="Admin\Aatf\GetAatfIdByComplianceYearHandlerTests.cs" />
+    <Compile Include="Admin\AddPaymentDetailsHandlerTests.cs" />
     <Compile Include="Admin\CheckApprovalNumberIsUniqueHandlerTests.cs" />
     <Compile Include="Admin\Aatf\CheckAatfCanBeDeletedHandlerTests.cs" />
     <Compile Include="Admin\Aatf\DeleteAatfHandlerTests.cs" />

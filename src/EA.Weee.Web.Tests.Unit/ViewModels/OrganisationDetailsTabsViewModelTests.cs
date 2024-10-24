@@ -73,7 +73,7 @@
             model.IsAdmin = isAdmin;
             model.IsInternal = isInternal;
 
-            model.ShowRemoveButton.Should().Be(expected);
+            model.IsInternalAdmin.Should().Be(expected);
         }
     }
 }
