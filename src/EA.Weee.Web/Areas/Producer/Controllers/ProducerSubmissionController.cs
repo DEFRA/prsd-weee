@@ -28,6 +28,7 @@
     using System.Web.Mvc;
 
     [AuthorizeRouteClaims("directRegistrantId", WeeeClaimTypes.DirectRegistrantAccess)]
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
     public class ProducerSubmissionController : ExternalSiteController
     {
         public SmallProducerSubmissionData SmallProducerSubmissionData;
@@ -356,7 +357,8 @@
         }
 
         [HttpGet]
-        [SmallProducerSubmissionContext]
+        [SmallProducerSubmissionSubmitted(Order = 2)]
+        [SmallProducerSubmissionContext(Order = 1)]
         public async Task<ActionResult> AppropriateSignatory()
         {
             var model = mapper.Map<SmallProducerSubmissionData, AppropriateSignatoryViewModel>(SmallProducerSubmissionData);
