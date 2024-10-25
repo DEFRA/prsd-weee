@@ -40,28 +40,18 @@
             return this;
         }
 
-        public DirectRegistrantSubmissionHistoryDbSetup WithBusinessAddress(Guid addressId)
+        public DirectRegistrantSubmissionHistoryDbSetup WithBusinessAddress(Address address)
         {
-            ObjectInstantiator<DirectProducerSubmissionHistory>.SetProperty(o => o.BusinessAddressId, addressId, instance);
+            EnsureCountryIsAttached(address);
+
+            instance.BusinessAddress = address;
 
             return this;
         }
 
         public DirectRegistrantSubmissionHistoryDbSetup WithContactAddress(Address address)
         {
-            if (address.Country != null)
-            {
-                var country = DbContext.Countries.First(c => c.Id == address.Country.Id);
-                address.Country = country;
-                DbContext.Entry(country).State = EntityState.Unchanged;
-            }
-
-            // Attach the address if it's not already tracked
-            //var addressEntry = DbContext.Entry(address);
-            //if (addressEntry.State == EntityState.Detached)
-            //{
-                //DbContext.Set<Address>().Attach(address);
-            //}
+            EnsureCountryIsAttached(address);
 
             instance.ContactAddress = address;
 
@@ -73,6 +63,16 @@
             ObjectInstantiator<DirectProducerSubmissionHistory>.SetProperty(o => o.BrandName, new BrandName(brandName), instance);
 
             return this;
+        }
+
+        private void EnsureCountryIsAttached(Address address)
+        {
+            if (address.Country != null)
+            {
+                var country = DbContext.Countries.First(c => c.Id == address.Country.Id);
+                address.Country = country;
+                DbContext.Entry(country).State = EntityState.Unchanged;
+            }
         }
 
         private void EnsureEntityIsTracked<T>(T entity) where T : class
@@ -90,6 +90,13 @@
 
         public DirectRegistrantSubmissionHistoryDbSetup WithAuthorisedRep(AuthorisedRepresentative authorisedRep)
         {
+            if (authorisedRep.OverseasContact.Address.Country != null)
+            {
+                var country = DbContext.Countries.First(c => c.Id == authorisedRep.OverseasContact.Address.CountryId);
+                authorisedRep.OverseasContact.Address.Country = country;
+                DbContext.Entry(country).State = EntityState.Unchanged;
+            }
+
             if (!DbContext.Set<AuthorisedRepresentative>().Local.Contains(authorisedRep))
             {
                 DbContext.Set<AuthorisedRepresentative>().Attach(authorisedRep);

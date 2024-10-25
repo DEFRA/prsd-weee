@@ -5,7 +5,10 @@
     using Base;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain;
+    using EA.Weee.Domain.DataReturns;
+    using EA.Weee.Domain.Lookup;
     using EA.Weee.Domain.Producer;
+    using EA.Weee.Domain.Producer.Classfication;
     using EA.Weee.Integration.Tests.Builders;
     using EA.Weee.Requests.Admin.DirectRegistrants;
     using FluentAssertions;
@@ -14,7 +17,6 @@
     using Prsd.Core.Mediator;
     using System;
     using System.Security;
-    using EA.Weee.Domain.Producer.Classfication;
 
     public class ReturnSmallProducerSubmissionHandlerIntegrationTests : IntegrationTestBase
     {
@@ -98,8 +100,15 @@
                 var contactAddress = AddressDbSetup.Init()
                     .WithCountry("UK - England")
                     .Create();
+                var businessAddress = AddressDbSetup.Init().Create();
+                var eeeVersion = new EeeOutputReturnVersion();
+                eeeVersion.AddEeeOutputAmount(
+                    EeeOutputAmountDbSetup.Init().WithData(directProducerSubmission.RegisteredProducerId, Domain.Lookup.WeeeCategory.AutomaticDispensers, Domain.Obligation.ObligationType.B2C, 10m).Create());
+                eeeVersion.AddEeeOutputAmount(
+                    EeeOutputAmountDbSetup.Init().WithData(directProducerSubmission.RegisteredProducerId, Domain.Lookup.WeeeCategory.AutomaticDispensers, Domain.Obligation.ObligationType.B2B, 5m).Create());
 
                 directProducerSubmissionHistory = DirectRegistrantSubmissionHistoryDbSetup.Init()
+                    .WithBusinessAddress(businessAddress)
                     .WithDirectProducerSubmission(directProducerSubmission)
                     .WithSellingTechnique(SellingTechniqueType.DirectSellingtoEndUser)
                     .WithBrandName(Faker.Name.First())
@@ -107,6 +116,7 @@
                     .WithAuthorisedRep(authorisedRep)
                     .WithContact(contact)
                     .WithContactAddress(contactAddress)
+                    .WithEeeData(eeeVersion)
                     .Create();
 
                 Query.UpdateCurrentProducerSubmission(directProducerSubmission.Id, directProducerSubmissionHistory.Id);
@@ -133,13 +143,27 @@
                 submission.CurrentSubmission.AuthorisedRepresentative.Should().NotBeNull();
                 submission.CurrentSubmission.AuthorisedRepresentative.Should()
                     .BeEquivalentTo(directProducerSubmissionHistory.AuthorisedRepresentative);
-                submission.CurrentSubmission.BusinessAddress.Should().BeNull();
+                submission.CurrentSubmission.BusinessAddress.Should().NotBeNull();
+                submission.CurrentSubmission.BusinessAddress.Should()
+                    .BeEquivalentTo(directProducerSubmissionHistory.BusinessAddress);
                 submission.CurrentSubmission.Contact.Should().NotBeNull();
                 submission.CurrentSubmission.Contact.Should().BeEquivalentTo(directProducerSubmissionHistory.Contact);
                 submission.CurrentSubmission.ContactAddress.Should().NotBeNull();
                 submission.CurrentSubmission.ContactAddress.Should()
                     .BeEquivalentTo(directProducerSubmissionHistory.ContactAddress);
-                submission.CurrentSubmission.EeeOutputReturnVersion.Should().BeNull();
+                submission.CurrentSubmission.EeeOutputReturnVersion.Should().NotBeNull();
+                submission.CurrentSubmission.EeeOutputReturnVersion.EeeOutputAmounts
+                    .Should().Contain(x =>
+                        x.RegisteredProducerId == directProducerSubmission.RegisteredProducerId &&
+                        x.WeeeCategory == WeeeCategory.AutomaticDispensers &&
+                        x.ObligationType == Domain.Obligation.ObligationType.B2C &&
+                        x.Tonnage == 10m);
+                submission.CurrentSubmission.EeeOutputReturnVersion.EeeOutputAmounts
+                    .Should().Contain(x =>
+                        x.RegisteredProducerId == directProducerSubmission.RegisteredProducerId &&
+                        x.WeeeCategory == WeeeCategory.AutomaticDispensers &&
+                        x.ObligationType == Domain.Obligation.ObligationType.B2B &&
+                        x.Tonnage == 5m);
                 submission.CurrentSubmission.SellingTechniqueType.Should()
                     .Be(SellingTechniqueType.DirectSellingtoEndUser.Value);
                 submission.CurrentSubmission.ServiceOfNoticeAddress.Should().BeNull();
