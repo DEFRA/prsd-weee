@@ -5,6 +5,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Z.EntityFramework.Plus;
 
     public class SmallProducerDataAccess : ISmallProducerDataAccess
     {
@@ -18,7 +19,7 @@
         public async Task<DirectProducerSubmission> GetCurrentDirectRegistrantSubmissionByComplianceYear(Guid directRegistrantId, int complianceYear)
         {
             return await context.DirectProducerSubmissions.Where(d =>
-                d.DirectRegistrantId == directRegistrantId && d.ComplianceYear == complianceYear).FirstOrDefaultAsync();
+                d.DirectRegistrantId == directRegistrantId && d.ComplianceYear == complianceYear && d.RegisteredProducer.Removed == false).FirstOrDefaultAsync();
         }
 
         public async Task<DirectProducerSubmission> GetCurrentDirectRegistrantSubmissionById(Guid directProducerSubmissionId)
@@ -35,6 +36,24 @@
                     .Include(directRegistrant4 => directRegistrant4.Address)
                     .Include(directRegistrant5 => directRegistrant5.AdditionalCompanyDetails).FirstOrDefaultAsync(d =>
                         d.OrganisationId == organisationId);
+        }
+
+        public async Task<DirectRegistrant> GetById(Guid directRegistrantId)
+        {
+            var directRegistrant = await context.DirectRegistrants
+                .Include(dr =>
+                    dr.DirectProducerSubmissions.Select(directProducerSubmission =>
+                        directProducerSubmission.RegisteredProducer))
+                .FirstOrDefaultAsync(d => d.Id == directRegistrantId);
+
+            if (directRegistrant != null)
+            {
+                directRegistrant.DirectProducerSubmissions = directRegistrant.DirectProducerSubmissions
+                    .Where(dp => dp.RegisteredProducer != null && dp.RegisteredProducer.Removed == false)
+                    .ToList();
+            }
+
+            return directRegistrant;
         }
     }
 }
