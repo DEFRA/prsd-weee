@@ -35,17 +35,17 @@
             <div class="govuk-grid-column-one-half govuk-!-margin-bottom-3">
 
                 <div class="govuk-form-group">
-                    <fieldset class="govuk-fieldset" role="group" aria-describedby="passport-issued-hint">
+                    <fieldset class="govuk-fieldset" role="group">
                         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
                             @Html.Gds().LabelFor(m => m.PaymentRecievedDate, false)
                             @Html.Gds().ValidationMessageFor(m => m.PaymentRecievedDate.Day)
                             @Html.Gds().ValidationMessageFor(m => m.PaymentRecievedDate.Month)
                             @Html.Gds().ValidationMessageFor(m => m.PaymentRecievedDate.Year)
                         </legend>
-                        <div id="passport-issued-hint" class="govuk-hint">
+                        <div class="govuk-hint">
                             For example, 27 3 2007
                         </div>
-                        <div class="govuk-date-input" id="passport-issued">
+                        <div class="govuk-date-input">
                             <div class="govuk-date-input__item">
                                 <div class="govuk-form-group">
                                     @Html.Gds().LabelFor(m => m.PaymentRecievedDate.Day, false)

@@ -38,26 +38,37 @@
             model.OrganisationViewModel.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
             model.OrganisationViewModel.HasPaid = true;
             model.IsInternal = true;
+            model.IsAdmin = true;
 
             model.ShowReturnRegistrationToUser.Should().Be(true);
 
             model.OrganisationViewModel.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
             model.OrganisationViewModel.HasPaid = false;
             model.IsInternal = true;
+            model.IsAdmin = true;
 
             model.ShowReturnRegistrationToUser.Should().Be(true);
 
             model.OrganisationViewModel.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
             model.OrganisationViewModel.HasPaid = true;
             model.IsInternal = false;
+            model.IsAdmin = true;
 
             model.ShowReturnRegistrationToUser.Should().Be(false);
 
             model.OrganisationViewModel.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
             model.OrganisationViewModel.HasPaid = false;
             model.IsInternal = true;
+            model.IsAdmin = true;
 
             model.ShowReturnRegistrationToUser.Should().Be(true);
+
+            model.OrganisationViewModel.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
+            model.OrganisationViewModel.HasPaid = true;
+            model.IsInternal = true;
+            model.IsAdmin = false;
+
+            model.ShowReturnRegistrationToUser.Should().Be(false);
         }
 
         [Theory]
