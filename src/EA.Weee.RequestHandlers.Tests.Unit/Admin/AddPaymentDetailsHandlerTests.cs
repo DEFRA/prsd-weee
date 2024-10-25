@@ -76,6 +76,31 @@
         }
 
         [Fact]
+        public async Task HandleAsync_WithPaymentFinished_ThrowsInvalidException()
+        {
+            //arrange
+            var directProducerSubmissionId = Guid.NewGuid();
+
+            var submission = A.Dummy<DirectProducerSubmission>();
+            submission.PaymentFinished = true;
+
+            var userContext = A.Fake<IUserContext>();
+
+            var req = this.fixture.Build<AddPaymentDetails>().With(x => x.DirectProducerSubmissionId, directProducerSubmissionId).Create();
+
+            A.CallTo(() => this.dataAccess.GetById<DirectProducerSubmission>(directProducerSubmissionId))
+             .Returns(submission);
+
+            //act
+            AddPaymentDetailsHandler handler = new AddPaymentDetailsHandler(authorization, dataAccess, userContext, context);
+
+            Func<Task> action = async () => await handler.HandleAsync(req);
+
+            //assert
+            await Assert.ThrowsAsync<InvalidOperationException>(action);
+        }
+
+        [Fact]
         public async Task HandleAsync_SetManualPaymentDetails()
         {
             //arrange
