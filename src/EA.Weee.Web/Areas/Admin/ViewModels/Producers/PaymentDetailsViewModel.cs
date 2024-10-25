@@ -14,8 +14,8 @@
         public string PaymentMethod { get; set; }
 
         [Required]
-        [DisplayName("Payment recieved date")]
-        public DateTimeInput PaymentRecievedDate { get; set; }
+        [DisplayName("Payment received date")]
+        public DateTimeInput PaymentReceivedDate { get; set; }
 
         [DisplayName("Payment details")]
         public string PaymentDetailsDescription { get; set; }
