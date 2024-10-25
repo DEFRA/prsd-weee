@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetProducerDetails
 {
+    using EA.Prsd.Core;
     using EA.Weee.Domain.Producer;
     using FakeItEasy;
     using FluentAssertions;
@@ -7,7 +8,6 @@
     using RequestHandlers.Security;
     using Requests.Admin;
     using System;
-    using System.Runtime.Remoting.Contexts;
     using System.Security;
     using System.Threading.Tasks;
     using Weee.Security;
@@ -69,7 +69,7 @@
             // Arrange
             var builder = new RemoveSmallProducerHandlerBuilder();
             var request = new RemoveSmallProducer(Guid.NewGuid());
-            var producer = A.Fake<RegisteredProducer>();
+            var producer = new RegisteredProducer("PRN", 2024);
 
             A.CallTo(() => builder.RemoveProducerDataAccess.GetProducerRegistration(request.RegisteredProducerId)).Returns(producer);
 
@@ -77,10 +77,8 @@
             await builder.Build().HandleAsync(request);
 
             // Assert
-            A.CallTo(() => builder.RemoveProducerDataAccess.GetProducerRegistration(request.RegisteredProducerId)).MustHaveHappened(1, Times.Exactly);
-
             producer.Removed.Should().BeTrue();
-
+            producer.RemovedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(10));
             A.CallTo(() => builder.RemoveProducerDataAccess.SaveChangesAsync())
                 .MustHaveHappened(1, Times.Exactly);
         }
