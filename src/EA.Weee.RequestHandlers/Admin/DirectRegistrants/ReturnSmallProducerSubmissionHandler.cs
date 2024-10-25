@@ -52,7 +52,7 @@
         private void EnsureAuthorisation()
         {
             authorization.EnsureCanAccessInternalArea();
-            authorization.EnsureUserInRole(Roles.InternalAdmin);
+            authorization.EnsureUserInRole(Roles.InternalUser);
         }
 
         private async Task<DirectProducerSubmission> GetAndValidateSubmission(Guid submissionId)

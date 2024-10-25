@@ -212,9 +212,9 @@
                 var setup = SetupTest(IocApplication.RequestHandler)
                     .WithIoC()
                     .WithTestData()
-                    .WithInternalUserAccess(true);
+                    .WithInternalUserAccess(false);
 
-                Query.SetupUserWithRole(UserId.ToString(), "Administrator", CompetentAuthority.England);
+                Query.SetupUserWithRole(UserId.ToString(), "Standard", CompetentAuthority.England);
 
                 directRegistrant = DirectRegistrantDbSetup.Init()
                     .Create();
