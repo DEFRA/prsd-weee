@@ -8,6 +8,8 @@
     public class PaymentDetailsViewModel
     {
         public Guid DirectProducerSubmissionId { get; set; }
+        public string RegistrationNumber { get; set; }
+        public int? Year { get; set; }
 
         [Required]
         [DisplayName("Payment method")]
