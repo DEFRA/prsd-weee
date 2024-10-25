@@ -1,12 +1,16 @@
 ﻿namespace EA.Weee.Integration.Tests.Builders
 {
     using Base;
+    using EA.Prsd.Core;
+    using EA.Weee.Domain;
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.Domain.Producer;
     using EA.Weee.Domain.Producer.Classfication;
     using EA.Weee.Tests.Core;
     using System;
+    using System.Data.Entity;
+    using System.Linq;
 
     public class DirectRegistrantSubmissionHistoryDbSetup : DbTestDataBuilder<DirectProducerSubmissionHistory, DirectRegistrantSubmissionHistoryDbSetup>
     {
@@ -16,7 +20,7 @@
             {
                 CompanyName = Faker.Company.Name(),
                 TradingName = Faker.Company.Name(),
-                CompanyRegistrationNumber = Faker.RandomNumber.Next(0, 10).ToString()
+                CompanyRegistrationNumber = Faker.RandomNumber.Next(1000000, 100000000000).ToString()
             };
 
             return instance;
@@ -29,9 +33,9 @@
             return this;
         }
 
-        public DirectRegistrantSubmissionHistoryDbSetup WithContact(Guid contactId)
+        public DirectRegistrantSubmissionHistoryDbSetup WithContact(Contact contact)
         {
-            ObjectInstantiator<DirectProducerSubmissionHistory>.SetProperty(o => o.ContactId, contactId, instance);
+            instance.Contact = contact;
 
             return this;
         }
@@ -43,9 +47,23 @@
             return this;
         }
 
-        public DirectRegistrantSubmissionHistoryDbSetup WithContactAddress(Guid addressId)
+        public DirectRegistrantSubmissionHistoryDbSetup WithContactAddress(Address address)
         {
-            ObjectInstantiator<DirectProducerSubmissionHistory>.SetProperty(o => o.ContactAddressId, addressId, instance);
+            if (address.Country != null)
+            {
+                var country = DbContext.Countries.First(c => c.Id == address.Country.Id);
+                address.Country = country;
+                DbContext.Entry(country).State = EntityState.Unchanged;
+            }
+
+            // Attach the address if it's not already tracked
+            //var addressEntry = DbContext.Entry(address);
+            //if (addressEntry.State == EntityState.Detached)
+            //{
+                //DbContext.Set<Address>().Attach(address);
+            //}
+
+            instance.ContactAddress = address;
 
             return this;
         }
@@ -57,9 +75,28 @@
             return this;
         }
 
+        private void EnsureEntityIsTracked<T>(T entity) where T : class
+        {
+            var set = DbContext.Set<T>();
+            if (!set.Local.Contains(entity))
+            {
+                var entry = DbContext.Entry(entity);
+                if (entry.State == EntityState.Detached)
+                {
+                    set.Attach(entity);
+                }
+            }
+        }
+
         public DirectRegistrantSubmissionHistoryDbSetup WithAuthorisedRep(AuthorisedRepresentative authorisedRep)
         {
-            ObjectInstantiator<DirectProducerSubmissionHistory>.SetProperty(o => o.AuthorisedRepresentative, authorisedRep, instance);
+            if (!DbContext.Set<AuthorisedRepresentative>().Local.Contains(authorisedRep))
+            {
+                DbContext.Set<AuthorisedRepresentative>().Attach(authorisedRep);
+            }
+
+            // Then set the relationship
+            instance.AuthorisedRepresentative = authorisedRep;
 
             return this;
         }

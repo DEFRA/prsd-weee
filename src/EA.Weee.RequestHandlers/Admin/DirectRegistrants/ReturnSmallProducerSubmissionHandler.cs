@@ -57,7 +57,7 @@
             var serviceOfNoticeAddress = currentSubmissionHistory.ServiceOfNoticeAddress;
             var authorisedRep = currentSubmissionHistory.AuthorisedRepresentative;
 
-            if (contact != null)
+            if (contactAddress != null)
             {
                 newSubmissionHistory.AddOrUpdateContactAddress(new Address(contactAddress.Address1,
                     contactAddress.Address2,
