@@ -22,6 +22,12 @@
             return TextAreaFor(expression, new RouteValueDictionary(), useHalfWidth, displayFormat);
         }
 
+        public MvcHtmlString TextAreaFor<TValue>(Expression<Func<TModel, TValue>> expression, object htmlAttributes, bool useHalfWidth = true, string displayFormat = null)
+        {
+            var routeValueDictionary = System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
+            return TextAreaFor(expression, routeValueDictionary, useHalfWidth, displayFormat);
+        }
+
         public MvcHtmlString TextBoxFor<TValue>(Expression<Func<TModel, TValue>> expression, object htmlAttributes, bool useHalfWidth = true, string displayFormat = null)
         {
             var routeValueDictionary = System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes);
