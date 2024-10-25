@@ -115,8 +115,8 @@
 
                 var directProducerSubmissionHistory = DirectRegistrantSubmissionHistoryDbSetup.Init()
                     .WithBusinessAddress(address.Id)
-                    .WithContactAddress(address.Id)
-                    .WithContact(contact.Id)
+                    .WithContactAddress(address)
+                    .WithContact(contact)
                     .WithBrandName("new brand")
                     .WithAuthorisedRep(authedRepSubmission)
                     .WithDirectProducerSubmission(directProducerSubmission).Create();

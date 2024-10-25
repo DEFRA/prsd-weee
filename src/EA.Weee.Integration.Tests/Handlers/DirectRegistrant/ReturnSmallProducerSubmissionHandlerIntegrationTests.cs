@@ -94,12 +94,19 @@
 
                 var appropriateSignatory = ContactDbSetup.Init().Create();
                 var authorisedRep = AuthorisedRepDbSetup.Init().Create();
+                var contact = ContactDbSetup.Init().Create();
+                var contactAddress = AddressDbSetup.Init()
+                    .WithCountry("UK - England")
+                    .Create();
+
                 directProducerSubmissionHistory = DirectRegistrantSubmissionHistoryDbSetup.Init()
                     .WithDirectProducerSubmission(directProducerSubmission)
                     .WithSellingTechnique(SellingTechniqueType.DirectSellingtoEndUser)
                     .WithBrandName(Faker.Name.First())
                     .WithAppropriateSignatory(appropriateSignatory)
                     .WithAuthorisedRep(authorisedRep)
+                    .WithContact(contact)
+                    .WithContactAddress(contactAddress)
                     .Create();
 
                 Query.UpdateCurrentProducerSubmission(directProducerSubmission.Id, directProducerSubmissionHistory.Id);
@@ -120,13 +127,18 @@
                 submission.Id.Should().Be(directProducerSubmission.Id);
                 submission.DirectProducerSubmissionStatus.Should().Be(DirectProducerSubmissionStatus.Returned);
                 submission.CurrentSubmission.BrandName.Name.Should().Be(directProducerSubmissionHistory.BrandName.Name);
+                submission.CurrentSubmission.AppropriateSignatory.Should().NotBeNull();
                 submission.CurrentSubmission.AppropriateSignatory.Should()
                     .BeEquivalentTo(directProducerSubmissionHistory.AppropriateSignatory);
+                submission.CurrentSubmission.AuthorisedRepresentative.Should().NotBeNull();
                 submission.CurrentSubmission.AuthorisedRepresentative.Should()
                     .BeEquivalentTo(directProducerSubmissionHistory.AuthorisedRepresentative);
                 submission.CurrentSubmission.BusinessAddress.Should().BeNull();
-                submission.CurrentSubmission.Contact.Should().BeNull();
-                submission.CurrentSubmission.ContactAddress.Should().BeNull();
+                submission.CurrentSubmission.Contact.Should().NotBeNull();
+                submission.CurrentSubmission.Contact.Should().BeEquivalentTo(directProducerSubmissionHistory.Contact);
+                submission.CurrentSubmission.ContactAddress.Should().NotBeNull();
+                submission.CurrentSubmission.ContactAddress.Should()
+                    .BeEquivalentTo(directProducerSubmissionHistory.ContactAddress);
                 submission.CurrentSubmission.EeeOutputReturnVersion.Should().BeNull();
                 submission.CurrentSubmission.SellingTechniqueType.Should()
                     .Be(SellingTechniqueType.DirectSellingtoEndUser.Value);
