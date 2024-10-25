@@ -1,28 +1,26 @@
 ﻿namespace EA.Weee.RequestHandlers.Organisations.DirectRegistrants
 {
-    using DataAccess;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.DirectRegistrant;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.DataAccess.DataAccess;
-    using EA.Weee.Domain.Producer;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using Security;
-    using System.Data.Entity;
-    using System.Linq;
+    using System;
     using System.Threading.Tasks;
 
     internal class ValidateAndGetSubmissionPaymentHandler : IRequestHandler<ValidateAndGetSubmissionPayment, SubmissionPaymentDetails>
     {
-        private readonly WeeeContext weeeContext;
         private readonly IWeeeAuthorization authorization;
         private readonly ISystemDataDataAccess systemDataAccess;
         private readonly IPaymentSessionDataAccess paymentSessionDataAccess;
+        private readonly ISmallProducerDataAccess smallProducerDataAccess;
 
         public ValidateAndGetSubmissionPaymentHandler(IWeeeAuthorization authorization,
-            WeeeContext weeeContext, ISystemDataDataAccess systemDataAccess, IPaymentSessionDataAccess paymentSessionDataAccess)
+            ISystemDataDataAccess systemDataAccess, IPaymentSessionDataAccess paymentSessionDataAccess, ISmallProducerDataAccess smallProducerDataAccess)
         {
-            this.weeeContext = weeeContext;
             this.paymentSessionDataAccess = paymentSessionDataAccess;
+            this.smallProducerDataAccess = smallProducerDataAccess;
             this.authorization = authorization;
             this.systemDataAccess = systemDataAccess;
         }
@@ -43,6 +41,31 @@
                 };
             }
 
+            var directRegistrantSubmission =
+                await smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(
+                    request.DirectRegistrantId,
+                    systemTime.Year);
+
+            if (directRegistrantSubmission == null)
+            {
+                throw new InvalidOperationException("No direct registrant submission found");
+            }
+
+            // check user has access to the direct registrant
+            authorization.EnsureOrganisationAccess(directRegistrantSubmission.DirectRegistrant.OrganisationId);
+
+            // if already finished
+            if (directRegistrantSubmission.PaymentFinished)
+            {
+                return new SubmissionPaymentDetails()
+                {
+                    DirectRegistrantId = directRegistrantSubmission.DirectRegistrantId,
+                    PaymentReference = directRegistrantSubmission.FinalPaymentSession.PaymentReference,
+                    PaymentFinished = true,
+                    PaymentStatus = directRegistrantSubmission.FinalPaymentSession.Status.ToCoreEnumeration<PaymentStatus>()
+                };
+            }
+
             // we only care about the most recent session as user should only have one payment process at once.
             var session = await paymentSessionDataAccess.GetCurrentInProgressPayment(request.PaymentReturnToken, request.DirectRegistrantId, systemTime.Year);
 
@@ -53,11 +76,6 @@
                     ErrorMessage = $"No payment request {request.PaymentReturnToken} exists for user"
                 };
             }
-
-            // check user has access to the direct registrant
-            authorization.EnsureOrganisationAccess(session.DirectRegistrant.OrganisationId);
-
-            await weeeContext.SaveChangesAsync();
 
             return new SubmissionPaymentDetails()
             {
