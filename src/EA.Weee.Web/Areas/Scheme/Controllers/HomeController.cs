@@ -58,29 +58,32 @@
             using (var client = apiClient())
             {
                 var organisationExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
-
                 if (!organisationExists)
                 {
                     throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
                 }
 
                 var organisationDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(pcsId));
-
                 var activities = await GetActivities(pcsId, organisationDetails, directRegistrantId);
 
-                // if this is an organisation that is just doing small producer submissions, and it is a representing company redirect to screen to allow selection of company
-                if (organisationDetails.IsRepresentingCompany && activities.Count == 4 && !directRegistrantId.HasValue)
+                // Updated condition to check for specific activities
+                if (organisationDetails.IsRepresentingCompany && HasOnlySmallProducerActivities(activities) && !directRegistrantId.HasValue)
                 {
-                    return this.RedirectToAction(nameof(OrganisationController.RepresentingCompanies), typeof(OrganisationController).GetControllerName(), new { organisationId = pcsId, area = string.Empty });
+                    return this.RedirectToAction(nameof(OrganisationController.RepresentingCompanies),
+                        typeof(OrganisationController).GetControllerName(),
+                        new { organisationId = pcsId, area = string.Empty });
                 }
 
                 var defaultDirectRegistrant = organisationDetails.DirectRegistrants.FirstOrDefault();
-                var model = new ChooseActivityViewModel(activities) { IsRepresentingCompany = organisationDetails.IsRepresentingCompany, OrganisationId = pcsId, DirectRegistrantId = directRegistrantId ?? defaultDirectRegistrant?.DirectRegistrantId };
+                var model = new ChooseActivityViewModel(activities)
+                {
+                    IsRepresentingCompany = organisationDetails.IsRepresentingCompany,
+                    OrganisationId = pcsId,
+                    DirectRegistrantId = directRegistrantId ?? defaultDirectRegistrant?.DirectRegistrantId
+                };
 
                 await SetBreadcrumb(pcsId, null, false);
-
                 await SetShowLinkToCreateOrJoinOrganisation(model);
-
                 return View(model);
             }
         }
@@ -743,6 +746,29 @@
             {
                 breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
             }
+        }
+
+        private bool HasOnlySmallProducerActivities(List<string> activities)
+        {
+            var expectedActivities = new HashSet<string>
+            {
+                ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
+                ProducerSubmissionConstant.NewProducerRegistrationSubmission,
+                ProducerSubmissionConstant.ViewOrganisation,
+                PcsAction.ManageOrganisationUsers,
+                ProducerSubmissionConstant.ManageRepresentingCompany
+            };
+
+            var alternativeExpectedActivities = new HashSet<string>
+            {
+                ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
+                ProducerSubmissionConstant.NewProducerRegistrationSubmission,
+                ProducerSubmissionConstant.ViewOrganisation,
+                ProducerSubmissionConstant.ManageRepresentingCompany
+            };
+
+            return activities.All(a => expectedActivities.Contains(a)) && activities.Count == expectedActivities.Count
+                   || activities.All(a => alternativeExpectedActivities.Contains(a)) && activities.Count == alternativeExpectedActivities.Count;
         }
     }
 }
