@@ -1208,6 +1208,105 @@
             routeValues["area"].Should().Be("Aatf");
         }
 
+        [Fact]
+        public async Task ChooseActivity_WithRepresentingCompanyAndSmallProducerActivities_RedirectsToRepresentingCompanies()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var organisationDetails = new OrganisationData
+            {
+                Id = organisationId,
+                IsRepresentingCompany = true,
+                DirectRegistrants = new List<DirectRegistrantInfo> { new DirectRegistrantInfo() }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(true);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(organisationDetails);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationOverview>._))
+                .Returns(new OrganisationOverview { HasMultipleOrganisationUsers = false });
+
+            // This will trigger our small producer activities scenario
+            organisationDetails.HasAatfs = false;
+            organisationDetails.HasAes = false;
+            organisationDetails.SchemeId = null;
+
+            // Act
+            var result = await HomeController().ChooseActivity(organisationId);
+
+            // Assert
+            result.Should().BeOfType<RedirectToRouteResult>()
+                .Which.RouteValues.Should().ContainKeys("action", "controller", "area")
+                .And.ContainValues(
+                    nameof(OrganisationController.RepresentingCompanies),
+                    typeof(OrganisationController).GetControllerName(),
+                    string.Empty);
+        }
+
+        [Fact]
+        public async Task ChooseActivity_WithRepresentingCompanyAndSmallProducerActivitiesWithManageUsers_RedirectsToRepresentingCompanies()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var organisationDetails = new OrganisationData
+            {
+                Id = organisationId,
+                IsRepresentingCompany = true,
+                DirectRegistrants = new List<DirectRegistrantInfo> { new DirectRegistrantInfo() }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(true);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(organisationDetails);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationOverview>._))
+                .Returns(new OrganisationOverview { HasMultipleOrganisationUsers = true });
+
+            // This will trigger our small producer activities scenario
+            organisationDetails.HasAatfs = false;
+            organisationDetails.HasAes = false;
+            organisationDetails.SchemeId = null;
+
+            // Act
+            var result = await HomeController().ChooseActivity(organisationId);
+
+            // Assert
+            result.Should().BeOfType<RedirectToRouteResult>()
+                .Which.RouteValues.Should().ContainKeys("action", "controller", "area")
+                .And.ContainValues(
+                    nameof(OrganisationController.RepresentingCompanies),
+                    typeof(OrganisationController).GetControllerName(),
+                    string.Empty);
+        }
+
+        [Fact]
+        public async Task ChooseActivity_WithRepresentingCompanyAndNonSmallProducerActivities_DoesNotRedirectToRepresentingCompanies()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var organisationDetails = new OrganisationData
+            {
+                Id = organisationId,
+                IsRepresentingCompany = true,
+                DirectRegistrants = new List<DirectRegistrantInfo> { new DirectRegistrantInfo() },
+                SchemeId = Guid.NewGuid() // Adding a scheme ID will add non-small producer activities
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(true);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(organisationDetails);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationOverview>._))
+                .Returns(new OrganisationOverview { HasMultipleOrganisationUsers = true });
+
+            // Act
+            var result = await HomeController().ChooseActivity(organisationId);
+
+            // Assert
+            result.Should().BeOfType<ViewResult>();
+        }
+
         //GC ------------------------------
 
         private Web.Areas.Scheme.Controllers.HomeController HomeControllerSetupForPCSEvidenceNotes(bool enablePCSEvidenceNotes = false)
