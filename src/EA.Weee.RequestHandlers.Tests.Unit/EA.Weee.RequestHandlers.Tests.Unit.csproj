@@ -246,6 +246,7 @@
     <Compile Include="Admin\AatfReports\GetUkWeeeAtAatfsCsv\GetUkWeeeAtAatfsCsvDataAccessTests.cs" />
     <Compile Include="Admin\AatfReports\GetAllAatfObligatedDataCsvHandlerTests.cs" />
     <Compile Include="Admin\AatfReports\GetUkWeeeAtAatfsCsv\GetUkWeeeAtAatfsCsvHandlerTests.cs" />
+    <Compile Include="Admin\GetProducerDetails\RemoveSmallProducerHandlerTests.cs" />
     <Compile Include="Admin\ManageEvidenceNotes\GetAllAatfsForComplianceYearHandlerTests.cs" />
     <Compile Include="Admin\ManageEvidenceNotes\GetAllNotesRequestHandlerTests.cs" />
     <Compile Include="Admin\GetSchemes\GetEEEWEEEDataReturnSchemesByComplianceYearHandlerTests.cs" />
