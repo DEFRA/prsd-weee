@@ -39,6 +39,11 @@
 
             var submission = await dataAccess.GetById<DirectProducerSubmission>(request.DirectProducerSubmissionId);
 
+            if (submission.PaymentFinished)
+            {
+                throw new InvalidOperationException("Manual payment for submission has already been made.");
+            }
+
             submission.ManualPaymentMadeByUserId = userContext.UserId.ToString();
             submission.ManualPaymentDetails = request.PaymentDetailsDescription;
             submission.ManualPaymentMethod = request.PaymentMethod;

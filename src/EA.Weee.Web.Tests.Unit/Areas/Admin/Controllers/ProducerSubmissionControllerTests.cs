@@ -355,7 +355,7 @@
 
                 PaymentDetailsDescription = "des",
                 PaymentMethod = "meth",
-                PaymentRecievedDate = new Core.PaymentDetails.DateTimeInput { Day = 01, Month = 10, Year = 1989 }
+                PaymentReceivedDate = new Core.PaymentDetails.DateTimeInput { Day = 01, Month = 10, Year = 1989 }
             };
 
             var payresult = new ManualPaymentResult
@@ -366,7 +366,7 @@
 
             A.CallTo(() => client.SendAsync(A<string>._,
                 A<AddPaymentDetails>.That.Matches(s => s.PaymentMethod == vm.PaymentMethod
-                && s.PaymentRecievedDate == vm.PaymentRecievedDate
+                && s.PaymentRecievedDate == vm.PaymentReceivedDate
                 && s.PaymentDetailsDescription == vm.PaymentDetailsDescription
                 && s.DirectProducerSubmissionId == vm.DirectProducerSubmissionId)))
                .Returns(payresult);
@@ -379,7 +379,7 @@
 
             A.CallTo(() => client.SendAsync(A<string>._,
                 A<AddPaymentDetails>.That.Matches(s => s.PaymentMethod == vm.PaymentMethod
-                && s.PaymentRecievedDate == vm.PaymentRecievedDate
+                && s.PaymentRecievedDate == vm.PaymentReceivedDate
                 && s.PaymentDetailsDescription == vm.PaymentDetailsDescription
                 && s.DirectProducerSubmissionId == vm.DirectProducerSubmissionId)))
                 .MustHaveHappenedOnceExactly();

@@ -142,6 +142,7 @@
 
         [HttpPost]
         [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> AddPaymentDetails(PaymentDetailsViewModel model)
         {
             if (ModelState.IsValid == false)
@@ -176,7 +177,7 @@
             using (var client = apiClient())
             {
                 return await client.SendAsync(User.GetAccessToken(),
-                    new AddPaymentDetails(model.PaymentMethod, model.PaymentRecievedDate, model.PaymentDetailsDescription, model.DirectProducerSubmissionId));
+                    new AddPaymentDetails(model.PaymentMethod, model.PaymentReceivedDate, model.PaymentDetailsDescription, model.DirectProducerSubmissionId));
             }
         }
     }
