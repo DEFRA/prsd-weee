@@ -6,7 +6,6 @@
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.Domain.Producer;
-    using EA.Weee.RequestHandlers.Shared;
     using EA.Weee.Requests.Admin.DirectRegistrants;
     using EA.Weee.Security;
     using Security;
@@ -16,103 +15,127 @@
     internal class ReturnSmallProducerSubmissionHandler : IRequestHandler<ReturnSmallProducerSubmission, Guid>
     {
         private readonly IWeeeAuthorization authorization;
-        private readonly IRegisteredProducerDataAccess registeredProducerDataAccess;
-        private readonly ISmallProducerSubmissionService smallProducerSubmissionService;
         private readonly ISmallProducerDataAccess smallProducerDataAccess;
         private readonly WeeeContext weeeContext;
 
         public ReturnSmallProducerSubmissionHandler(
             IWeeeAuthorization authorization,
-            IRegisteredProducerDataAccess registeredProducerDataAccess,
-            ISmallProducerSubmissionService smallProducerSubmissionService, ISmallProducerDataAccess smallProducerDataAccess, WeeeContext weeeContext)
+            ISmallProducerDataAccess smallProducerDataAccess,
+            WeeeContext weeeContext)
         {
             this.authorization = authorization;
-            this.registeredProducerDataAccess = registeredProducerDataAccess;
-            this.smallProducerSubmissionService = smallProducerSubmissionService;
             this.smallProducerDataAccess = smallProducerDataAccess;
             this.weeeContext = weeeContext;
         }
 
         public async Task<Guid> HandleAsync(ReturnSmallProducerSubmission request)
         {
+            ValidateRequest(request);
+            EnsureAuthorisation();
+
+            var submission = await GetAndValidateSubmission(request.DirectProducerSubmissionId);
+            var newSubmissionHistory = CreateNewSubmissionHistory(submission);
+
+            await SaveSubmissionHistory(newSubmissionHistory, submission);
+
+            return submission.Id;
+        }
+
+        private static void ValidateRequest(ReturnSmallProducerSubmission request)
+        {
+            if (request == null)
+            {
+                throw new ArgumentNullException(nameof(request));
+            }
+        }
+
+        private void EnsureAuthorisation()
+        {
             authorization.EnsureCanAccessInternalArea();
             authorization.EnsureUserInRole(Roles.InternalAdmin);
+        }
 
-            var submission =
-                await smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionById(
-                    request.DirectProducerSubmissionId);
+        private async Task<DirectProducerSubmission> GetAndValidateSubmission(Guid submissionId)
+        {
+            var submission = await smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionById(submissionId);
 
             if (submission == null || submission.DirectProducerSubmissionStatus != DirectProducerSubmissionStatus.Complete)
             {
-                throw new InvalidOperationException("submission status invalid");
+                throw new InvalidOperationException("Submission status invalid");
             }
 
+            return submission;
+        }
+
+        private static DirectProducerSubmissionHistory CreateNewSubmissionHistory(DirectProducerSubmission submission)
+        {
             var newSubmissionHistory = new DirectProducerSubmissionHistory(submission);
+            var currentSubmission = submission.CurrentSubmission;
 
-            var currentSubmissionHistory = submission.CurrentSubmission;
-            var contactAddress = currentSubmissionHistory.ContactAddress;
-            var businessAddress = currentSubmissionHistory.BusinessAddress;
-            var contact = currentSubmissionHistory.Contact;
-            var appropriateSig = currentSubmissionHistory.AppropriateSignatory;
-            var serviceOfNoticeAddress = currentSubmissionHistory.ServiceOfNoticeAddress;
-            var authorisedRep = currentSubmissionHistory.AuthorisedRepresentative;
+            CopyAddresses(currentSubmission, newSubmissionHistory);
+            CopyContacts(currentSubmission, newSubmissionHistory);
+            CopyAuthorisedRepresentative(currentSubmission, newSubmissionHistory);
+            CopyEeeOutputData(currentSubmission, newSubmissionHistory);
+            CopyCompanyDetails(currentSubmission, newSubmissionHistory);
 
-            if (contactAddress != null)
+            return newSubmissionHistory;
+        }
+
+        private static void CopyAddresses(DirectProducerSubmissionHistory source, DirectProducerSubmissionHistory target)
+        {
+            if (source.ContactAddress != null)
             {
-                newSubmissionHistory.AddOrUpdateContactAddress(new Address(contactAddress.Address1,
-                    contactAddress.Address2,
-                    contactAddress.TownOrCity,
-                    contactAddress.CountyOrRegion,
-                    contactAddress.Postcode,
-                    contactAddress.Country,
-                    contactAddress.Telephone,
-                    contactAddress.Email,
-                    contactAddress.WebAddress));
+                target.AddOrUpdateContactAddress(CreateAddressFrom(source.ContactAddress));
             }
 
-            if (businessAddress != null)
+            if (source.BusinessAddress != null)
             {
-                newSubmissionHistory.AddOrUpdateBusinessAddress(new Address(businessAddress.Address1,
-                    businessAddress.Address2,
-                    businessAddress.TownOrCity,
-                    businessAddress.CountyOrRegion,
-                    businessAddress.Postcode,
-                    businessAddress.Country,
-                    businessAddress.Telephone,
-                    businessAddress.Email,
-                    businessAddress.WebAddress));
+                target.AddOrUpdateBusinessAddress(CreateAddressFrom(source.BusinessAddress));
             }
 
-            if (contact != null)
+            if (source.ServiceOfNoticeAddress != null)
             {
-                newSubmissionHistory.AddOrUpdateContact(new Contact(contact.FirstName, contact.LastName,
-                    contact.Position));
+                target.AddOrUpdateServiceOfNotice(CreateAddressFrom(source.ServiceOfNoticeAddress));
+            }
+        }
+
+        private static Address CreateAddressFrom(Address address) =>
+            new Address(address.Address1,
+                address.Address2,
+                address.TownOrCity,
+                address.CountyOrRegion,
+                address.Postcode,
+                address.Country,
+                address.Telephone,
+                address.Email,
+                address.WebAddress);
+
+        private static void CopyContacts(DirectProducerSubmissionHistory source, DirectProducerSubmissionHistory target)
+        {
+            if (source.Contact != null)
+            {
+                target.AddOrUpdateContact(CreateContactFrom(source.Contact));
             }
 
-            if (appropriateSig != null)
+            if (source.AppropriateSignatory != null)
             {
-                newSubmissionHistory.AddOrUpdateAppropriateSignatory(new Contact(appropriateSig.FirstName, appropriateSig.LastName, appropriateSig.Position));
+                target.AddOrUpdateAppropriateSignatory(CreateContactFrom(source.AppropriateSignatory));
             }
+        }
 
-            if (serviceOfNoticeAddress != null)
-            {
-                newSubmissionHistory.AddOrUpdateServiceOfNotice(new Address(serviceOfNoticeAddress.Address1,
-                    serviceOfNoticeAddress.Address2,
-                    serviceOfNoticeAddress.TownOrCity,
-                    serviceOfNoticeAddress.CountyOrRegion,
-                    serviceOfNoticeAddress.Postcode,
-                    serviceOfNoticeAddress.Country,
-                    serviceOfNoticeAddress.Telephone,
-                    serviceOfNoticeAddress.Email,
-                    serviceOfNoticeAddress.WebAddress));
-            }
+        private static Contact CreateContactFrom(Contact contact) =>
+            new Contact(contact.FirstName, contact.LastName, contact.Position);
 
-            if (authorisedRep != null)
+        private static void CopyAuthorisedRepresentative(DirectProducerSubmissionHistory source, DirectProducerSubmissionHistory target)
+        {
+            if (source.AuthorisedRepresentative != null)
             {
-                var authRepAddress = authorisedRep.OverseasContact.Address;
-                var authRepContact = authorisedRep.OverseasContact;
+                var authRep = source.AuthorisedRepresentative;
+                var authRepAddress = authRep.OverseasContact.Address;
+                var authRepContact = authRep.OverseasContact;
+
                 var producerAddress = new ProducerAddress(
-                     authRepAddress.PrimaryName,
+                    authRepAddress.PrimaryName,
                     authRepAddress.SecondaryName,
                     authRepAddress.Street,
                     authRepAddress.Town,
@@ -121,7 +144,8 @@
                     authRepAddress.Country,
                     authRepAddress.PostCode);
 
-                var producerContact = new ProducerContact(authRepContact.Title,
+                var producerContact = new ProducerContact(
+                    authRepContact.Title,
                     authRepContact.ForeName,
                     authRepContact.SurName,
                     authRepContact.Telephone,
@@ -130,40 +154,53 @@
                     authRepContact.Email,
                     producerAddress);
 
-                var newAuthorisedRepresentative = new AuthorisedRepresentative(authorisedRep.OverseasProducerName, authorisedRep.OverseasProducerTradingName, producerContact);
-
-                newSubmissionHistory.AddOrUpdateAuthorisedRepresentative(newAuthorisedRepresentative);
+                target.AddOrUpdateAuthorisedRepresentative(
+                    new AuthorisedRepresentative(
+                        authRep.OverseasProducerName,
+                        authRep.OverseasProducerTradingName,
+                        producerContact));
             }
+        }
 
-            if (currentSubmissionHistory.EeeOutputReturnVersion != null)
+        private static void CopyEeeOutputData(DirectProducerSubmissionHistory source, DirectProducerSubmissionHistory target)
+        {
+            if (source.EeeOutputReturnVersion != null)
             {
-                foreach (var eeeOutputAmount in currentSubmissionHistory.EeeOutputReturnVersion.EeeOutputAmounts)
+                target.EeeOutputReturnVersion = new EeeOutputReturnVersion();
+                foreach (var amount in source.EeeOutputReturnVersion.EeeOutputAmounts)
                 {
-                    newSubmissionHistory.EeeOutputReturnVersion = new EeeOutputReturnVersion();
-                    newSubmissionHistory.EeeOutputReturnVersion.EeeOutputAmounts.Add(new EeeOutputAmount(eeeOutputAmount.ObligationType, eeeOutputAmount.WeeeCategory, eeeOutputAmount.Tonnage, eeeOutputAmount.RegisteredProducer));
+                    target.EeeOutputReturnVersion.EeeOutputAmounts.Add(
+                        new EeeOutputAmount(
+                            amount.ObligationType,
+                            amount.WeeeCategory,
+                            amount.Tonnage,
+                            amount.RegisteredProducer));
                 }
             }
+        }
 
-            if (currentSubmissionHistory.BrandName != null)
+        private static void CopyCompanyDetails(DirectProducerSubmissionHistory source, DirectProducerSubmissionHistory target)
+        {
+            if (source.BrandName != null)
             {
-                newSubmissionHistory.AddOrUpdateBrandName(currentSubmissionHistory.BrandName);
+                target.AddOrUpdateBrandName(source.BrandName);
             }
 
-            newSubmissionHistory.CompanyName = currentSubmissionHistory.CompanyName;
-            newSubmissionHistory.TradingName = currentSubmissionHistory.TradingName;
-            newSubmissionHistory.CompanyRegistrationNumber = currentSubmissionHistory.CompanyRegistrationNumber;
-            newSubmissionHistory.SellingTechniqueType = currentSubmissionHistory.SellingTechniqueType;
+            target.CompanyName = source.CompanyName;
+            target.TradingName = source.TradingName;
+            target.CompanyRegistrationNumber = source.CompanyRegistrationNumber;
+            target.SellingTechniqueType = source.SellingTechniqueType;
+        }
 
+        private async Task SaveSubmissionHistory(DirectProducerSubmissionHistory newSubmissionHistory, DirectProducerSubmission submission)
+        {
             weeeContext.DirectProducerSubmissionHistories.Add(newSubmissionHistory);
-
             await weeeContext.SaveChangesAsync();
 
             submission.DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Returned;
             submission.SetCurrentSubmission(newSubmissionHistory);
 
             await weeeContext.SaveChangesAsync();
-
-            return submission.Id;
         }
     }
 }

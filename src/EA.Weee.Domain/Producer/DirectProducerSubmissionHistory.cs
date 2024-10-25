@@ -45,7 +45,7 @@
 
         public virtual Contact Contact { get; set; }
 
-        public virtual Address BusinessAddress { get; private set; }
+        public virtual Address BusinessAddress { get; set; }
 
         public virtual BrandName BrandName { get; set; }
 
