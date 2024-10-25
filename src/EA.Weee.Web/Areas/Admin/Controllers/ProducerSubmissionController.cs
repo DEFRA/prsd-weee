@@ -134,9 +134,15 @@
 
         [HttpGet]
         [AuthorizeInternalClaims(Claims.InternalAdmin)]
-        public async Task<ActionResult> AddPaymentDetails(Guid directProducerSubmissionId)
+        public async Task<ActionResult> AddPaymentDetails(Guid directProducerSubmissionId, string registrationNumber, int? year)
         {
-            var model = new PaymentDetailsViewModel { DirectProducerSubmissionId = directProducerSubmissionId };
+            var model = new PaymentDetailsViewModel
+            {
+                DirectProducerSubmissionId = directProducerSubmissionId,
+                RegistrationNumber = registrationNumber,
+                Year = year
+            };
+
             return View(model);
         }
 

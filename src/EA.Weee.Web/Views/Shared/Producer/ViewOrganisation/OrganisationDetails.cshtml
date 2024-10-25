@@ -56,7 +56,12 @@
 
                                 @if (Model.OrganisationViewModel.HasPaid == false && Model.IsInternalAdmin)
                                 {
-                                    <div style="float: right"> @Html.ActionLink("Add payment details", "AddPaymentDetails", "ProducerSubmission", new { directProducerSubmissionId = Model.OrganisationViewModel.DirectProducerSubmissionId }, new { @class = "govuk-link" })</div>
+                                    <div style="float: right"> @Html.ActionLink("Add payment details", "AddPaymentDetails", "ProducerSubmission",
+                                                              new { 
+                                                                  directProducerSubmissionId = Model.OrganisationViewModel.DirectProducerSubmissionId, 
+                                                                  RegistrationNumber = Model.OrganisationViewModel.ProducerRegistrationNumber,
+                                                                  year = Model.Year
+                                                              }, new { @class = "govuk-link" })</div>
                                 }
                             </td>
                         </tr>

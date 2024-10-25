@@ -1,8 +1,7 @@
 ﻿@model EA.Weee.Web.Areas.Admin.ViewModels.Producers.PaymentDetailsViewModel
 @using EA.Weee.Core.DataStandards;
 @using EA.Weee.Web.RazorHelpers
-@using EA.Weee.Web.Areas.Admin.Controllers
-@using EA.Prsd.Core.Helpers
+@using MvcNavigationHelpers
 @{
     var title = "Add payment details";
     ViewBag.Title = @title + " - GOV.UK";
@@ -15,6 +14,8 @@
             @title
         </h1>
     </header>
+
+    @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.ProducerSubmissionController> (a => a.OrganisationDetails(Model.RegistrationNumber, Model.Year))))
 
     @using (Html.BeginForm())
     {
