@@ -10,6 +10,8 @@
 
         Task<DirectRegistrant> GetDirectRegistrantByOrganisationId(Guid organisationId);
 
+        Task<DirectRegistrant> GetById(Guid directRegistrantId);
+
         Task<DirectProducerSubmission> GetCurrentDirectRegistrantSubmissionById(Guid directProducerSubmissionId);
     }
 }
