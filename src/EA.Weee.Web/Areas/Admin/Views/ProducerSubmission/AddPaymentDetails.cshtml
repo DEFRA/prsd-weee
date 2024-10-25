@@ -9,13 +9,13 @@
 
 @section full_main_content
 {
+    @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.ProducerSubmissionController> (a => a.OrganisationDetails(Model.RegistrationNumber, Model.Year))))
+
     <header class="hgroup">
         <h1 class="govuk-heading-l">
             @title
         </h1>
     </header>
-
-    @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.ProducerSubmissionController> (a => a.OrganisationDetails(Model.RegistrationNumber, Model.Year))))
 
     @using (Html.BeginForm())
     {
