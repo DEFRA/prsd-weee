@@ -6,11 +6,13 @@
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
+    using EA.Weee.Security;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
     using EA.Weee.Web.Areas.Producer.Filters;
     using EA.Weee.Web.Areas.Producer.ViewModels;
+    using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.Services;
@@ -302,6 +304,7 @@
             A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, true)).MustHaveHappenedOnceExactly();
         }
 
+        [Fact]
         public async Task RemoveSubmission_Get_ReturnAndPopulatesViewModel()
         {
             // Arrange
@@ -310,6 +313,7 @@
             string registrationNumber = "reg"; 
             int year = 2024;
             var submission = controller.SmallProducerSubmissionData.SubmissionHistory[year];
+            var producerName = controller.SmallProducerSubmissionData.HasAuthorisedRepresentitive ? controller.SmallProducerSubmissionData.AuthorisedRepresentitiveData.CompanyName : submission.CompanyName;
 
             // Act
             var result = controller.RemoveSubmission(registrationNumber, year) as ViewResult;
@@ -320,10 +324,10 @@
             result.Model.Should().NotBeNull();
 
             var viewModel = result.Model as ConfirmRemovalViewModel;
-
+            
             viewModel.Producer.RegistrationNumber.Should().Be(registrationNumber); 
             viewModel.Producer.ComplianceYear.Should().Be(year);
-            viewModel.Producer.ProducerName.Should().Be(submission.CompanyName);
+            viewModel.Producer.ProducerName.Should().Be(producerName);
             viewModel.Producer.RegisteredProducerId.Should().Be(submission.RegisteredProducerId);
         }
 
@@ -336,6 +340,18 @@
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<AdminSmallProducerSubmissionContextAttribute>();
             methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+            methodInfo.Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
+        }
+
+        [Fact]
+        public void Removed_Get_ShouldHaveContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("Removed", new[] { typeof(string), typeof(string), typeof(int) });
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+            methodInfo.Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
         }
 
         private void SetupDefaultControllerData()
