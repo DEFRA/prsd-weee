@@ -36,12 +36,13 @@
 
                 <div class="govuk-form-group">
                     <fieldset class="govuk-fieldset" role="group">
-                        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-                            @Html.Gds().LabelFor(m => m.PaymentReceivedDate, false)
-                            @Html.Gds().ValidationMessageFor(m => m.PaymentReceivedDate.Day)
-                            @Html.Gds().ValidationMessageFor(m => m.PaymentReceivedDate.Month)
-                            @Html.Gds().ValidationMessageFor(m => m.PaymentReceivedDate.Year)
+                        <legend class="govuk-fieldset__legend">
+                            @Html.DisplayNameFor(x => x.PaymentReceivedDate)
                         </legend>
+
+                        @Html.Gds().ValidationMessageFor(m => m.PaymentReceivedDate.Day)
+                        @Html.Gds().ValidationMessageFor(m => m.PaymentReceivedDate.Month)
+                        @Html.Gds().ValidationMessageFor(m => m.PaymentReceivedDate.Year)
                         <div class="govuk-hint">
                             For example, 27 3 2007
                         </div>
@@ -49,7 +50,13 @@
                             <div class="govuk-date-input__item">
                                 <div class="govuk-form-group">
                                     @Html.Gds().LabelFor(m => m.PaymentReceivedDate.Day, false)
-                                    @Html.TextBoxFor(m => m.PaymentReceivedDate.Day, new { @maxlength = 2, @class = "govuk-input govuk-date-input__input govuk-input--width-2" })
+                                    @Html.TextBoxFor(m => m.PaymentReceivedDate.Day,
+                                       new
+                                            {
+                                               @maxlength = 2,
+                                               @class = "govuk-input govuk-date-input__input govuk-input--width-2",
+                                               @ariaLabeledBy = "PaymentReceivedDate payment-received-date-label"
+                                           })
                                 </div>
                             </div>
                             <div class="govuk-date-input__item">
