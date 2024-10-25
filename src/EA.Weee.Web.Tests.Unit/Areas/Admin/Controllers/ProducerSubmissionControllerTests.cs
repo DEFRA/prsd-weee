@@ -305,7 +305,7 @@
         }
 
         [Fact]
-        public async Task RemoveSubmission_Get_ReturnAndPopulatesViewModel()
+        public async Task RemoveSubmission_Get_HasAuthorisedRepresentitive_ReturnAndPopulatesViewModel()
         {
             // Arrange
             SetupDefaultControllerData();
@@ -326,6 +326,34 @@
             var viewModel = result.Model as ConfirmRemovalViewModel;
             
             viewModel.Producer.RegistrationNumber.Should().Be(registrationNumber); 
+            viewModel.Producer.ComplianceYear.Should().Be(year);
+            viewModel.Producer.ProducerName.Should().Be(producerName);
+            viewModel.Producer.RegisteredProducerId.Should().Be(submission.RegisteredProducerId);
+        }
+
+        [Fact]
+        public async Task RemoveSubmission_Get_NotHasAuthorisedRepresentitive_ReturnAndPopulatesViewModel()
+        {
+            // Arrange
+            SetupDefaultControllerData();
+            controller.SmallProducerSubmissionData.HasAuthorisedRepresentitive = false;
+
+            string registrationNumber = "reg";
+            int year = 2024;
+            var submission = controller.SmallProducerSubmissionData.SubmissionHistory[year];
+            var producerName = controller.SmallProducerSubmissionData.HasAuthorisedRepresentitive ? controller.SmallProducerSubmissionData.AuthorisedRepresentitiveData.CompanyName : submission.CompanyName;
+
+            // Act
+            var result = controller.RemoveSubmission(registrationNumber, year) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+            result.Model.Should().NotBeNull();
+
+            var viewModel = result.Model as ConfirmRemovalViewModel;
+
+            viewModel.Producer.RegistrationNumber.Should().Be(registrationNumber);
             viewModel.Producer.ComplianceYear.Should().Be(year);
             viewModel.Producer.ProducerName.Should().Be(producerName);
             viewModel.Producer.RegisteredProducerId.Should().Be(submission.RegisteredProducerId);
