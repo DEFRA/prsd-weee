@@ -1,60 +1,47 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers
 {
-    using EA.Prsd.Core.Mapper;
+    using Api.Client;
+    using Base;
+    using Core.DirectRegistrant;
+    using Core.PaymentDetails;
     using EA.Weee.Core.Admin;
-    using EA.Weee.Core.DirectRegistrant;
-    using EA.Weee.Security;
-    using EA.Weee.Web.Areas.Admin.Controllers.Base;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
+    using EA.Weee.Requests.Admin;
+    using EA.Weee.Requests.Admin.DirectRegistrants;
     using EA.Weee.Web.Areas.Producer.Filters;
-    using EA.Weee.Web.Infrastructure;
-    using EA.Weee.Web.Infrastructure.PDF;
-    using EA.Weee.Web.Services;
-    using EA.Weee.Web.Services.Caching;
-    using EA.Weee.Web.Services.SubmissionService;
+    using Filters;
+    using Infrastructure;
+    using Security;
+    using Services.Caching;
+    using Services.SubmissionService;
     using System;
     using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using EA.Weee.Api.Client;
-    using EA.Weee.Requests.Admin;
-    using EA.Weee.Requests.Admin.DirectRegistrants;
-    using EA.Weee.Web.Filters;
+    using ViewModels.Producers;
 
     public class ProducerSubmissionController : AdminController
     {
         public SmallProducerSubmissionData SmallProducerSubmissionData;
-        private readonly BreadcrumbService breadcrumb;
-        private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeCache cache;
-        private readonly IMapper mapper;
-        private readonly IMvcTemplateExecutor templateExecutor;
-        private readonly IPdfDocumentProvider pdfDocumentProvider;
         private readonly ISubmissionService submissionService;
+        private readonly Func<IWeeeClient> apiClient;
 
         public ProducerSubmissionController(
-            BreadcrumbService breadcrumb,
             Func<IWeeeClient> apiClient,
             IWeeeCache cache,
-            IMapper mapper,
-            IMvcTemplateExecutor templateExecutor,
-            IPdfDocumentProvider pdfDocumentProvider,
             ISubmissionService submissionService)
         {
-            this.breadcrumb = breadcrumb;
             this.apiClient = apiClient;
             this.cache = cache;
-            this.mapper = mapper;
-            this.templateExecutor = templateExecutor;
-            this.pdfDocumentProvider = pdfDocumentProvider;
             this.submissionService = submissionService;
+            this.apiClient = apiClient;
         }
 
         [AdminSmallProducerSubmissionContext]
         [HttpGet]
         public async Task<ActionResult> Submissions(string registrationNumber, int? year = null)
         {
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
+            submissionService.WithSubmissionData(SmallProducerSubmissionData, true);
 
             var model = await submissionService.Submissions(year);
 
@@ -68,7 +55,7 @@
         [HttpGet]
         public async Task<ActionResult> OrganisationDetails(string registrationNumber, int? year = null)
         {
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
+            submissionService.WithSubmissionData(SmallProducerSubmissionData, true);
 
             var model = await submissionService.OrganisationDetails(year);
 
@@ -82,7 +69,7 @@
         [HttpGet]
         public async Task<ActionResult> ContactDetails(string registrationNumber, int? year = null)
         {
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
+            submissionService.WithSubmissionData(SmallProducerSubmissionData, true);
 
             var model = await submissionService.ContactDetails(year);
 
@@ -95,7 +82,7 @@
         [HttpGet]
         public async Task<ActionResult> ServiceOfNoticeDetails(string registrationNumber, int? year = null)
         {
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
+            submissionService.WithSubmissionData(SmallProducerSubmissionData, true);
 
             var model = await submissionService.ServiceOfNoticeDetails(year);
 
@@ -108,7 +95,7 @@
         [HttpGet]
         public async Task<ActionResult> RepresentedOrganisationDetails(string registrationNumber, int? year = null)
         {
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
+            submissionService.WithSubmissionData(SmallProducerSubmissionData, true);
 
             var model = await submissionService.RepresentedOrganisationDetails(year);
 
@@ -121,7 +108,7 @@
         [HttpGet]
         public async Task<ActionResult> TotalEEEDetails(string registrationNumber, int? year = null)
         {
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
+            submissionService.WithSubmissionData(SmallProducerSubmissionData, true);
 
             var model = await submissionService.TotalEEEDetails(year);
 
@@ -131,9 +118,32 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> AddPaymentDetails()
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        public ActionResult AddPaymentDetails(Guid directProducerSubmissionId, string registrationNumber, int? year)
         {
-            return View();
+            var model = new PaymentDetailsViewModel
+            {
+                DirectProducerSubmissionId = directProducerSubmissionId,
+                RegistrationNumber = registrationNumber,
+                Year = year
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> AddPaymentDetails(PaymentDetailsViewModel model)
+        {
+            if (ModelState.IsValid == false)
+            {
+                return View(model);
+            }
+
+            var details = await SendPaymentDetails(model);
+
+            return RedirectToAction(nameof(OrganisationDetails), new { registrationNumber = details.RegistrationNumber, year = details.ComplianceYear });
         }
 
         [AuthorizeInternalClaims(Claims.InternalAdmin)]
@@ -141,7 +151,7 @@
         [HttpGet]
         public ActionResult RemoveSubmission(string registrationNumber, int year)
         {
-            var submission = this.SmallProducerSubmissionData.SubmissionHistory[year];
+            var submission = SmallProducerSubmissionData.SubmissionHistory[year];
             var selectedValue = string.Empty;
             var model = new ConfirmRemovalViewModel
             {
@@ -149,7 +159,7 @@
                 Producer = new ProducerDetailsScheme
                 {
                     ComplianceYear = year,
-                    ProducerName = this.SmallProducerSubmissionData.HasAuthorisedRepresentitive ? this.SmallProducerSubmissionData.AuthorisedRepresentitiveData.CompanyName : submission.CompanyName,
+                    ProducerName = SmallProducerSubmissionData.HasAuthorisedRepresentitive ? SmallProducerSubmissionData.AuthorisedRepresentitiveData.CompanyName : submission.CompanyName,
                     RegistrationNumber = registrationNumber,
                     RegisteredProducerId = submission.RegisteredProducerId
                 }
@@ -162,7 +172,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RemoveSubmission(ConfirmRemovalViewModel viewModel)
         {
-            if (this.ModelState.IsValid)
+            if (ModelState.IsValid)
             {
                 if (viewModel.SelectedValue == "Yes")
                 {
@@ -177,18 +187,18 @@
                         await cache.InvalidateProducerSearch();
                     }
 
-                    return RedirectToAction(nameof(ProducerSubmissionController.Removed),
+                    return RedirectToAction(nameof(Removed),
                         new { registrationNumber = viewModel.Producer.RegistrationNumber, producerName = viewModel.Producer.ProducerName, year = viewModel.Producer.ComplianceYear });
                 }
                 else
                 {
-                    return RedirectToAction(nameof(ProducerSubmissionController.Submissions),
+                    return RedirectToAction(nameof(Submissions),
                         new { viewModel.Producer.RegistrationNumber });
                 }
             }
             else
             {
-                return this.View(viewModel);
+                return View(viewModel);
             }
         }
 
@@ -209,13 +219,13 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Removed(RemovedViewModel model)
         {
-            using (IWeeeClient client = apiClient())
+            using (var client = apiClient())
             {
-                this.SmallProducerSubmissionData = await client.SendAsync(User.GetAccessToken(), new GetSmallProducerSubmissionByRegistrationNumber(model.RegistrationNumber));
+                SmallProducerSubmissionData = await client.SendAsync(User.GetAccessToken(), new GetSmallProducerSubmissionByRegistrationNumber(model.RegistrationNumber));
                 
                 if (SmallProducerSubmissionData.AnySubmissionSubmitted)
                 {
-                    return RedirectToAction(nameof(ProducerSubmissionController.Submissions),
+                    return RedirectToAction(nameof(Submissions),
                         new { model.RegistrationNumber });
                 }
 
@@ -225,7 +235,17 @@
 
         private ActionResult RedirectToOrganisationHasNoSubmissions()
         {
+            //TODO
             return RedirectToAction("OrganisationHasNoSubmissions");
+        }
+
+        private async Task<ManualPaymentResult> SendPaymentDetails(PaymentDetailsViewModel model)
+        {
+            using (var client = apiClient())
+            {
+                return await client.SendAsync(User.GetAccessToken(),
+                    new AddPaymentDetails(model.PaymentMethod, model.PaymentReceivedDate, model.PaymentDetailsDescription, model.DirectProducerSubmissionId));
+            }
         }
     }
 }
