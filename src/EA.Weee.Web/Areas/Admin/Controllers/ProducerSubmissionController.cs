@@ -148,8 +148,8 @@
                 SelectedValue = selectedValue,
                 Producer = new ProducerDetailsScheme
                 {
-                    ComplianceYear = submission.ComplianceYear,
-                    ProducerName = submission.CompanyName,
+                    ComplianceYear = year,
+                    ProducerName = this.SmallProducerSubmissionData.HasAuthorisedRepresentitive ? this.SmallProducerSubmissionData.AuthorisedRepresentitiveData.CompanyName : submission.CompanyName,
                     RegistrationNumber = registrationNumber,
                     RegisteredProducerId = submission.RegisteredProducerId
                 }
