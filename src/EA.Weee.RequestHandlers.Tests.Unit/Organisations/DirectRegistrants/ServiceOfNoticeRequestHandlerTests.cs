@@ -14,7 +14,6 @@
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
-    using FluentAssertions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
@@ -29,13 +28,13 @@
         private readonly ServiceOfNoticeRequestHandler handler;
         private readonly Guid directRegistrantId = Guid.NewGuid();
         private readonly Guid countryId = Guid.NewGuid();
-        private readonly Guid userId = Guid.NewGuid();
         private readonly Country country;
 
         public ServiceOfNoticeRequestHandlerTests()
         {
             authorization = A.Fake<IWeeeAuthorization>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
+            var smallProducerDataAccess = A.Fake<ISmallProducerDataAccess>();
             var systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
             var weeeContext = A.Fake<WeeeContext>();
             var dbContextHelper = new DbContextHelper();
@@ -52,7 +51,8 @@
                 authorization,
                 genericDataAccess,
                 weeeContext,
-                systemDataDataAccess);
+                systemDataDataAccess,
+                smallProducerDataAccess);
         }
 
         [Fact]
@@ -105,19 +105,6 @@
 
             // Act & Assert
             await Assert.ThrowsAsync<NullReferenceException>(() => handler.HandleAsync(request));
-        }
-
-        [Fact]
-        public async Task HandleAsync_WhenNoCurrentYearSubmission_ThrowsInvalidOperationException()
-        {
-            // Arrange
-            var request = CreateValidRequest();
-            var directRegistrant = new DirectRegistrant();
-            A.CallTo(() => genericDataAccess.GetById<DirectRegistrant>(request.DirectRegistrantId))
-                .Returns(Task.FromResult(directRegistrant));
-
-            // Act & Assert
-            await Assert.ThrowsAsync<InvalidOperationException>(() => handler.HandleAsync(request));
         }
 
         [Fact]
