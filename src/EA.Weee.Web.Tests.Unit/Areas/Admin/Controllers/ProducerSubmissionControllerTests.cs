@@ -314,11 +314,18 @@
             SetupDefaultControllerData();
 
             var directProducerSubmissionId = Guid.NewGuid();
+            var reg = "reg";
+            var year = 2004;
 
-            var view = (await controller.AddPaymentDetails(directProducerSubmissionId)) as ViewResult;
+            var view = (await controller.AddPaymentDetails(directProducerSubmissionId, reg, year)) as ViewResult;
 
             view.Model.Should().BeOfType<PaymentDetailsViewModel>();
-            (view.Model as PaymentDetailsViewModel).DirectProducerSubmissionId.Should().Be(directProducerSubmissionId);
+
+            var vm = (view.Model as PaymentDetailsViewModel);
+
+            vm.DirectProducerSubmissionId.Should().Be(directProducerSubmissionId);
+            vm.RegistrationNumber.Should().Be(reg);
+            vm.Year.Should().Be(year);
         }
 
         [Fact]
@@ -335,7 +342,7 @@
         public void AddPaymentDetails_Get_DecoratesWithAuthorizeInternalClaimsAttribute()
         {
             var methodInfo = typeof(EA.Weee.Web.Areas.Admin.Controllers.ProducerSubmissionController)
-                .GetMethod("AddPaymentDetails", new[] { typeof(Guid) });
+                .GetMethod("AddPaymentDetails", new[] { typeof(Guid), typeof(string), typeof(int?) });
 
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
