@@ -27,6 +27,7 @@
                     HasPaid = sub.HasPaid,
                     RegistrationDate = sub.RegistrationDate,
                     SubmittedDate = sub.SubmittedDate,
+                    DirectProducerSubmissionId = sub.DirectProducerSubmissionId,
                     PaymentReference = sub.PaymentReference,
                     ProducerRegistrationNumber = sub.ProducerRegistrationNumber,
                     Address = mapper.Map<AddressData, ExternalAddressData>(sub.BusinessAddressData),

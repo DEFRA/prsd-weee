@@ -12,6 +12,7 @@
         Task<OrganisationDetailsTabsViewModel> ServiceOfNoticeDetails(int? year = null);
         Task<OrganisationDetailsTabsViewModel> Submissions(int? year = null);
         Task<OrganisationDetailsTabsViewModel> TotalEEEDetails(int? year = null);
+        Task SetTabsCrumb(int? year = null);
         SubmissionService WithSubmissionData(SmallProducerSubmissionData data, bool isInternal = false);
     }
 }

@@ -85,9 +85,11 @@
     <Compile Include="AatfEvidence\Reports\GetEvidenceNoteReportRequest.cs" />
     <Compile Include="AatfReturn\GetEvidenceNotesRecipientList.cs" />
     <Compile Include="Aatf\GetAatfById.cs" />
+    <Compile Include="Admin\AddPaymentDetails.cs" />
     <Compile Include="Admin\DirectRegistrants\GetSmallProducerSubmissionByRegistrationNumber.cs" />
     <Compile Include="Admin\GetAllAatfsForComplianceYearRequest.cs" />
     <Compile Include="Admin\Obligations\GetSchemesWithObligation.cs" />
+    <Compile Include="Admin\RemoveSmallProducer.cs" />
     <Compile Include="Admin\Reports\GetSchemesWithObligationOrEvidence.cs" />
     <Compile Include="Organisations\DirectRegistrant\ProducerRegistrationNumberRequest.cs" />
     <Compile Include="Organisations\DirectRegistrant\AddSignatoryAndCompleteRequest.cs" />
