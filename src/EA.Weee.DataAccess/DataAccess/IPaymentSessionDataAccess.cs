@@ -9,6 +9,8 @@
     {
         Task<PaymentSession> GetCurrentInProgressPayment(string paymentToken, Guid directRegistrantId, int year);
 
+        Task<PaymentSession> GetCurrentPayment(string paymentToken, Guid directRegistrantId, int year);
+
         Task<PaymentSession> GetCurrentRetryPayment(Guid directRegistrantId, int year);
 
         Task<bool> AnyPaymentTokenAsync(string paymentToken);

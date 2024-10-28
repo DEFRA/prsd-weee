@@ -32,6 +32,16 @@
                 .Include(paymentSession => paymentSession.DirectRegistrant).FirstOrDefaultAsync();
         }
 
+        public async Task<PaymentSession> GetCurrentPayment(string paymentToken, Guid directRegistrantId, int year)
+        {
+            return await weeeContext.PaymentSessions.Where(c =>
+                c.PaymentReturnToken == paymentToken &&
+                c.UserId.ToString() == userContext.UserId.ToString() &&
+                c.DirectRegistrantId == directRegistrantId &&
+                c.DirectProducerSubmission.ComplianceYear == year).OrderByDescending(p => p.CreatedAt)
+                .Include(paymentSession => paymentSession.DirectRegistrant).FirstOrDefaultAsync();
+        }
+        
         public async Task<PaymentSession> GetCurrentRetryPayment(Guid directRegistrantId, int year)
         {
             return await weeeContext.PaymentSessions.Where(c =>

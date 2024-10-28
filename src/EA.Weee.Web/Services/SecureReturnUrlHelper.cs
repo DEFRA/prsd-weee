@@ -31,7 +31,7 @@
             }
         }
 
-        public string GenerateSecureRandomString(Guid guid, int length = 16)
+        public string GenerateSecureRandomString(Guid guid, int length = 8)
         {
             var bytes = new byte[length];
             using (var rng = RandomNumberGenerator.Create())
