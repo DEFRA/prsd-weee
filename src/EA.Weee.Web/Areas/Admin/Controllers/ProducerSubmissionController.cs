@@ -223,20 +223,30 @@
             {
                 SmallProducerSubmissionData = await client.SendAsync(User.GetAccessToken(), new GetSmallProducerSubmissionByRegistrationNumber(model.RegistrationNumber));
                 
-                if (SmallProducerSubmissionData.AnySubmissionSubmitted)
+                if (SmallProducerSubmissionData.AnySubmissions)
                 {
                     return RedirectToAction(nameof(Submissions),
                         new { model.RegistrationNumber });
                 }
 
-                return RedirectToOrganisationHasNoSubmissions();
+                return RedirectToOrganisationHasNoSubmissions(SmallProducerSubmissionData.OrganisationData.Id);
             }
         }
 
-        private ActionResult RedirectToOrganisationHasNoSubmissions()
+        [HttpGet]
+        public ActionResult OrganisationHasNoSubmissions(Guid organisationId)
         {
-            //TODO
-            return RedirectToAction("OrganisationHasNoSubmissions");
+            var model = new OrganisationIdViewModel()
+            {
+                OrganisationId = organisationId
+            };
+
+            return View(model);
+        }
+
+        private ActionResult RedirectToOrganisationHasNoSubmissions(Guid organisationId)
+        {
+            return RedirectToAction("OrganisationHasNoSubmissions", new { organisationId });
         }
 
         private async Task<ManualPaymentResult> SendPaymentDetails(PaymentDetailsViewModel model)
