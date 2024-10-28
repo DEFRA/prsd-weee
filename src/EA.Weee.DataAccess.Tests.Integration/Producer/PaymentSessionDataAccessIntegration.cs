@@ -400,6 +400,315 @@
             }
         }
 
+        [Theory]
+        [InlineData(PaymentStatus.Created)]
+        [InlineData(PaymentStatus.Started)]
+        [InlineData(PaymentStatus.Capturable)]
+        [InlineData(PaymentStatus.New)]
+        public async Task GetCurrentInProgressPayment_WithDifferentValidStates_ShouldReturnCorrectPaymentSession(PaymentStatus state)
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                var domainStatus = state.ToDomainEnumeration<PaymentState>();
+                var context = database.WeeeContext;
+                var user = database.Model.AspNetUsers.First().Id;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(user));
+
+                var dataAccess = new PaymentSessionDataAccess(context, userContext);
+
+                const string paymentToken = "testToken";
+                const int year = 2023;
+
+                var (_, directRegistrant, registeredProducer) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(database, "company",
+                    SystemTime.UtcNow.Ticks.ToString(), year);
+
+                var submission = await DirectRegistrantHelper.CreateSubmission(database, directRegistrant, registeredProducer, year,
+                    new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete);
+
+                var validPaymentSession = CreatePaymentSession(user, year, directRegistrant, submission, paymentToken,
+                    "paymentId1", "paymentRef1", domainStatus);
+                context.PaymentSessions.Add(validPaymentSession);
+
+                await context.SaveChangesAsync();
+
+                // Act
+                var result = await dataAccess.GetCurrentInProgressPayment(paymentToken, directRegistrant.Id, year);
+
+                // Assert
+                result.Should().NotBeNull();
+                result.PaymentReturnToken.Should().Be(paymentToken);
+                result.UserId.Should().Be(user);
+                result.Status.Should().Be(domainStatus);
+                result.InFinalState.Should().BeFalse();
+                result.DirectProducerSubmission.ComplianceYear.Should().Be(year);
+                result.DirectRegistrant.Should().NotBeNull();
+                result.DirectRegistrant.Id.Should().Be(directRegistrant.Id);
+                result.PaymentId.Should().Be("paymentId1");
+                result.PaymentReference.Should().Be("paymentRef1");
+            }
+        }
+
+        [Fact]
+        public async Task GetCurrentInProgressPayment_WithInvalidState_ShouldReturnNull()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                var context = database.WeeeContext;
+                var user = database.Model.AspNetUsers.First().Id;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(user));
+
+                var dataAccess = new PaymentSessionDataAccess(context, userContext);
+
+                const string paymentToken = "testToken";
+                const int year = 2023;
+
+                var (_, directRegistrant, registeredProducer) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(database, "company",
+                    SystemTime.UtcNow.Ticks.ToString(), year);
+
+                var submission = await DirectRegistrantHelper.CreateSubmission(database, directRegistrant, registeredProducer, year,
+                    new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete);
+
+                // Create session with an invalid state (e.g., Success)
+                var invalidSession = CreatePaymentSession(user, year, directRegistrant, submission, paymentToken,
+                    "paymentId1", "paymentRef1", PaymentState.Success);
+
+                context.PaymentSessions.Add(invalidSession);
+                await context.SaveChangesAsync();
+
+                // Act
+                var result = await dataAccess.GetCurrentInProgressPayment(paymentToken, directRegistrant.Id, year);
+
+                // Assert
+                result.Should().BeNull();
+            }
+        }
+
+        [Fact]
+        public async Task GetCurrentPayment_WithValidInputs_ShouldReturnCorrectPaymentSession()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                var context = database.WeeeContext;
+                var user = database.Model.AspNetUsers.First().Id;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(user));
+
+                var dataAccess = new PaymentSessionDataAccess(context, userContext);
+
+                const string paymentToken = "testToken";
+                const int year = 2023;
+
+                var (_, directRegistrant, registeredProducer) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(database, "company",
+                    SystemTime.UtcNow.Ticks.ToString(), year);
+
+                var submission = await DirectRegistrantHelper.CreateSubmission(database, directRegistrant, registeredProducer, year,
+                    new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete);
+
+                var validPaymentSession = CreatePaymentSession(user, year, directRegistrant, submission, paymentToken, "paymentId1", "paymentRef1");
+                context.PaymentSessions.Add(validPaymentSession);
+
+                // Add sessions that shouldn't be returned
+                context.PaymentSessions.Add(CreatePaymentSession(user, year, directRegistrant, submission, "differentToken", "paymentId2", "paymentRef2", -1));
+                context.PaymentSessions.Add(CreatePaymentSession(user, year, directRegistrant, submission, paymentToken, "paymentId3", "paymentRef3", -2));
+
+                await context.SaveChangesAsync();
+
+                // Act
+                var result = await dataAccess.GetCurrentPayment(paymentToken, directRegistrant.Id, year);
+
+                // Assert
+                result.Should().NotBeNull();
+                result.PaymentReturnToken.Should().Be(paymentToken);
+                result.UserId.Should().Be(user);
+                result.DirectProducerSubmission.ComplianceYear.Should().Be(year);
+                result.DirectRegistrant.Should().NotBeNull();
+                result.DirectRegistrant.Id.Should().Be(directRegistrant.Id);
+                result.PaymentId.Should().Be("paymentId1");
+                result.PaymentReference.Should().Be("paymentRef1");
+            }
+        }
+
+        [Fact]
+        public async Task GetCurrentPayment_WithNoMatchingPaymentSession_ShouldReturnNull()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                var context = database.WeeeContext;
+                var user = database.Model.AspNetUsers.First().Id;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(user));
+
+                var dataAccess = new PaymentSessionDataAccess(context, userContext);
+
+                var organisation = Domain.Organisation.Organisation.CreateRegisteredCompany("Test Company", "987654321");
+                var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, null, null, null, null, null, null);
+
+                // Act
+                var result = await dataAccess.GetCurrentPayment("nonExistentToken", directRegistrant.Id, 2023);
+
+                // Assert
+                result.Should().BeNull();
+            }
+        }
+
+        [Fact]
+        public async Task GetCurrentPayment_WithDifferentUser_ShouldReturnNull()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                var context = database.WeeeContext;
+                var user = database.Model.AspNetUsers.First().Id;
+                var differentUser = Guid.NewGuid();
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(differentUser); // Set different user in context
+
+                var dataAccess = new PaymentSessionDataAccess(context, userContext);
+
+                const string paymentToken = "testToken";
+                const int year = 2023;
+
+                var (_, directRegistrant, registeredProducer) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(database, "company",
+                    SystemTime.UtcNow.Ticks.ToString(), year);
+
+                var submission = await DirectRegistrantHelper.CreateSubmission(database, directRegistrant, registeredProducer, year,
+                    new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete);
+
+                var paymentSession = CreatePaymentSession(user, year, directRegistrant, submission, paymentToken, "paymentId1", "paymentRef1");
+                context.PaymentSessions.Add(paymentSession);
+                await context.SaveChangesAsync();
+
+                // Act
+                var result = await dataAccess.GetCurrentPayment(paymentToken, directRegistrant.Id, year);
+
+                // Assert
+                result.Should().BeNull();
+            }
+        }
+
+        [Fact]
+        public async Task GetCurrentPayment_WithDifferentYear_ShouldReturnNull()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                var context = database.WeeeContext;
+                var user = database.Model.AspNetUsers.First().Id;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(user));
+
+                var dataAccess = new PaymentSessionDataAccess(context, userContext);
+
+                const string paymentToken = "testToken";
+                const int year = 2023;
+                const int differentYear = 2024;
+
+                var (_, directRegistrant, registeredProducer) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(database, "company",
+                    SystemTime.UtcNow.Ticks.ToString(), year);
+
+                var submission = await DirectRegistrantHelper.CreateSubmission(database, directRegistrant, registeredProducer, year,
+                    new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete);
+
+                var paymentSession = CreatePaymentSession(user, year, directRegistrant, submission, paymentToken, "paymentId1", "paymentRef1");
+                context.PaymentSessions.Add(paymentSession);
+                await context.SaveChangesAsync();
+
+                // Act
+                var result = await dataAccess.GetCurrentPayment(paymentToken, directRegistrant.Id, differentYear);
+
+                // Assert
+                result.Should().BeNull();
+            }
+        }
+
+        [Fact]
+        public async Task GetCurrentPayment_WithDifferentDirectRegistrant_ShouldReturnNull()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                var context = database.WeeeContext;
+                var user = database.Model.AspNetUsers.First().Id;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(user));
+
+                var dataAccess = new PaymentSessionDataAccess(context, userContext);
+
+                const string paymentToken = "testToken";
+                const int year = 2023;
+
+                // Create first organisation and payment session
+                var (_, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(database, "company1",
+                    SystemTime.UtcNow.Ticks.ToString(), year);
+
+                var submission1 = await DirectRegistrantHelper.CreateSubmission(database, directRegistrant1, registeredProducer1, year,
+                    new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete);
+
+                var paymentSession = CreatePaymentSession(user, year, directRegistrant1, submission1, paymentToken, "paymentId1", "paymentRef1");
+                context.PaymentSessions.Add(paymentSession);
+
+                // Create second organisation
+                var (_, directRegistrant2, _) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(database, "company2",
+                    SystemTime.UtcNow.Ticks.ToString(), year);
+
+                await context.SaveChangesAsync();
+
+                // Act
+                var result = await dataAccess.GetCurrentPayment(paymentToken, directRegistrant2.Id, year);
+
+                // Assert
+                result.Should().BeNull();
+            }
+        }
+
+        [Fact]
+        public async Task GetCurrentPayment_WithMultiplePaymentSessions_ShouldReturnMostRecent()
+        {
+            using (var database = new DatabaseWrapper())
+            {
+                // Arrange
+                var context = database.WeeeContext;
+                var user = database.Model.AspNetUsers.First().Id;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(user));
+
+                var dataAccess = new PaymentSessionDataAccess(context, userContext);
+
+                const string paymentToken = "testToken";
+                const int year = 2023;
+
+                var (_, directRegistrant, registeredProducer) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(database, "company",
+                    SystemTime.UtcNow.Ticks.ToString(), year);
+
+                var submission = await DirectRegistrantHelper.CreateSubmission(database, directRegistrant, registeredProducer, year,
+                    new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete);
+
+                // Add older session
+                var olderSession = CreatePaymentSession(user, year, directRegistrant, submission, paymentToken, "paymentId1", "paymentRef1", -2);
+                context.PaymentSessions.Add(olderSession);
+
+                // Add newer session
+                var newerSession = CreatePaymentSession(user, year, directRegistrant, submission, paymentToken, "paymentId2", "paymentRef2", -1);
+                context.PaymentSessions.Add(newerSession);
+
+                await context.SaveChangesAsync();
+
+                // Act
+                var result = await dataAccess.GetCurrentPayment(paymentToken, directRegistrant.Id, year);
+
+                // Assert
+                result.Should().NotBeNull();
+                result.PaymentId.Should().Be("paymentId2"); // Should get the newer session
+                result.PaymentReference.Should().Be("paymentRef2");
+            }
+        }
+
         private static PaymentSession CreatePaymentSession(string userId, int year, DirectRegistrant directRegistrant, DirectProducerSubmission submission, string paymentToken, string paymentId, string paymentRef, int minutesOffset = 0)
         {
             return new PaymentSession(
