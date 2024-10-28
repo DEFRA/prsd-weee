@@ -551,6 +551,7 @@
       <DependentUpon>AatfResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Admin\Controllers\Base\AdminBreadcrumbBaseController.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Producers\OrganisationIdViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\PaymentDetailsViewModel.cs" />
     <Compile Include="Services\SubmissionsService\ISubmissionService.cs" />
     <Compile Include="Areas\Admin\Controllers\ProducerSubmissionController.cs" />
@@ -1161,6 +1162,7 @@
     <Content Include="Views\Organisation\RepresentingOrganisation.cshtml" />
     <Content Include="Areas\Admin\Views\ProducerSubmission\ReturnProducerRegistration.cshtml" />
     <Content Include="Areas\Admin\Views\ProducerSubmission\Removed.cshtml" />
+    <Content Include="Areas\Admin\Views\ProducerSubmission\OrganisationHasNoSubmissions.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
