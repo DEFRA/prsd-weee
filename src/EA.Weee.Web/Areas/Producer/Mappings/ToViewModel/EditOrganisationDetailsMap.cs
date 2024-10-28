@@ -41,7 +41,8 @@
                 EEEBrandNames = submissionData.CurrentSubmission.EEEBrandNames,
                 CompanyName = submissionData.CurrentSubmission.CompanyName,
                 BusinessTradingName = submissionData.CurrentSubmission.TradingName,
-                CompaniesRegistrationNumber = submissionData.OrganisationData.CompanyRegistrationNumber
+                CompaniesRegistrationNumber = submissionData.OrganisationData.CompanyRegistrationNumber,
+                ProducerRegistrationNumber = submissionData.CurrentSubmission.ProducerRegistrationNumber
             };
 
             var viewModel = new EditOrganisationDetailsViewModel

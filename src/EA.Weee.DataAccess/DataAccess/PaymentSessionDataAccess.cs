@@ -22,10 +22,12 @@
 
         public async Task<PaymentSession> GetCurrentInProgressPayment(string paymentToken, Guid directRegistrantId, int year)
         {
+            var validInProgressStatus = new List<int>() { PaymentState.Capturable.Value, PaymentState.Started.Value, PaymentState.Created.Value, PaymentState.New.Value };
+
             return await weeeContext.PaymentSessions.Where(c =>
                     c.PaymentReturnToken == paymentToken &&
                     c.UserId.ToString() == userContext.UserId.ToString() &&
-                    c.Status.Value == PaymentState.New.Value &&
+                    validInProgressStatus.Contains(c.Status.Value) &&
                     c.DirectRegistrantId == directRegistrantId &&
                     c.DirectProducerSubmission.ComplianceYear == year &&
                     c.InFinalState == false).OrderByDescending(p => p.CreatedAt)

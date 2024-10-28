@@ -54,9 +54,14 @@
                             <td class="govuk-table__cell">
                                 @(Model.OrganisationViewModel.HasPaid ? "Paid" : "Not paid")
 
-                                @if (Model.OrganisationViewModel.HasPaid == false)
+                                @if (Model.OrganisationViewModel.HasPaid == false && Model.IsInternalAdmin)
                                 {
-                                    <div style="float: right"> @Html.ActionLink("Add payment details", "AddPaymentDetails", "ProducerSubmission", null, new { @class = "govuk-link" })</div>
+                                    <div style="float: right"> @Html.ActionLink("Add payment details", "AddPaymentDetails", "ProducerSubmission",
+                                                              new { 
+                                                                  directProducerSubmissionId = Model.OrganisationViewModel.DirectProducerSubmissionId, 
+                                                                  RegistrationNumber = Model.OrganisationViewModel.ProducerRegistrationNumber,
+                                                                  year = Model.Year
+                                                              }, new { @class = "govuk-link" })</div>
                                 }
                             </td>
                         </tr>
