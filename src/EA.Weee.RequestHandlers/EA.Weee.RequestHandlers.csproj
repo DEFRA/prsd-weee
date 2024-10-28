@@ -158,11 +158,13 @@
     <Compile Include="AatfReturn\SearchedAatfResultList\ISearchedAatfResultListDataAccess.cs" />
     <Compile Include="AatfReturn\SearchedAatfResultList\SearchedAatfResultListDataAccess.cs" />
     <Compile Include="Aatf\GetAatfByIdExternalSearchHandler.cs" />
+    <Compile Include="Admin\GetProducerDetails\RemoveSmallProducerHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetEEEWEEEDataReturnSchemesByComplianceYearHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetMemberRegistrationSchemesByComplianceYearHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetSchemesWithObligationOrEvidenceByComplianceYearHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemesWithObligationHandler.cs" />
     <Compile Include="Admin\Obligations\GetObligationComplianceYearsHandler.cs" />
+    <Compile Include="Admin\AddPaymentDetailsHandler.cs" />
     <Compile Include="Mappings\AdditionalCompanyDetailsAddressDataMap.cs" />
     <Compile Include="Mappings\AuthorisedRepresentitiveDataMap.cs" />
     <Compile Include="Mappings\AatfSimpleMapObject.cs" />

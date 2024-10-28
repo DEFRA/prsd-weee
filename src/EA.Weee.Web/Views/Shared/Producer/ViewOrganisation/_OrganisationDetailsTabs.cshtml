@@ -57,10 +57,10 @@ else
     </p>
 }
 
-@if (Model.ShowRemoveButton)
+@if (Model.IsInternalAdmin)
 {
     <p>
-        @Html.ActionLink("Remove " + Model.Year + " producer submission", "RemoveSubmission", "ProducerSubmission", null, new { @class = "govuk-link" })
+        @Html.ActionLink("Remove " + Model.Year + " submission", "RemoveSubmission", "ProducerSubmission", new { registrationNumber = Model.RegistrationNumber, year = Model.Year }, new { @class = "govuk-link" })
     </p>
 }
 
