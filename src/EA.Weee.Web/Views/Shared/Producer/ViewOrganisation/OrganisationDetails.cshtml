@@ -19,58 +19,58 @@
             <table id="pcs-details-table" class="govuk-table">
                 <tbody class="govuk-table__body">
 
-                    @if (Model.IsInternal)
-                    {
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" style="width: 30%;" scope="row">Registration status</th>
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Registration status</th>
 
-                            @if (Model.IsRegistered)
+                        @if (Model.IsRegistered)
+                        {
+                            <td class="govuk-table__cell">Registered</td>
+                        }
+                        else
+                        {
+                            <td class="govuk-table__cell">@Model.OrganisationViewModel.Status.GetDisplayName()</td>
+                        }
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Registration date</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.RegistrationDate</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Submission date</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.SubmittedDate</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Producer registration number (PRN)</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.ProducerRegistrationNumber</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Payment status</th>
+                        <td class="govuk-table__cell">
+                            @(Model.OrganisationViewModel.HasPaid ? "Paid" : "Not paid")
+
+                            @if (Model.OrganisationViewModel.HasPaid == false && Model.IsInternalAdmin)
                             {
-                                <td class="govuk-table__cell">Registered</td>
+                                <div style="float: right">
+                                    @Html.ActionLink("Add payment details", "AddPaymentDetails", "ProducerSubmission",
+                                   new
+                                        {
+                                       directProducerSubmissionId = Model.OrganisationViewModel.DirectProducerSubmissionId,
+                                       RegistrationNumber = Model.OrganisationViewModel.ProducerRegistrationNumber,
+                                       year = Model.Year
+                                   }, new { @class = "govuk-link" })
+                                </div>
                             }
-                            else
-                            {
-                                <td class="govuk-table__cell">@Model.OrganisationViewModel.Status.GetDisplayName()</td>
-                            }
-                        </tr>
+                        </td>
+                    </tr>
 
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" style="width: 30%;" scope="row">Registration date</th>
-                            <td class="govuk-table__cell">@Model.OrganisationViewModel.RegistrationDate</td>
-                        </tr>
-
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" style="width: 30%;" scope="row">Submission date</th>
-                            <td class="govuk-table__cell">@Model.OrganisationViewModel.SubmittedDate</td>
-                        </tr>
-
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" style="width: 30%;" scope="row">Producer registration number (PRN)</th>
-                            <td class="govuk-table__cell">@Model.OrganisationViewModel.ProducerRegistrationNumber</td>
-                        </tr>
-
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" style="width: 30%;" scope="row">Payment status</th>
-                            <td class="govuk-table__cell">
-                                @(Model.OrganisationViewModel.HasPaid ? "Paid" : "Not paid")
-
-                                @if (Model.OrganisationViewModel.HasPaid == false && Model.IsInternalAdmin)
-                                {
-                                    <div style="float: right"> @Html.ActionLink("Add payment details", "AddPaymentDetails", "ProducerSubmission",
-                                                              new { 
-                                                                  directProducerSubmissionId = Model.OrganisationViewModel.DirectProducerSubmissionId, 
-                                                                  RegistrationNumber = Model.OrganisationViewModel.ProducerRegistrationNumber,
-                                                                  year = Model.Year
-                                                              }, new { @class = "govuk-link" })</div>
-                                }
-                            </td>
-                        </tr>
-
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" style="width: 30%;" scope="row">Payment reference</th>
-                            <td class="govuk-table__cell">@Model.OrganisationViewModel.PaymentReference</td>
-                        </tr>
-                    }
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Payment reference</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.PaymentReference</td>
+                    </tr>
 
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" style="width: 30%;" scope="row">Organisation type</th>
