@@ -118,9 +118,14 @@
         }
 
         [HttpGet]
+        [AdminSmallProducerSubmissionContext]
         [AuthorizeInternalClaims(Claims.InternalAdmin)]
-        public ActionResult AddPaymentDetails(Guid directProducerSubmissionId, string registrationNumber, int? year)
+        public async Task<ActionResult> AddPaymentDetails(Guid directProducerSubmissionId, string registrationNumber, int? year)
         {
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
+
+            await submissionService.SetTabsCrumb(year);
+
             var model = new PaymentDetailsViewModel
             {
                 DirectProducerSubmissionId = directProducerSubmissionId,
@@ -149,8 +154,12 @@
         [AuthorizeInternalClaims(Claims.InternalAdmin)]
         [AdminSmallProducerSubmissionContext]
         [HttpGet]
-        public ActionResult RemoveSubmission(string registrationNumber, int year)
+        public async Task<ActionResult> RemoveSubmission(string registrationNumber, int year)
         {
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
+
+            await submissionService.SetTabsCrumb(year);
+
             var submission = SmallProducerSubmissionData.SubmissionHistory[year];
             var selectedValue = string.Empty;
             var model = new ConfirmRemovalViewModel
