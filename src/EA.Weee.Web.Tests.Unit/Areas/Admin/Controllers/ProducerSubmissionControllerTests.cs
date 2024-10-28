@@ -294,7 +294,7 @@
         }
 
         [Fact]
-        public void AddPaymentDetails_Get_ReturnViewModel()
+        public async Task AddPaymentDetails_Get_ReturnViewModel()
         {
             SetupDefaultControllerData();
 
@@ -302,7 +302,7 @@
             var reg = "reg";
             var year = 2004;
 
-            var view = controller.AddPaymentDetails(directProducerSubmissionId, reg, year) as ViewResult;
+            var view = await controller.AddPaymentDetails(directProducerSubmissionId, reg, year) as ViewResult;
 
             view.Model.Should().BeOfType<PaymentDetailsViewModel>();
 
@@ -311,6 +311,41 @@
             vm.DirectProducerSubmissionId.Should().Be(directProducerSubmissionId);
             vm.RegistrationNumber.Should().Be(reg);
             vm.Year.Should().Be(year);
+        }
+
+        [Fact]
+        public async Task AddPaymentDetails_Get_SetsBreadCrumb()
+        {
+            SetupDefaultControllerData();
+
+            var directProducerSubmissionId = Guid.NewGuid();
+            var reg = "reg";
+            var year = 2004;
+
+            var view = await controller.AddPaymentDetails(directProducerSubmissionId, reg, year) as ViewResult;
+
+            view.Model.Should().BeOfType<PaymentDetailsViewModel>();
+
+            var vm = (view.Model as PaymentDetailsViewModel);
+
+            A.CallTo(() => submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, true)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => submissionService.SetTabsCrumb(year)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task RemoveSubmission_Get_SetsBreadCrumb()
+        {
+            SetupDefaultControllerData();
+            controller.SmallProducerSubmissionData.HasAuthorisedRepresentitive = false;
+
+            string registrationNumber = "reg";
+            int year = 2024;
+
+            // Act
+            var result = await controller.RemoveSubmission(registrationNumber, year) as ViewResult;
+
+            A.CallTo(() => submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, true)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => submissionService.SetTabsCrumb(year)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -331,6 +366,16 @@
 
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
+        }
+
+        [Fact]
+        public void AddPaymentDetails_Get_DecoratesWithAdminSmallProducerSubmissionContextAttribute()
+        {
+            var methodInfo = typeof(ProducerSubmissionController)
+                .GetMethod("AddPaymentDetails", new[] { typeof(Guid), typeof(string), typeof(int?) });
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>();
         }
 
         [Fact]
@@ -377,7 +422,7 @@
         }
 
         [Fact]
-        public void RemoveSubmission_Get_HasAuthorisedRepresentitive_ReturnAndPopulatesViewModel()
+        public async Task RemoveSubmission_Get_HasAuthorisedRepresentitive_ReturnAndPopulatesViewModel()
         {
             // Arrange
             SetupDefaultControllerData();
@@ -388,7 +433,7 @@
             var producerName = controller.SmallProducerSubmissionData.HasAuthorisedRepresentitive ? controller.SmallProducerSubmissionData.AuthorisedRepresentitiveData.CompanyName : submission.CompanyName;
 
             // Act
-            var result = controller.RemoveSubmission(registrationNumber, year) as ViewResult;
+            var result = await controller.RemoveSubmission(registrationNumber, year) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -404,7 +449,7 @@
         }
 
         [Fact]
-        public void RemoveSubmission_Get_NotHasAuthorisedRepresentitive_ReturnAndPopulatesViewModel()
+        public async Task RemoveSubmission_Get_NotHasAuthorisedRepresentitive_ReturnAndPopulatesViewModel()
         {
             // Arrange
             SetupDefaultControllerData();
@@ -416,7 +461,7 @@
             var producerName = controller.SmallProducerSubmissionData.HasAuthorisedRepresentitive ? controller.SmallProducerSubmissionData.AuthorisedRepresentitiveData.CompanyName : submission.CompanyName;
 
             // Act
-            var result = controller.RemoveSubmission(registrationNumber, year) as ViewResult;
+            var result = await controller.RemoveSubmission(registrationNumber, year) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
