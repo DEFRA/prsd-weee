@@ -158,11 +158,13 @@
     <Compile Include="AatfReturn\SearchedAatfResultList\ISearchedAatfResultListDataAccess.cs" />
     <Compile Include="AatfReturn\SearchedAatfResultList\SearchedAatfResultListDataAccess.cs" />
     <Compile Include="Aatf\GetAatfByIdExternalSearchHandler.cs" />
+    <Compile Include="Admin\GetProducerDetails\RemoveSmallProducerHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetEEEWEEEDataReturnSchemesByComplianceYearHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetMemberRegistrationSchemesByComplianceYearHandler.cs" />
     <Compile Include="Admin\GetSchemes\GetSchemesWithObligationOrEvidenceByComplianceYearHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemesWithObligationHandler.cs" />
     <Compile Include="Admin\Obligations\GetObligationComplianceYearsHandler.cs" />
+    <Compile Include="Admin\AddPaymentDetailsHandler.cs" />
     <Compile Include="Mappings\AdditionalCompanyDetailsAddressDataMap.cs" />
     <Compile Include="Mappings\AuthorisedRepresentitiveDataMap.cs" />
     <Compile Include="Mappings\AatfSimpleMapObject.cs" />
@@ -172,9 +174,12 @@
     <Compile Include="Mappings\OrganisationProducerBalancingSchemeMap.cs" />
     <Compile Include="Mappings\EeeDataMap.cs" />
     <Compile Include="Mappings\SmallProducerSubmissionHistoryDataMap.cs" />
+    <Compile Include="Organisations\DirectRegistrants\ProducerRegistrationNumberRequestHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddSignatoryAndCompleteRequestHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddPaymentSessionRequestHandler.cs" />
+    <Compile Include="Organisations\DirectRegistrants\AddRepresentingCompanyHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\GetInProgressPaymentSessionRequestHandler.cs" />
+    <Compile Include="Organisations\DirectRegistrants\RepresentingCompanyHelper.cs" />
     <Compile Include="Organisations\DirectRegistrants\ValidateAndGetSubmissionPaymentHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\UpdateSubmissionPaymentDetailsRequestHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\SubmissionRequestHandlerBase.cs" />

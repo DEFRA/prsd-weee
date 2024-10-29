@@ -13,5 +13,9 @@
         public string PaymentReference { get; set; }
 
         public Guid PaymentSessionId { get; set; }
+
+        public bool PaymentFinished { get; set; }
+
+        public PaymentStatus PaymentStatus { get; set; }
     }
 }

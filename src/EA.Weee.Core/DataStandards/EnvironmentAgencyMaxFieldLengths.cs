@@ -7,6 +7,8 @@
         public const int SchemeApprovalNumber = 16;
         public const int IbisBillingReference = 10;
         public const int ProducerRegistrationNumber = 50;
+        public const int ProducerName = 50;
+        public const int ProducerTradingName = 256;
         public const int ProducerSearchTerm = CommonMaxFieldLengths.DefaultString + ProducerRegistrationNumber + 2; // +2 as search term is comma separated e.g. MyProducer, MY1234PRN
         public const int GenericAddress1 = 60;
         public const int GenericAddress2 = 60;

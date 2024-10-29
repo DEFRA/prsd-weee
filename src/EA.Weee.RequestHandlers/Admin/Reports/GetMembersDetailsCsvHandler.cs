@@ -5,6 +5,7 @@
     using DataAccess;
     using DataAccess.StoredProcedure;
     using EA.Prsd.Core;
+    using EA.Weee.Core.Constants;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
@@ -37,8 +38,16 @@
                 throw new ArgumentException(message);
             }
 
+            var filterByDirectRegistrant = false;
+            var schemeId = request.SchemeId;
+            if (request.SchemeId == DirectRegistrantFixedIdConstant.DirectRegistrantFixedId)
+            {
+                schemeId = null;
+                filterByDirectRegistrant = true;
+            }
+
             var result = await context.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(
-                       request.ComplianceYear, request.IncludeRemovedProducer, request.IncludeBrandNames, request.SchemeId, request.CompetentAuthorityId);
+                       request.ComplianceYear, request.IncludeRemovedProducer, request.IncludeBrandNames, schemeId, request.CompetentAuthorityId, filterByDirectRegistrant);
 
             csvWriter.DefineColumn(@"PCS name or direct registrant", i => i.SchemeName);
             csvWriter.DefineColumn(@"PCS approval number", i => i.ApprovalNumber);
