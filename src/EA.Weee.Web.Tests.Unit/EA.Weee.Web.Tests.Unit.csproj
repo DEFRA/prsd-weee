@@ -396,6 +396,7 @@
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EvidenceSummaryViewModelTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\RecipientWasteStatusViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\SubmittedDatesFilterViewModelMapTests.cs" />
+    <Compile Include="Areas\Admin\Attributes\AdminSmallProducerSubmissionContextAttributeUnitTests.cs" />
     <Compile Include="Areas\Admin\Controllers\EvidenceTransferReportControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\EvidenceReportsControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ProducerSubmissionControllerTests.cs" />

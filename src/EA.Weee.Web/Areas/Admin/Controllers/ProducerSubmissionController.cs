@@ -7,7 +7,7 @@
     using EA.Weee.Core.Admin;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Admin.DirectRegistrants;
-    using EA.Weee.Web.Areas.Producer.Filters;
+    using EA.Weee.Web.Filters;
     using Filters;
     using Infrastructure;
     using Security;
