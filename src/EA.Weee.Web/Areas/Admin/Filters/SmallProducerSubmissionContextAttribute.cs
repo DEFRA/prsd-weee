@@ -1,8 +1,8 @@
-﻿namespace EA.Weee.Web.Areas.Producer.Filters
+﻿namespace EA.Weee.Web.Areas.Admin.Filters
 {
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Requests.Admin.DirectRegistrants;
-    using EA.Weee.Web.Areas.Producer.Controllers;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
     using System;
@@ -11,6 +11,7 @@
     public class AdminSmallProducerSubmissionContextAttribute : ActionFilterAttribute
     {
         public Func<IWeeeClient> Client { get; set; }
+
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             var registrationNumber = context.HttpContext.Request.QueryString["RegistrationNumber"];
@@ -36,6 +37,16 @@
             var controller = context.Controller as EA.Weee.Web.Areas.Admin.Controllers.ProducerSubmissionController;
 
             controller.SmallProducerSubmissionData = data;
+
+            if (!data.AnySubmissions)
+            {
+                context.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary
+                {
+                    { "action", nameof(Areas.Admin.Controllers.ProducerSubmissionController.OrganisationHasNoSubmissions) },
+                    { "controller", typeof(Areas.Admin.Controllers.ProducerSubmissionController).GetControllerName() },
+                    { "organisationId", data.OrganisationData.Id }
+                });
+            }
 
             base.OnActionExecuting(context);
         }
