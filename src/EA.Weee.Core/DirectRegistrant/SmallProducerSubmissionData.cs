@@ -24,13 +24,7 @@
             }
         }
 
-        public bool AnySubmissions
-        {
-            get
-            {
-                return SubmissionHistory.Any();
-            }
-        }
+        public bool AnySubmissions => SubmissionHistory.Any();
 
         public SmallProducerSubmissionHistoryData CurrentSubmission { get; set; }
 

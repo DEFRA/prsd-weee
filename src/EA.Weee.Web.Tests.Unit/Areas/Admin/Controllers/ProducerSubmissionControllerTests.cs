@@ -11,8 +11,8 @@
     using EA.Weee.Requests.Admin.DirectRegistrants;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.Admin.Controllers;
+    using EA.Weee.Web.Areas.Admin.Filters;
     using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
-    using EA.Weee.Web.Areas.Producer.Filters;
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Filters;
     using FakeItEasy;
