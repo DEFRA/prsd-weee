@@ -1,7 +1,11 @@
-﻿@using System.Web.Mvc.Html
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Web.Areas.Producer.Controllers
+@using MvcNavigationHelpers
+@using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Producer.ViewModels.PaymentResultModel
 @{
-    var title = "Your payment has failed.";
+    var title = "Your payment has failed";
     ViewBag.Title = @title + " - GOV.UK";
 }
 
@@ -10,4 +14,18 @@
         <h1 class="govuk-heading-l">@title</h1>
     </header>
 
+    <p class="govuk-body">
+        Your payment has failed. You can either retry your payment or pay by phone.
+    </p>
+    <p class="govuk-body">
+        To pay by phone, call: 00000000000.
+    </p>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="govuk-button-group govuk-!-padding-top-3">
+            @this.WeeeGds().Button("Retry payment")
+        </div>
+    }
 }

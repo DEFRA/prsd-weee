@@ -898,6 +898,52 @@
             // Assert
             result.Should().BeOfType<ViewResult>();
         }
+
+        [Fact]
+        public async Task RetryPayment_Post_ShouldRedirectToNextUrl()
+        {
+            // Arrange
+            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            controller.SmallProducerSubmissionData = submissionData;
+
+            var model = TestFixture.Create<AppropriateSignatoryViewModel>();
+            var request = TestFixture.Create<AddSignatoryAndCompleteRequest>();
+            request.DirectRegistrantId = model.DirectRegistrantId = submissionData.DirectRegistrantId;
+
+            var createPaymentResult = TestFixture.Create<CreatePaymentResult>();
+            createPaymentResult.Links = TestFixture.Create<PaymentLinks>();
+            createPaymentResult.Links.NextUrl = TestFixture.Create<Link>();
+            createPaymentResult.Links.NextUrl.Href = TestFixture.Create<string>();
+
+            A.CallTo(() => addSignatoryAndCompleteRequestCreator.ViewModelToRequest(model)).Returns(request);
+            A.CallTo(() => paymentService.CheckInProgressPaymentAsync(A<string>._, request.DirectRegistrantId)).Returns(Task.FromResult((PaymentWithAllLinks)null));
+            A.CallTo(() => paymentService.CreatePaymentAsync(request.DirectRegistrantId, A<string>._, A<string>._)).Returns(createPaymentResult);
+            A.CallTo(() => paymentService.ValidateExternalUrl(createPaymentResult.Links.NextUrl.Href)).Returns(true);
+
+            // Act
+            var result = await controller.AppropriateSignatory(model) as RedirectResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => paymentService.CheckInProgressPaymentAsync(A<string>._, request.DirectRegistrantId)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => paymentService.CreatePaymentAsync(request.DirectRegistrantId, A<string>._, A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => weeeCache.InvalidateOrganisationNameCache(model.OrganisationId))
+                .MustHaveHappenedOnceExactly();
+            A.CallTo(() => paymentService.ValidateExternalUrl(createPaymentResult.Links.NextUrl.Href)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void RetryPayment_ShouldHaveSmallProducerSubmissionContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("RetryPayment");
+
+            // Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
+        }
+
         [Fact]
         public async Task EditEeeData_Get_ShouldReturnViewWithMappedModel()
         {
@@ -1062,6 +1108,90 @@
 
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionSubmittedAttribute>();
+        }
+
+        [Fact]
+        public async Task AppropriateSignatory_Post_ValidModel_ExistingSuccessfulPayment_ShouldRedirectToAlreadySubmittedAndPaid()
+        {
+            // Arrange
+            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            controller.SmallProducerSubmissionData = submissionData;
+
+            var model = TestFixture.Create<AppropriateSignatoryViewModel>();
+            var request = TestFixture.Create<AddSignatoryAndCompleteRequest>();
+            request.DirectRegistrantId = model.DirectRegistrantId = submissionData.DirectRegistrantId;
+
+            var existingPayment = TestFixture.Create<PaymentWithAllLinks>();
+            existingPayment.State = new PaymentState { Status = PaymentStatus.Success };
+
+            A.CallTo(() => addSignatoryAndCompleteRequestCreator.ViewModelToRequest(model)).Returns(request);
+            A.CallTo(() => paymentService.CheckInProgressPaymentAsync(A<string>._, request.DirectRegistrantId)).Returns(Task.FromResult(existingPayment));
+
+            // Act
+            var result = await controller.AppropriateSignatory(model) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("AlreadySubmittedAndPaid");
+            result.RouteValues["controller"].Should().Be("Producer");
+        }
+
+        [Fact]
+        public void AppropriateSignatory_Get_ShouldHaveSmallProducerSubmissionSubmittedAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("AppropriateSignatory", Type.EmptyTypes);
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionSubmittedAttribute>();
+        }
+
+        [Fact]
+        public void AppropriateSignatory_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("AppropriateSignatory", Type.EmptyTypes);
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
+        }
+
+        [Fact]
+        public void ProducerSubmissionController_ShouldHaveAuthorizeRouteClaimsAttribute()
+        {
+            // Arrange
+            var typeInfo = typeof(ProducerSubmissionController);
+
+            // Act
+            var attribute = typeInfo.GetCustomAttributes(typeof(AuthorizeRouteClaimsAttribute), false)
+                                     .FirstOrDefault() as AuthorizeRouteClaimsAttribute;
+
+            // Assert
+            attribute.Should().NotBeNull(); // Check that the attribute is present
+
+            var routeIdParamField = typeof(AuthorizeRouteClaimsAttribute)
+                .GetField("routeIdParam", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+            var claimsField = typeof(AuthorizeRouteClaimsAttribute)
+                .GetField("claims", System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance);
+
+            var routeIdParam = (string)routeIdParamField.GetValue(attribute);
+            var claims = (string[])claimsField.GetValue(attribute);
+
+            routeIdParam.Should().Be("directRegistrantId");
+            claims.Should().Contain(WeeeClaimTypes.DirectRegistrantAccess);
+        }
+
+        [Fact]
+        public void ProducerSubmissionController_ShouldHaveOutputCacheAttribute()
+        {
+            // Arrange
+            var typeInfo = typeof(ProducerSubmissionController);
+
+            // Act & Assert
+            typeInfo.Should().BeDecoratedWith<OutputCacheAttribute>(attr =>
+                attr.NoStore == true &&
+                attr.Duration == 0 &&
+                attr.VaryByParam == "None");
         }
     }
 }

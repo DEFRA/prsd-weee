@@ -12,7 +12,7 @@
         [DisplayName("Compliance year")]
         public int SelectedYear { get; set; }
 
-        [DisplayName("PCS name")]
+        [DisplayName("PCS name or direct registrants")]
         public Guid? SelectedScheme { get; set; }
 
         [DisplayName("Appropriate authority")]

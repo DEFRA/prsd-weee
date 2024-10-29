@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Payment.Controllers
 {
+    using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Web.Areas.Producer.Controllers;
     using EA.Weee.Web.Controllers.Base;
@@ -22,14 +23,14 @@
         {
             var success = await paymentService.HandlePaymentReturnAsync(User.GetAccessToken(), token);
 
-            if (!string.IsNullOrWhiteSpace(success.PaymentReference))
+            if (success.Status == PaymentStatus.Success)
             {
                 return RedirectToAction(nameof(ProducerSubmissionController.PaymentSuccess), typeof(ProducerSubmissionController).GetControllerName(), 
                     new { directRegistrantId = success.DirectRegistrantId, area = "Producer", reference = success.PaymentReference });
             }
-
-            return RedirectToAction(nameof(ProducerSubmissionController.PaymentFailure), typeof(ProducerSubmissionController).GetControllerName(), 
-                new { directRegistrantId = success.DirectRegistrantId, area = "Producer"});
+               
+            return RedirectToAction(nameof(ProducerSubmissionController.PaymentFailure), typeof(ProducerSubmissionController).GetControllerName(),
+                   new { directRegistrantId = success.DirectRegistrantId, area = "Producer" });
         }
     }
 }

@@ -551,10 +551,15 @@
       <DependentUpon>AatfResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Admin\Controllers\Base\AdminBreadcrumbBaseController.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Producers\OrganisationIdViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Producers\PaymentDetailsViewModel.cs" />
+    <Compile Include="Services\SubmissionsService\ISubmissionService.cs" />
     <Compile Include="Areas\Admin\Controllers\ProducerSubmissionController.cs" />
+    <Compile Include="Services\SubmissionsService\SubmissionService.cs" />
     <Compile Include="Areas\Admin\Controllers\TransferEvidenceReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\EvidenceReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\ManageEvidenceNotesController.cs" />
+    <Compile Include="Areas\Admin\Filters\SmallProducerSubmissionContextAttribute.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllTransferNotesMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllEvidenceNotesMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewObligationsAndEvidenceSummaryViewModelMap.cs" />
@@ -615,6 +620,10 @@
     <Compile Include="Areas\Producer\ViewModels\EditContactDetailsViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\CheckAnswersViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\PaymentResultModel.cs" />
+    <Compile Include="ViewModels\Organisation\Mapping\ToViewModel\RepresentingCompaniesViewModelMap.cs" />
+    <Compile Include="ViewModels\Organisation\Mapping\ToViewModel\RepresentingCompaniesViewModelMapSource.cs" />
+    <Compile Include="ViewModels\Organisation\RepresentingCompany.cs" />
+    <Compile Include="ViewModels\Organisation\RepresentingCompaniesViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\ServiceOfNoticeViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\SellingTechniqueViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\EditEeeDataViewModel.cs" />
@@ -1125,28 +1134,35 @@
     <Content Include="Views\OrganisationRegistration\PartnerDetails.cshtml" />
     <Content Include="Views\OrganisationRegistration\SoleTraderDetails.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\Submissions.cshtml" />
-    <Content Include="Areas\Producer\Views\Producer\ViewOrganisation\OrganisationDetails.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\EditOrganisationDetails.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\EditEeeeData.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\ServiceOfNotice.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\EditContactDetails.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\EditRepresentedOrganisationDetails.cshtml" />
-    <Content Include="Areas\Producer\Views\Producer\ViewOrganisation\_OrganisationDetailsTabs.cshtml" />
-    <Content Include="Areas\Producer\Views\Producer\ViewOrganisation\ContactDetails.cshtml" />
-    <Content Include="Areas\Producer\Views\Producer\ViewOrganisation\ServiceOfNoticeDetails.cshtml" />
-    <Content Include="Areas\Producer\Views\Producer\ViewOrganisation\RepresentedOrganisationDetails.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\AppropriateSignatory.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\PaymentSuccess.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\PaymentFailure.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\SubmitRegistration.cshtml" />
     <Content Include="Views\OrganisationRegistration\OrganisationFound.cshtml" />
     <Content Include="Areas\Admin\Views\ProducerSubmission\Submissions.cshtml" />
-    <Content Include="Areas\Producer\Views\Producer\ViewOrganisation\TotalEEEDetails.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\DownloadSubmission.cshtml" />
     <Content Include="Areas\Producer\Views\Shared\_CheckAnswersContentPartial.cshtml" />
     <Content Include="Views\Shared\_PdfLayout.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\AlreadySubmittedAndPaid.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\OrganisationHasNoSubmissions.cshtml" />
+    <Content Include="Views\Shared\Producer\ViewOrganisation\_OrganisationDetailsTabs.cshtml" />
+    <Content Include="Views\Shared\Producer\ViewOrganisation\ContactDetails.cshtml" />
+    <Content Include="Views\Shared\Producer\ViewOrganisation\OrganisationDetails.cshtml" />
+    <Content Include="Views\Shared\Producer\ViewOrganisation\RepresentedOrganisationDetails.cshtml" />
+    <Content Include="Views\Shared\Producer\ViewOrganisation\ServiceOfNoticeDetails.cshtml" />
+    <Content Include="Views\Shared\Producer\ViewOrganisation\TotalEEEDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\ProducerSubmission\AddPaymentDetails.cshtml" />
+    <Content Include="Areas\Admin\Views\ProducerSubmission\RemoveSubmission.cshtml" />
+    <Content Include="Views\Organisation\RepresentingCompanies.cshtml" />
+    <Content Include="Views\Organisation\RepresentingOrganisation.cshtml" />
+    <Content Include="Areas\Admin\Views\ProducerSubmission\ReturnProducerRegistration.cshtml" />
+    <Content Include="Areas\Admin\Views\ProducerSubmission\Removed.cshtml" />
+    <Content Include="Areas\Admin\Views\ProducerSubmission\OrganisationHasNoSubmissions.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
@@ -1972,6 +1988,7 @@
     <Content Include="Views\Shared\_SearchFilterButtonsPartial.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\SubmittedDatesFiltersViewModel.cshtml" />
     <Content Include="Views\Shared\_OrganisationAddressCountryPartial.cshtml" />
+    <Content Include="Views\Shared\_RepresentingCompanyPartial.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
@@ -2192,6 +2209,7 @@
     <Folder Include="Areas\Test\Views\TestControllerBase\" />
     <Folder Include="ViewModels\OrganisationRegistration\Details\" />
     <Folder Include="ViewModels\Shared\Utilities\" />
+    <Folder Include="Views\Producer\" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Areas\AatfReturn\Views\App_LocalResources\ReturnsResources.resx">

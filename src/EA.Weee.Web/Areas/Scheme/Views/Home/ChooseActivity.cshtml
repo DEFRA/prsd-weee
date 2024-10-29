@@ -8,11 +8,19 @@
 
 @section main_content
 {
-    
-    @if (!Model.ShowLinkToCreateOrJoinOrganisation)
+
+    @if (Model.IsRepresentingCompany)
     {
-        @(this.WeeeGds().BackLink(@Url.Action("Index", "Organisation", new { @area = "" })))
+        @(this.WeeeGds().BackLink(@Url.Action("RepresentingCompanies", "Organisation", new { organisationId = Model.OrganisationId, area = "" })))
     }
+    else
+    {
+        if (!Model.ShowLinkToCreateOrJoinOrganisation)
+        {
+            @(this.WeeeGds().BackLink(@Url.Action("Index", "Organisation", new { @area = "" })))
+        }
+    }
+
 
     @using (Html.BeginForm(actionName: "ChooseActivity", controllerName: "Home", method: FormMethod.Post))
     {
@@ -27,6 +35,7 @@
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.DirectRegistrantId)
         @Html.HiddenFor(m => m.SchemeId)
+        @Html.HiddenFor(m => m.IsRepresentingCompany)
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ActivityOptions">
             @Html.Gds().ValidationMessageFor(m => m.SelectedValue)

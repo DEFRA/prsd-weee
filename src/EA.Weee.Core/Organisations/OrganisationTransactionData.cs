@@ -15,7 +15,7 @@
 
         [Required] public ExternalOrganisationType? OrganisationType { get; set; }
 
-        [Required] public YesNoType? PreviousRegistration { get; set; }
+        [Required] public PreviouslyRegisteredProducerType? PreviousRegistration { get; set; }
 
         [Required] public YesNoType? AuthorisedRepresentative { get; set; }
 

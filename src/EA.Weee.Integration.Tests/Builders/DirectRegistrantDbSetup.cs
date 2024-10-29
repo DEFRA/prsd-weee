@@ -25,6 +25,7 @@
 
         public DirectRegistrantDbSetup WithOrganisation(Guid organisationId)
         {
+            ObjectInstantiator<DirectRegistrant>.SetProperty(o => o.Organisation, null, instance);
             ObjectInstantiator<DirectRegistrant>.SetProperty(o => o.OrganisationId, organisationId, instance);
 
             return this;
@@ -32,6 +33,7 @@
 
         public DirectRegistrantDbSetup WithContact(Guid contactId)
         {
+            ObjectInstantiator<DirectRegistrant>.SetProperty(o => o.Contact, null, instance);
             ObjectInstantiator<DirectRegistrant>.SetProperty(o => o.ContactId, contactId, instance);
 
             return this;
@@ -39,6 +41,7 @@
 
         public DirectRegistrantDbSetup WithAddress(Guid addressId)
         {
+            ObjectInstantiator<DirectRegistrant>.SetProperty(o => o.Address, null, instance);
             ObjectInstantiator<DirectRegistrant>.SetProperty(o => o.AddressId, addressId, instance);
 
             return this;
@@ -47,6 +50,13 @@
         public DirectRegistrantDbSetup WithBrandName(string brandName)
         {
             ObjectInstantiator<DirectRegistrant>.SetProperty(o => o.BrandName, new BrandName(brandName), instance);
+
+            return this;
+        }
+
+        public DirectRegistrantDbSetup WithPrn(string prn)
+        {
+            ObjectInstantiator<DirectRegistrant>.SetProperty(o => o.ProducerRegistrationNumber, prn, instance);
 
             return this;
         }
