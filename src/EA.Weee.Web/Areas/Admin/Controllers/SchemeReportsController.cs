@@ -291,7 +291,7 @@
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
 
-            await PopulateFilters(model, true);
+            await PopulateFilters(model, true, true);
 
             return View(model);
         }
