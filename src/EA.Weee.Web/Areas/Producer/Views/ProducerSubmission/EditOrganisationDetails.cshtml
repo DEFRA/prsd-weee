@@ -56,6 +56,16 @@
             </div>
         </div>
 
+        if (Model.Organisation.ProducerRegistrationNumber != null)
+        {
+            <div class="govuk-grid-row govuk-!-padding-bottom-2">
+                <div class="flex-container">
+                    <span class="govuk-body govuk-label--s label-width" for="Organisation_ProducerRegistrationNumber" id="Organisation_ProducerRegistrationNumber-label">Producer registration number</span>
+                    <span class="govuk-body" aria-labelledby="Organisation_ProducerRegistrationNumber-label" name="Organisation_ProducerRegistrationNumber" id="Organisation.ProducerRegistrationNumber">@Model.Organisation.ProducerRegistrationNumber</span>
+                </div>
+            </div>
+        }
+
         @Html.EditorForAs(model => model.Organisation)
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.Address.WebsiteAddress)">

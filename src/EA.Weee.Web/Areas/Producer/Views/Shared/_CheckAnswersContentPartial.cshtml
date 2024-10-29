@@ -9,20 +9,26 @@
 
 @{
     var organisationDetails = new Dictionary<string, object>
-{
-            { "Organisation type", Model.OrganisationDetails.Organisation.OrganisationType.GetDisplayName()},
-            { "Company registration number", Model.OrganisationDetails.Organisation.CompaniesRegistrationNumber},
-            { "Company name", Model.OrganisationDetails.Organisation.CompanyName},
-            { "Trading name", Model.OrganisationDetails.Organisation.BusinessTradingName},
-            { "Website address", Model.OrganisationDetails.Organisation.Address.WebsiteAddress},
-            { "Address line 1", Model.OrganisationDetails.Organisation.Address.Address1},
-            { "Address line 2", Model.OrganisationDetails.Organisation.Address.Address2},
-            { "Town or city", Model.OrganisationDetails.Organisation.Address.TownOrCity},
-            { "County or region", Model.OrganisationDetails.Organisation.Address.CountyOrRegion},
-            { "Postcode", Model.OrganisationDetails.Organisation.Address.Postcode},
-            { "Country", Model.OrganisationDetails.Organisation.Address.CountryName},
-            { "EEE brand names", Model.OrganisationDetails.Organisation.EEEBrandNames},
+    {
+        { "Organisation type", Model.OrganisationDetails.Organisation.OrganisationType.GetDisplayName() },
+        { "Company registration number", Model.OrganisationDetails.Organisation.CompaniesRegistrationNumber },
     };
+
+    if (Model.OrganisationDetails.Organisation.ProducerRegistrationNumber != null)
+    {
+        organisationDetails.Add("Producer registration number", Model.OrganisationDetails.Organisation.ProducerRegistrationNumber);
+    }
+
+    organisationDetails.Add("Company name", Model.OrganisationDetails.Organisation.CompanyName);
+    organisationDetails.Add("Trading name", Model.OrganisationDetails.Organisation.BusinessTradingName);
+    organisationDetails.Add("Website address", Model.OrganisationDetails.Organisation.Address.WebsiteAddress);
+    organisationDetails.Add("Address line 1", Model.OrganisationDetails.Organisation.Address.Address1);
+    organisationDetails.Add("Address line 2", Model.OrganisationDetails.Organisation.Address.Address2);
+    organisationDetails.Add("Town or city", Model.OrganisationDetails.Organisation.Address.TownOrCity);
+    organisationDetails.Add("County or region", Model.OrganisationDetails.Organisation.Address.CountyOrRegion);
+    organisationDetails.Add("Postcode", Model.OrganisationDetails.Organisation.Address.Postcode);
+    organisationDetails.Add("Country", Model.OrganisationDetails.Organisation.Address.CountryName);
+    organisationDetails.Add("EEE brand names", Model.OrganisationDetails.Organisation.EEEBrandNames);
 
     var sortedContacts = Model.OrganisationDetails.AdditionalContactModels.OrderBy(c => c.Order).ToList();
 
