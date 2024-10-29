@@ -83,6 +83,8 @@
                 ComplianceYear = SmallProducerSubmissionData.CurrentSubmission.ComplianceYear
             };
 
+            SetHistoricBreadcrumb();
+
             return View(model);
         }
 
@@ -303,7 +305,7 @@
 
         private ActionResult RedirectToOrganisationHasNoSubmissions()
         {
-             return RedirectToAction("OrganisationHasNoSubmissions");
+            return RedirectToAction("OrganisationHasNoSubmissions");
         }
     }
 }
