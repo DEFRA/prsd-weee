@@ -40,6 +40,7 @@
 
             return new OrganisationViewModel()
             {
+                ProducerRegistrationNumber = source.SmallProducerSubmissionData.ProducerRegistrationNumber,
                 Address = mapper.Map<AddressData, ExternalAddressData>(source.SmallProducerSubmissionData.OrganisationData.BusinessAddress),
                 CompanyName = source.SmallProducerSubmissionData.OrganisationData.Name,
                 BusinessTradingName = source.SmallProducerSubmissionData.OrganisationData.TradingName,
