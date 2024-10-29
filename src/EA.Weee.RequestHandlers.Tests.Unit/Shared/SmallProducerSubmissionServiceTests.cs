@@ -200,7 +200,7 @@
         }
 
         [Fact]
-        public async Task GetSmallProducerSubmissionDatac_SetsCurrentSubmission_WhenAvailable()
+        public async Task GetSmallProducerSubmissionData_SetsCurrentSubmission_WhenAvailable()
         {
             // Arrange
             var directRegistrant = SetupValidDirectRegistrant(true);
@@ -234,13 +234,6 @@
 
             // Assert
             result.CurrentSubmission.Should().BeNull();
-        }
-
-        private DirectProducerSubmission CreateSubmission(int year)
-        {
-            var submission = A.Fake<DirectProducerSubmission>();
-            A.CallTo(() => submission.ComplianceYear).Returns(year);
-            return submission;
         }
 
         [Fact]
@@ -308,6 +301,51 @@
                 .Returns(Task.FromResult(directRegistrant));
 
             return directRegistrant;
+        }
+
+        [Fact]
+        public async Task GetSmallProducerSubmissionData_WhenSubmissionHistoryExists_SetsProducerRegistrationNumber()
+        {
+            // Arrange
+            var directRegistrant = SetupValidDirectRegistrant();
+            var registeredProducer = A.Fake<RegisteredProducer>();
+            const string expectedRegNumber = "WEE/AB1234CD";
+
+            var submission = CreateSubmission(2023);
+            A.CallTo(() => submission.RegisteredProducer).Returns(registeredProducer);
+            A.CallTo(() => registeredProducer.ProducerRegistrationNumber).Returns(expectedRegNumber);
+
+            var submissions = new List<DirectProducerSubmission> { submission };
+            A.CallTo(() => directRegistrant.DirectProducerSubmissions).Returns(submissions);
+
+            // Act
+            var result = await service.GetSmallProducerSubmissionData(directRegistrant);
+
+            // Assert
+            result.ProducerRegistrationNumber.Should().Be(expectedRegNumber);
+        }
+
+        [Fact]
+        public async Task GetSmallProducerSubmissionData_WhenNoSubmissionHistory_ReturnsEmptyProducerRegistrationNumber()
+        {
+            // Arrange
+            var directRegistrant = SetupValidDirectRegistrant();
+            A.CallTo(() => directRegistrant.DirectProducerSubmissions).Returns(new List<DirectProducerSubmission>());
+
+            // Act
+            var result = await service.GetSmallProducerSubmissionData(directRegistrant);
+
+            // Assert
+            result.ProducerRegistrationNumber.Should().BeEmpty();
+        }
+
+        private static DirectProducerSubmission CreateSubmission(int year)
+        {
+            var submission = A.Fake<DirectProducerSubmission>();
+            var registeredProducer = A.Fake<RegisteredProducer>();
+            A.CallTo(() => submission.ComplianceYear).Returns(year);
+            A.CallTo(() => submission.RegisteredProducer).Returns(registeredProducer);
+            return submission;
         }
     }
 }
