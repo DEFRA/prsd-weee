@@ -4,6 +4,7 @@
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview;
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Constant;
@@ -129,12 +130,27 @@
 
         private Task SetViewBreadcrumb() => 
             SetBreadcrumb(smallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.ViewOrganisation);
-        private Task SetHistoricBreadcrumb() => 
+
+        private Task SetHistoricBreadcrumb() =>
             SetBreadcrumb(smallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
 
-        public Task SetTabsCrumb(int? year = null) => year.HasValue 
-            ? SetHistoricBreadcrumb() 
-            : SetViewBreadcrumb();
+        private Task SetInternalBreadcrumb() =>
+           SetBreadcrumb(smallProducerSubmissionData.OrganisationData.Id, InternalUserActivity.DirectRegistrantDetails);
+
+        public Task SetTabsCrumb(int? year = null)
+        {
+            if (this.isInternal)
+            {
+                return SetInternalBreadcrumb();
+            }
+
+            if (year.HasValue)
+            {
+                return SetHistoricBreadcrumb();
+            }
+
+            return SetViewBreadcrumb();
+        }
 
         private IEnumerable<int> YearsDropdownData(SmallProducerSubmissionData data)
         {
