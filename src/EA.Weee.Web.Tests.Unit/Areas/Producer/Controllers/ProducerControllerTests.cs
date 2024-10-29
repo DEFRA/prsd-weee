@@ -376,6 +376,75 @@
         }
 
         [Fact]
+        public void OrganisationHasNoSubmissions_Get_ReturnView()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            const int complianceYear = 2024;
+
+            controller.SmallProducerSubmissionData = new Core.DirectRegistrant.SmallProducerSubmissionData
+            {
+                OrganisationData = new OrganisationData
+                {
+                    Id = id
+                },
+                CurrentSubmission = new SmallProducerSubmissionHistoryData()
+                {
+                    ComplianceYear = complianceYear
+                }
+            };
+
+            // Act
+            var result = controller.OrganisationHasNoSubmissions() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Model.Should().BeOfType<AlreadySubmittedAndPaidViewModel>();
+
+            var model = result.Model as AlreadySubmittedAndPaidViewModel;
+            model.OrganisationId.Should().Be(id);
+            model.ComplianceYear.Should().Be(complianceYear);
+
+            result.ViewName.Should().BeEmpty();
+        }
+
+        [Fact]
+        public void OrganisationHasNoSubmissions_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerController).GetMethod("OrganisationHasNoSubmissions");
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public void OrganisationHasNoSubmissions_Get_ShouldSetBreadcrumb()
+        {
+            // Arrange
+            var id = Guid.NewGuid();
+            const int complianceYear = 2024;
+
+            controller.SmallProducerSubmissionData = new Core.DirectRegistrant.SmallProducerSubmissionData
+            {
+                OrganisationData = new OrganisationData
+                {
+                    Id = id
+                },
+                CurrentSubmission = new SmallProducerSubmissionHistoryData()
+                {
+                    ComplianceYear = complianceYear
+                }
+            };
+
+            // Act
+            var result = controller.OrganisationHasNoSubmissions() as ViewResult;
+
+            Assert.Equal(breadcrumb.ExternalActivity, ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
+        }
+
+        [Fact]
         public async Task CheckAnswers_Get_ShouldReturnViewWithMappedModel()
         {
             // Arrange
