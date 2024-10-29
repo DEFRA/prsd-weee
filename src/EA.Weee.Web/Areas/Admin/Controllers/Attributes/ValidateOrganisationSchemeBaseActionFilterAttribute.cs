@@ -1,14 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers.Attributes
 {
-    using EA.Weee.Api.Client;
-    using EA.Weee.Core.Scheme;
-    using EA.Weee.Requests.Scheme;
-    using EA.Weee.Web.Areas.AatfReturn.Attributes;
-    using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.Filters;
     using System;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Filters;
 
     public abstract class ValidateOrganisationSchemeBaseActionFilterAttribute : ActionFilterAttribute
     {
