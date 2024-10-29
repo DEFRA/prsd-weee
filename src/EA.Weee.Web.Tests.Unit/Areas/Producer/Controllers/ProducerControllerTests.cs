@@ -412,7 +412,7 @@
         public void OrganisationHasNoSubmissions_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
         {
             // Arrange
-            var methodInfo = typeof(ProducerController).GetMethod("AlreadySubmittedAndPaid");
+            var methodInfo = typeof(ProducerController).GetMethod("OrganisationHasNoSubmissions");
 
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
