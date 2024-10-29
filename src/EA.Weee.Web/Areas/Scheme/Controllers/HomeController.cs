@@ -748,27 +748,52 @@
             }
         }
 
-        private bool HasOnlySmallProducerActivities(List<string> activities)
+        private static readonly HashSet<string> ProducerRegistrationSubmissionTypes = new HashSet<string>
         {
-            var expectedActivities = new HashSet<string>
-            {
-                ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
-                ProducerSubmissionConstant.NewProducerRegistrationSubmission,
-                ProducerSubmissionConstant.ViewOrganisation,
-                PcsAction.ManageOrganisationUsers,
-                ProducerSubmissionConstant.ManageRepresentingCompany
-            };
+            ProducerSubmissionConstant.NewProducerRegistrationSubmission,
+            ProducerSubmissionConstant.ContinueProducerRegistrationSubmission
+        };
 
-            var alternativeExpectedActivities = new HashSet<string>
-            {
-                ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
-                ProducerSubmissionConstant.NewProducerRegistrationSubmission,
-                ProducerSubmissionConstant.ViewOrganisation,
-                ProducerSubmissionConstant.ManageRepresentingCompany
-            };
+        private static readonly HashSet<string> StandardActivitiesBase = new HashSet<string>
+        {
+            ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
+            ProducerSubmissionConstant.ViewOrganisation,
+            PcsAction.ManageOrganisationUsers,
+            ProducerSubmissionConstant.ManageRepresentingCompany
+        };
 
-            return activities.All(a => expectedActivities.Contains(a)) && activities.Count == expectedActivities.Count
-                   || activities.All(a => alternativeExpectedActivities.Contains(a)) && activities.Count == alternativeExpectedActivities.Count;
+        private static readonly HashSet<string> AlternativeActivitiesBase = new HashSet<string>
+        {
+            ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
+            ProducerSubmissionConstant.ViewOrganisation,
+            ProducerSubmissionConstant.ManageRepresentingCompany
+        };
+
+        public bool HasOnlySmallProducerActivities(IEnumerable<string> activities)
+        {
+            if (activities == null)
+            {
+                return false;
+            }
+
+            var activityList = activities.ToList();
+
+            var registrationTypeCount = activityList.Count(a => ProducerRegistrationSubmissionTypes.Contains(a));
+            if (registrationTypeCount != 1)
+            {
+                return false;
+            }
+
+            var remainingActivities = new HashSet<string>(activityList.Where(a => !ProducerRegistrationSubmissionTypes.Contains(a)));
+
+            return IsExactMatch(remainingActivities, StandardActivitiesBase) ||
+                   IsExactMatch(remainingActivities, AlternativeActivitiesBase);
+        }
+
+        private static bool IsExactMatch(ICollection<string> activities, ICollection<string> expectedActivities)
+        {
+            return activities.Count == expectedActivities.Count &&
+                   activities.All(expectedActivities.Contains);
         }
     }
 }
