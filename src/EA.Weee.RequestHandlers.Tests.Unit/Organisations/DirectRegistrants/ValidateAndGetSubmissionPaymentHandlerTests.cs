@@ -201,7 +201,7 @@
 
         private void SetupNoCurrentInProgressPayment()
         {
-            A.CallTo(() => paymentSessionDataAccess.GetCurrentInProgressPayment(PaymentReturnToken, directRegistrantId, year))
+            A.CallTo(() => paymentSessionDataAccess.GetCurrentPayment(PaymentReturnToken, directRegistrantId, year))
                 .Returns<PaymentSession>(null);
         }
 
@@ -245,7 +245,7 @@
             A.CallTo(() => paymentSession.PaymentReference).Returns(TestFixture.Create<string>());
             A.CallTo(() => paymentSession.Id).Returns(TestFixture.Create<Guid>());
 
-            A.CallTo(() => paymentSessionDataAccess.GetCurrentInProgressPayment(PaymentReturnToken, directRegistrantId, year))
+            A.CallTo(() => paymentSessionDataAccess.GetCurrentPayment(PaymentReturnToken, directRegistrantId, year))
                 .Returns(paymentSession);
 
             return paymentSession;
