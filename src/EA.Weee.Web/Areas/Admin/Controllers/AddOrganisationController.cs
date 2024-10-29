@@ -7,7 +7,7 @@
     using Core.Shared;
     using EA.Prsd.Core.Extensions;
     using EA.Weee.Web.Areas.Admin.ViewModels.AddOrganisation;
-    using Filters;
+    using EA.Weee.Web.Filters;
     using Infrastructure;
     using Security;
     using Services;
