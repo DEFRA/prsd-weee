@@ -46,7 +46,7 @@
 
             private readonly Because of = () =>
             {
-                result = Task.Run(async () => await handler.HandleAsync(request)).Result;
+                result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
 
                 obligationUpload = Query.GetObligationUploadById(result);
             };
