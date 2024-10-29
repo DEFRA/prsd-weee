@@ -6,11 +6,13 @@
     using Core.Organisations;
     using Core.Organisations.Base;
     using Core.PaymentDetails;
+    using EA.Weee.Core.Admin;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Requests.Admin.DirectRegistrants;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.Admin.Controllers;
+    using EA.Weee.Web.Areas.Admin.Filters;
     using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
-    using EA.Weee.Web.Areas.Producer.Filters;
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Filters;
     using FakeItEasy;
@@ -292,7 +294,7 @@
         }
 
         [Fact]
-        public void AddPaymentDetails_Get_ReturnViewModel()
+        public async Task AddPaymentDetails_Get_ReturnViewModel()
         {
             SetupDefaultControllerData();
 
@@ -300,7 +302,7 @@
             var reg = "reg";
             var year = 2004;
 
-            var view = controller.AddPaymentDetails(directProducerSubmissionId, reg, year) as ViewResult;
+            var view = await controller.AddPaymentDetails(directProducerSubmissionId, reg, year) as ViewResult;
 
             view.Model.Should().BeOfType<PaymentDetailsViewModel>();
 
@@ -309,6 +311,41 @@
             vm.DirectProducerSubmissionId.Should().Be(directProducerSubmissionId);
             vm.RegistrationNumber.Should().Be(reg);
             vm.Year.Should().Be(year);
+        }
+
+        [Fact]
+        public async Task AddPaymentDetails_Get_SetsBreadCrumb()
+        {
+            SetupDefaultControllerData();
+
+            var directProducerSubmissionId = Guid.NewGuid();
+            var reg = "reg";
+            var year = 2004;
+
+            var view = await controller.AddPaymentDetails(directProducerSubmissionId, reg, year) as ViewResult;
+
+            view.Model.Should().BeOfType<PaymentDetailsViewModel>();
+
+            var vm = (view.Model as PaymentDetailsViewModel);
+
+            A.CallTo(() => submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, true)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => submissionService.SetTabsCrumb(year)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task RemoveSubmission_Get_SetsBreadCrumb()
+        {
+            SetupDefaultControllerData();
+            controller.SmallProducerSubmissionData.HasAuthorisedRepresentitive = false;
+
+            string registrationNumber = "reg";
+            int year = 2024;
+
+            // Act
+            var result = await controller.RemoveSubmission(registrationNumber, year) as ViewResult;
+
+            A.CallTo(() => submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, true)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => submissionService.SetTabsCrumb(year)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -329,6 +366,16 @@
 
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
+        }
+
+        [Fact]
+        public void AddPaymentDetails_Get_DecoratesWithAdminSmallProducerSubmissionContextAttribute()
+        {
+            var methodInfo = typeof(ProducerSubmissionController)
+                .GetMethod("AddPaymentDetails", new[] { typeof(Guid), typeof(string), typeof(int?) });
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>();
         }
 
         [Fact]
@@ -375,7 +422,7 @@
         }
 
         [Fact]
-        public void RemoveSubmission_Get_HasAuthorisedRepresentitive_ReturnAndPopulatesViewModel()
+        public async Task RemoveSubmission_Get_HasAuthorisedRepresentitive_ReturnAndPopulatesViewModel()
         {
             // Arrange
             SetupDefaultControllerData();
@@ -386,7 +433,7 @@
             var producerName = controller.SmallProducerSubmissionData.HasAuthorisedRepresentitive ? controller.SmallProducerSubmissionData.AuthorisedRepresentitiveData.CompanyName : submission.CompanyName;
 
             // Act
-            var result = controller.RemoveSubmission(registrationNumber, year) as ViewResult;
+            var result = await controller.RemoveSubmission(registrationNumber, year) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -402,7 +449,7 @@
         }
 
         [Fact]
-        public void RemoveSubmission_Get_NotHasAuthorisedRepresentitive_ReturnAndPopulatesViewModel()
+        public async Task RemoveSubmission_Get_NotHasAuthorisedRepresentitive_ReturnAndPopulatesViewModel()
         {
             // Arrange
             SetupDefaultControllerData();
@@ -414,7 +461,7 @@
             var producerName = controller.SmallProducerSubmissionData.HasAuthorisedRepresentitive ? controller.SmallProducerSubmissionData.AuthorisedRepresentitiveData.CompanyName : submission.CompanyName;
 
             // Act
-            var result = controller.RemoveSubmission(registrationNumber, year) as ViewResult;
+            var result = await controller.RemoveSubmission(registrationNumber, year) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -450,6 +497,175 @@
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
             methodInfo.Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
+        }
+
+        [Fact]
+        public async Task RemoveSubmission_Post_SelectValueYes_ReturnsAndRedirectsProducerValues()
+        {
+            // Arrange
+            SetupDefaultControllerData();
+
+            var returns = TestFixture.Create<RemoveSmallProducerResult>();
+
+            var vm = new ConfirmRemovalViewModel
+            {
+                PossibleValues = new[] { string.Empty },
+                SelectedValue = "Yes",
+                Producer = new Core.Admin.ProducerDetailsScheme
+                {
+                    ComplianceYear = 2004,
+                    RegistrationNumber = "regno",
+                    ProducerName = "name",
+                    RegisteredProducerId = Guid.NewGuid()
+                }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+               A<RemoveSmallProducer>.That.Matches(s => s.RegisteredProducerId == vm.Producer.RegisteredProducerId)))
+              .Returns(returns);
+
+            // Act
+            var result = await controller.RemoveSubmission(vm) as RedirectToRouteResult;
+
+            //Assert
+            result.RouteValues["registrationNumber"].Should().Be(vm.Producer.RegistrationNumber);
+            result.RouteValues["producerName"].Should().Be(vm.Producer.ProducerName);
+            result.RouteValues["year"].Should().Be(vm.Producer.ComplianceYear);
+            result.RouteValues["action"].Should().Be(nameof(ProducerSubmissionController.Removed));
+        }
+
+        [Fact]
+        public async Task RemoveSubmission_Post_SelectValueYesInvalidateProducerSearchCache_CallsInvalidate()
+        {
+            // Arrange
+            SetupDefaultControllerData();
+
+            var returns = new RemoveSmallProducerResult(true);
+
+            var vm = new ConfirmRemovalViewModel
+            {
+                PossibleValues = new[] { string.Empty },
+                SelectedValue = "Yes",
+                Producer = new Core.Admin.ProducerDetailsScheme
+                {
+                    RegisteredProducerId = Guid.NewGuid()
+                }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+               A<RemoveSmallProducer>.That.Matches(s => s.RegisteredProducerId == vm.Producer.RegisteredProducerId)))
+              .Returns(returns);
+
+            // Act
+            var result = await controller.RemoveSubmission(vm) as RedirectToRouteResult;
+
+            //Assert
+            A.CallTo(() => weeeCache.InvalidateProducerSearch()).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task RemoveSubmission_Post_SelectValueNoInvalidateProducerSearchCache_CallsInvalidate()
+        {
+            // Arrange
+            SetupDefaultControllerData();
+
+            var returns = new RemoveSmallProducerResult(true);
+
+            var vm = new ConfirmRemovalViewModel
+            {
+                PossibleValues = new[] { string.Empty },
+                SelectedValue = "No",
+                Producer = new Core.Admin.ProducerDetailsScheme
+                {
+                    RegisteredProducerId = Guid.NewGuid()
+                }
+            };
+
+            // Act
+            var result = await controller.RemoveSubmission(vm) as RedirectToRouteResult;
+
+            //Assert
+            result.RouteValues["RegistrationNumber"].Should().Be(vm.Producer.RegistrationNumber);
+            result.RouteValues["action"].Should().Be(nameof(ProducerSubmissionController.Submissions));
+        }
+
+        [Fact]
+        public async Task RemoveSubmission_Post_ModelStateInvalid_ReturnsView()
+        {
+            // Arrange
+            SetupDefaultControllerData();
+
+            var vm = new ConfirmRemovalViewModel
+            {
+                PossibleValues = new[] { string.Empty },
+                SelectedValue = "No",
+                Producer = new Core.Admin.ProducerDetailsScheme
+                {
+                    RegisteredProducerId = Guid.NewGuid()
+                }
+            };
+
+            controller.ModelState.AddModelError("Field", "Problem");
+
+            // Act
+            var result = await controller.RemoveSubmission(vm) as ViewResult;
+
+            //Assert
+            var model = result.Model as ConfirmRemovalViewModel;
+            model.Should().Be(vm);
+        }
+
+        [Fact]
+        public async Task Removed_Post_NoSubmissions_RedirectsToNoSubmissions()
+        {
+            // Arrange
+            SetupDefaultControllerData();
+            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>();
+
+            var vm = new RemovedViewModel
+            {
+                ComplianceYear = 2004,
+                ProducerName = "Test",
+                RegistrationNumber = "reg",
+                SchemeName = "s"
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+              A<GetSmallProducerSubmissionByRegistrationNumber>.That.Matches(s => s.RegistrationNumber == vm.RegistrationNumber)))
+             .Returns(controller.SmallProducerSubmissionData);
+
+            // Act
+            var result = await controller.Removed(vm) as RedirectToRouteResult;
+
+            //Assert
+            result.RouteValues["organisationId"].Should().Be(controller.SmallProducerSubmissionData.OrganisationData.Id);
+            result.RouteValues["action"].Should().Be("OrganisationHasNoSubmissions");
+        }
+
+        [Fact]
+        public async Task Removed_Post_NoSubmissions_RedirectsToSubmissions()
+        {
+            // Arrange
+            SetupDefaultControllerData();
+
+            var vm = new RemovedViewModel
+            {
+                ComplianceYear = 2004,
+                ProducerName = "Test",
+                RegistrationNumber = "reg",
+                SchemeName = "s"
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+              A<GetSmallProducerSubmissionByRegistrationNumber>.That.Matches(s => s.RegistrationNumber == vm.RegistrationNumber)))
+             .Returns(controller.SmallProducerSubmissionData);
+
+            // Act
+            var result = await controller.Removed(vm) as RedirectToRouteResult;
+
+            //Assert
+            result.RouteValues["RegistrationNumber"].Should().Be(vm.RegistrationNumber);
+            result.RouteValues["action"].Should().Be(nameof(ProducerSubmissionController.Submissions));
         }
 
         private void SetupDefaultControllerData()

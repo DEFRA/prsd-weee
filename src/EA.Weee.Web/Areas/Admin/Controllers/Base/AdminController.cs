@@ -1,6 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Admin.Controllers.Base
 {
-    using Filters;
+    using EA.Weee.Web.Filters;
     using Security;
     using System.Web.Mvc;
 
