@@ -26,7 +26,6 @@
         private readonly WeeeContext weeeContext;
         private readonly IGenerateFromXmlDataAccess generateFromXmlDataAccess;
         private readonly ISmallProducerDataAccess smallProducerDataAccess;
-        private DirectProducerSubmission directProducerSubmission;
         private readonly AddSmallProducerSubmissionHandler handler;
 
         public AddSmallProducerSubmissionHandlerTests()
