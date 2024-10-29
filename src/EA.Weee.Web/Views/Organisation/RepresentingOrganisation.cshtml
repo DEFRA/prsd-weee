@@ -1,0 +1,19 @@
+﻿@using MvcNavigationHelpers
+@using EA.Weee.Web.Controllers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Core.Organisations.RepresentingCompanyDetailsViewModel
+@{
+    const string title = "Producer details";
+    ViewBag.Title = title + " - GOV.UK";
+}
+@section full_main_content
+{
+
+    @this.WeeeGds().BackLink(@Url.UrlFor<OrganisationController>(a => a.RepresentingCompanies(Model.OrganisationId)))
+
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">@title</h1>
+    </header>
+
+    @Html.Partial("_RepresentingCompanyPartial", Model)
+}

@@ -5,6 +5,8 @@
     using Core;
     using DataAccess;
     using DataAccess.Identity;
+    using EA.Weee.Api.Client;
+    using EA.Weee.Api.HangfireServices;
     using EA.Weee.Email;
     using EA.Weee.Xml;
     using Identity;
@@ -39,6 +41,7 @@
             builder.RegisterModule(new EventDispatcherModule());
             builder.RegisterModule(new XmlModule());
             builder.RegisterModule(new SecurityModule());
+            builder.RegisterModule(new ApiClientModule());
 
             // http://www.talksharp.com/configuring-autofac-to-work-with-the-aspnet-identity-framework-in-mvc-5
             builder.RegisterType<WeeeIdentityContext>().AsSelf().InstancePerRequest();
@@ -52,6 +55,9 @@
                 .WithParameter(new NamedParameter("connectionString", connectionString))
                 .As<ISecurityEventAuditor>()
                 .InstancePerRequest();
+
+            builder.RegisterType<PaymentsJob>().AsSelf().InstancePerLifetimeScope();
+            builder.RegisterType<PaymentsService>().As<IPaymentsService>().InstancePerLifetimeScope();
 
             return builder.Build();
         }

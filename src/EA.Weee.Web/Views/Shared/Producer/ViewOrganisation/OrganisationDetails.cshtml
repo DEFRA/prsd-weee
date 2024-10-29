@@ -19,12 +19,12 @@
             <table id="pcs-details-table" class="govuk-table">
                 <tbody class="govuk-table__body">
 
-                    @if (Model.IsInternal)
+                    @if (Model.Year.HasValue)
                     {
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" style="width: 30%;" scope="row">Registration status</th>
 
-                            @if (Model.OrganisationViewModel.Status == EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted && Model.OrganisationViewModel.HasPaid)
+                            @if (Model.IsRegistered)
                             {
                                 <td class="govuk-table__cell">Registered</td>
                             }
@@ -54,19 +54,26 @@
                             <td class="govuk-table__cell">
                                 @(Model.OrganisationViewModel.HasPaid ? "Paid" : "Not paid")
 
-                                @if (Model.OrganisationViewModel.HasPaid)
+                                @if (Model.OrganisationViewModel.HasPaid == false && Model.IsInternalAdmin)
                                 {
-                                    <div style="float: right"> @Html.ActionLink("Add payment details", "AddPaymentDetails", "ProducerSubmission", null, new { @class = "govuk-link" })</div>
+                                    <div style="float: right">
+                                        @Html.ActionLink("Add payment details", "AddPaymentDetails", "ProducerSubmission",
+                                new
+                                {
+                                    directProducerSubmissionId = Model.OrganisationViewModel.DirectProducerSubmissionId,
+                                    RegistrationNumber = Model.OrganisationViewModel.ProducerRegistrationNumber,
+                                    year = Model.Year
+                                }, new { @class = "govuk-link" })
+                                    </div>
                                 }
                             </td>
                         </tr>
 
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" style="width: 30%;" scope="row">Payment reference</th>
-                            <td class="govuk-table__cell">Payment reference</td>
+                            <td class="govuk-table__cell">@Model.OrganisationViewModel.PaymentReference</td>
                         </tr>
                     }
-
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" style="width: 30%;" scope="row">Organisation type</th>
                         <td class="govuk-table__cell">@Model.OrganisationViewModel.OrganisationType.GetDisplayName()</td>
@@ -81,6 +88,14 @@
                         <th class="govuk-table__header" style="width: 30%;" scope="row">Company registration number</th>
                         <td class="govuk-table__cell">@Model.OrganisationViewModel.CompaniesRegistrationNumber</td>
                     </tr>
+
+                    @if (Model.Year.HasValue == false)
+                    {
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="width: 30%;" scope="row">Producer registration number (PRN)</th>
+                            <td class="govuk-table__cell">@Model.OrganisationViewModel.ProducerRegistrationNumber</td>
+                        </tr>
+                    }
 
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" style="width: 30%;" scope="row">Trading name</th>
@@ -126,10 +141,11 @@
 
         </div>
 
-        @if (Model.IsInternal && (Model.OrganisationViewModel.Status != EA.Weee.Core.DirectRegistrant.SubmissionStatus.InComplete
-    && Model.OrganisationViewModel.Status != EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted))
+        @if (Model.ShowReturnRegistrationToUser)
         {
-            @(this.WeeeGds().Button("Return submission to user"));
+            <div class="govuk-button-group govuk-!-padding-top-3">
+                @(this.WeeeGds().GovUkButtonLink("Return producer registration to user", "ReturnProducerRegistration"))
+            </div>
         }
     </div>
 

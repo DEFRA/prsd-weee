@@ -28,6 +28,7 @@
     using System.Web.Mvc;
 
     [AuthorizeRouteClaims("directRegistrantId", WeeeClaimTypes.DirectRegistrantAccess)]
+    [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
     public class ProducerSubmissionController : ExternalSiteController
     {
         public SmallProducerSubmissionData SmallProducerSubmissionData;
@@ -356,7 +357,8 @@
         }
 
         [HttpGet]
-        [SmallProducerSubmissionContext]
+        [SmallProducerSubmissionSubmitted(Order = 2)]
+        [SmallProducerSubmissionContext(Order = 1)]
         public async Task<ActionResult> AppropriateSignatory()
         {
             var model = mapper.Map<SmallProducerSubmissionData, AppropriateSignatoryViewModel>(SmallProducerSubmissionData);
@@ -407,6 +409,11 @@
             }
             else
             {
+                if (existingPaymentInProgress.State.Status == PaymentStatus.Success)
+                {
+                    return RedirectToAction(nameof(ProducerController.AlreadySubmittedAndPaid), typeof(ProducerController).GetControllerName());
+                }
+
                 nextUrl = existingPaymentInProgress.Links.NextUrl.Href;
             }
 
@@ -440,6 +447,15 @@
         public ActionResult PaymentFailure()
         {
             return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [ActionName("PaymentFailure")]
+        [SmallProducerSubmissionContext]
+        public async Task<ActionResult> RetryPayment()
+        {
+            return await RedirectToNextUrl();
         }
 
         public ActionResult BackToPrevious(bool? redirectToCheckAnswers)

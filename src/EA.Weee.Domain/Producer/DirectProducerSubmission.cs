@@ -18,9 +18,19 @@
 
         public virtual Guid RegisteredProducerId { get; set; }
         
-        public virtual bool? PaymentFinished { get; set; }
+        public virtual bool PaymentFinished { get; set; }
 
-        public virtual int ComplianceYear {get; set; }
+        public virtual int ComplianceYear { get; set; }
+
+        public virtual string ManualPaymentMethod { get; set; }
+
+        public virtual DateTime? ManualPaymentReceivedDate { get; set; }
+
+        public virtual string ManualPaymentDetails { get; set; }
+
+        public virtual string ManualPaymentMadeByUserId { get; set; }
+
+        public virtual User.User ManualPaymentMadeByUser { get; set; }
 
         public virtual DirectProducerSubmissionStatus DirectProducerSubmissionStatus { get; set; }
 
