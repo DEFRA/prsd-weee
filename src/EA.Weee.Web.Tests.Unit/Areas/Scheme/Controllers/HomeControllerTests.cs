@@ -2517,6 +2517,122 @@
                 .Which.IsRepresentingCompany.Should().BeTrue();
         }
 
+        [Fact]
+        public void HasOnlySmallProducerActivities_WithNullActivities_ReturnsFalse()
+        {
+            var result = HomeController().HasOnlySmallProducerActivities(null);
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void HasOnlySmallProducerActivities_WithEmptyActivities_ReturnsFalse()
+        {
+            var result = HomeController().HasOnlySmallProducerActivities(new List<string>());
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void HasOnlySmallProducerActivities_WithNoRegistrationType_ReturnsFalse()
+        {
+            var activities = new List<string>
+            {
+                ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
+                ProducerSubmissionConstant.ViewOrganisation,
+                PcsAction.ManageOrganisationUsers
+            };
+
+            var result = HomeController().HasOnlySmallProducerActivities(activities);
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void HasOnlySmallProducerActivities_WithMultipleRegistrationTypes_ReturnsFalse()
+        {
+            var activities = new List<string>
+            {
+                ProducerSubmissionConstant.NewProducerRegistrationSubmission,
+                ProducerSubmissionConstant.ContinueProducerRegistrationSubmission,
+                ProducerSubmissionConstant.ViewOrganisation
+            };
+
+            var result = HomeController().HasOnlySmallProducerActivities(activities);
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void HasOnlySmallProducerActivities_WithStandardActivities_ReturnsTrue()
+        {
+            var activities = new List<string>
+            {
+                ProducerSubmissionConstant.NewProducerRegistrationSubmission,
+                ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
+                ProducerSubmissionConstant.ViewOrganisation,
+                PcsAction.ManageOrganisationUsers,
+                ProducerSubmissionConstant.ManageRepresentingCompany
+            };
+
+            var result = HomeController().HasOnlySmallProducerActivities(activities);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void HasOnlySmallProducerActivities_WithPartialStandardActivities_ReturnsFalse()
+        {
+            var activities = new List<string>
+            {
+                ProducerSubmissionConstant.NewProducerRegistrationSubmission,
+                ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
+                ProducerSubmissionConstant.ViewOrganisation
+            };
+
+            var result = HomeController().HasOnlySmallProducerActivities(activities);
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void HasOnlySmallProducerActivities_WithAlternativeActivities_ReturnsTrue()
+        {
+            var activities = new List<string>
+            {
+                ProducerSubmissionConstant.NewProducerRegistrationSubmission,
+                ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
+                ProducerSubmissionConstant.ViewOrganisation,
+                ProducerSubmissionConstant.ManageRepresentingCompany
+            };
+
+            var result = HomeController().HasOnlySmallProducerActivities(activities);
+            Assert.True(result);
+        }
+
+        [Fact]
+        public void HasOnlySmallProducerActivities_WithPartialAlternativeActivities_ReturnsFalse()
+        {
+            var activities = new List<string>
+            {
+                ProducerSubmissionConstant.NewProducerRegistrationSubmission,
+                ProducerSubmissionConstant.HistoricProducerRegistrationSubmission
+            };
+
+            var result = HomeController().HasOnlySmallProducerActivities(activities);
+            Assert.False(result);
+        }
+
+        [Fact]
+        public void HasOnlySmallProducerActivities_WithExtraActivities_ReturnsFalse()
+        {
+            var activities = new List<string>
+            {
+                ProducerSubmissionConstant.NewProducerRegistrationSubmission,
+                ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
+                ProducerSubmissionConstant.ViewOrganisation,
+                ProducerSubmissionConstant.ManageRepresentingCompany,
+                PcsAction.ManageEeeWeeeData
+            };
+
+            var result = HomeController().HasOnlySmallProducerActivities(activities);
+            Assert.False(result);
+        }
+
         private void SetupCommonFakes(OrganisationData organisationDetails)
         {
             A.CallTo(() => weeeClient.SendAsync(
