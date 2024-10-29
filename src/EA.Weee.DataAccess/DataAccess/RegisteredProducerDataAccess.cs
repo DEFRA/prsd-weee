@@ -7,6 +7,7 @@
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
+    using Z.EntityFramework.Plus;
 
     public class RegisteredProducerDataAccess : IRegisteredProducerDataAccess
     {
@@ -66,10 +67,31 @@
 
         public async Task<DirectRegistrant> GetDirectRegistrantByRegistration(string producerRegistrationNumber)
         {
-            return await context.DirectProducerSubmissions
+            var directRegistrant = await context.DirectProducerSubmissions
+                .Include(p => p.RegisteredProducer)  // Include RegisteredProducer to access Removed property
                 .Where(p => p.RegisteredProducer.ProducerRegistrationNumber == producerRegistrationNumber)
                 .Select(p => p.DirectRegistrant)
                 .FirstOrDefaultAsync();
+
+            if (directRegistrant != null)
+            {
+                await context.Entry(directRegistrant)
+                    .Collection(d => d.DirectProducerSubmissions)
+                    .LoadAsync();
+
+                foreach (var submission in directRegistrant.DirectProducerSubmissions.ToList())
+                {
+                    await context.Entry(submission)
+                        .Reference(s => s.RegisteredProducer)
+                        .LoadAsync();
+                }
+
+                directRegistrant.DirectProducerSubmissions = directRegistrant.DirectProducerSubmissions
+                    .Where(submission => !submission.RegisteredProducer.Removed)
+                    .ToList();
+            }
+
+            return directRegistrant;
         }
 
         public bool HasPreviousAmendmentCharge(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber)
