@@ -10,6 +10,7 @@
     using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.Services.SubmissionService;
     using FakeItEasy;
     using FluentAssertions;
     using System;
@@ -27,31 +28,36 @@
         }
 
         private readonly IWeeeClient fakeClient;
+        private readonly IWeeeCache weeeCache;
         private readonly ActionExecutingContext actionExecutingContext;
         private readonly SmallProducerSubmissionContextAttribute filter;
+        private readonly ISubmissionService submissionService;
 
         public SmallProducerSubmissionContextAttributeTests()
         {
             fakeClient = A.Fake<IWeeeClient>();
+            this.weeeCache = A.Fake<IWeeeCache>();
+
             var fakeHttpContext = A.Fake<HttpContextBase>();
 
             var breadcrumbService = A.Fake<BreadcrumbService>();
-            var weeeCache = A.Fake<IWeeeCache>();
             var mapper = A.Fake<IMapper>();
             var templateExecutor = A.Fake<IMvcTemplateExecutor>();
             var pdfDocumentProvider = A.Fake<IPdfDocumentProvider>();
+            submissionService = A.Fake<ISubmissionService>();
 
             actionExecutingContext = new ActionExecutingContext
             {
                 ActionParameters = new System.Web.Routing.RouteValueDictionary(),
-                Controller = new ProducerController(breadcrumbService, weeeCache, mapper, templateExecutor, pdfDocumentProvider),
+                Controller = new ProducerController(breadcrumbService, weeeCache, mapper, templateExecutor, pdfDocumentProvider, submissionService),
                 HttpContext = fakeHttpContext,
                 RouteData = new System.Web.Routing.RouteData()
             };
 
             filter = new SmallProducerSubmissionContextAttribute
             {
-                Client = () => fakeClient
+                Client = () => fakeClient,
+                Cache = weeeCache
             };
 
             var fakePrincipal = A.Fake<ClaimsPrincipal>();
@@ -99,18 +105,23 @@
                 .WithMessage("The specified direct registrant ID is not valid.");
         }
 
-        [Fact]
-        public void OnActionExecuting_WhenDataIsNull_CreatesNewSubmission()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void OnActionExecuting_WhenDataIsNull_CreatesNewSubmission(bool invalidateCache)
         {
             // Arrange
             var directRegistrantId = Guid.NewGuid();
             actionExecutingContext.RouteData.Values["directRegistrantId"] = directRegistrantId.ToString();
 
             A.CallTo(() => fakeClient.SendAsync(A<string>._, A<GetSmallProducerSubmission>._))
-                .Returns(Task.FromResult<SmallProducerSubmissionData>(new SmallProducerSubmissionData()))
+                .Returns(Task.FromResult(new SmallProducerSubmissionData()))
                 .Once()
                 .Then
                 .Returns(Task.FromResult(new SmallProducerSubmissionData()));
+
+            A.CallTo(() => fakeClient.SendAsync(A<string>._, A<AddSmallProducerSubmission>._))
+                .Returns(new AddSmallProducerSubmissionResult(invalidateCache, A.Dummy<Guid>()));
 
             // Act
             filter.OnActionExecuting(actionExecutingContext);
@@ -118,6 +129,14 @@
             // Assert
             A.CallTo(() => fakeClient.SendAsync(A<string>._, A<AddSmallProducerSubmission>.That.Matches(a => a.DirectRegistrantId == directRegistrantId)))
                 .MustHaveHappenedOnceExactly();
+            if (invalidateCache)
+            {
+                A.CallTo(() => weeeCache.InvalidateSmallProducerSearch()).MustHaveHappenedOnceExactly();
+            }
+            else
+            {
+                A.CallTo(() => weeeCache.InvalidateSmallProducerSearch()).MustNotHaveHappened();
+            }
         }
 
         [Fact]

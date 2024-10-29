@@ -130,7 +130,7 @@
         }
 
         [Fact]
-        public async Task CheckInProgressPaymentAsync_ShouldReturnPaymentWhenExistsAndNotFinished()
+        public async Task CheckInProgressPaymentAsync_ShouldReturnPaymentWhenExists()
         {
             // Arrange
             var accessToken = fixture.Create<string>();
@@ -183,9 +183,8 @@
             // Assert
             result.Should().Be(expectedResult);
         }
-
         [Fact]
-        public async Task CheckInProgressPaymentAsync_ShouldReturnNullWhenPaymentIsFinished()
+        public async Task CheckInProgressPaymentAsync_ShouldReturnNullForFinishedUnsuccessfulPayment()
         {
             // Arrange
             var accessToken = fixture.Create<string>();
@@ -202,26 +201,158 @@
             A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetInProgressPaymentSessionRequest>._))
                 .Returns(existingPayment);
 
-            var finishedPaymentResult = new PaymentWithAllLinks
+            var unsuccessfulPayment = new PaymentWithAllLinks
             {
                 PaymentId = paymentId,
-                State = new PaymentState { Status = PaymentStatus.Success, Finished = true }
+                State = new PaymentState { Status = PaymentStatus.Failed, Finished = true }
             };
 
             A.CallTo(() => payClient.GetPaymentAsync(paymentId))
-                .Returns(finishedPaymentResult);
+                .Returns(unsuccessfulPayment);
 
             // Act
             var result = await paymentService.CheckInProgressPaymentAsync(accessToken, directRegistrantId);
 
             // Assert
             result.Should().BeNull();
-            A.CallTo(() => weeeClient.SendAsync(accessToken, A<UpdateSubmissionPaymentDetailsRequest>.That.Matches(u =>
-                    u.IsFinalState == finishedPaymentResult.State.IsInFinalState() &&
-                    u.DirectRegistrantId == directRegistrantId &&
-                    u.PaymentSessionId == existingPayment.PaymentSessionId &&
-                    u.PaymentStatus == finishedPaymentResult.State.Status)))
+        }
+
+        [Fact]
+        public async Task HandlePaymentReturnAsync_ShouldThrowForErrorMessage()
+        {
+            // Arrange
+            var accessToken = fixture.Create<string>();
+            var token = fixture.Create<string>();
+            var directRegistrantId = Guid.NewGuid();
+
+            A.CallTo(() => secureReturnUrlHelper.ValidateSecureRandomString(token))
+                .Returns((true, directRegistrantId));
+
+            var payment = new SubmissionPaymentDetails
+            {
+                ErrorMessage = "Some error occurred"
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<ValidateAndGetSubmissionPayment>._))
+                .Returns(payment);
+
+            // Act & Assert
+            await Assert.ThrowsAsync<InvalidOperationException>(() =>
+                paymentService.HandlePaymentReturnAsync(accessToken, token));
+        }
+
+        [Fact]
+        public async Task HandlePaymentReturnAsync_ShouldReturnNullForNullPaymentResult()
+        {
+            // Arrange
+            var accessToken = fixture.Create<string>();
+            var token = fixture.Create<string>();
+            var directRegistrantId = Guid.NewGuid();
+
+            A.CallTo(() => secureReturnUrlHelper.ValidateSecureRandomString(token))
+                .Returns((true, directRegistrantId));
+
+            var payment = new SubmissionPaymentDetails
+            {
+                PaymentId = fixture.Create<string>()
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<ValidateAndGetSubmissionPayment>._))
+                .Returns(payment);
+
+            A.CallTo(() => payClient.GetPaymentAsync(payment.PaymentId))
+                .Returns<PaymentWithAllLinks>(null);
+
+            // Act
+            var result = await paymentService.HandlePaymentReturnAsync(accessToken, token);
+
+            // Assert
+            result.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task HandlePaymentReturnAsync_ShouldReturnPaymentResultWithStatus()
+        {
+            // Arrange
+            var accessToken = fixture.Create<string>();
+            var token = fixture.Create<string>();
+            var directRegistrantId = Guid.NewGuid();
+
+            A.CallTo(() => secureReturnUrlHelper.ValidateSecureRandomString(token))
+                .Returns((true, directRegistrantId));
+
+            var payment = new SubmissionPaymentDetails
+            {
+                DirectRegistrantId = directRegistrantId,
+                PaymentId = fixture.Create<string>(),
+                PaymentSessionId = Guid.NewGuid(),
+                PaymentReference = fixture.Create<string>(),
+                PaymentFinished = false 
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<ValidateAndGetSubmissionPayment>._))
+                .Returns(payment);
+
+            var paymentResult = new PaymentWithAllLinks
+            {
+                State = new PaymentState { Status = PaymentStatus.Success }
+            };
+
+            A.CallTo(() => payClient.GetPaymentAsync(payment.PaymentId))
+                .Returns(paymentResult);
+
+            // Act
+            var result = await paymentService.HandlePaymentReturnAsync(accessToken, token);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.DirectRegistrantId.Should().Be(directRegistrantId);
+            result.PaymentReference.Should().Be(payment.PaymentReference);
+            result.Status.Should().Be(PaymentStatus.Success);
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken,
+                A<UpdateSubmissionPaymentDetailsRequest>.That.Matches(r =>
+                    r.DirectRegistrantId == payment.DirectRegistrantId &&
+                    r.PaymentStatus == paymentResult.State.Status &&
+                    r.PaymentSessionId == payment.PaymentSessionId &&
+                    r.IsFinalState == paymentResult.State.IsInFinalState())))
                 .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandlePaymentReturnAsync_ShouldReturnPaymentResultDirectlyWhenPaymentFinished()
+        {
+            // Arrange
+            var accessToken = fixture.Create<string>();
+            var token = fixture.Create<string>();
+            var directRegistrantId = Guid.NewGuid();
+
+            A.CallTo(() => secureReturnUrlHelper.ValidateSecureRandomString(token))
+                .Returns((true, directRegistrantId));
+
+            var payment = new SubmissionPaymentDetails
+            {
+                DirectRegistrantId = directRegistrantId,
+                PaymentId = fixture.Create<string>(),
+                PaymentReference = fixture.Create<string>(),
+                PaymentFinished = true,
+                PaymentStatus = PaymentStatus.Success
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<ValidateAndGetSubmissionPayment>._))
+                .Returns(payment);
+
+            // Act
+            var result = await paymentService.HandlePaymentReturnAsync(accessToken, token);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.DirectRegistrantId.Should().Be(directRegistrantId);
+            result.PaymentReference.Should().Be(payment.PaymentReference);
+            result.Status.Should().Be(PaymentStatus.Success);
+
+            A.CallTo(() => payClient.GetPaymentAsync(A<string>._))
+                .MustNotHaveHappened();
         }
     }
 }

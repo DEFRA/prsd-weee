@@ -17,36 +17,5 @@
         <h1 class="govuk-heading-l">@title</h1>
     </header>
 
-    <p>Provide the address of the non-UK established Small EEE producer you are registering on behalf of.</p>
-
-    @using (Html.BeginForm())
-    {
-        @Html.AntiForgeryToken()
-        @Html.Gds().ValidationSummary()
-
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompanyName)">
-            @Html.Gds().LabelFor(m => m.CompanyName)
-            @Html.Gds().ValidationMessageFor(m => m.CompanyName)
-            @Html.Gds().TextBoxFor(m => m.CompanyName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
-        </div>
-
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.BusinessTradingName)">
-            @Html.Gds().LabelFor(m => m.BusinessTradingName)
-            @Html.Gds().TextBoxFor(m => m.BusinessTradingName, new { @maxlength = CommonMaxFieldLengths.DefaultString })
-        </div>
-
-        <div>
-            <h2 class="govuk-heading-s">Contact address</h2>
-        </div>
-
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address)">
-            @Html.EditorFor(m => m.Address)
-        </div>
-
-        <div class="govuk-form-group">
-            @(this.WeeeGds().Submit("Continue"))
-        </div>
-
-        @(this.WeeeGds().BackToTopLink())
-    }
+    @Html.Partial("_RepresentingCompanyPartial", Model)
 }

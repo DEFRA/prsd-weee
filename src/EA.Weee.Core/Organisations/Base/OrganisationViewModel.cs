@@ -2,7 +2,9 @@
 {
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.DataStandards;
+    using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Validation;
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
@@ -36,15 +38,37 @@
         [DisplayName("Organisation type")]
         public ExternalOrganisationType? OrganisationType { get; set; }
 
+        public bool HasPaid { get; set; } = false;
+
+        public SubmissionStatus Status { get; set; }
+        public DateTime? RegistrationDate { get; set; }
+
+        public DateTime? SubmittedDate { get; set; }
+
+        public string PaymentReference { get; set; }
+
+        public Guid DirectProducerSubmissionId { get; set; }
+
+        public bool IsPreviousSchemeMember { get; set; }
+
+        [StringLength(CommonMaxFieldLengths.ProducerRegistrationNumber)]
+        [DisplayName("Producer registration number (PRN)")]
+        public virtual string ProducerRegistrationNumber { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            return ExternalAddressValidator.Validate(Address.CountryId, Address.Postcode, "Address.CountryId", "Address.Postcode");
+            var results = new List<ValidationResult>();
+
+            results.AddRange(ExternalAddressValidator.Validate(Address.CountryId, Address.Postcode, "Address.CountryId", "Address.Postcode"));
+
+            return results;
         }
 
         public static IEnumerable<string> ValidationMessageDisplayOrder => new List<string>
         {
             "Address.CountryId",
             nameof(CompaniesRegistrationNumber),
+            nameof(ProducerRegistrationNumber),
             nameof(CompanyName),
             nameof(BusinessTradingName),
             "Address.WebsiteAddress",

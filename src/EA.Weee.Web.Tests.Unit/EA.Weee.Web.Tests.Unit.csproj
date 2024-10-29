@@ -396,6 +396,7 @@
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\EvidenceSummaryViewModelTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\RecipientWasteStatusViewModelMapTests.cs" />
     <Compile Include="Areas\Aatf\Mapping\ToViewModel\SubmittedDatesFilterViewModelMapTests.cs" />
+    <Compile Include="Areas\Admin\Attributes\AdminSmallProducerSubmissionContextAttributeUnitTests.cs" />
     <Compile Include="Areas\Admin\Controllers\EvidenceTransferReportControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\EvidenceReportsControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ProducerSubmissionControllerTests.cs" />
@@ -463,6 +464,7 @@
     <Compile Include="Extensions\ValidateModelTests.cs" />
     <Compile Include="Service\OrganisationTransactionServiceUnitTests.cs" />
     <Compile Include="Service\PaymentReferenceGeneratorUnitTests.cs" />
+    <Compile Include="Service\SubmissionServiceUnitTests.cs" />
     <Compile Include="Service\PaymentServiceUnitTests.cs" />
     <Compile Include="Service\SecureReturnUrlHelperTests.cs" />
     <Compile Include="ViewModels\RecipientWasteStatusFilterViewModelTests.cs" />
@@ -612,6 +614,7 @@
     <Compile Include="ViewModels\ListOfSchemeNotesViewModelBaseTests.cs" />
     <Compile Include="ViewModels\ListOfNotesViewModelBaseTests.cs" />
     <Compile Include="ViewModels\RadioButtonStringCollectionViewModelTests.cs" />
+    <Compile Include="ViewModels\OrganisationDetailsTabsViewModelTests.cs" />
     <Compile Include="ViewModels\UserCreationViewModelTests.cs" />
     <Compile Include="ViewModels\Returns\Mappings\ToViewModel\ReturnsToReturnsViewModelMapTests.cs" />
     <Compile Include="Areas\AatfReturn\Mapping\ToViewModel\ReturnToReturnsListRedirectOptionsMapTests.cs" />
@@ -693,6 +696,7 @@
     <Compile Include="TestHelpers\Factories\AutofacContainerFactory.cs" />
     <Compile Include="TestHelpers\HttpContextMocker.cs" />
     <Compile Include="TestHelpers\ViewModelValidator.cs" />
+    <Compile Include="ViewModels\ToViewModel\RepresentingCompaniesViewModelMapTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config">
