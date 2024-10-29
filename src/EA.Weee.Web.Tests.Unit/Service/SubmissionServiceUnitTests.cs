@@ -5,10 +5,9 @@
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
-    using EA.Weee.Core.Scheme.MemberUploadTesting;
     using EA.Weee.Tests.Core;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview;
-    using EA.Weee.Web.Areas.Producer.Controllers;
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Services;
@@ -20,7 +19,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Web.Mvc;
+    using System.Web.Caching;
     using Xunit;
 
     public class SubmissionServiceUnitTests : SimpleUnitTestBase
@@ -182,6 +181,50 @@
                 .Map<SubmissionsYearDetails, EditEeeDataViewModel>(
                 A<SubmissionsYearDetails>.That.Matches(x => x.Year == year && x.SmallProducerSubmissionData == data)))
                 .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task SetTabsCrumb_InternalSetCorrectCrumb()
+        {
+            var data = GetDefaultSmallProducerData();
+
+            service.WithSubmissionData(data, true);
+
+            await service.SetTabsCrumb();
+
+            breadcrumb.InternalActivity.Should().Be(InternalUserActivity.DirectRegistrantDetails);
+        }
+
+        [Fact]
+        public async Task SetTabsCrumb_ExternalSetCorrectCrumb()
+        {
+            var data = GetDefaultSmallProducerData();
+
+            service.WithSubmissionData(data);
+
+            A.CallTo(() => weeeCache.FetchOrganisationName(data.OrganisationData.Id)).Returns(data.OrganisationData.Name);
+
+            await service.SetTabsCrumb(2004);
+
+            breadcrumb.OrganisationId.Should().Be(data.OrganisationData.Id);
+            breadcrumb.ExternalOrganisation.Should().Be(data.OrganisationData.Name);
+            breadcrumb.ExternalActivity.Should().Be(ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
+        }
+
+        [Fact]
+        public async Task SetTabsCrumb_ExternalSetCorrectCrumbForView()
+        {
+            var data = GetDefaultSmallProducerData();
+
+            service.WithSubmissionData(data);
+
+            A.CallTo(() => weeeCache.FetchOrganisationName(data.OrganisationData.Id)).Returns(data.OrganisationData.Name);
+
+            await service.SetTabsCrumb();
+
+            breadcrumb.OrganisationId.Should().Be(data.OrganisationData.Id);
+            breadcrumb.ExternalOrganisation.Should().Be(data.OrganisationData.Name);
+            breadcrumb.ExternalActivity.Should().Be(ProducerSubmissionConstant.ViewOrganisation);
         }
 
         [Theory]
