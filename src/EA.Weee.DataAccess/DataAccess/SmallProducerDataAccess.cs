@@ -19,7 +19,8 @@
         public async Task<DirectProducerSubmission> GetCurrentDirectRegistrantSubmissionByComplianceYear(Guid directRegistrantId, int complianceYear)
         {
             return await context.DirectProducerSubmissions.Where(d =>
-                d.DirectRegistrantId == directRegistrantId && d.ComplianceYear == complianceYear && d.RegisteredProducer.Removed == false).FirstOrDefaultAsync();
+                d.DirectRegistrantId == directRegistrantId && d.ComplianceYear == complianceYear && !d.RegisteredProducer.Removed)
+                .FirstOrDefaultAsync();
         }
 
         public async Task<DirectRegistrant> GetDirectRegistrantByOrganisationId(Guid organisationId)
@@ -35,15 +36,23 @@
         public async Task<DirectRegistrant> GetById(Guid directRegistrantId)
         {
             var directRegistrant = await context.DirectRegistrants
-                .Include(dr =>
-                    dr.DirectProducerSubmissions.Select(directProducerSubmission =>
-                        directProducerSubmission.RegisteredProducer))
                 .FirstOrDefaultAsync(d => d.Id == directRegistrantId);
 
             if (directRegistrant != null)
             {
+                await context.Entry(directRegistrant)
+                    .Collection(d => d.DirectProducerSubmissions)
+                    .LoadAsync();
+
+                foreach (var submission in directRegistrant.DirectProducerSubmissions.ToList())
+                {
+                    await context.Entry(submission)
+                        .Reference(s => s.RegisteredProducer)
+                        .LoadAsync();
+                }
+
                 directRegistrant.DirectProducerSubmissions = directRegistrant.DirectProducerSubmissions
-                    .Where(dp => dp.RegisteredProducer != null && dp.RegisteredProducer.Removed == false)
+                    .Where(dp => dp.RegisteredProducer != null && !dp.RegisteredProducer.Removed)
                     .ToList();
             }
 
