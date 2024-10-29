@@ -127,5 +127,9 @@
         public int GovUkPayAmountInPence { get; set; }
 
         public string GovUkPayTokenSecret { get; set; }
+
+        public string GovUkPayTokenSalt { get; set; }
+
+        public TimeSpan GovUkPayTokenLifeTime { get; set; }
     }
 }
