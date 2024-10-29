@@ -7,7 +7,7 @@
     using EA.Weee.Core.Admin;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Admin.DirectRegistrants;
-    using EA.Weee.Web.Areas.Producer.Filters;
+    using EA.Weee.Web.Filters;
     using Filters;
     using Infrastructure;
     using Security;
@@ -118,9 +118,14 @@
         }
 
         [HttpGet]
+        [AdminSmallProducerSubmissionContext]
         [AuthorizeInternalClaims(Claims.InternalAdmin)]
-        public ActionResult AddPaymentDetails(Guid directProducerSubmissionId, string registrationNumber, int? year)
+        public async Task<ActionResult> AddPaymentDetails(Guid directProducerSubmissionId, string registrationNumber, int? year)
         {
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
+
+            await submissionService.SetTabsCrumb(year);
+
             var model = new PaymentDetailsViewModel
             {
                 DirectProducerSubmissionId = directProducerSubmissionId,
@@ -149,8 +154,12 @@
         [AuthorizeInternalClaims(Claims.InternalAdmin)]
         [AdminSmallProducerSubmissionContext]
         [HttpGet]
-        public ActionResult RemoveSubmission(string registrationNumber, int year)
+        public async Task<ActionResult> RemoveSubmission(string registrationNumber, int year)
         {
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
+
+            await submissionService.SetTabsCrumb(year);
+
             var submission = SmallProducerSubmissionData.SubmissionHistory[year];
             var selectedValue = string.Empty;
             var model = new ConfirmRemovalViewModel
@@ -223,20 +232,30 @@
             {
                 SmallProducerSubmissionData = await client.SendAsync(User.GetAccessToken(), new GetSmallProducerSubmissionByRegistrationNumber(model.RegistrationNumber));
                 
-                if (SmallProducerSubmissionData.AnySubmissionSubmitted)
+                if (SmallProducerSubmissionData.AnySubmissions)
                 {
                     return RedirectToAction(nameof(Submissions),
                         new { model.RegistrationNumber });
                 }
 
-                return RedirectToOrganisationHasNoSubmissions();
+                return RedirectToOrganisationHasNoSubmissions(SmallProducerSubmissionData.OrganisationData.Id);
             }
         }
 
-        private ActionResult RedirectToOrganisationHasNoSubmissions()
+        [HttpGet]
+        public ActionResult OrganisationHasNoSubmissions(Guid organisationId)
         {
-            //TODO
-            return RedirectToAction("OrganisationHasNoSubmissions");
+            var model = new OrganisationIdViewModel()
+            {
+                OrganisationId = organisationId
+            };
+
+            return View(model);
+        }
+
+        private ActionResult RedirectToOrganisationHasNoSubmissions(Guid organisationId)
+        {
+            return RedirectToAction("OrganisationHasNoSubmissions", new { organisationId });
         }
 
         private async Task<ManualPaymentResult> SendPaymentDetails(PaymentDetailsViewModel model)
