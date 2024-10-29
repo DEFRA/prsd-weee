@@ -4,7 +4,7 @@
     using EA.Weee.Core.DirectRegistrant;
 
     using System;
-    public class AddSmallProducerSubmission : IRequest<Guid>
+    public class AddSmallProducerSubmission : IRequest<AddSmallProducerSubmissionResult>
     {
         public Guid DirectRegistrantId {get; set; }
 

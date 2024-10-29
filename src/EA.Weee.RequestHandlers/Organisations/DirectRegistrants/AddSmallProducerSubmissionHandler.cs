@@ -3,6 +3,7 @@
     using DataAccess;
     using Domain.Producer;
     using EA.Prsd.Core.Mediator;
+    using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
@@ -11,27 +12,29 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    internal class AddSmallProducerSubmissionHandler : IRequestHandler<AddSmallProducerSubmission, Guid>
+    internal class AddSmallProducerSubmissionHandler : IRequestHandler<AddSmallProducerSubmission, AddSmallProducerSubmissionResult>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
         private readonly IGenerateFromXmlDataAccess generateFromXmlDataAccess;
         private readonly ISystemDataDataAccess systemDataAccess;
+        private readonly ISmallProducerDataAccess smallProducerDataAccess;
 
         public AddSmallProducerSubmissionHandler(IWeeeAuthorization authorization, 
             IGenericDataAccess genericDataAccess, 
             WeeeContext weeeContext, 
-            IGenerateFromXmlDataAccess generateFromXmlDataAccess, ISystemDataDataAccess systemDataAccess)
+            IGenerateFromXmlDataAccess generateFromXmlDataAccess, ISystemDataDataAccess systemDataAccess, ISmallProducerDataAccess smallProducerDataAccess)
         {
             this.authorization = authorization;
             this.genericDataAccess = genericDataAccess;
             this.weeeContext = weeeContext;
             this.generateFromXmlDataAccess = generateFromXmlDataAccess;
             this.systemDataAccess = systemDataAccess;
+            this.smallProducerDataAccess = smallProducerDataAccess;
         }
 
-        public async Task<Guid> HandleAsync(AddSmallProducerSubmission request)
+        public async Task<AddSmallProducerSubmissionResult> HandleAsync(AddSmallProducerSubmission request)
         { 
             authorization.EnsureCanAccessExternalArea();
 
@@ -42,33 +45,39 @@
             var systemDateTime = await systemDataAccess.GetSystemDateTime();
 
             var currentYearSubmission =
-                directRegistrant.DirectProducerSubmissions.Where(d => d.ComplianceYear == systemDateTime.Year);
+                await smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(request.DirectRegistrantId, systemDateTime.Year);
 
-            if (currentYearSubmission.Any())
+            if (currentYearSubmission != null)
             {
                 throw new InvalidOperationException($"Producer submission for compliance year {systemDateTime.Year} already exists");
             }
 
-            var existingProducer = directRegistrant.DirectProducerSubmissions.Where(c => c.RegisteredProducer.ComplianceYear != systemDateTime.Year)
-                .Select(r => r.RegisteredProducer).FirstOrDefault();
+            var existingProducer = directRegistrant.DirectProducerSubmissions.Select(r => r.RegisteredProducer).FirstOrDefault();
 
             string producerRegistrationNumber;
-
-            if (existingProducer != null)
+            var invalidateCache = false;
+            if (!string.IsNullOrWhiteSpace(directRegistrant.ProducerRegistrationNumber))
             {
-                producerRegistrationNumber = existingProducer.ProducerRegistrationNumber;
+                producerRegistrationNumber = directRegistrant.ProducerRegistrationNumber;
             }
             else
             {
-                var generatedPrn = await generateFromXmlDataAccess.ComputePrns(1);
-
-                producerRegistrationNumber = generatedPrn.Dequeue();
-
-                var exists = await generateFromXmlDataAccess.ProducerRegistrationExists(producerRegistrationNumber);
-
-                if (exists)
+                if (existingProducer != null)
                 {
-                    throw new InvalidOperationException($"Producer number {producerRegistrationNumber} already exists");
+                    producerRegistrationNumber = existingProducer.ProducerRegistrationNumber;
+                }
+                else
+                {
+                    var generatedPrn = await generateFromXmlDataAccess.ComputePrns(1);
+
+                    producerRegistrationNumber = generatedPrn.Dequeue();
+
+                    var exists = await generateFromXmlDataAccess.ProducerRegistrationExists(producerRegistrationNumber);
+                    invalidateCache = true;
+                    if (exists)
+                    {
+                        throw new InvalidOperationException($"Producer number {producerRegistrationNumber} already exists");
+                    }
                 }
             }
 
@@ -83,7 +92,7 @@
 
             await weeeContext.SaveChangesAsync();
 
-            return directRegistrantSubmission.Id;
+            return new AddSmallProducerSubmissionResult(invalidateCache, directRegistrantSubmission.Id);
         }
     }
 }
