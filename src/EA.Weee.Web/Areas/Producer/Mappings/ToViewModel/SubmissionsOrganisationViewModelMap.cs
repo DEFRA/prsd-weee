@@ -40,13 +40,7 @@
 
             return new OrganisationViewModel()
             {
-                Status = source.SmallProducerSubmissionData.CurrentSubmission.Status,
-                HasPaid = source.SmallProducerSubmissionData.CurrentSubmission.HasPaid,
-                RegistrationDate = source.SmallProducerSubmissionData.CurrentSubmission.RegistrationDate,
-                SubmittedDate = source.SmallProducerSubmissionData.CurrentSubmission.SubmittedDate,
-                DirectProducerSubmissionId = source.SmallProducerSubmissionData.CurrentSubmission.DirectProducerSubmissionId,
-                PaymentReference = source.SmallProducerSubmissionData.CurrentSubmission.PaymentReference,
-                ProducerRegistrationNumber = source.SmallProducerSubmissionData.CurrentSubmission.ProducerRegistrationNumber,
+                ProducerRegistrationNumber = source.SmallProducerSubmissionData.ProducerRegistrationNumber,
                 Address = mapper.Map<AddressData, ExternalAddressData>(source.SmallProducerSubmissionData.OrganisationData.BusinessAddress),
                 CompanyName = source.SmallProducerSubmissionData.OrganisationData.Name,
                 BusinessTradingName = source.SmallProducerSubmissionData.OrganisationData.TradingName,
