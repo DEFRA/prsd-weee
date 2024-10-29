@@ -117,9 +117,7 @@
 
             if (isInternal)
             {
-                breadcrumb.InternalOrganisation = org;
                 breadcrumb.InternalActivity = activity;
-                breadcrumb.OrganisationId = organisationId;
             }
             else
             {
@@ -129,10 +127,14 @@
             }
         }
 
-        private Task SetViewBreadcrumb() => SetBreadcrumb(smallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.ViewOrganisation);
-        private Task SetHistoricBreadcrumb() => SetBreadcrumb(smallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
+        private Task SetViewBreadcrumb() => 
+            SetBreadcrumb(smallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.ViewOrganisation);
+        private Task SetHistoricBreadcrumb() => 
+            SetBreadcrumb(smallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
 
-        private Task SetTabsCrumb(int? year = null) => year.HasValue ? SetHistoricBreadcrumb() : SetViewBreadcrumb();
+        public Task SetTabsCrumb(int? year = null) => year.HasValue 
+            ? SetHistoricBreadcrumb() 
+            : SetViewBreadcrumb();
 
         private IEnumerable<int> YearsDropdownData(SmallProducerSubmissionData data)
         {

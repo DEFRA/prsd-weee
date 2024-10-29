@@ -63,21 +63,21 @@
                 "UserName",
                 TimeSpan.FromMinutes(5),
                 (key) => key.ToString(),
-                (key) => FetchUserNameFromApi(key));
+                FetchUserNameFromApi);
 
             OrganisationNames = new Cache<Guid, string>(
                 provider,
                 "AatfName",
                 TimeSpan.FromMinutes(configurationService.CurrentConfiguration.OrganisationCacheDurationMins),
                 (key) => key.ToString(),
-                (key) => FetchOrganisationNameFromApi(key));
+                FetchOrganisationNameFromApi);
 
             SchemeNames = new Cache<Guid, string>(
                 provider,
                 "SchemeName",
                 TimeSpan.FromMinutes(15),
                 (key) => key.ToString(),
-                (key) => FetchSchemeNameFromApi(key));
+                FetchSchemeNameFromApi);
 
             UserActiveCompleteOrganisationCount = new Cache<Guid, int>(
                 provider,
@@ -91,20 +91,20 @@
                 "SchemeInfos",
                 TimeSpan.FromMinutes(15),
                 (key) => key.ToString(),
-                (key) => FetchSchemePublicInfoFromApi(key));
+                FetchSchemePublicInfoFromApi);
 
             SchemePublicInfosBySchemeId = new Cache<Guid, SchemePublicInfo>(
                 provider,
                 "SchemeInfos",
                 TimeSpan.FromMinutes(15),
                 (key) => key.ToString(),
-                (key) => FetchSchemePublicInfoByIdFromApi(key));
+                FetchSchemePublicInfoByIdFromApi);
 
             ProducerSearchResultList = new SingleItemCache<IList<ProducerSearchResult>>(
                 provider,
                 "ProducerPublicInfoList",
                 TimeSpan.FromDays(1),
-                () => FetchProducerSearchResultListFromApi());
+                FetchProducerSearchResultListFromApi);
 
             SmallProducerSearchResultList = new SingleItemCache<IList<SmallProducerSearchResult>>(
                 provider,
@@ -116,7 +116,7 @@
                 provider,
                 "OrganisationPublicInfoList",
                 TimeSpan.FromMinutes(configurationService.CurrentConfiguration.OrganisationCacheDurationMins),
-                () => FetchOrganisationSearchResultListFromApi());
+                FetchOrganisationSearchResultListFromApi);
 
             AatfPublicInfo = new Cache<Guid, IList<AatfData>>(
                 provider,
@@ -379,6 +379,11 @@
         public async Task InvalidateOrganisationNameCache(Guid organisationId)
         {
             await OrganisationNames.InvalidateCache(organisationId);
+        }
+
+        public async Task InvalidateSmallProducerSearch()
+        {
+            await SmallProducerSearchResultList.InvalidateCache();
         }
 
         public void Clear()

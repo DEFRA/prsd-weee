@@ -232,6 +232,7 @@
     <Compile Include="Admin\Aatf\GetAatfApprovalDateChangeStatusTests.cs" />
     <Compile Include="Admin\Aatf\GetAatfComplianceYearsByAatfIdHandlerTests.cs" />
     <Compile Include="Admin\Aatf\GetAatfIdByComplianceYearHandlerTests.cs" />
+    <Compile Include="Admin\AddPaymentDetailsHandlerTests.cs" />
     <Compile Include="Admin\CheckApprovalNumberIsUniqueHandlerTests.cs" />
     <Compile Include="Admin\Aatf\CheckAatfCanBeDeletedHandlerTests.cs" />
     <Compile Include="Admin\Aatf\DeleteAatfHandlerTests.cs" />
@@ -245,6 +246,7 @@
     <Compile Include="Admin\AatfReports\GetUkWeeeAtAatfsCsv\GetUkWeeeAtAatfsCsvDataAccessTests.cs" />
     <Compile Include="Admin\AatfReports\GetAllAatfObligatedDataCsvHandlerTests.cs" />
     <Compile Include="Admin\AatfReports\GetUkWeeeAtAatfsCsv\GetUkWeeeAtAatfsCsvHandlerTests.cs" />
+    <Compile Include="Admin\GetProducerDetails\RemoveSmallProducerHandlerTests.cs" />
     <Compile Include="Admin\ManageEvidenceNotes\GetAllAatfsForComplianceYearHandlerTests.cs" />
     <Compile Include="Admin\ManageEvidenceNotes\GetAllNotesRequestHandlerTests.cs" />
     <Compile Include="Admin\GetSchemes\GetEEEWEEEDataReturnSchemesByComplianceYearHandlerTests.cs" />
@@ -271,6 +273,7 @@
     <Compile Include="Admin\Obligations\SchemeObligationsDataProcessorTests.cs" />
     <Compile Include="Admin\Obligations\SubmitSchemeObligationsHandlerTests.cs" />
     <Compile Include="Admin\Obligations\SubmitSchemeObligationTests.cs" />
+    <Compile Include="Admin\Reports\GetProducerEeeDataCsvDataAccessTests.cs" />
     <Compile Include="Admin\Reports\GetSchemesWithObligationOrEvidenceByComplianceYearHandlerTests.cs" />
     <Compile Include="Admin\Search\FetchSmallProducerSearchResultsForCacheHandlerUnitTests.cs" />
     <Compile Include="Factories\ReturnFactoryTests.cs" />
@@ -414,6 +417,8 @@
     <Compile Include="Organisations\AddAddressToOrganisationHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddSignatoryAndCompleteRequestHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddPaymentSessionRequestHandlerTests.cs" />
+    <Compile Include="Organisations\DirectRegistrants\ProducerRegistrationNumberRequestHandlerTests.cs" />
+    <Compile Include="Organisations\DirectRegistrants\AddRepresentingCompanyHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\EditEeeDataRequestHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\EditRepresentedOrganisationDetailsRequestHandlerTests.cs" />
     <Compile Include="Organisations\DirectRegistrants\EditContactDetailsRequestHandlerTests.cs" />

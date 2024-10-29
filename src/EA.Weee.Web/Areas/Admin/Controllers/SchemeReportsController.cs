@@ -3,6 +3,8 @@
     using Api.Client;
     using Core.Admin;
     using Core.Shared;
+    using EA.Weee.Core.Constants;
+    using Extensions;
     using Infrastructure;
     using Prsd.Core;
     using Services;
@@ -12,7 +14,6 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Extensions;
     using ViewModels.Reports;
     using ViewModels.SchemeReports;
     using Weee.Requests.AatfEvidence.Reports;
@@ -192,7 +193,7 @@
 
             fileName.AppendFormat("{0:D4}", complianceYear);
 
-            if (schemeId != null)
+            if (schemeId != null && schemeId != DirectRegistrantFixedIdConstant.DirectRegistrantFixedId)
             {
                 using (var client = apiClient())
                 {
@@ -201,6 +202,11 @@
 
                     fileName.AppendFormat("_{0}", scheme.ApprovalName);
                 }
+            }
+
+            if (schemeId == DirectRegistrantFixedIdConstant.DirectRegistrantFixedId)
+            {
+                fileName.AppendFormat("_{0}", DirectRegistrantFixedIdConstant.DirectRegistrant);
             }
 
             if (authorityId != null)
@@ -273,7 +279,7 @@
             ViewBag.TriggerDownload = false;
 
             var model = new ProducersDataViewModel();
-            await PopulateFilters(model, true);
+            await PopulateFilters(model, true, true);
 
             return View(model);
         }
@@ -285,7 +291,7 @@
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
 
-            await PopulateFilters(model, true);
+            await PopulateFilters(model, true, true);
 
             return View(model);
         }
@@ -508,7 +514,7 @@
         private async Task PopulateFilters(ReportsFilterViewModel model)
         {
             var years = await FetchComplianceYearsForMemberRegistrations();
-            var schemes = await FetchSchemes();
+            var schemes = await FetchSchemes(true);
             var authorities = await FetchAuthorities();
 
             model.ComplianceYears = new SelectList(years);
@@ -528,7 +534,7 @@
             model.ComplianceYears = new SelectList(FetchAllComplianceYears());
         }
 
-        private async Task PopulateFilters(ProducersDataViewModel model, bool populateSchemes)
+        private async Task PopulateFilters(ProducersDataViewModel model, bool populateSchemes, bool includeDirectRegistrants = false)
         {
             var years = await FetchComplianceYearsForDataReturns();
 
@@ -536,7 +542,7 @@
 
             if (populateSchemes)
             {
-                var schemes = await FetchSchemes();
+                var schemes = await FetchSchemes(includeDirectRegistrants);
                 model.Schemes = new SelectList(schemes, "Id", "SchemeName");
             }
         }

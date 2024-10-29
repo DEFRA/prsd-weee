@@ -85,10 +85,13 @@
     <Compile Include="AatfEvidence\Reports\GetEvidenceNoteReportRequest.cs" />
     <Compile Include="AatfReturn\GetEvidenceNotesRecipientList.cs" />
     <Compile Include="Aatf\GetAatfById.cs" />
+    <Compile Include="Admin\AddPaymentDetails.cs" />
     <Compile Include="Admin\DirectRegistrants\GetSmallProducerSubmissionByRegistrationNumber.cs" />
     <Compile Include="Admin\GetAllAatfsForComplianceYearRequest.cs" />
     <Compile Include="Admin\Obligations\GetSchemesWithObligation.cs" />
+    <Compile Include="Admin\RemoveSmallProducer.cs" />
     <Compile Include="Admin\Reports\GetSchemesWithObligationOrEvidence.cs" />
+    <Compile Include="Organisations\DirectRegistrant\ProducerRegistrationNumberRequest.cs" />
     <Compile Include="Organisations\DirectRegistrant\AddSignatoryAndCompleteRequest.cs" />
     <Compile Include="Organisations\DirectRegistrant\AddPaymentSessionRequest.cs" />
     <Compile Include="Organisations\DirectRegistrant\GetInProgressPaymentSessionRequest.cs" />
@@ -105,6 +108,7 @@
     <Compile Include="Organisations\DirectRegistrant\AddUpdateOrganisationTransaction.cs" />
     <Compile Include="Organisations\DirectRegistrant\AddSmallProducerSubmission.cs" />
     <Compile Include="Organisations\DirectRegistrant\GetUserOrganisationTransaction.cs" />
+    <Compile Include="Organisations\DirectRegistrant\AddRepresentingCompany.cs" />
     <Compile Include="Organisations\OrganisationByRegistrationNumberValue.cs" />
     <Compile Include="Search\FetchSmallProducerSearchResultsForCache.cs" />
     <Compile Include="Shared\GetObligationSummaryRequest.cs" />

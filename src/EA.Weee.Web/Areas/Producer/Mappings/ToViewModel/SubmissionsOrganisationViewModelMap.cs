@@ -20,13 +20,15 @@
             if (source.Year.HasValue)
             {
                 var sub = source.SmallProducerSubmissionData.SubmissionHistory[source.Year.Value];
- 
+
                 return new OrganisationViewModel()
                 {
                     Status = sub.Status,
                     HasPaid = sub.HasPaid,
                     RegistrationDate = sub.RegistrationDate,
                     SubmittedDate = sub.SubmittedDate,
+                    DirectProducerSubmissionId = sub.DirectProducerSubmissionId,
+                    PaymentReference = sub.PaymentReference,
                     ProducerRegistrationNumber = sub.ProducerRegistrationNumber,
                     Address = mapper.Map<AddressData, ExternalAddressData>(sub.BusinessAddressData),
                     CompanyName = sub.CompanyName,
@@ -38,6 +40,7 @@
 
             return new OrganisationViewModel()
             {
+                ProducerRegistrationNumber = source.SmallProducerSubmissionData.ProducerRegistrationNumber,
                 Address = mapper.Map<AddressData, ExternalAddressData>(source.SmallProducerSubmissionData.OrganisationData.BusinessAddress),
                 CompanyName = source.SmallProducerSubmissionData.OrganisationData.Name,
                 BusinessTradingName = source.SmallProducerSubmissionData.OrganisationData.TradingName,

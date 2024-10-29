@@ -45,7 +45,7 @@
         }
 
         [Fact]
-        public async Task PaymentResult_WithValidPaymentReference_RedirectsToPaymentSuccess()
+        public async Task PaymentResult_WithSuccessPayment_RedirectsToPaymentSuccess()
         {
             // Arrange
             var token = TestFixture.Create<string>();
@@ -56,7 +56,8 @@
                 .Returns(new PaymentResult
                 {
                     PaymentReference = paymentReference,
-                    DirectRegistrantId = directRegistrantId
+                    DirectRegistrantId = directRegistrantId,
+                    Status = PaymentStatus.Success
                 });
 
             // Act

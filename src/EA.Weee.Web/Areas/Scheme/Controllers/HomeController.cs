@@ -11,6 +11,7 @@
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Producer.Controllers;
     using EA.Weee.Web.Constant;
+    using EA.Weee.Web.Controllers;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using Infrastructure;
@@ -52,36 +53,42 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ChooseActivity(Guid pcsId)
+        public async Task<ActionResult> ChooseActivity(Guid pcsId, Guid? directRegistrantId = null)
         {
             using (var client = apiClient())
             {
                 var organisationExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
-
                 if (!organisationExists)
                 {
                     throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
                 }
 
                 var organisationDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(pcsId));
+                var activities = await GetActivities(pcsId, organisationDetails, directRegistrantId);
 
-                var activities = await GetActivities(pcsId, organisationDetails);
+                // Updated condition to check for specific activities
+                if (organisationDetails.IsRepresentingCompany && HasOnlySmallProducerActivities(activities) && !directRegistrantId.HasValue)
+                {
+                    return this.RedirectToAction(nameof(OrganisationController.RepresentingCompanies),
+                        typeof(OrganisationController).GetControllerName(),
+                        new { organisationId = pcsId, area = string.Empty });
+                }
 
-                Guid? defaultDirectRegistrantId = organisationDetails.DirectRegistrants
-                    .FirstOrDefault(dr => dr.YearSubmissionStarted)?.DirectRegistrantId
-                    ?? organisationDetails.DirectRegistrants.FirstOrDefault()?.DirectRegistrantId;
-
-                var model = new ChooseActivityViewModel(activities) { OrganisationId = pcsId, DirectRegistrantId = defaultDirectRegistrantId };
+                var defaultDirectRegistrant = organisationDetails.DirectRegistrants.FirstOrDefault();
+                var model = new ChooseActivityViewModel(activities)
+                {
+                    IsRepresentingCompany = organisationDetails.IsRepresentingCompany,
+                    OrganisationId = pcsId,
+                    DirectRegistrantId = directRegistrantId ?? defaultDirectRegistrant?.DirectRegistrantId
+                };
 
                 await SetBreadcrumb(pcsId, null, false);
-
                 await SetShowLinkToCreateOrJoinOrganisation(model);
-
                 return View(model);
             }
         }
 
-        internal async Task<List<string>> GetActivities(Guid pcsId, OrganisationData organisationDetails)
+        internal async Task<List<string>> GetActivities(Guid pcsId, OrganisationData organisationDetails, Guid? directRegistrantId)
         {
             var organisationOverview = await GetOrganisationOverview(pcsId);
 
@@ -143,21 +150,24 @@
                 {
                     activities.Add(ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
 
-                    var firstRegistrant = organisationDetails.DirectRegistrants.FirstOrDefault();
+                    var firstRegistrant = directRegistrantId.HasValue ? organisationDetails.DirectRegistrants.FirstOrDefault(d => d.DirectRegistrantId == directRegistrantId) : organisationDetails.DirectRegistrants.FirstOrDefault();
 
                     if (firstRegistrant != null)
                     {
-                        if (firstRegistrant.YearSubmissionStarted)
-                        {
-                            activities.Add(ProducerSubmissionConstant.ContinueProducerRegistrationSubmission);
-                        }
-                        else
-                        {
-                            activities.Add(ProducerSubmissionConstant.NewProducerRegistrationSubmission);
-                        }
+                        activities.Add(firstRegistrant.YearSubmissionStarted
+                            ? ProducerSubmissionConstant.ContinueProducerRegistrationSubmission
+                            : ProducerSubmissionConstant.NewProducerRegistrationSubmission);
                     }
 
                     activities.Add(ProducerSubmissionConstant.ViewOrganisation);
+
+                    // This organisation represents companies add the manage option.
+                    // If in ChooseActivity the organisation only has direct registrant activities and its represents companies go directly to
+                    // the select company screen
+                    if (organisationDetails.IsRepresentingCompany && !directRegistrantId.HasValue)
+                    {
+                        activities.Add(ProducerSubmissionConstant.ManageRepresentingCompany);
+                    }
                 }
             }
 
@@ -319,7 +329,7 @@
             {
                 var organisationDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(viewModel.OrganisationId));
 
-                viewModel.PossibleValues = await GetActivities(viewModel.OrganisationId, organisationDetails);
+                viewModel.PossibleValues = await GetActivities(viewModel.OrganisationId, organisationDetails, viewModel.DirectRegistrantId);
                 await this.SetShowLinkToCreateOrJoinOrganisation(viewModel);
                 return this.View(viewModel);
             }
@@ -736,6 +746,54 @@
             {
                 breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
             }
+        }
+
+        private static readonly HashSet<string> ProducerRegistrationSubmissionTypes = new HashSet<string>
+        {
+            ProducerSubmissionConstant.NewProducerRegistrationSubmission,
+            ProducerSubmissionConstant.ContinueProducerRegistrationSubmission
+        };
+
+        private static readonly HashSet<string> StandardActivitiesBase = new HashSet<string>
+        {
+            ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
+            ProducerSubmissionConstant.ViewOrganisation,
+            PcsAction.ManageOrganisationUsers,
+            ProducerSubmissionConstant.ManageRepresentingCompany
+        };
+
+        private static readonly HashSet<string> AlternativeActivitiesBase = new HashSet<string>
+        {
+            ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
+            ProducerSubmissionConstant.ViewOrganisation,
+            ProducerSubmissionConstant.ManageRepresentingCompany
+        };
+
+        public bool HasOnlySmallProducerActivities(IEnumerable<string> activities)
+        {
+            if (activities == null)
+            {
+                return false;
+            }
+
+            var activityList = activities.ToList();
+
+            var registrationTypeCount = activityList.Count(a => ProducerRegistrationSubmissionTypes.Contains(a));
+            if (registrationTypeCount != 1)
+            {
+                return false;
+            }
+
+            var remainingActivities = new HashSet<string>(activityList.Where(a => !ProducerRegistrationSubmissionTypes.Contains(a)));
+
+            return IsExactMatch(remainingActivities, StandardActivitiesBase) ||
+                   IsExactMatch(remainingActivities, AlternativeActivitiesBase);
+        }
+
+        private static bool IsExactMatch(ICollection<string> activities, ICollection<string> expectedActivities)
+        {
+            return activities.Count == expectedActivities.Count &&
+                   activities.All(expectedActivities.Contains);
         }
     }
 }

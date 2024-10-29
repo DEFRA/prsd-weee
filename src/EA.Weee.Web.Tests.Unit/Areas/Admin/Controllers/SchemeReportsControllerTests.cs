@@ -5,6 +5,7 @@
     using Core.Admin;
     using Core.Scheme;
     using Core.Shared;
+    using EA.Weee.Core.Constants;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core;
@@ -17,7 +18,6 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.Admin.Controllers;
-    using Web.Areas.Admin.Controllers.Base;
     using Web.Areas.Admin.ViewModels.Reports;
     using Web.Areas.Admin.ViewModels.SchemeReports;
     using Web.Infrastructure;
@@ -228,7 +228,8 @@
                 a1 => { Assert.Equal("EB44DAD0-6B47-47C1-9124-4BE91042E563", a1.Value, true); Assert.Equal("AA1", a1.Text); });
 
             Assert.Collection(model.SchemeNames,
-                s1 => { Assert.Equal("0F638399-226F-4942-AEF1-E6BC7EB447D6", s1.Value, true); Assert.Equal("Test Scheme", s1.Text); });
+                s1 => { Assert.Equal("0F638399-226F-4942-AEF1-E6BC7EB447D6", s1.Value, true); Assert.Equal("Test Scheme", s1.Text); },
+                s2 => { Assert.Equal(DirectRegistrantFixedIdConstant.DirectRegistrantFixedId.ToString(), s2.Value, true); Assert.Equal(DirectRegistrantFixedIdConstant.DirectRegistrant, s2.Text); });
         }
 
         /// <summary>
@@ -304,7 +305,8 @@
                 a1 => { Assert.Equal("EB44DAD0-6B47-47C1-9124-4BE91042E563", a1.Value, true); Assert.Equal("AA1", a1.Text); });
 
             Assert.Collection(model.SchemeNames,
-                s1 => { Assert.Equal("0F638399-226F-4942-AEF1-E6BC7EB447D6", s1.Value, true); Assert.Equal("Test Scheme", s1.Text); });
+                s1 => { Assert.Equal("0F638399-226F-4942-AEF1-E6BC7EB447D6", s1.Value, true); Assert.Equal("Test Scheme", s1.Text); },
+                s2 => { Assert.Equal(DirectRegistrantFixedIdConstant.DirectRegistrantFixedId.ToString(), s2.Value, true); Assert.Equal(DirectRegistrantFixedIdConstant.DirectRegistrant, s2.Text); });
         }
 
         /// <summary>
@@ -1528,6 +1530,122 @@
             //assert
             result.FileContents.Should().BeEquivalentTo(new UTF8Encoding().GetBytes(csvData.FileContent));
             result.FileDownloadName.Should().BeEquivalentTo(CsvFilenameFormat.FormatFileName(csvData.FileName));
+        }
+
+        [Fact]
+        public async Task ProducerEeeData_GET_WithDirectRegistrants_IncludesDirectRegistrantsInSchemeList()
+        {
+            // Arrange
+            var years = new List<int> { 2023, 2022 };
+            var schemes = new List<SchemeData>
+            {
+                new SchemeData { Id = Guid.NewGuid(), SchemeName = "Scheme 1" },
+                new SchemeData { Id = DirectRegistrantFixedIdConstant.DirectRegistrantFixedId, SchemeName = "Direct Registrant" }
+            };
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._))
+                .Returns(years);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemes>._))
+                .Returns(schemes);
+
+            // Act
+            var result = await controller.ProducerEeeData() as ViewResult;
+
+            // Assert
+            var model = result.Model as ProducersDataViewModel;
+            model.Schemes.Should().Contain(s => s.Value == DirectRegistrantFixedIdConstant.DirectRegistrantFixedId.ToString());
+        }
+
+        [Fact]
+        public async Task ProducerDetails_GET_WithDirectRegistrants_IncludesDirectRegistrantsInSchemeList()
+        {
+            // Arrange
+            var years = new List<int> { 2023, 2022 };
+            var schemes = new List<SchemeData>
+            {
+                new SchemeData { Id = Guid.NewGuid(), SchemeName = "Scheme 1" },
+                new SchemeData { Id = DirectRegistrantFixedIdConstant.DirectRegistrantFixedId, SchemeName = "Direct Registrant" }
+            };
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetDataReturnsActiveComplianceYears>._))
+                .Returns(years);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemes>._))
+                .Returns(schemes);
+
+            // Act
+            var result = await controller.ProducerDetails() as ViewResult;
+
+            // Assert
+            var model = result.Model as ReportsFilterViewModel;
+            model.SchemeNames.Should().Contain(s => s.Value == DirectRegistrantFixedIdConstant.DirectRegistrantFixedId.ToString());
+        }
+
+        [Fact]
+        public async Task GetDownloadProducerDetailsCsv_WithDirectRegistrantSchemeId_ReturnsCorrectFileName()
+        {
+            // Arrange
+            var file = new CSVFileData() { FileContent = "Content" };
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberDetailsCsv>._))
+                .Returns(file);
+
+            SystemTime.Freeze(new DateTime(2016, 12, 31, 23, 59, 58));
+
+            // Act
+            var result = await controller.DownloadProducerDetailsCsv(
+                2015,
+                DirectRegistrantFixedIdConstant.DirectRegistrantFixedId,
+                null,
+                false,
+                false);
+
+            SystemTime.Unfreeze();
+
+            // Assert
+            var fileResult = result as FileResult;
+            fileResult.Should().NotBeNull();
+            fileResult.FileDownloadName.Should().Be("2015_Direct registrants_producerdetails_31122016_2359.csv");
+        }
+
+        [Fact]
+        public async Task GetDownloadProducerDetailsCsv_WithNormalSchemeId_ShouldNotCallGetSchemeByIdForDirectRegistrant()
+        {
+            // Arrange
+            var file = new CSVFileData() { FileContent = "Content" };
+            var schemeId = Guid.NewGuid(); 
+            var schemeData = new SchemeData() { ApprovalName = "WEE/AA1111AA/SCH" };
+
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberDetailsCsv>._))
+                .Returns(file);
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemeById>._))
+                .Returns(schemeData);
+
+            // Act
+            await controller.DownloadProducerDetailsCsv(2015, schemeId, null, false, false);
+
+            // Assert
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemeById>.That.Matches(x => x.SchemeId == schemeId)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task GetDownloadProducerDetailsCsv_WithDirectRegistrantSchemeId_ShouldNotCallGetSchemeById()
+        {
+            // Arrange
+            var file = new CSVFileData() { FileContent = "Content" };
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetMemberDetailsCsv>._))
+                .Returns(file);
+
+            // Act
+            await controller.DownloadProducerDetailsCsv(
+                2015,
+                DirectRegistrantFixedIdConstant.DirectRegistrantFixedId,
+                null,
+                false,
+                false);
+
+            // Assert
+            A.CallTo(() => client.SendAsync(A<string>._, A<GetSchemeById>._))
+                .MustNotHaveHappened();
         }
     }
 }

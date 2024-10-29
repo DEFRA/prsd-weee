@@ -29,6 +29,7 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
         private readonly ISystemDataDataAccess systemDataAccess;
+        private readonly ISmallProducerDataAccess smallProducerDataAccess;
         private readonly AddSignatoryAndCompleteRequestHandler handler;
         private readonly Guid directRegistrantId = Guid.NewGuid();
         private readonly Guid countryId = Guid.NewGuid();
@@ -43,6 +44,7 @@
             genericDataAccess = A.Fake<IGenericDataAccess>();
             weeeContext = A.Fake<WeeeContext>();
             systemDataAccess = A.Fake<ISystemDataDataAccess>();
+            smallProducerDataAccess = A.Fake<ISmallProducerDataAccess>();
             var dbContextHelper = new DbContextHelper();
 
             country = new Country(countryId, "UK");
@@ -56,7 +58,8 @@
                 authorization,
                 genericDataAccess,
                 weeeContext,
-                systemDataAccess);
+                systemDataAccess,
+                smallProducerDataAccess);
         }
 
         [Fact]
@@ -105,6 +108,10 @@
             var directRegistrant = new DirectRegistrant();
             A.CallTo(() => genericDataAccess.GetById<DirectRegistrant>(request.DirectRegistrantId))
                 .Returns(Task.FromResult(directRegistrant));
+
+            A.CallTo(() =>
+                smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(directRegistrantId,
+                    SystemTime.UtcNow.Year)).Returns<DirectProducerSubmission>(null);
 
             // Act & Assert
             await Assert.ThrowsAsync<InvalidOperationException>(() => handler.HandleAsync(request));
@@ -331,6 +338,10 @@
             
             A.CallTo(() => genericDataAccess.GetById<DirectRegistrant>(directRegistrantId))
                 .Returns(Task.FromResult(directRegistrant));
+
+            A.CallTo(() =>
+                smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(directRegistrantId,
+                    SystemTime.UtcNow.Year)).Returns(directProducerSubmissionCurrentYear);
 
             return directRegistrant;
         }

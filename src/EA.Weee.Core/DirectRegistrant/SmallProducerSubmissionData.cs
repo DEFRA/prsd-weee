@@ -24,6 +24,8 @@
             }
         }
 
+        public bool AnySubmissions => SubmissionHistory.Any();
+
         public SmallProducerSubmissionHistoryData CurrentSubmission { get; set; }
 
         public Guid DirectRegistrantId { get; set; }

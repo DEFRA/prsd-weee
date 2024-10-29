@@ -78,6 +78,7 @@
             result.Organisation.BusinessTradingName.Should().Be(submissionData.CurrentSubmission.TradingName);
             result.Organisation.EEEBrandNames.Should().Be(submissionData.CurrentSubmission.EEEBrandNames);
             result.Organisation.CompaniesRegistrationNumber.Should().Be(submissionData.OrganisationData.CompanyRegistrationNumber);
+            result.Organisation.ProducerRegistrationNumber.Should().Be(submissionData.CurrentSubmission.ProducerRegistrationNumber);
         }
 
         [Fact]

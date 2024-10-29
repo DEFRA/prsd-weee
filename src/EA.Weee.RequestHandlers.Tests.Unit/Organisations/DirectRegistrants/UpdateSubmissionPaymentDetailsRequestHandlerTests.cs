@@ -24,6 +24,7 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
         private readonly IPaymentSessionDataAccess paymentSessionDataAccess;
+        private readonly ISmallProducerDataAccess smallProducerDataAccess;
         private readonly UpdateSubmissionPaymentDetailsRequestHandler handler;
         private readonly Guid directRegistrantId = Guid.NewGuid();
         private readonly Guid paymentSessionId = Guid.NewGuid();
@@ -38,6 +39,7 @@
             authorization = A.Fake<IWeeeAuthorization>();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             weeeContext = A.Fake<WeeeContext>();
+            smallProducerDataAccess = A.Fake<ISmallProducerDataAccess>();
             var userContext = A.Fake<IUserContext>();
 
             A.CallTo(() => userContext.UserId).Returns(userId);
@@ -54,9 +56,9 @@
                 genericDataAccess,
                 weeeContext,
                 systemDataAccess,
-                systemDataAccess,
                 paymentSessionDataAccess,
-                userContext);
+                userContext,
+                smallProducerDataAccess);
         }
 
         [Fact]
@@ -221,11 +223,11 @@
             await handler.HandleAsync(request);
 
             // Assert
-            currentYearSubmission.PaymentFinished.Should().BeNull();
+            currentYearSubmission.PaymentFinished.Should().BeFalse();
 
             request = CreateValidRequest(isFinalState: true, paymentStatus: PaymentStatus.Failed);
             await handler.HandleAsync(request);
-            currentYearSubmission.PaymentFinished.Should().BeNull();
+            currentYearSubmission.PaymentFinished.Should().BeFalse();
         }
 
         private UpdateSubmissionPaymentDetailsRequest CreateValidRequest(bool isFinalState = false, PaymentStatus paymentStatus = PaymentStatus.Success)
@@ -254,6 +256,10 @@
 
             A.CallTo(() => genericDataAccess.GetById<DirectRegistrant>(directRegistrantId))
                 .Returns(Task.FromResult(directRegistrant));
+
+            A.CallTo(() =>
+                smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(directRegistrantId,
+                    SystemTime.UtcNow.Year)).Returns(currentYearSubmission);
 
             return directRegistrant;
         }

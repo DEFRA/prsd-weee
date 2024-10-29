@@ -56,7 +56,7 @@
                         transaction.SearchTerm = tonnageTypeViewModel.SearchedText;
                         break;
                     case PreviousRegistrationViewModel previousRegistrationModel:
-                        transaction.PreviousRegistration = previousRegistrationModel.SelectedValue.GetValueFromDisplayName<YesNoType>();
+                        transaction.PreviousRegistration = previousRegistrationModel.SelectedValue.GetValueFromDisplayName<PreviouslyRegisteredProducerType>();
                         break;
                     case RepresentingCompanyDetailsViewModel representingCompanyDetailsViewModel:
                         transaction.RepresentingCompanyDetailsViewModel = representingCompanyDetailsViewModel;
