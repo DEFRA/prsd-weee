@@ -71,6 +71,7 @@
                 result.BusinessTradingName.Should().Be(source.SmallProducerSubmissionData.OrganisationData.TradingName);
                 result.CompanyName.Should().Be(source.SmallProducerSubmissionData.OrganisationData.Name);
                 result.CompaniesRegistrationNumber.Should().Be(source.SmallProducerSubmissionData.OrganisationData.CompanyRegistrationNumber);
+                result.ProducerRegistrationNumber.Should().Be(source.SmallProducerSubmissionData.ProducerRegistrationNumber);
             }
         }
 
