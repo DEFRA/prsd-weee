@@ -175,16 +175,9 @@
             {
                 SetupTest(IocApplication.RequestHandler)
                     .WithDefaultSettings(resetData: true)
-                    .WithInternalUserAccess();
+                    .WithInternalUserAccess(false);
 
-                var authority = Query.GetEaCompetentAuthority();
-                var role = Query.GetInternalUserRole();
-
-                if (!Query.CompetentAuthorityUserExists(UserId.ToString(), role.Id))
-                {
-                    CompetentAuthorityUserDbSetup.Init().WithUserIdAndAuthorityAndRole(UserId.ToString(), authority.Id, role.Id)
-                        .Create();
-                }
+                Query.SetupUserWithRole(UserId.ToString(), "Standard", CompetentAuthority.England);
 
                 fixture = new Fixture();
                 notesSet = new List<Note>();
