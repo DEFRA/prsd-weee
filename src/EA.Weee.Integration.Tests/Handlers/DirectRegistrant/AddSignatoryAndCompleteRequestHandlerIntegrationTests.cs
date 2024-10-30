@@ -114,11 +114,11 @@
                 var authedRepSubmission = AuthorisedRepDbSetup.Init().Create();
 
                 var directProducerSubmissionHistory = DirectRegistrantSubmissionHistoryDbSetup.Init()
-                    .WithBusinessAddress(address.Id)
-                    .WithContactAddress(address.Id)
-                    .WithContact(contact.Id)
+                    .WithBusinessAddress(address)
+                    .WithContactAddress(address)
+                    .WithContact(contact)
                     .WithBrandName("new brand")
-                    .WithAuthorisedRep(authedRepSubmission.Id)
+                    .WithAuthorisedRep(authedRepSubmission)
                     .WithDirectProducerSubmission(directProducerSubmission).Create();
 
                 Query.UpdateCurrentProducerSubmission(directProducerSubmission.Id, directProducerSubmissionHistory.Id);

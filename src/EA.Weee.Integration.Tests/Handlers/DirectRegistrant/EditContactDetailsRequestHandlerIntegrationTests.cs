@@ -71,8 +71,8 @@
 
                 var directProducerSubmissionHistory = DirectRegistrantSubmissionHistoryDbSetup
                     .Init()
-                    .WithContact(contact.Id)
-                    .WithContactAddress(address.Id)
+                    .WithContact(contact)
+                    .WithContactAddress(address)
                     .WithDirectProducerSubmission(directProducerSubmission).Create();
 
                 Query.UpdateCurrentProducerSubmission(directProducerSubmission.Id, directProducerSubmissionHistory.Id);
