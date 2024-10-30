@@ -425,24 +425,48 @@
         [HttpGet]
         public async Task<ActionResult> OrganisationDetails()
         {
-            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+            var accessToken = User.GetAccessToken();
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(accessToken);
 
-            var model = existingTransaction?.OrganisationViewModel ?? new OrganisationViewModel
+            var model = MapToOrganisationViewModel(existingTransaction);
+            await EnrichModelWithCountries(model);
+
+            var specificViewModel = model.CastToSpecificViewModel(model);
+            return View(specificViewModel);
+        }
+
+        private static OrganisationViewModel MapToOrganisationViewModel(OrganisationTransactionData existingTransaction)
+        {
+            if (existingTransaction == null)
             {
-                CompanyName = existingTransaction?.SearchTerm,
-                OrganisationType = existingTransaction != null ? existingTransaction.OrganisationType ?? ExternalOrganisationType.RegisteredCompany : ExternalOrganisationType.RegisteredCompany,
+                return new OrganisationViewModel
+                {
+                    OrganisationType = ExternalOrganisationType.RegisteredCompany
+                };
+            }
+
+            var model = existingTransaction.OrganisationViewModel ?? new OrganisationViewModel
+            {
+                CompanyName = existingTransaction.SearchTerm,
+                OrganisationType = existingTransaction.OrganisationType ?? ExternalOrganisationType.RegisteredCompany
             };
 
-            if (existingTransaction.PreviousRegistration.Value == PreviouslyRegisteredProducerType.YesPreviousSchemeMember)
+            model.OrganisationType = existingTransaction.OrganisationType;
+
+            if (existingTransaction.PreviousRegistration == PreviouslyRegisteredProducerType.YesPreviousSchemeMember)
             {
                 model.IsPreviousSchemeMember = true;
             }
 
-            model.Address.Countries = await GetCountries();
+            return model;
+        }
 
-            var specificViewModel = model.CastToSpecificViewModel(model);
-
-            return View(specificViewModel);
+        private async Task EnrichModelWithCountries(OrganisationViewModel model)
+        {
+            if (model?.Address != null)
+            {
+                model.Address.Countries = await GetCountries();
+            }
         }
 
         [HttpGet]
