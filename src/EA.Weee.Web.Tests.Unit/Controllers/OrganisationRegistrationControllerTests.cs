@@ -1231,7 +1231,10 @@
                     weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
                 .Returns(countries);
 
-            DefraCompaniesHouseApiModel defraCompaniesHouseApiModel = null;
+            DefraCompaniesHouseApiModel defraCompaniesHouseApiModel = new DefraCompaniesHouseApiModel()
+            {
+                Error = true
+            };
 
             A.CallTo(() =>
                     companiesHouseClient.GetCompanyDetailsAsync(
@@ -1269,7 +1272,10 @@
                     weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
                 .Returns(countries);
 
-            var defraCompaniesHouseApiModel = TestFixture.Build<DefraCompaniesHouseApiModel>().Create();
+            var defraCompaniesHouseApiModel = TestFixture.Build<DefraCompaniesHouseApiModel>()
+                .With(d => d.Error, false)
+                .With(d => d.InvalidReference, false)
+                .Create();
             defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Country.Name = countries[0].Name;
 
             A.CallTo(() =>
