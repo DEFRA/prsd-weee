@@ -298,7 +298,7 @@
         }
 
         [Fact]
-        public async Task AddPaymentDetails_Get_ReturnViewModel()
+        public void AddPaymentDetails_Get_ReturnViewModel()
         {
             SetupDefaultControllerData();
 
@@ -306,7 +306,7 @@
             var reg = "reg";
             var year = 2004;
 
-            var view = await controller.AddPaymentDetails(directProducerSubmissionId, reg, year) as ViewResult;
+            var view = controller.AddPaymentDetails(directProducerSubmissionId, reg, year) as ViewResult;
 
             view.Model.Should().BeOfType<PaymentDetailsViewModel>();
 
@@ -326,7 +326,7 @@
             var reg = "reg";
             var year = 2004;
 
-            var view = await controller.AddPaymentDetails(directProducerSubmissionId, reg, year) as ViewResult;
+            var view = controller.AddPaymentDetails(directProducerSubmissionId, reg, year) as ViewResult;
 
             view.Model.Should().BeOfType<PaymentDetailsViewModel>();
 
