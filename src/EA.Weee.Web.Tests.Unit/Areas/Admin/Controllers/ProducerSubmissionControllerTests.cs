@@ -371,16 +371,6 @@
         }
 
         [Fact]
-        public void AddPaymentDetails_Get_DecoratesWithAdminSmallProducerSubmissionContextAttribute()
-        {
-            var methodInfo = typeof(ProducerSubmissionController)
-                .GetMethod("AddPaymentDetails", new[] { typeof(Guid), typeof(string), typeof(int?) });
-
-            // Act & Assert
-            methodInfo.Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>();
-        }
-
-        [Fact]
         public async Task AddPaymentDetails_Post_ReturnsRouteValuesAndCallsClient()
         {
             SetupDefaultControllerData();

@@ -130,9 +130,8 @@
         }
 
         [HttpGet]
-        [AdminSmallProducerSubmissionContext]
         [AuthorizeInternalClaims(Claims.InternalAdmin)]
-        public async Task<ActionResult> AddPaymentDetails(Guid directProducerSubmissionId, string registrationNumber, int? year)
+        public ActionResult AddPaymentDetails(Guid directProducerSubmissionId, string registrationNumber, int? year)
         {
             SetBreadcrumb();
 
