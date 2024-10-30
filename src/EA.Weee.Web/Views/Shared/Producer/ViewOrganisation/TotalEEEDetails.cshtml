@@ -1,6 +1,6 @@
-﻿@using EA.Weee.Web.RazorHelpers
+﻿@using EA.Prsd.Core.Helpers
 @using MvcNavigationHelpers
-
+@using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Web.Areas.Producer.ViewModels
 
 @model OrganisationDetailsTabsViewModel
@@ -40,6 +40,15 @@
                             </td>
                             <td class="govuk-table__cell govuk-table__cell--numeric printable-word-break category-cell-no-break">
                                 @category.NonHouseHold
+                            </td>
+                        </tr>
+                    }
+                    @if (@Model.EditEeeDataViewModel.SellingTechnique.IsDirectSelling || Model.EditEeeDataViewModel.SellingTechnique.IsIndirectSelling)
+                    {
+                        <tr class="govuk-table__row">
+                            <th scope="col" class="govuk-table__header govuk-!-text-align-left" style="width: 28%;">Selling technique(s) that you use</th>
+                            <td class="govuk-table__cell" colspan="2">
+                                @Model.EditEeeDataViewModel.SellingTechnique.ToSellingTechniqueType().GetDisplayName()
                             </td>
                         </tr>
                     }
