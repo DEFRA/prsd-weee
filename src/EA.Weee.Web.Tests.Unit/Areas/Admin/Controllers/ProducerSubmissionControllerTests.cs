@@ -12,6 +12,7 @@
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.Filters;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Filters;
@@ -36,19 +37,22 @@
         private readonly IWeeeCache weeeCache;
         private readonly Guid organisationId = Guid.NewGuid();
         private readonly ISubmissionService submissionService;
+        private readonly BreadcrumbService breadcrumbService;
 
         public ProducerSubmissionControllerUnitTests()
         {
             A.Fake<BreadcrumbService>();
             weeeClient = A.Fake<IWeeeClient>();
             weeeCache = A.Fake<IWeeeCache>();
+            breadcrumbService = A.Fake<BreadcrumbService>();
 
             submissionService = A.Fake<ISubmissionService>();
 
             controller = new ProducerSubmissionController(
                () => weeeClient,
                weeeCache,
-               submissionService);
+               submissionService,
+               breadcrumbService);
         }
 
         [Fact]
@@ -328,12 +332,11 @@
 
             var vm = (view.Model as PaymentDetailsViewModel);
 
-            A.CallTo(() => submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, true)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => submissionService.SetTabsCrumb(year)).MustHaveHappenedOnceExactly();
+            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.DirectRegistrantDetails);
         }
 
         [Fact]
-        public async Task RemoveSubmission_Get_SetsBreadCrumb()
+        public void RemoveSubmission_Get_SetsBreadCrumb()
         {
             SetupDefaultControllerData();
             controller.SmallProducerSubmissionData.HasAuthorisedRepresentitive = false;
@@ -342,10 +345,9 @@
             int year = 2024;
 
             // Act
-            var result = await controller.RemoveSubmission(registrationNumber, year) as ViewResult;
+            var result = controller.RemoveSubmission(registrationNumber, year) as ViewResult;
 
-            A.CallTo(() => submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, true)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => submissionService.SetTabsCrumb(year)).MustHaveHappenedOnceExactly();
+            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.DirectRegistrantDetails);
         }
 
         [Fact]
@@ -422,7 +424,7 @@
         }
 
         [Fact]
-        public async Task RemoveSubmission_Get_HasAuthorisedRepresentitive_ReturnAndPopulatesViewModel()
+        public void RemoveSubmission_Get_HasAuthorisedRepresentitive_ReturnAndPopulatesViewModel()
         {
             // Arrange
             SetupDefaultControllerData();
@@ -433,7 +435,7 @@
             var producerName = controller.SmallProducerSubmissionData.HasAuthorisedRepresentitive ? controller.SmallProducerSubmissionData.AuthorisedRepresentitiveData.CompanyName : submission.CompanyName;
 
             // Act
-            var result = await controller.RemoveSubmission(registrationNumber, year) as ViewResult;
+            var result = controller.RemoveSubmission(registrationNumber, year) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -449,7 +451,7 @@
         }
 
         [Fact]
-        public async Task RemoveSubmission_Get_NotHasAuthorisedRepresentitive_ReturnAndPopulatesViewModel()
+        public void RemoveSubmission_Get_NotHasAuthorisedRepresentitive_ReturnAndPopulatesViewModel()
         {
             // Arrange
             SetupDefaultControllerData();
@@ -461,7 +463,7 @@
             var producerName = controller.SmallProducerSubmissionData.HasAuthorisedRepresentitive ? controller.SmallProducerSubmissionData.AuthorisedRepresentitiveData.CompanyName : submission.CompanyName;
 
             // Act
-            var result = await controller.RemoveSubmission(registrationNumber, year) as ViewResult;
+            var result = controller.RemoveSubmission(registrationNumber, year) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -640,6 +642,20 @@
             //Assert
             result.RouteValues["organisationId"].Should().Be(controller.SmallProducerSubmissionData.OrganisationData.Id);
             result.RouteValues["action"].Should().Be("OrganisationHasNoSubmissions");
+        }
+
+        [Fact]
+        public void OrganisationHasNoSubmissions_Get_SetsBreadcrumb()
+        {
+            // Arrange
+            SetupDefaultControllerData();
+            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>();
+
+            // Act
+            var result = controller.OrganisationHasNoSubmissions(controller.SmallProducerSubmissionData.OrganisationData.Id) as RedirectToRouteResult;
+
+            //Assert
+            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.DirectRegistrantDetails);
         }
 
         [Fact]

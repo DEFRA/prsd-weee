@@ -2,6 +2,7 @@
 {
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Helpers;
+    using EA.Weee.Web.Services.SubmissionService;
     using System;
     using System.Web.Mvc;
 
@@ -14,8 +15,6 @@
             var controller = context.Controller as EA.Weee.Web.Areas.Admin.Controllers.ProducerSubmissionController;
 
             var data = controller.SmallProducerSubmissionData;
-
-            controller.SmallProducerSubmissionData = data;
 
             if (!data.AnySubmissions)
             {
