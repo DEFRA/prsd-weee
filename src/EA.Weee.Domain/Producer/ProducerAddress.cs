@@ -67,7 +67,7 @@
 
         public virtual Guid CountryId { get; private set; }
 
-        public virtual Country Country { get; protected set; }
+        public virtual Country Country { get; set; }
 
         /// <summary>
         /// Returns a concatenated string containing the address represented by this instance.
