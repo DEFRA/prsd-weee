@@ -43,7 +43,7 @@
                             </td>
                         </tr>
                     }
-                    @if (!Model.EditEeeDataViewModel.SellingTechnique.IsDirectSelling && !Model.EditEeeDataViewModel.SellingTechnique.IsIndirectSelling)
+                    @if (@Model.EditEeeDataViewModel.SellingTechnique.IsDirectSelling || Model.EditEeeDataViewModel.SellingTechnique.IsIndirectSelling)
                     {
                         <tr class="govuk-table__row">
                             <th scope="col" class="govuk-table__header govuk-!-text-align-left" style="width: 28%;">Selling technique(s) that you use</th>
