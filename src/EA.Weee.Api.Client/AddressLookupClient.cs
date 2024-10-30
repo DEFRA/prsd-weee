@@ -95,14 +95,12 @@
                 // Check total results count
                 if (!int.TryParse(firstResponse?.Header?.TotalResults, out var totalResults))
                 {
-                    logger.Warning($"Unable to parse total results from API response for postcode {postcode}");
                     totalResults = 0;
                 }
 
                 // If more than 200 results, return response indicating search is too broad as the Defra API only allows a maximum offset of 200
                 if (totalResults > 200)
                 {
-                    logger.Information($"Search for postcode {postcode} returned {totalResults} results which exceeds the maximum of 200. A more specific search is required.");
                     return new AddressLookupResponse()
                     {
                         Header = firstResponse?.Header ?? new Header
@@ -120,7 +118,6 @@
                 if (firstResponse.Results != null && firstResponse.Results.Any())
                 {
                     allResults.AddRange(firstResponse.Results);
-                    logger.Debug($"Retrieved {firstResponse.Results.Count} results from initial page");
                 }
 
                 // Get remaining pages if needed
@@ -216,47 +213,6 @@
                 };
             }
         }
-
-        private async Task<AddressLookupResponse> MakeApiRequest(string requestUri, string token)
-        {
-            try
-            {
-                var response = await retryPolicy.ExecuteAsync(() =>
-                    httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Get, requestUri)
-                    {
-                        Headers = { { "Authorization", $"Bearer {token}" } }
-                    })).ConfigureAwait(false);
-
-                response.EnsureSuccessStatusCode();
-
-                var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                return jsonSerializer.Deserialize<AddressLookupResponse>(content);
-            }
-            catch (Exception ex)
-            {
-                logger.Error($"Error making API request to {requestUri}", ex);
-                return null;
-            }
-        }
-
-        private List<AddressResult> FilterResults(List<AddressResult> results, string buildingNameOrNumber)
-        {
-            if (results == null || !results.Any())
-            {
-                return new List<AddressResult>();
-            }
-
-            return results
-                .Where(address =>
-                    ((!string.IsNullOrWhiteSpace(address.BuildingNumber) &&
-                      address.BuildingNumber.IndexOf(buildingNameOrNumber, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                     (!string.IsNullOrWhiteSpace(address.BuildingName) &&
-                      address.BuildingName.IndexOf(buildingNameOrNumber, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                     (!string.IsNullOrWhiteSpace(address.SubBuildingName) &&
-                      address.SubBuildingName.IndexOf(buildingNameOrNumber, StringComparison.OrdinalIgnoreCase) >= 0)))
-                .ToList();
-        }
-
         private static bool IsValidSearchParameter(string postcode, string buildingNameOrNumber)
         {
             if (string.IsNullOrWhiteSpace(postcode) || string.IsNullOrWhiteSpace(buildingNameOrNumber))
@@ -278,13 +234,10 @@
 
         private string BuildRequestUri(string endpoint, string postcode, int? offset = null)
         {
-            // Remove any trailing '?' or '&' from the endpoint
             endpoint = endpoint.TrimEnd('?', '&');
 
-            // Construct the base URI
             var requestUri = endpoint;
 
-            // Add postcode parameter
             if (!endpoint.Contains("?postcode=") && !endpoint.Contains("&postcode="))
             {
                 requestUri += (endpoint.Contains("?") ? "&" : "?") + $"postcode={postcode}";
@@ -294,7 +247,6 @@
                 requestUri += postcode;
             }
 
-            // Add offset if provided
             if (offset > 0)
             {
                 requestUri += $"&offset={offset.Value}";
