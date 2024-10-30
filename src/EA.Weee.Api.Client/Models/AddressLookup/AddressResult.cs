@@ -1,10 +1,12 @@
 ﻿namespace EA.Weee.Api.Client.Models.AddressLookup
 {
+    using EA.Weee.Core.Constants;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Text;
     using System.Text.Json.Serialization;
+    using System.Web.Http.Results;
 
     public class AddressResult
     {
@@ -30,6 +32,9 @@
         [JsonPropertyName("postcode")] public string Postcode { get; set; }
 
         [JsonPropertyName("country")] public string Country { get; set; }
+
+        [JsonIgnore]
+        public Guid CountryId => UkCountry.GetIdByName(Country);
 
         [JsonPropertyName("xCoordinate")] public int XCoordinate { get; set; }
 
