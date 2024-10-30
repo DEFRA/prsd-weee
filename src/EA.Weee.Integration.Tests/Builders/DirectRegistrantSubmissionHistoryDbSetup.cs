@@ -1,11 +1,16 @@
 ﻿namespace EA.Weee.Integration.Tests.Builders
 {
     using Base;
+    using EA.Prsd.Core;
+    using EA.Weee.Domain;
+    using EA.Weee.Domain.DataReturns;
+    using EA.Weee.Domain.Organisation;
     using EA.Weee.Domain.Producer;
     using EA.Weee.Domain.Producer.Classfication;
     using EA.Weee.Tests.Core;
     using System;
-    using EA.Weee.Domain.DataReturns;
+    using System.Data.Entity;
+    using System.Linq;
 
     public class DirectRegistrantSubmissionHistoryDbSetup : DbTestDataBuilder<DirectProducerSubmissionHistory, DirectRegistrantSubmissionHistoryDbSetup>
     {
@@ -13,9 +18,9 @@
         {
             instance = new DirectProducerSubmissionHistory
             {
-                CompanyName = "new company name",
-                TradingName = "new trading name",
-                CompanyRegistrationNumber = "12345678"
+                CompanyName = Faker.Company.Name(),
+                TradingName = Faker.Company.Name(),
+                CompanyRegistrationNumber = Faker.RandomNumber.Next(1000000, 100000000000).ToString()
             };
 
             return instance;
@@ -28,23 +33,27 @@
             return this;
         }
 
-        public DirectRegistrantSubmissionHistoryDbSetup WithContact(Guid contactId)
+        public DirectRegistrantSubmissionHistoryDbSetup WithContact(Contact contact)
         {
-            ObjectInstantiator<DirectProducerSubmissionHistory>.SetProperty(o => o.ContactId, contactId, instance);
+            instance.Contact = contact;
 
             return this;
         }
 
-        public DirectRegistrantSubmissionHistoryDbSetup WithBusinessAddress(Guid addressId)
+        public DirectRegistrantSubmissionHistoryDbSetup WithBusinessAddress(Address address)
         {
-            ObjectInstantiator<DirectProducerSubmissionHistory>.SetProperty(o => o.BusinessAddressId, addressId, instance);
+            EnsureCountryIsAttached(address);
+
+            instance.BusinessAddress = address;
 
             return this;
         }
 
-        public DirectRegistrantSubmissionHistoryDbSetup WithContactAddress(Guid addressId)
+        public DirectRegistrantSubmissionHistoryDbSetup WithContactAddress(Address address)
         {
-            ObjectInstantiator<DirectProducerSubmissionHistory>.SetProperty(o => o.ContactAddressId, addressId, instance);
+            EnsureCountryIsAttached(address);
+
+            instance.ContactAddress = address;
 
             return this;
         }
@@ -56,9 +65,45 @@
             return this;
         }
 
-        public DirectRegistrantSubmissionHistoryDbSetup WithAuthorisedRep(Guid authorisedRepId)
+        private void EnsureCountryIsAttached(Address address)
         {
-            ObjectInstantiator<DirectProducerSubmissionHistory>.SetProperty(o => o.AuthorisedRepresentativeId, authorisedRepId, instance);
+            if (address.Country != null)
+            {
+                var country = DbContext.Countries.First(c => c.Id == address.Country.Id);
+                address.Country = country;
+                DbContext.Entry(country).State = EntityState.Unchanged;
+            }
+        }
+
+        private void EnsureEntityIsTracked<T>(T entity) where T : class
+        {
+            var set = DbContext.Set<T>();
+            if (!set.Local.Contains(entity))
+            {
+                var entry = DbContext.Entry(entity);
+                if (entry.State == EntityState.Detached)
+                {
+                    set.Attach(entity);
+                }
+            }
+        }
+
+        public DirectRegistrantSubmissionHistoryDbSetup WithAuthorisedRep(AuthorisedRepresentative authorisedRep)
+        {
+            if (authorisedRep.OverseasContact.Address.Country != null)
+            {
+                var country = DbContext.Countries.First(c => c.Id == authorisedRep.OverseasContact.Address.CountryId);
+                authorisedRep.OverseasContact.Address.Country = country;
+                DbContext.Entry(country).State = EntityState.Unchanged;
+            }
+
+            if (!DbContext.Set<AuthorisedRepresentative>().Local.Contains(authorisedRep))
+            {
+                DbContext.Set<AuthorisedRepresentative>().Attach(authorisedRep);
+            }
+
+            // Then set the relationship
+            instance.AuthorisedRepresentative = authorisedRep;
 
             return this;
         }
@@ -73,6 +118,13 @@
         public DirectRegistrantSubmissionHistoryDbSetup WithEeeData(EeeOutputReturnVersion outputReturnVersion)
         {
             ObjectInstantiator<DirectProducerSubmissionHistory>.SetProperty(o => o.EeeOutputReturnVersion, outputReturnVersion, instance);
+
+            return this;
+        }
+
+        public DirectRegistrantSubmissionHistoryDbSetup WithAppropriateSignatory(Contact appropriateSignatory)
+        {
+            ObjectInstantiator<DirectProducerSubmissionHistory>.SetProperty(o => o.AppropriateSignatory, appropriateSignatory, instance);
 
             return this;
         }
