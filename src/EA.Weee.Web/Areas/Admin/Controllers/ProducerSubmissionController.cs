@@ -7,6 +7,7 @@
     using EA.Weee.Core.Admin;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Admin.DirectRegistrants;
+    using EA.Weee.Web.Areas.Producer.Filters;
     using EA.Weee.Web.Filters;
     using Filters;
     using Infrastructure;
@@ -37,7 +38,8 @@
             this.apiClient = apiClient;
         }
 
-        [AdminSmallProducerSubmissionContext]
+        [AdminSmallProducerSubmissionContext(Order = 1)]
+        [AdminSmallProducerSubmissionSubmittedContext(Order = 2)]
         [HttpGet]
         public async Task<ActionResult> Submissions(string registrationNumber, int? year = null)
         {
@@ -51,7 +53,8 @@
             return View("Producer/ViewOrganisation/OrganisationDetails", model);
         }
 
-        [AdminSmallProducerSubmissionContext]
+        [AdminSmallProducerSubmissionContext(Order = 1)]
+        [AdminSmallProducerSubmissionSubmittedContext(Order = 2)]
         [HttpGet]
         public async Task<ActionResult> OrganisationDetails(string registrationNumber, int? year = null)
         {
@@ -65,7 +68,8 @@
             return View("Producer/ViewOrganisation/OrganisationDetails", model);
         }
 
-        [AdminSmallProducerSubmissionContext]
+        [AdminSmallProducerSubmissionContext(Order = 1)]
+        [AdminSmallProducerSubmissionSubmittedContext(Order = 2)]
         [HttpGet]
         public async Task<ActionResult> ContactDetails(string registrationNumber, int? year = null)
         {
@@ -78,7 +82,8 @@
             return View("Producer/ViewOrganisation/ContactDetails", model);
         }
 
-        [AdminSmallProducerSubmissionContext]
+        [AdminSmallProducerSubmissionContext(Order = 1)]
+        [AdminSmallProducerSubmissionSubmittedContext(Order = 2)]
         [HttpGet]
         public async Task<ActionResult> ServiceOfNoticeDetails(string registrationNumber, int? year = null)
         {
@@ -91,7 +96,8 @@
             return View("Producer/ViewOrganisation/ServiceOfNoticeDetails", model);
         }
 
-        [AdminSmallProducerSubmissionContext]
+        [AdminSmallProducerSubmissionContext(Order = 1)]
+        [AdminSmallProducerSubmissionSubmittedContext(Order = 2)]
         [HttpGet]
         public async Task<ActionResult> RepresentedOrganisationDetails(string registrationNumber, int? year = null)
         {
@@ -104,7 +110,8 @@
             return View("Producer/ViewOrganisation/RepresentedOrganisationDetails", model);
         }
 
-        [AdminSmallProducerSubmissionContext]
+        [AdminSmallProducerSubmissionContext(Order = 1)]
+        [AdminSmallProducerSubmissionSubmittedContext(Order = 2)]
         [HttpGet]
         public async Task<ActionResult> TotalEEEDetails(string registrationNumber, int? year = null)
         {
@@ -152,7 +159,7 @@
         }
 
         [AuthorizeInternalClaims(Claims.InternalAdmin)]
-        [AdminSmallProducerSubmissionContext]
+        [AdminSmallProducerSubmissionContext(Order = 1)]
         [HttpGet]
         public async Task<ActionResult> RemoveSubmission(string registrationNumber, int year)
         {
