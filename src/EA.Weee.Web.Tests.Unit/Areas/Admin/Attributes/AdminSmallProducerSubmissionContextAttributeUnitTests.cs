@@ -8,6 +8,7 @@
     using EA.Weee.Requests.Admin.DirectRegistrants;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.Filters;
+    using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.Services.SubmissionService;
     using FakeItEasy;
@@ -36,7 +37,7 @@
             httpContext = A.Fake<HttpContextBase>();
             principal = A.Fake<IPrincipal>();
             request = A.Fake<HttpRequestBase>();
-            controller = new ProducerSubmissionController(A.Fake<IWeeeClient>, A.Fake<IWeeeCache>(), A.Fake<ISubmissionService>());
+            controller = new ProducerSubmissionController(A.Fake<IWeeeClient>, A.Fake<IWeeeCache>(), A.Fake<ISubmissionService>(), A.Fake<BreadcrumbService>());
 
             requestContext = new RequestContext(httpContext, new RouteData());
             controller.ControllerContext = new ControllerContext(requestContext, controller);
