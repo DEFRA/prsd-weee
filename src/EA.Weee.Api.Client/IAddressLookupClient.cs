@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.Api.Client
 {
+    using EA.Weee.Api.Client.Models.AddressLookup;
     using System;
     using System.Threading.Tasks;
-    using EA.Weee.Api.Client.Entities.AddressLookup;
 
     public interface IAddressLookupClient : IDisposable
     {
-        Task<AddressLookupResponse> GetAddressLookup(string endpoint, string companyReference);
+        Task<AddressLookupResponse> GetAddressDetailsAsync(string endpoint, string postcode, string street);
     }
 }
