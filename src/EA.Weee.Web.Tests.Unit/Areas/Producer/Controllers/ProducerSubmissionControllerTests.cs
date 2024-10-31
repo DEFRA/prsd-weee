@@ -846,8 +846,8 @@
 
             // Assert
             result.Should().NotBeNull();
-            result.Model.Should().BeOfType<PaymentResultModel>();
-            var model = (PaymentResultModel)result.Model;
+            result.Model.Should().BeOfType<RegisteredResultModel>();
+            var model = (RegisteredResultModel)result.Model;
             model.PaymentReference.Should().Be(reference);
             model.OrganisationId.Should().Be(organisationId);
             model.ComplianceYear.Should().Be(controller.SmallProducerSubmissionData.CurrentSubmission.ComplianceYear);
@@ -1192,6 +1192,84 @@
                 attr.NoStore == true &&
                 attr.Duration == 0 &&
                 attr.VaryByParam == "None");
+        }
+
+        [Fact]
+        public void Registered_Get_ShouldHaveSmallProducerSubmissionContextAttribute()
+        {
+            // Arrange
+            var methodInfo =
+                typeof(ProducerSubmissionController).GetMethod("Registered", new Type[] { });
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>();
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
+        public async Task Registered_Get_ShouldReturnViewWithCorrectModel()
+        {
+            // Arrange 
+            controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
+            {
+                OrganisationData = new OrganisationData { Id = Guid.NewGuid() },
+                CurrentSubmission = new SmallProducerSubmissionHistoryData { ComplianceYear = SystemTime.UtcNow.Year }
+            };
+
+            // Act
+            var result = await controller.Registered() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var model = result.Model as RegisteredResultModel;
+            model.Should().NotBeNull();
+            model.OrganisationId.Should().Be(controller.SmallProducerSubmissionData.OrganisationData.Id);
+            model.ComplianceYear.Should().Be(controller.SmallProducerSubmissionData.CurrentSubmission.ComplianceYear);
+        }
+
+        [Fact]
+        public async Task Registered_Get_ShouldSetBreadcrumb()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var organisationName = TestFixture.Create<string>();
+            controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
+            {
+                OrganisationData = new OrganisationData { Id = organisationId },
+                CurrentSubmission = new SmallProducerSubmissionHistoryData()
+            };
+
+            A.CallTo(() => weeeCache.FetchOrganisationName(organisationId)).Returns(organisationName);
+
+            // Act
+            await controller.Registered();
+
+            // Assert
+            breadcrumbService.OrganisationId.Should().Be(organisationId);
+            breadcrumbService.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumbService.ExternalActivity.Should()
+                .Be(ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+        }
+
+        [Fact]
+        public async Task AppropriateSignatory_Post_ValidModel_AlreadyPaid_ShouldRedirectToRegistered()
+        {
+            // Arrange
+            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            submissionData.CurrentSubmission.HasPaid = true;
+            controller.SmallProducerSubmissionData = submissionData;
+
+            var model = TestFixture.Create<AppropriateSignatoryViewModel>();
+            var request = TestFixture.Create<AddSignatoryAndCompleteRequest>();
+            A.CallTo(() => addSignatoryAndCompleteRequestCreator.ViewModelToRequest(model)).Returns(request);
+
+            // Act
+            var result = await controller.AppropriateSignatory(model) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be(nameof(ProducerSubmissionController.Registered));
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappenedOnceExactly();
         }
     }
 }
