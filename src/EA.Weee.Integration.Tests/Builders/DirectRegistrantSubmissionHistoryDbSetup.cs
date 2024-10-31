@@ -15,7 +15,6 @@
             {
                 CompanyName = "new company name",
                 TradingName = "new trading name",
-                CompanyRegistrationNumber = "12345678"
             };
 
             return instance;

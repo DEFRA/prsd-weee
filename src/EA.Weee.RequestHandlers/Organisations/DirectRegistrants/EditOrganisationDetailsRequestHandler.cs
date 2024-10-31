@@ -40,11 +40,6 @@
                 currentYearSubmission.CurrentSubmission.AddOrUpdateBrandName(brandNames);
             }
 
-            if (!string.IsNullOrWhiteSpace(request.CompanyRegistrationNumber))
-            {
-                currentYearSubmission.CurrentSubmission.CompanyRegistrationNumber = request.CompanyRegistrationNumber;
-            }
-
             await weeeContext.SaveChangesAsync();
 
             return true;

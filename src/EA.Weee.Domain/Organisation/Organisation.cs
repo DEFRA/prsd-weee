@@ -117,13 +117,12 @@
             TradingName = tradingName;
         }
 
-        public void UpdateDirectRegistrantDetails(string companyName, string companyRegNumber, string tradingName)
+        public void UpdateDirectRegistrantDetails(string companyName, string tradingName)
         {
             Condition.Requires(companyName).IsNotNullOrWhiteSpace();
 
             Name = companyName;
             TradingName = tradingName;
-            CompanyRegistrationNumber = companyRegNumber;
         }
 
         public void UpdateSoleTraderDetails(string companyName, string tradingName)

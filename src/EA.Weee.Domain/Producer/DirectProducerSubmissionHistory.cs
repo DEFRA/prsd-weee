@@ -23,8 +23,6 @@
 
         public virtual string TradingName { get; set; }
 
-        public virtual string CompanyRegistrationNumber { get; set; }
-
         public virtual DirectProducerSubmission DirectProducerSubmission { get; set; }
 
         public virtual Guid? ContactId { get; private set; }
