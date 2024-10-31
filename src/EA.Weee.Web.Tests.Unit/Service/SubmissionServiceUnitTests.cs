@@ -271,7 +271,7 @@
 
             var result = await task;
 
-            Assert.Equal(breadcrumb.InternalActivity, InternalUserActivity.DirectRegistrantDetails);
+            Assert.Equal(InternalUserActivity.DirectRegistrantDetails, breadcrumb.InternalActivity);
         }
 
         private IEnumerable<int> ExpectedYears(SmallProducerSubmissionData d) => 
