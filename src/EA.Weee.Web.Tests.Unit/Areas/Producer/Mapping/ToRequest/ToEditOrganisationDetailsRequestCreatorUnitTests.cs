@@ -45,6 +45,7 @@
             result.TradingName.Should().Be(viewModel.Organisation.BusinessTradingName);
             result.BusinessAddressData.Should().Be(mappedAddress);
             result.EEEBrandNames.Should().BeEquivalentTo(viewModel.Organisation.EEEBrandNames);
+            result.CompanyRegistrationNumber.Should().BeEquivalentTo(viewModel.Organisation.CompaniesRegistrationNumber);
         }
     }
 }

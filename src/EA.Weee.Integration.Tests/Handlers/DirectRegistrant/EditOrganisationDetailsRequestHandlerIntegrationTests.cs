@@ -157,7 +157,7 @@
                 var address = fixture.Build<AddressData>().With(a => a.CountryId, country.Id).Create();
 
                 request = new EditOrganisationDetailsRequest(directRegistrant.Id, "New company name",
-                    "New trading name", address, "New brand names");
+                    "New trading name", address, "New brand names", "Reg1234");
 
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, directRegistrant.OrganisationId).Create();
 
