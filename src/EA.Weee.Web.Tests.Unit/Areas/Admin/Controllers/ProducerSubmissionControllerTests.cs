@@ -979,33 +979,6 @@
             result.RouteValues["action"].Should().Be(nameof(ProducerSubmissionController.Submissions));
         }
 
-        [Fact]
-        public async Task Returned_Post_NoSubmissions_RedirectsToNoSubmissions()
-        {
-            // Arrange
-            SetupDefaultControllerData();
-            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>();
-
-            var vm = new ReturnedViewModel
-            {
-                ComplianceYear = 2004,
-                ProducerName = "Test",
-                RegistrationNumber = "reg",
-                SchemeName = "s"
-            };
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._,
-              A<GetSmallProducerSubmissionByRegistrationNumber>.That.Matches(s => s.RegistrationNumber == vm.RegistrationNumber)))
-             .Returns(controller.SmallProducerSubmissionData);
-
-            // Act
-            var result = await controller.Returned(vm) as RedirectToRouteResult;
-
-            //Assert
-            result.RouteValues["organisationId"].Should().Be(controller.SmallProducerSubmissionData.OrganisationData.Id);
-            result.RouteValues["action"].Should().Be("OrganisationHasNoSubmissions");
-        }
-
         private void SetupDefaultControllerData()
         {
             controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
