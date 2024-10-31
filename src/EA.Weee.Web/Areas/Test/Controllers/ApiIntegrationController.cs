@@ -60,6 +60,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> CompaniesHouseLookup(ApiModel viewModel)
         {
             viewModel.SubmittedForm = "company";
@@ -86,6 +87,7 @@
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<ActionResult> Payment(ApiModel viewModel)
         {
             viewModel.SubmittedForm = "payment";
