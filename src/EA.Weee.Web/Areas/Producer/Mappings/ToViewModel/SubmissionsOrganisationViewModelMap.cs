@@ -33,7 +33,7 @@
                     Address = mapper.Map<AddressData, ExternalAddressData>(sub.BusinessAddressData),
                     CompanyName = sub.CompanyName,
                     BusinessTradingName = sub.TradingName,
-                    CompaniesRegistrationNumber = sub.CompanyRegistrationNumber,
+                    CompaniesRegistrationNumber = source.SmallProducerSubmissionData.OrganisationData.CompanyRegistrationNumber,
                     OrganisationType = MapOrganisationType(source.SmallProducerSubmissionData.OrganisationData.OrganisationType)
                 };
             }
