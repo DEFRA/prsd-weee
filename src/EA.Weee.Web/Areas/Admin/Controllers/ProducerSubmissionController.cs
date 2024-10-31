@@ -331,13 +331,8 @@
             {
                 SmallProducerSubmissionData = await client.SendAsync(User.GetAccessToken(), new GetSmallProducerSubmissionByRegistrationNumber(model.RegistrationNumber));
 
-                if (SmallProducerSubmissionData.AnySubmissions)
-                {
-                    return RedirectToAction(nameof(Submissions),
-                        new { model.RegistrationNumber });
-                }
-
-                return RedirectToOrganisationHasNoSubmissions(SmallProducerSubmissionData.OrganisationData.Id);
+                return RedirectToAction(nameof(Submissions),
+                    new { model.RegistrationNumber });
             }
         }
 
