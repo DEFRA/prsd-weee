@@ -144,7 +144,9 @@
         @if (Model.ShowReturnRegistrationToUser)
         {
             <div class="govuk-button-group govuk-!-padding-top-3">
-                @(this.WeeeGds().GovUkButtonLink("Return producer registration to user", "ReturnProducerRegistration"))
+                <a href="@Url.Action("ReturnProducerRegistration", new { registrationNumber = Model.RegistrationNumber, year = Model.Year , directProducerSubmissionId = Model.SmallProducerSubmissionData.CurrentSubmission.DirectProducerSubmissionId})" class="govuk-button">
+                    Return submission to user
+                </a>
             </div>
         }
     </div>

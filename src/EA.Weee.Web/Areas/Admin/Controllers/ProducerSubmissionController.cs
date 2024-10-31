@@ -249,6 +249,90 @@
             }
         }
 
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        [AdminSmallProducerSubmissionContext(Order = 1)]
+        [HttpGet]
+        public ActionResult ReturnProducerRegistration(string registrationNumber, int year, Guid directProducerSubmissionId)
+        {
+            SetBreadcrumb();
+
+            var submission = SmallProducerSubmissionData.SubmissionHistory[year];
+            var selectedValue = string.Empty;
+            var model = new ConfirmReturnViewModel
+            {
+                SelectedValue = selectedValue,
+                Producer = new ProducerDetailsScheme
+                {
+                    ComplianceYear = year,
+                    ProducerName = SmallProducerSubmissionData.HasAuthorisedRepresentitive ? SmallProducerSubmissionData.AuthorisedRepresentitiveData.CompanyName : submission.CompanyName,
+                    RegistrationNumber = registrationNumber,
+                    RegisteredProducerId = submission.RegisteredProducerId
+                },
+                DirectProducerSubmissionId = directProducerSubmissionId
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ReturnProducerRegistration(ConfirmReturnViewModel viewModel)
+        {
+            if (ModelState.IsValid)
+            {
+                if (viewModel.SelectedValue == "Yes")
+                {
+                    using (IWeeeClient client = apiClient())
+                    {
+                        await client.SendAsync(User.GetAccessToken(), new ReturnSmallProducerSubmission(viewModel.DirectProducerSubmissionId));
+                    }
+
+                    return RedirectToAction(nameof(Returned),
+                        new { registrationNumber = viewModel.Producer.RegistrationNumber, producerName = viewModel.Producer.ProducerName, year = viewModel.Producer.ComplianceYear });
+                }
+                else
+                {
+                    return RedirectToAction(nameof(Submissions),
+                        new { viewModel.Producer.RegistrationNumber });
+                }
+            }
+            else
+            {
+                return View(viewModel);
+            }
+        }
+
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        [HttpGet]
+        public ActionResult Returned(string registrationNumber, string producerName, int year)
+        {
+            return View(new RemovedViewModel
+            {
+                RegistrationNumber = registrationNumber,
+                ProducerName = producerName,
+                ComplianceYear = year
+            });
+        }
+
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Returned(RemovedViewModel model)
+        {
+            using (var client = apiClient())
+            {
+                SmallProducerSubmissionData = await client.SendAsync(User.GetAccessToken(), new GetSmallProducerSubmissionByRegistrationNumber(model.RegistrationNumber));
+
+                if (SmallProducerSubmissionData.AnySubmissions)
+                {
+                    return RedirectToAction(nameof(Submissions),
+                        new { model.RegistrationNumber });
+                }
+
+                return RedirectToOrganisationHasNoSubmissions(SmallProducerSubmissionData.OrganisationData.Id);
+            }
+        }
+
         [HttpGet]
         public ActionResult OrganisationHasNoSubmissions(Guid organisationId)
         {
