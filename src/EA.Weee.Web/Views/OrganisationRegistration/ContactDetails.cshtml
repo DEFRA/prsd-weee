@@ -2,6 +2,9 @@
 @using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Web.Controllers
 @using MvcNavigationHelpers
+
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+
 @model EA.Weee.Core.Organisations.ContactDetailsViewModel
 @{
     const string title = "Contact details";
@@ -70,6 +73,36 @@
             For non-UK addresses, enter your details manually.
         </div>
 
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AddressData.Postcode)">
+            @Html.Gds().LabelFor(m => m.AddressData.Postcode)
+            @Html.Gds().ValidationMessageFor(m => m.AddressData.Postcode)
+            @Html.Gds().TextBoxFor(m => m.AddressData.Postcode, new { @maxlength = CommonMaxFieldLengths.Postcode })
+        </div>
+
+
+        <button type="button"
+                name="Find address"
+                class="govuk-button"
+                id="find-address"
+                data-module="govuk-button"
+                data-prevent-double-click="true">
+            Find address
+        </button>
+
+        <div class="govuk-form-group">
+            <h1 class="govuk-label-wrapper">
+                <label class="govuk-label govuk-label--l" for="address-results">
+                    Select address
+                </label>
+            </h1>
+            <select class="govuk-select gds-auto-complete ui-autocomplete-input" 
+                    id="address-results" 
+                    name="Address Results"
+                    data-module="autocomplete">
+            </select>
+        </div>
+
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AddressData.Address1)">
             @Html.Gds().LabelFor(m => m.AddressData.Address1)
             @Html.Gds().ValidationMessageFor(m => m.AddressData.Address1)
@@ -94,12 +127,6 @@
             @Html.Gds().TextBoxFor(m => m.AddressData.CountyOrRegion, new { @maxlength = CommonMaxFieldLengths.TownCounty })
         </div>
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AddressData.Postcode)">
-            @Html.Gds().LabelFor(m => m.AddressData.Postcode)
-            @Html.Gds().ValidationMessageFor(m => m.AddressData.Postcode)
-            @Html.Gds().TextBoxFor(m => m.AddressData.Postcode, new { @maxlength = CommonMaxFieldLengths.Postcode })
-        </div>
-
         <div class="govuk-form-group countries govuk-!-margin-bottom-8 @Html.Gds().FormGroupClass(m => m.AddressData.CountryId)" id="operator-country-dropdown-list">
             @Html.Gds().LabelFor(m => m.AddressData.CountryId, new { id = "country-dropdown-list" })
             @Html.Gds().ValidationMessageFor(m => m.AddressData.CountryId)
@@ -113,3 +140,29 @@
         @(this.WeeeGds().BackToTopLink())
     }
 }
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        $(() => {
+            let config = {
+                inputFieldId: "AddressData_Postcode",
+                selectFieldId: "address-results",
+                endpoint: "@Url.Action("GetAddresses")?postcode=",
+                findButtonId: "find-address",
+                onSelected: (selected) => {
+                    $("#AddressData_Address1").val(selected.BuildingName || selected.BuildingNumber + " " + selected.Street);
+                    $("#AddressData_TownOrCity").val(selected.Town);
+                    $("#AddressData_CountyOrRegion").val(selected.AdministrativeArea || selected.HistoricCounty || selected.HistoricCounty);
+                    $("#AddressData_Postcode").val(selected.Postcode);
+                },
+                mappedFields: {
+                    key: "Uprn",
+                    value: "AddressLine",
+                    output: "Results"
+                }
+            }
+
+            searchAutocomplete(config)
+        });
+    });
+</script>

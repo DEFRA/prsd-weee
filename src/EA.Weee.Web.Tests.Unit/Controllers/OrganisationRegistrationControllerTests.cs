@@ -37,6 +37,7 @@
         private readonly OrganisationRegistrationController controller;
         private readonly IWeeeCache weeeCache;
         private readonly ICompaniesHouseClient companiesHouseClient;
+        private readonly IAddressLookupClient addressLookupClient;
 
         public OrganisationRegistrationControllerTests()
         {
@@ -46,6 +47,7 @@
             organisationSearcher = A.Fake<ISearcher<OrganisationSearchResult>>();
             weeeCache = A.Fake<IWeeeCache>();
             companiesHouseClient = A.Fake<ICompaniesHouseClient>();
+            addressLookupClient = A.Fake<IAddressLookupClient>();
 
             controller = new OrganisationRegistrationController(
                 () => weeeClient,
@@ -53,7 +55,8 @@
                 configurationService,
                 transactionService,
                 weeeCache,
-                () => companiesHouseClient);
+                () => companiesHouseClient,
+                () => addressLookupClient);
 
             A.CallTo(() => configurationService.CurrentConfiguration.MaximumOrganisationSearchResults).Returns(5);
         }
@@ -80,7 +83,8 @@
                 configurationService,
                 transactionService,
                 weeeCache,
-                () => companiesHouseClient);
+                () => companiesHouseClient,
+                () => addressLookupClient);
 
             // Act
             ActionResult result = await controller.JoinOrganisationConfirmation(orgData.Id, true);
@@ -104,19 +108,10 @@
                 DisplayName = "Test"
             };
 
-            var weeeClient = A.Fake<IWeeeClient>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>._))
                 .Returns(orgData);
 
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
-
-            var controller = new OrganisationRegistrationController(
-                () => weeeClient,
-                organisationSearcher,
-                configurationService,
-                transactionService,
-                weeeCache,
-                () => companiesHouseClient);
 
             // Act
             ActionResult result = await controller.JoinOrganisationConfirmation(orgData.Id, activeUsers);
@@ -133,19 +128,10 @@
         public async Task GetJoinOrganisation_ReturnsView()
         {
             // Arrange
-            var weeeClient = A.Fake<IWeeeClient>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>._))
                 .Returns(new PublicOrganisationData());
 
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
-
-            var controller = new OrganisationRegistrationController(
-                () => weeeClient,
-                organisationSearcher,
-                configurationService,
-                transactionService,
-                weeeCache,
-                () => companiesHouseClient);
 
             // Act
             ActionResult result = await controller.JoinOrganisation(A.Dummy<Guid>());
@@ -161,19 +147,10 @@
         public async Task GetJoinOrganisation_GivenActiveUsers_ReturnsViewWithActiveUsersSet()
         {
             // Arrange
-            var weeeClient = A.Fake<IWeeeClient>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>._))
                 .Returns(new PublicOrganisationData());
 
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
-
-            var controller = new OrganisationRegistrationController(
-                () => weeeClient,
-                organisationSearcher,
-                configurationService,
-                transactionService,
-                weeeCache,
-                () => companiesHouseClient);
 
             var activeUsers = new List<OrganisationUserData>()
             {
@@ -197,19 +174,10 @@
         public async Task GetJoinOrganisation_GivenNoActiveUsers_ReturnsViewWithActiveUsersSet()
         {
             // Arrange
-            var weeeClient = A.Fake<IWeeeClient>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>._))
                 .Returns(new PublicOrganisationData());
 
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
-
-            var controller = new OrganisationRegistrationController(
-                () => weeeClient,
-                organisationSearcher,
-                configurationService,
-                transactionService,
-                weeeCache,
-                () => companiesHouseClient);
 
             var activeUsers = new List<OrganisationUserData>();
 
@@ -231,8 +199,6 @@
         {
             // Arrange
             var organisationId = new Guid("101F5E58-FEA3-4F59-9281-E543EDE5699F");
-
-            var weeeClient = A.Fake<IWeeeClient>();
 
             var organisation = new PublicOrganisationData()
             {
@@ -261,14 +227,6 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetActiveOrganisationUsers>._)).Returns(activeUsers);
 
-            var controller = new OrganisationRegistrationController(
-                () => weeeClient,
-                organisationSearcher,
-                configurationService,
-                transactionService,
-                weeeCache,
-                () => companiesHouseClient);
-
             // Act
             ActionResult result = await controller.JoinOrganisation(organisationId);
 
@@ -291,16 +249,7 @@
         public async Task PostJoinOrganisation_NoSearchAnotherOrganisationSelected_RedirectsToType()
         {
             // Arrange
-            var weeeClient = A.Dummy<IWeeeClient>();
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
-
-            var controller = new OrganisationRegistrationController(
-                () => weeeClient,
-                organisationSearcher,
-                configurationService,
-                transactionService,
-                weeeCache,
-                () => companiesHouseClient);
 
             var model = new JoinOrganisationViewModel { SelectedValue = "No" };
 
@@ -317,19 +266,10 @@
         public async Task PostJoinOrganisation_YesJoinOrganisationSelected_RedirectsToJoinOrganisationConfirmation()
         {
             // Arrange
-            var weeeClient = A.Fake<IWeeeClient>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<JoinOrganisation>._))
                 .Returns(Guid.NewGuid());
 
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
-
-            var controller = new OrganisationRegistrationController(
-                () => weeeClient,
-                organisationSearcher,
-                configurationService,
-                transactionService,
-                weeeCache,
-                () => companiesHouseClient);
 
             var model = new JoinOrganisationViewModel { SelectedValue = "Yes - join xyz" };
 
@@ -346,19 +286,10 @@
         public async Task GetSearch_UserHasNotOrganisation_ShowPerformAnotherActivityLinkIsFalse()
         {
             // Arrange
-            var weeeClient = A.Fake<IWeeeClient>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
                 .Returns(new List<OrganisationUserData>());
 
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
-
-            var controller = new OrganisationRegistrationController(
-                () => weeeClient,
-                organisationSearcher,
-                configurationService,
-                transactionService,
-                weeeCache,
-                () => companiesHouseClient);
 
             // Act
             var result = await controller.Search();
@@ -374,7 +305,6 @@
         public async Task GetSearch_UserHasOrganisations_ShowPerformAnotherActivityLinkIsTrue()
         {
             // Arrange
-            var weeeClient = A.Fake<IWeeeClient>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
                 .Returns(new List<OrganisationUserData>
                 {
@@ -383,14 +313,6 @@
                 });
 
             var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
-
-            var controller = new OrganisationRegistrationController(
-                () => weeeClient,
-                organisationSearcher,
-                configurationService,
-                transactionService,
-                weeeCache,
-                () => companiesHouseClient);
 
             // Act
             var result = await controller.Search();
@@ -406,17 +328,6 @@
         public async Task GetSearch_ReturnsSearchView()
         {
             // Arrange
-            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
-            var weeeClient = A.Dummy<Func<IWeeeClient>>();
-
-            var controller = new OrganisationRegistrationController(
-                weeeClient,
-                organisationSearcher,
-                configurationService,
-                transactionService,
-                weeeCache,
-                () => companiesHouseClient);
-
             // Act
             var result = await controller.Search();
 
@@ -432,17 +343,6 @@
         public async Task PostSearch_WithInvalidModel_ReturnsSearchView()
         {
             // Arrange
-            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
-            var weeeClient = A.Dummy<Func<IWeeeClient>>();
-
-            var controller = new OrganisationRegistrationController(
-                weeeClient,
-                organisationSearcher,
-                configurationService,
-                transactionService,
-                weeeCache,
-                () => companiesHouseClient);
-
             var viewModel = new SearchViewModel();
             controller.ModelState.AddModelError("SomeProperty", "Exception");
 
@@ -461,17 +361,6 @@
         public async Task PostSearch_WithSearchTermAndNoSelectedOrganisationId_RedirectsToSearchResultsAction()
         {
             // Arrange
-            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
-            var weeeClient = A.Dummy<Func<IWeeeClient>>();
-
-            var controller = new OrganisationRegistrationController(
-                weeeClient,
-                organisationSearcher,
-                configurationService,
-                transactionService,
-                weeeCache,
-                () => companiesHouseClient);
-
             var viewModel = new SearchViewModel { SearchTerm = "testSearchTerm", SelectedOrganisationId = null };
 
             // Act
@@ -489,17 +378,6 @@
         public async Task PostSearch_WithSelectedOrganisationId_RedirectsToJoinOrganisationAction()
         {
             // Arrange
-            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
-            var weeeClient = A.Dummy<Func<IWeeeClient>>();
-
-            var controller = new OrganisationRegistrationController(
-                weeeClient,
-                organisationSearcher,
-                configurationService,
-                transactionService,
-                weeeCache,
-                () => companiesHouseClient);
-
             var viewModel = new SearchViewModel
             {
                 SearchTerm = "Test Company",
@@ -531,19 +409,8 @@
                 }
             };
 
-            var organisationSearcher = A.Fake<ISearcher<OrganisationSearchResult>>();
             A.CallTo(() => organisationSearcher.Search("testSearchTerm", 5, false))
                 .Returns(fakeResults);
-
-            var weeeClient = A.Dummy<Func<IWeeeClient>>();
-
-            var controller = new OrganisationRegistrationController(
-                weeeClient,
-                organisationSearcher,
-                configurationService,
-                transactionService,
-                weeeCache,
-                () => companiesHouseClient);
 
             // Act
             var result = await controller.SearchResults("testSearchTerm");
@@ -575,19 +442,8 @@
                 }
             };
 
-            var organisationSearcher = A.Fake<ISearcher<OrganisationSearchResult>>();
             A.CallTo(() => organisationSearcher.Search("testSearchTerm", 5, false))
                 .Returns(fakeResults);
-
-            var weeeClient = A.Dummy<Func<IWeeeClient>>();
-
-            var controller = new OrganisationRegistrationController(
-                weeeClient,
-                organisationSearcher,
-                configurationService,
-                transactionService,
-                weeeCache,
-                () => companiesHouseClient);
 
             var viewModel = new SearchResultsViewModel { SearchTerm = "testSearchTerm" };
             controller.ModelState.AddModelError("SomeProperty", "Exception");
@@ -613,18 +469,6 @@
         public async Task PostSearchResults_WithSelectedOrganisationId_RedirectsToJoinOrganisationAction()
         {
             // Arrange
-            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
-
-            var weeeClient = A.Dummy<Func<IWeeeClient>>();
-
-            var controller = new OrganisationRegistrationController(
-                weeeClient,
-                organisationSearcher,
-                configurationService,
-                transactionService,
-                weeeCache,
-                () => companiesHouseClient);
-
             var viewModel = new SearchResultsViewModel()
             {
                 SelectedOrganisationId = new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8")
@@ -645,18 +489,6 @@
         [Fact]
         public async Task TypeGet_ReturnsViewWithViewModel_WithSearchText()
         {
-            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
-
-            var weeeClient = A.Dummy<Func<IWeeeClient>>();
-
-            var controller = new OrganisationRegistrationController(
-                weeeClient,
-                organisationSearcher,
-                configurationService,
-                transactionService,
-                weeeCache,
-                () => companiesHouseClient);
-
             var result = await controller.Type() as ViewResult;
 
             var resultViewModel = result.Model as OrganisationTypeViewModel;
@@ -696,18 +528,6 @@
         [InlineData("Registered company", "OrganisationDetails")]
         public async Task TypePost_ValidViewModel_ReturnsCorrectRedirect(string selectedValue, string action)
         {
-            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
-
-            var weeeClient = A.Dummy<Func<IWeeeClient>>();
-
-            var controller = new OrganisationRegistrationController(
-                weeeClient,
-                organisationSearcher,
-                configurationService,
-                transactionService,
-                weeeCache,
-                () => companiesHouseClient);
-
             var viewModel = new OrganisationTypeViewModel()
             {
                 SelectedValue = selectedValue,
@@ -726,17 +546,6 @@
         public async void TonnageTypeGet_ReturnsViewWithViewModel_WithSearchText()
         {
             // Arrange
-            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
-            var weeeClient = A.Dummy<Func<IWeeeClient>>();
-
-            var controller = new OrganisationRegistrationController(
-                weeeClient,
-                organisationSearcher,
-                configurationService,
-                transactionService,
-                weeeCache,
-                () => companiesHouseClient);
-
             const string searchText = "company";
 
             // Act
@@ -775,17 +584,6 @@
         public async void TonnageTypePost_ModelNotValid_ReturnsView()
         {
             // Arrange
-            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
-            var weeeClient = A.Dummy<Func<IWeeeClient>>();
-
-            var controller = new OrganisationRegistrationController(
-                weeeClient,
-                organisationSearcher,
-                configurationService,
-                transactionService,
-                weeeCache,
-                () => companiesHouseClient);
-
             controller.ModelState.AddModelError("error", "error");
 
             const string searchText = "company";
@@ -811,18 +609,6 @@
             string correctController)
         {
             // Arrange
-            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
-
-            var weeeClient = A.Dummy<Func<IWeeeClient>>();
-
-            var controller = new OrganisationRegistrationController(
-                weeeClient,
-                organisationSearcher,
-                configurationService,
-                transactionService,
-                weeeCache,
-                () => companiesHouseClient);
-
             const string searchText = "company";
             var viewModel = new TonnageTypeViewModel()
             {
@@ -847,17 +633,6 @@
         public void FiveTonnesOrMoreGet_ReturnsView()
         {
             // Arrange
-            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
-            var weeeClient = A.Dummy<Func<IWeeeClient>>();
-
-            var controller = new OrganisationRegistrationController(
-                weeeClient,
-                organisationSearcher,
-                configurationService,
-                transactionService,
-                weeeCache,
-                () => companiesHouseClient);
-
             // Act
             var result = controller.FiveTonnesOrMore();
 
