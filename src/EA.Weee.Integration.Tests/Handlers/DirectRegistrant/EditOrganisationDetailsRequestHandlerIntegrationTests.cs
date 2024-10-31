@@ -67,7 +67,7 @@
                 var address = AddressDbSetup.Init().Create();
 
                 var directProducerSubmissionHistory = DirectRegistrantSubmissionHistoryDbSetup.Init()
-                    .WithBusinessAddress(address.Id)
+                    .WithBusinessAddress(address)
                     .WithBrandName(fixture.Create<string>())
                     .WithDirectProducerSubmission(directProducerSubmission).Create();
 

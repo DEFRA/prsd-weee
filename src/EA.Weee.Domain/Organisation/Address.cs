@@ -40,7 +40,7 @@
         private string email;
         private string webAddress;
 
-        public virtual Country Country { get; protected set; }
+        public virtual Country Country { get; set; }
 
         public virtual Guid CountryId { get; private set; }
 

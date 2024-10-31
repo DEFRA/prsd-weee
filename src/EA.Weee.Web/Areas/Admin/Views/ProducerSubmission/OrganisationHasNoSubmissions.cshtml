@@ -9,7 +9,10 @@
 }
 @section full_main_content
 {
-    @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.ProducersController>(a => a.Search(SearchTypeEnum.SmallProducer))))
+    @if (Model.DisplayBack)
+    {
+        @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.ProducersController>(a => a.Search(SearchTypeEnum.SmallProducer))))
+    }
 
     <header class="hgroup">
         <h1 class="govuk-heading-l">@title</h1>

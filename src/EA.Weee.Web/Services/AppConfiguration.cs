@@ -131,5 +131,13 @@
         public string GovUkPayTokenSalt { get; set; }
 
         public TimeSpan GovUkPayTokenLifeTime { get; set; }
+
+        public string OAuthTokenEndpoint { get; set; }
+
+        public string OAuthTokenClientId { get; set; }
+
+        public string OAuthTokenClientSecret { get; set; }
+
+        public string CompaniesHouseScope { get; set; }
     }
 }
