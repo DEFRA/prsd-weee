@@ -7,5 +7,7 @@
     public interface IAddressLookupClient : IDisposable
     {
         Task<AddressLookupResponse> GetAddressDetailsAsync(string endpoint, string postcode, string street);
+
+        Task<AddressLookupResponse> GetAddressesAsync(string endpoint, string postcode);
     }
 }
