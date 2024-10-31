@@ -256,7 +256,7 @@
         [AuthorizeInternalClaims(Claims.InternalAdmin)]
         [AdminSmallProducerSubmissionContext(Order = 1)]
         [HttpGet]
-        public ActionResult ReturnProducerRegistration(string registrationNumber, int year, Guid directProducerSubmissionId)
+        public ActionResult ReturnProducerRegistration(string registrationNumber, int year)
         {
             SetBreadcrumb();
 
@@ -272,7 +272,7 @@
                     RegistrationNumber = registrationNumber,
                     RegisteredProducerId = submission.RegisteredProducerId
                 },
-                DirectProducerSubmissionId = directProducerSubmissionId
+                DirectProducerSubmissionId = submission.DirectProducerSubmissionId
             };
 
             return View(model);
@@ -282,6 +282,8 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ReturnProducerRegistration(ConfirmReturnViewModel viewModel)
         {
+            SetBreadcrumb();
+
             if (ModelState.IsValid)
             {
                 if (viewModel.SelectedValue == "Yes")
@@ -310,6 +312,8 @@
         [HttpGet]
         public ActionResult Returned(string registrationNumber, string producerName, int year)
         {
+            SetBreadcrumb();
+
             return View(new ReturnedViewModel
             {
                 RegistrationNumber = registrationNumber,

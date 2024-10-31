@@ -751,7 +751,7 @@
             var producerName = controller.SmallProducerSubmissionData.HasAuthorisedRepresentitive ? controller.SmallProducerSubmissionData.AuthorisedRepresentitiveData.CompanyName : submission.CompanyName;
 
             // Act
-            var result = controller.ReturnProducerRegistration(registrationNumber, year, submission.DirectProducerSubmissionId) as ViewResult;
+            var result = controller.ReturnProducerRegistration(registrationNumber, year) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -779,7 +779,7 @@
             var producerName = controller.SmallProducerSubmissionData.HasAuthorisedRepresentitive ? controller.SmallProducerSubmissionData.AuthorisedRepresentitiveData.CompanyName : submission.CompanyName;
 
             // Act
-            var result = controller.ReturnProducerRegistration(registrationNumber, year, submission.DirectProducerSubmissionId) as ViewResult;
+            var result = controller.ReturnProducerRegistration(registrationNumber, year) as ViewResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -798,7 +798,7 @@
         public void ReturnProducerRegistration_Get_ShouldHaveContextAttribute()
         {
             // Arrange
-            var methodInfo = typeof(ProducerSubmissionController).GetMethod("ReturnProducerRegistration", new[] { typeof(string), typeof(int), typeof(Guid) });
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("ReturnProducerRegistration", new[] { typeof(string), typeof(int) });
 
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<AdminSmallProducerSubmissionContextAttribute>();
@@ -817,7 +817,7 @@
             var submission = controller.SmallProducerSubmissionData.SubmissionHistory[year];
 
             // Act
-            var result = controller.ReturnProducerRegistration(registrationNumber, year, submission.DirectProducerSubmissionId) as ViewResult;
+            var result = controller.ReturnProducerRegistration(registrationNumber, year) as ViewResult;
 
             breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.DirectRegistrantDetails);
         }
@@ -912,6 +912,7 @@
             //Assert
             var model = result.Model as ConfirmReturnViewModel;
             model.Should().Be(vm);
+            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.DirectRegistrantDetails);
         }
 
         [Fact]
@@ -923,6 +924,21 @@
             // Act & Assert
             methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
             methodInfo.Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
+        }
+
+        [Fact]
+        public void Returned_Get_SetsBreadcrumb()
+        {
+            // Arrange
+            var registrationNumber = "testRegNo";
+            var producerName = "testProducer";
+            var year = 2024;
+
+            // Act
+            var result = controller.Returned(registrationNumber, producerName, year) as ViewResult;
+
+            // Assert
+            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.DirectRegistrantDetails);
         }
 
         [Fact]

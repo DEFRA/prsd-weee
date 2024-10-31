@@ -10,7 +10,7 @@
 
 @section full_main_content
 {
-    @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.ProducerSubmissionController>(a => a.Submissions(Model.Producer.RegistrationNumber, null))))
+    @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.ProducerSubmissionController>(a => a.Submissions(Model.Producer.RegistrationNumber, Model.Producer.ComplianceYear))))
 
     <header class="hgroup">
         <h1 class="govuk-heading-l">
@@ -27,6 +27,8 @@
         @Html.HiddenFor(m => m.Producer.ComplianceYear, new { id = "year" })
         @Html.HiddenFor(m => m.Producer.RegisteredProducerId, new { id = "registeredProducerId" })
         @Html.HiddenFor(m => m.Producer.ProducerName)
+        @Html.HiddenFor(m => m.DirectProducerSubmissionId)
+
 
         <p class="govuk-body govuk-!-margin-bottom-0">The following producer submission will be returned to the producer.</p>
 
