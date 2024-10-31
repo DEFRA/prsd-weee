@@ -188,6 +188,8 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RemoveSubmission(ConfirmRemovalViewModel viewModel)
         {
+            SetBreadcrumb();
+
             if (ModelState.IsValid)
             {
                 if (viewModel.SelectedValue == "Yes")
@@ -222,6 +224,8 @@
         [HttpGet]
         public ActionResult Removed(string registrationNumber, string producerName, int year)
         {
+            SetBreadcrumb();
+
             return View(new RemovedViewModel
             {
                 RegistrationNumber = registrationNumber,
@@ -334,13 +338,14 @@
         }
 
         [HttpGet]
-        public ActionResult OrganisationHasNoSubmissions(Guid organisationId)
+        public ActionResult OrganisationHasNoSubmissions(Guid organisationId, bool? fromRemoved = false)
         {
             SetBreadcrumb();
 
             var model = new OrganisationIdViewModel()
             {
-                OrganisationId = organisationId
+                OrganisationId = organisationId,
+                DisplayBack = fromRemoved == false
             };
 
             return View(model);
@@ -348,7 +353,7 @@
 
         private ActionResult RedirectToOrganisationHasNoSubmissions(Guid organisationId)
         {
-            return RedirectToAction("OrganisationHasNoSubmissions", new { organisationId });
+            return RedirectToAction("OrganisationHasNoSubmissions", new { organisationId, fromRemoved = true});
         }
 
         private async Task<ManualPaymentResult> SendPaymentDetails(PaymentDetailsViewModel model)
