@@ -2,6 +2,7 @@
 {
     using CuttingEdge.Conditions;
     using EA.Prsd.Core.Mediator;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using System;
 
@@ -17,7 +18,9 @@
 
         public AddressData BusinessAddressData {get; private set; }
 
-        public EditOrganisationDetailsRequest(Guid directRegistrantId, string companyName, string tradingName, AddressData businessAddressData, string eeeBrandNames)
+        public string CompanyRegistrationNumber { get; set; }
+
+        public EditOrganisationDetailsRequest(Guid directRegistrantId, string companyName, string tradingName, AddressData businessAddressData, string eeeBrandNames, string companyRegistrationNumber)
         {
             Condition.Requires(directRegistrantId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(companyName).IsNotNullOrWhiteSpace();
@@ -28,6 +31,7 @@
             TradingName = tradingName;
             BusinessAddressData = businessAddressData;
             EEEBrandNames = eeeBrandNames;
+            CompanyRegistrationNumber = companyRegistrationNumber;
         }
     }
 }
