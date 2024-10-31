@@ -318,7 +318,7 @@
         }
 
         [Fact]
-        public async Task AddPaymentDetails_Get_SetsBreadCrumb()
+        public void AddPaymentDetails_Get_SetsBreadCrumb()
         {
             SetupDefaultControllerData();
 
@@ -672,6 +672,71 @@
             //Assert
             result.RouteValues["RegistrationNumber"].Should().Be(vm.RegistrationNumber);
             result.RouteValues["action"].Should().Be(nameof(ProducerSubmissionController.Submissions));
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        [InlineData(null)]
+        public void OrganisationHasNoSubmissions_Get_SetsCorrectDisplayBackValue(bool? fromRemoved)
+        {
+            // Arrange
+            SetupDefaultControllerData();
+            var organisationId = Guid.NewGuid();
+
+            // Act
+            var result = controller.OrganisationHasNoSubmissions(organisationId, fromRemoved) as ViewResult;
+
+            // Assert
+            var model = result.Model as OrganisationIdViewModel;
+            model.DisplayBack.Should().Be(fromRemoved == false);
+            model.OrganisationId.Should().Be(organisationId);
+        }
+
+        [Fact]
+        public async Task Removed_Post_NoSubmissions_RedirectsToNoSubmissionsWithFromRemovedTrue()
+        {
+            // Arrange
+            SetupDefaultControllerData();
+            controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>();
+
+            var vm = new RemovedViewModel
+            {
+                ComplianceYear = 2004,
+                ProducerName = "Test",
+                RegistrationNumber = "reg",
+                SchemeName = "s"
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                    A<GetSmallProducerSubmissionByRegistrationNumber>.That.Matches(s => s.RegistrationNumber == vm.RegistrationNumber)))
+                .Returns(controller.SmallProducerSubmissionData);
+
+            // Act
+            var result = await controller.Removed(vm) as RedirectToRouteResult;
+
+            //Assert
+            result.RouteValues["organisationId"].Should().Be(controller.SmallProducerSubmissionData.OrganisationData.Id);
+            result.RouteValues["fromRemoved"].Should().Be(true);
+            result.RouteValues["action"].Should().Be("OrganisationHasNoSubmissions");
+        }
+
+        [Fact]
+        public async Task RemoveSubmission_Post_SetsBreadcrumb()
+        {
+            // Arrange
+            SetupDefaultControllerData();
+            var vm = new ConfirmRemovalViewModel
+            {
+                SelectedValue = "No",
+                Producer = new ProducerDetailsScheme()
+            };
+
+            // Act
+            await controller.RemoveSubmission(vm);
+
+            // Assert
+            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.DirectRegistrantDetails);
         }
 
         [Fact]
