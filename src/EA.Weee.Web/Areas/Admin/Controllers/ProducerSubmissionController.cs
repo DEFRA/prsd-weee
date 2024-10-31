@@ -306,7 +306,7 @@
         [HttpGet]
         public ActionResult Returned(string registrationNumber, string producerName, int year)
         {
-            return View(new RemovedViewModel
+            return View(new ReturnedViewModel
             {
                 RegistrationNumber = registrationNumber,
                 ProducerName = producerName,
@@ -317,7 +317,7 @@
         [AuthorizeInternalClaims(Claims.InternalAdmin)]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Returned(RemovedViewModel model)
+        public async Task<ActionResult> Returned(ReturnedViewModel model)
         {
             using (var client = apiClient())
             {
