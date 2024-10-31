@@ -86,7 +86,6 @@
             result.EEEBrandNames.Should().BeEmpty();
             result.CompanyName.Should().Be(directRegistrant.Organisation.Name);
             result.TradingName.Should().Be(directRegistrant.Organisation.TradingName);
-            result.CompanyRegistrationNumber.Should().Be(directRegistrant.Organisation.CompanyRegistrationNumber);
         }
 
         [Theory]
@@ -226,7 +225,6 @@
             A.CallTo(() => currentSubmissionHistory.BrandNameId).Returns(Guid.NewGuid());
             A.CallTo(() => currentSubmissionHistory.CompanyName).Returns("Test Company");
             A.CallTo(() => currentSubmissionHistory.TradingName).Returns("Test Trading Name");
-            A.CallTo(() => currentSubmissionHistory.CompanyRegistrationNumber).Returns("12345678");
             A.CallTo(() => currentSubmissionHistory.SellingTechniqueType).Returns(Domain.Producer.Classfication.SellingTechniqueType.Both.Value);
             A.CallTo(() => currentSubmissionHistory.ContactAddressId).Returns(Guid.NewGuid());
             A.CallTo(() => currentSubmissionHistory.ContactId).Returns(Guid.NewGuid());
@@ -253,7 +251,6 @@
             A.CallTo(() => currentSubmissionHistory.BrandName).Returns(null);
             A.CallTo(() => currentSubmissionHistory.CompanyName).Returns(null);
             A.CallTo(() => currentSubmissionHistory.TradingName).Returns(null);
-            A.CallTo(() => currentSubmissionHistory.CompanyRegistrationNumber).Returns(null);
         }
 
         private void VerifyAllPropertiesMapped(SmallProducerSubmissionHistoryData result, DirectProducerSubmissionHistory currentSubmissionHistory)
@@ -265,7 +262,6 @@
             result.EEEBrandNames.Should().Be("Test Brand");
             result.CompanyName.Should().Be("Test Company");
             result.TradingName.Should().Be("Test Trading Name");
-            result.CompanyRegistrationNumber.Should().Be("12345678");
             result.SellingTechnique.Should().Be((SellingTechniqueType)Domain.Producer.Classfication.SellingTechniqueType.Both.Value);
 
             VerifyMapperCalls(currentSubmissionHistory);
@@ -276,7 +272,6 @@
             result.EEEBrandNames.Should().Be("Fallback Brand");
             result.CompanyName.Should().Be("Fallback Company");
             result.TradingName.Should().Be("Fallback Trading Name");
-            result.CompanyRegistrationNumber.Should().Be("87654321");
 
             VerifyMapperCalls(directRegistrant);
         }
