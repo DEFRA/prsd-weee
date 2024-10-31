@@ -830,7 +830,7 @@
         {
             using (var wrapper = new DatabaseWrapper())
             {
-                var (_, _) = DirectRegistrantHelper.SetupCommonTestData(wrapper);
+                DirectRegistrantHelper.SetupCommonTestData(wrapper);
 
                 const int complianceYear = 2080;
                 var (_, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear);
