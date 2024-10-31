@@ -23,6 +23,12 @@
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<DirectProducerSubmission> GetCurrentDirectRegistrantSubmissionById(Guid directProducerSubmissionId)
+        {
+            return await context.DirectProducerSubmissions.Where(d =>
+                d.Id == directProducerSubmissionId).FirstOrDefaultAsync();
+        }
+
         public async Task<DirectRegistrant> GetDirectRegistrantByOrganisationId(Guid organisationId)
         {
             return await context.DirectRegistrants.Include(directRegistrant1 => directRegistrant1.Organisation)

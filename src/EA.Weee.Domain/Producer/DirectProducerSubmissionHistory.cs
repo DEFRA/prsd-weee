@@ -29,7 +29,7 @@
 
         public virtual Guid? BusinessAddressId { get; private set; }
 
-        public virtual Guid? ContactAddressId { get; private set; }
+        public virtual Guid? ContactAddressId { get; set; }
 
         public virtual Guid? BrandNameId { get; private set; }
 
@@ -39,11 +39,11 @@
 
         public virtual Contact AppropriateSignatory { get; private set; }
 
-        public virtual Address ContactAddress { get; private set; }
+        public virtual Address ContactAddress { get; set; }
 
-        public virtual Contact Contact { get; private set; }
+        public virtual Contact Contact { get; set; }
 
-        public virtual Address BusinessAddress { get; private set; }
+        public virtual Address BusinessAddress { get; set; }
 
         public virtual BrandName BrandName { get; set; }
 

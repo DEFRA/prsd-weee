@@ -106,7 +106,7 @@
                     .Create();
 
                 directProducerSubmissionHistory = DirectRegistrantSubmissionHistoryDbSetup.Init()
-                    .WithAuthorisedRep(submissionAuthorisedRep.Id)
+                    .WithAuthorisedRep(submissionAuthorisedRep)
                     .WithDirectProducerSubmission(directProducerSubmission).Create();
 
                 Query.UpdateCurrentProducerSubmission(directProducerSubmission.Id, directProducerSubmissionHistory.Id);
