@@ -739,6 +739,246 @@
             breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.DirectRegistrantDetails);
         }
 
+        [Fact]
+        public void ReturnProducerRegistration_Get_HasAuthorisedRepresentitive_ReturnAndPopulatesViewModel()
+        {
+            // Arrange
+            SetupDefaultControllerData();
+
+            string registrationNumber = "reg";
+            int year = 2024;
+            var submission = controller.SmallProducerSubmissionData.SubmissionHistory[year];
+            var producerName = controller.SmallProducerSubmissionData.HasAuthorisedRepresentitive ? controller.SmallProducerSubmissionData.AuthorisedRepresentitiveData.CompanyName : submission.CompanyName;
+
+            // Act
+            var result = controller.ReturnProducerRegistration(registrationNumber, year) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+            result.Model.Should().NotBeNull();
+
+            var viewModel = result.Model as ConfirmReturnViewModel;
+
+            viewModel.Producer.RegistrationNumber.Should().Be(registrationNumber);
+            viewModel.Producer.ComplianceYear.Should().Be(year);
+            viewModel.Producer.ProducerName.Should().Be(producerName);
+            viewModel.Producer.RegisteredProducerId.Should().Be(submission.RegisteredProducerId);
+        }
+
+        [Fact]
+        public void ReturnProducerRegistration_Get_NotHasAuthorisedRepresentitive_ReturnAndPopulatesViewModel()
+        {
+            // Arrange
+            SetupDefaultControllerData();
+            controller.SmallProducerSubmissionData.HasAuthorisedRepresentitive = false;
+
+            string registrationNumber = "reg";
+            int year = 2024;
+            var submission = controller.SmallProducerSubmissionData.SubmissionHistory[year];
+            var producerName = controller.SmallProducerSubmissionData.HasAuthorisedRepresentitive ? controller.SmallProducerSubmissionData.AuthorisedRepresentitiveData.CompanyName : submission.CompanyName;
+
+            // Act
+            var result = controller.ReturnProducerRegistration(registrationNumber, year) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.ViewName.Should().BeEmpty();
+            result.Model.Should().NotBeNull();
+
+            var viewModel = result.Model as ConfirmReturnViewModel;
+
+            viewModel.Producer.RegistrationNumber.Should().Be(registrationNumber);
+            viewModel.Producer.ComplianceYear.Should().Be(year);
+            viewModel.Producer.ProducerName.Should().Be(producerName);
+            viewModel.Producer.RegisteredProducerId.Should().Be(submission.RegisteredProducerId);
+        }
+
+        [Fact]
+        public void ReturnProducerRegistration_Get_ShouldHaveContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("ReturnProducerRegistration", new[] { typeof(string), typeof(int) });
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<AdminSmallProducerSubmissionContextAttribute>();
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+            methodInfo.Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
+        }
+
+        [Fact]
+        public void ReturnProducerRegistration_Get_SetsBreadCrumb()
+        {
+            SetupDefaultControllerData();
+            controller.SmallProducerSubmissionData.HasAuthorisedRepresentitive = false;
+
+            string registrationNumber = "reg";
+            int year = 2024;
+            var submission = controller.SmallProducerSubmissionData.SubmissionHistory[year];
+
+            // Act
+            var result = controller.ReturnProducerRegistration(registrationNumber, year) as ViewResult;
+
+            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.DirectRegistrantDetails);
+        }
+
+        [Fact]
+        public async Task ReturnProducerRegistration_Post_SelectValueYes_ReturnsAndRedirectsProducerValues()
+        {
+            // Arrange
+            SetupDefaultControllerData();
+
+            var vm = new ConfirmReturnViewModel
+            {
+                PossibleValues = new[] { string.Empty },
+                SelectedValue = "Yes",
+                Producer = new Core.Admin.ProducerDetailsScheme
+                {
+                    ComplianceYear = 2004,
+                    RegistrationNumber = "regno",
+                    ProducerName = "name",
+                    RegisteredProducerId = Guid.NewGuid()
+                },
+                DirectProducerSubmissionId = Guid.NewGuid()
+            };
+
+            // Act
+            var result = await controller.ReturnProducerRegistration(vm) as RedirectToRouteResult;
+
+            //Assert
+            result.RouteValues["registrationNumber"].Should().Be(vm.Producer.RegistrationNumber);
+            result.RouteValues["producerName"].Should().Be(vm.Producer.ProducerName);
+            result.RouteValues["year"].Should().Be(vm.Producer.ComplianceYear);
+            result.RouteValues["action"].Should().Be(nameof(ProducerSubmissionController.Returned));
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+            A<ReturnSmallProducerSubmission>.That.Matches(s => s.DirectProducerSubmissionId == vm.DirectProducerSubmissionId)))
+            .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task ReturnProducerRegistration_Post_SelectValueNo_ReturnsSubmissionsView()
+        {
+            // Arrange
+            SetupDefaultControllerData();
+
+            var vm = new ConfirmReturnViewModel
+            {
+                PossibleValues = new[] { string.Empty },
+                SelectedValue = "No",
+                Producer = new Core.Admin.ProducerDetailsScheme
+                {
+                    ComplianceYear = 2004,
+                    RegistrationNumber = "regno",
+                    ProducerName = "name",
+                    RegisteredProducerId = Guid.NewGuid()
+                },
+                DirectProducerSubmissionId = Guid.NewGuid()
+            };
+
+            // Act
+            var result = await controller.ReturnProducerRegistration(vm) as RedirectToRouteResult;
+
+            //Assert
+            result.RouteValues["RegistrationNumber"].Should().Be(vm.Producer.RegistrationNumber);
+            result.RouteValues["action"].Should().Be(nameof(ProducerSubmissionController.Submissions));
+        }
+
+        [Fact]
+        public async Task ReturnProducerRegistration_Post_ModelStateInvalid_ReturnsView()
+        {
+            // Arrange
+            SetupDefaultControllerData();
+
+            var vm = new ConfirmReturnViewModel
+            {
+                PossibleValues = new[] { string.Empty },
+                SelectedValue = "No",
+                Producer = new Core.Admin.ProducerDetailsScheme
+                {
+                    ComplianceYear = 2004,
+                    RegistrationNumber = "regno",
+                    ProducerName = "name",
+                    RegisteredProducerId = Guid.NewGuid()
+                },
+                DirectProducerSubmissionId = Guid.NewGuid()
+            };
+
+            controller.ModelState.AddModelError("Field", "Problem");
+
+            // Act
+            var result = await controller.ReturnProducerRegistration(vm) as ViewResult;
+
+            //Assert
+            var model = result.Model as ConfirmReturnViewModel;
+            model.Should().Be(vm);
+            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.DirectRegistrantDetails);
+        }
+
+        [Fact]
+        public void Returned_Get_ShouldHaveContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("Returned", new[] { typeof(string), typeof(string), typeof(int) });
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+            methodInfo.Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
+        }
+
+        [Fact]
+        public void Returned_Get_SetsBreadcrumb()
+        {
+            // Arrange
+            var registrationNumber = "testRegNo";
+            var producerName = "testProducer";
+            var year = 2024;
+
+            // Act
+            var result = controller.Returned(registrationNumber, producerName, year) as ViewResult;
+
+            // Assert
+            breadcrumbService.InternalActivity.Should().Be(InternalUserActivity.DirectRegistrantDetails);
+        }
+
+        [Fact]
+        public void Returned_Post_ShouldHaveContextAttribute()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("Returned", new[] { typeof(ReturnedViewModel) });
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<HttpPostAttribute>();
+            methodInfo.Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
+            methodInfo.Should().BeDecoratedWith<ValidateAntiForgeryTokenAttribute>();
+        }
+
+        [Fact]
+        public async Task Returned_Post_submissions_RedirectsToSubmissions()
+        {
+            // Arrange
+            SetupDefaultControllerData();
+
+            var vm = new ReturnedViewModel
+            {
+                ComplianceYear = 2004,
+                ProducerName = "Test",
+                RegistrationNumber = "reg",
+                SchemeName = "s"
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+              A<GetSmallProducerSubmissionByRegistrationNumber>.That.Matches(s => s.RegistrationNumber == vm.RegistrationNumber)))
+             .Returns(controller.SmallProducerSubmissionData);
+
+            // Act
+            var result = await controller.Returned(vm) as RedirectToRouteResult;
+
+            //Assert
+            result.RouteValues["RegistrationNumber"].Should().Be(vm.RegistrationNumber);
+            result.RouteValues["action"].Should().Be(nameof(ProducerSubmissionController.Submissions));
+        }
+
         private void SetupDefaultControllerData()
         {
             controller.SmallProducerSubmissionData = new SmallProducerSubmissionData

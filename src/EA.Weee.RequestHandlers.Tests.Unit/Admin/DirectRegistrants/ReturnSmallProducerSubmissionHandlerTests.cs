@@ -100,7 +100,7 @@
             await handler.HandleAsync(request);
 
             // Assert
-            A.CallTo(() => authorization.EnsureUserInRole(Roles.InternalUser))
+            A.CallTo(() => authorization.EnsureUserInRole(Roles.InternalAdmin))
                 .MustHaveHappenedOnceExactly();
         }
 
