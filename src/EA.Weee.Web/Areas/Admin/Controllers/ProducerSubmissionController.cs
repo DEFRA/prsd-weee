@@ -7,7 +7,10 @@
     using EA.Weee.Core.Admin;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Admin.DirectRegistrants;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Home;
+    using EA.Weee.Web.Areas.Producer.Filters;
     using EA.Weee.Web.Filters;
+    using EA.Weee.Web.Services;
     using Filters;
     using Infrastructure;
     using Security;
@@ -24,20 +27,24 @@
         public SmallProducerSubmissionData SmallProducerSubmissionData;
         private readonly IWeeeCache cache;
         private readonly ISubmissionService submissionService;
+        private readonly BreadcrumbService breadcrumbService;
         private readonly Func<IWeeeClient> apiClient;
 
         public ProducerSubmissionController(
             Func<IWeeeClient> apiClient,
             IWeeeCache cache,
-            ISubmissionService submissionService)
+            ISubmissionService submissionService,
+            BreadcrumbService breadcrumbService)
         {
             this.apiClient = apiClient;
             this.cache = cache;
             this.submissionService = submissionService;
+            this.breadcrumbService = breadcrumbService;
             this.apiClient = apiClient;
         }
 
-        [AdminSmallProducerSubmissionContext]
+        [AdminSmallProducerSubmissionContext(Order = 1)]
+        [AdminSmallProducerSubmissionSubmittedContext(Order = 2)]
         [HttpGet]
         public async Task<ActionResult> Submissions(string registrationNumber, int? year = null)
         {
@@ -51,7 +58,8 @@
             return View("Producer/ViewOrganisation/OrganisationDetails", model);
         }
 
-        [AdminSmallProducerSubmissionContext]
+        [AdminSmallProducerSubmissionContext(Order = 1)]
+        [AdminSmallProducerSubmissionSubmittedContext(Order = 2)]
         [HttpGet]
         public async Task<ActionResult> OrganisationDetails(string registrationNumber, int? year = null)
         {
@@ -65,7 +73,8 @@
             return View("Producer/ViewOrganisation/OrganisationDetails", model);
         }
 
-        [AdminSmallProducerSubmissionContext]
+        [AdminSmallProducerSubmissionContext(Order = 1)]
+        [AdminSmallProducerSubmissionSubmittedContext(Order = 2)]
         [HttpGet]
         public async Task<ActionResult> ContactDetails(string registrationNumber, int? year = null)
         {
@@ -78,7 +87,8 @@
             return View("Producer/ViewOrganisation/ContactDetails", model);
         }
 
-        [AdminSmallProducerSubmissionContext]
+        [AdminSmallProducerSubmissionContext(Order = 1)]
+        [AdminSmallProducerSubmissionSubmittedContext(Order = 2)]
         [HttpGet]
         public async Task<ActionResult> ServiceOfNoticeDetails(string registrationNumber, int? year = null)
         {
@@ -91,7 +101,8 @@
             return View("Producer/ViewOrganisation/ServiceOfNoticeDetails", model);
         }
 
-        [AdminSmallProducerSubmissionContext]
+        [AdminSmallProducerSubmissionContext(Order = 1)]
+        [AdminSmallProducerSubmissionSubmittedContext(Order = 2)]
         [HttpGet]
         public async Task<ActionResult> RepresentedOrganisationDetails(string registrationNumber, int? year = null)
         {
@@ -104,7 +115,8 @@
             return View("Producer/ViewOrganisation/RepresentedOrganisationDetails", model);
         }
 
-        [AdminSmallProducerSubmissionContext]
+        [AdminSmallProducerSubmissionContext(Order = 1)]
+        [AdminSmallProducerSubmissionSubmittedContext(Order = 2)]
         [HttpGet]
         public async Task<ActionResult> TotalEEEDetails(string registrationNumber, int? year = null)
         {
@@ -118,13 +130,10 @@
         }
 
         [HttpGet]
-        [AdminSmallProducerSubmissionContext]
         [AuthorizeInternalClaims(Claims.InternalAdmin)]
-        public async Task<ActionResult> AddPaymentDetails(Guid directProducerSubmissionId, string registrationNumber, int? year)
+        public ActionResult AddPaymentDetails(Guid directProducerSubmissionId, string registrationNumber, int? year)
         {
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
-
-            await submissionService.SetTabsCrumb(year);
+            SetBreadcrumb();
 
             var model = new PaymentDetailsViewModel
             {
@@ -152,13 +161,11 @@
         }
 
         [AuthorizeInternalClaims(Claims.InternalAdmin)]
-        [AdminSmallProducerSubmissionContext]
+        [AdminSmallProducerSubmissionContext(Order = 1)]
         [HttpGet]
-        public async Task<ActionResult> RemoveSubmission(string registrationNumber, int year)
+        public ActionResult RemoveSubmission(string registrationNumber, int year)
         {
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, true);
-
-            await submissionService.SetTabsCrumb(year);
+            SetBreadcrumb();
 
             var submission = SmallProducerSubmissionData.SubmissionHistory[year];
             var selectedValue = string.Empty;
@@ -181,6 +188,8 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RemoveSubmission(ConfirmRemovalViewModel viewModel)
         {
+            SetBreadcrumb();
+
             if (ModelState.IsValid)
             {
                 if (viewModel.SelectedValue == "Yes")
@@ -215,6 +224,8 @@
         [HttpGet]
         public ActionResult Removed(string registrationNumber, string producerName, int year)
         {
+            SetBreadcrumb();
+
             return View(new RemovedViewModel
             {
                 RegistrationNumber = registrationNumber,
@@ -231,7 +242,7 @@
             using (var client = apiClient())
             {
                 SmallProducerSubmissionData = await client.SendAsync(User.GetAccessToken(), new GetSmallProducerSubmissionByRegistrationNumber(model.RegistrationNumber));
-                
+
                 if (SmallProducerSubmissionData.AnySubmissions)
                 {
                     return RedirectToAction(nameof(Submissions),
@@ -242,12 +253,98 @@
             }
         }
 
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        [AdminSmallProducerSubmissionContext(Order = 1)]
         [HttpGet]
-        public ActionResult OrganisationHasNoSubmissions(Guid organisationId)
+        public ActionResult ReturnProducerRegistration(string registrationNumber, int year)
         {
+            SetBreadcrumb();
+
+            var submission = SmallProducerSubmissionData.SubmissionHistory[year];
+            var selectedValue = string.Empty;
+            var model = new ConfirmReturnViewModel
+            {
+                SelectedValue = selectedValue,
+                Producer = new ProducerDetailsScheme
+                {
+                    ComplianceYear = year,
+                    ProducerName = SmallProducerSubmissionData.HasAuthorisedRepresentitive ? SmallProducerSubmissionData.AuthorisedRepresentitiveData.CompanyName : submission.CompanyName,
+                    RegistrationNumber = registrationNumber,
+                    RegisteredProducerId = submission.RegisteredProducerId
+                },
+                DirectProducerSubmissionId = submission.DirectProducerSubmissionId
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ReturnProducerRegistration(ConfirmReturnViewModel viewModel)
+        {
+            SetBreadcrumb();
+
+            if (ModelState.IsValid)
+            {
+                if (viewModel.SelectedValue == "Yes")
+                {
+                    using (IWeeeClient client = apiClient())
+                    {
+                        await client.SendAsync(User.GetAccessToken(), new ReturnSmallProducerSubmission(viewModel.DirectProducerSubmissionId));
+                    }
+
+                    return RedirectToAction(nameof(Returned),
+                        new { registrationNumber = viewModel.Producer.RegistrationNumber, producerName = viewModel.Producer.ProducerName, year = viewModel.Producer.ComplianceYear });
+                }
+                else
+                {
+                    return RedirectToAction(nameof(Submissions),
+                        new { viewModel.Producer.RegistrationNumber });
+                }
+            }
+            else
+            {
+                return View(viewModel);
+            }
+        }
+
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        [HttpGet]
+        public ActionResult Returned(string registrationNumber, string producerName, int year)
+        {
+            SetBreadcrumb();
+
+            return View(new ReturnedViewModel
+            {
+                RegistrationNumber = registrationNumber,
+                ProducerName = producerName,
+                ComplianceYear = year
+            });
+        }
+
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Returned(ReturnedViewModel model)
+        {
+            using (var client = apiClient())
+            {
+                SmallProducerSubmissionData = await client.SendAsync(User.GetAccessToken(), new GetSmallProducerSubmissionByRegistrationNumber(model.RegistrationNumber));
+
+                return RedirectToAction(nameof(Submissions),
+                    new { model.RegistrationNumber });
+            }
+        }
+
+        [HttpGet]
+        public ActionResult OrganisationHasNoSubmissions(Guid organisationId, bool? fromRemoved = false)
+        {
+            SetBreadcrumb();
+
             var model = new OrganisationIdViewModel()
             {
-                OrganisationId = organisationId
+                OrganisationId = organisationId,
+                DisplayBack = fromRemoved == false
             };
 
             return View(model);
@@ -255,7 +352,7 @@
 
         private ActionResult RedirectToOrganisationHasNoSubmissions(Guid organisationId)
         {
-            return RedirectToAction("OrganisationHasNoSubmissions", new { organisationId });
+            return RedirectToAction("OrganisationHasNoSubmissions", new { organisationId, fromRemoved = true});
         }
 
         private async Task<ManualPaymentResult> SendPaymentDetails(PaymentDetailsViewModel model)
@@ -265,6 +362,11 @@
                 return await client.SendAsync(User.GetAccessToken(),
                     new AddPaymentDetails(model.PaymentMethod, model.PaymentReceivedDate, model.PaymentDetailsDescription, model.DirectProducerSubmissionId));
             }
+        }
+
+        private void SetBreadcrumb()
+        {
+            breadcrumbService.InternalActivity = InternalUserActivity.DirectRegistrantDetails;
         }
     }
 }

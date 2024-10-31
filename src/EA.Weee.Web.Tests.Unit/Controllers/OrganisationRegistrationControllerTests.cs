@@ -1231,7 +1231,10 @@
                     weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
                 .Returns(countries);
 
-            DefraCompaniesHouseApiModel defraCompaniesHouseApiModel = null;
+            DefraCompaniesHouseApiModel defraCompaniesHouseApiModel = new DefraCompaniesHouseApiModel()
+            {
+                Error = true
+            };
 
             A.CallTo(() =>
                     companiesHouseClient.GetCompanyDetailsAsync(
@@ -1269,7 +1272,10 @@
                     weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
                 .Returns(countries);
 
-            var defraCompaniesHouseApiModel = TestFixture.Build<DefraCompaniesHouseApiModel>().Create();
+            var defraCompaniesHouseApiModel = TestFixture.Build<DefraCompaniesHouseApiModel>()
+                .With(d => d.Error, false)
+                .With(d => d.InvalidReference, false)
+                .Create();
             defraCompaniesHouseApiModel.Organisation.RegisteredOffice.Country.Name = countries[0].Name;
 
             A.CallTo(() =>
@@ -2159,6 +2165,64 @@
             result.RouteValues["action"].Should().Be("RegistrationComplete");
             result.RouteValues["controller"].Should().Be("OrganisationRegistration");
             controller.ModelState.IsValid.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_Get_WithNoExistingTransaction_ReturnsDefaultViewModel()
+        {
+            // Arrange
+            var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(countries);
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns<OrganisationTransactionData>(null);
+
+            // Act
+            var result = await controller.OrganisationDetails() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var model = result.Model as RegisteredCompanyDetailsViewModel;
+            model.Should().NotBeNull();
+            model.OrganisationType.Should().Be(ExternalOrganisationType.RegisteredCompany);
+            model.Address.Countries.Should().BeEquivalentTo(countries);
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_Get_WithExistingTransaction_PopulatesViewModelCorrectly()
+        {
+            // Arrange
+            var existingTransaction = new OrganisationTransactionData
+            {
+                OrganisationType = ExternalOrganisationType.RegisteredCompany,
+                PreviousRegistration = PreviouslyRegisteredProducerType.YesPreviousSchemeMember,
+                OrganisationViewModel = new OrganisationViewModel()
+                {
+                    OrganisationType = ExternalOrganisationType.Partnership,
+                    CompanyName = "Test Company"
+                }
+            };
+
+            var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(existingTransaction);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(countries);
+
+            // Act
+            var result = await controller.OrganisationDetails() as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var model = result.Model as RegisteredCompanyDetailsViewModel;
+            model.Should().NotBeNull();
+            model.CompanyName.Should().Be("Test Company");
+            model.OrganisationType.Should().Be(ExternalOrganisationType.RegisteredCompany);
+            model.IsPreviousSchemeMember.Should().BeTrue();
+            model.Address.Countries.Should().BeEquivalentTo(countries);
         }
     }
 }

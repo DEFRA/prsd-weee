@@ -32,18 +32,6 @@
             return this;
         }
 
-        public DirectRegistrantSubmissionDbSetup WithSubmission(DirectProducerSubmissionHistory submissionHistory)
-        {
-            if (instance.SubmissionHistory == null)
-            {
-                instance.SubmissionHistory = new List<DirectProducerSubmissionHistory>();
-            }
-
-            instance.SubmissionHistory.Add(submissionHistory);
-
-            return this;
-        }
-
         public DirectRegistrantSubmissionDbSetup WithRegisteredProducer(RegisteredProducer registeredProducer)
         {
             ObjectInstantiator<DirectProducerSubmission>.SetProperty(o => o.RegisteredProducer, registeredProducer, instance);
@@ -54,6 +42,13 @@
         public DirectRegistrantSubmissionDbSetup WithComplianceYear(int year)
         {
             ObjectInstantiator<DirectProducerSubmission>.SetProperty(o => o.ComplianceYear, year, instance);
+
+            return this;
+        }
+
+        public DirectRegistrantSubmissionDbSetup WithStatus(DirectProducerSubmissionStatus status)
+        {
+            ObjectInstantiator<DirectProducerSubmission>.SetProperty(o => o.DirectProducerSubmissionStatus, status, instance);
 
             return this;
         }
