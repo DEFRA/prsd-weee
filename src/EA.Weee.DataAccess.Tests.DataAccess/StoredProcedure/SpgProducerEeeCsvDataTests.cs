@@ -450,7 +450,7 @@
             {
                 var (_, country) = DirectRegistrantHelper.SetupCommonTestData(wrapper);
 
-                var complianceYear = 2060;
+                const int complianceYear = 2060;
                 // Direct registrant data is for the previous year
                 var (organisation1, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear);
 
@@ -472,14 +472,17 @@
 
                 await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant2, registeredProducer2, complianceYear + 1, amounts2, DirectProducerSubmissionStatus.Complete);
 
-                //var (organisation3, directRegistrant3, registeredProducer3) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 3", "WEE/AG28365JX", complianceYear - 1);
+                // should not affect the sums as producer submission has been removed
+                var (_, directRegistrant3, registeredProducer3) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 3", "WEE/AG28165JX", complianceYear);
 
-                //var amounts3 = new List<DirectRegistrantHelper.EeeOutputAmountData>
-                //{
-                //    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.MedicalDevices, Amount = 4.456m, ObligationType = Domain.Obligation.ObligationType.B2C }
-                //};
+                var amounts3 = new List<DirectRegistrantHelper.EeeOutputAmountData>
+                {
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.MedicalDevices, Amount = 4.456m, ObligationType = Domain.Obligation.ObligationType.B2C }
+                };
 
-                //await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant2, registeredProducer2, complianceYear + 1, amounts2, DirectProducerSubmissionStatus.Complete);
+                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant3, registeredProducer3, complianceYear + 1, amounts3, DirectProducerSubmissionStatus.Complete);
+
+                registeredProducer3.Remove();
 
                 // Create a scheme for test or ordering
                 var organisation =
@@ -588,6 +591,49 @@
                     var expectedAmounts2 = new Dictionary<string, decimal> { { "Cat8Q4", 4.456m } };
                     AssertEeeElementData(results.ElementAt(2), organisation2, registeredProducer2, country, expectedAmounts2, 4.456m);
                 }
+            }
+        }
+
+        [Fact]
+        public async Task Execute_WithDirectRegistrantSubmissionsThatHaveBeenReturnedAndReSubmitted_ShouldUseLatestSubmittedNumbers()
+        {
+            using (var wrapper = new DatabaseWrapper())
+            {
+                var (_, country) = DirectRegistrantHelper.SetupCommonTestData(wrapper);
+
+                const int complianceYear = 2059;
+                // Direct registrant data is for the previous year
+                var (organisation1, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear);
+
+                var amounts1 = new List<DirectRegistrantHelper.EeeOutputAmountData>
+                {
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 1m, ObligationType = Domain.Obligation.ObligationType.B2C },
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C }
+                };
+
+                var submission = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear + 1, amounts1, DirectProducerSubmissionStatus.Complete);
+
+                DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 2", "WEE/AG38365JX", complianceYear);
+
+                await DirectRegistrantHelper.ReturnSubmission(wrapper, submission);
+
+                //update the amounts
+                var amounts2 = new List<DirectRegistrantHelper.EeeOutputAmountData>
+                {
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C },
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 3m, ObligationType = Domain.Obligation.ObligationType.B2C }
+                };
+
+                await DirectRegistrantHelper.SubmitSubmission(wrapper, submission, amounts2);
+
+                var results = await wrapper.WeeeContext.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, "B2C", false);
+
+                results.Should().NotBeNull();
+                
+                results.Count.Should().Be(1);
+
+                var expectedAmounts1 = new Dictionary<string, decimal> { { "Cat1Q4", 2m }, { "Cat4Q4", 3m } };
+                AssertEeeElementData(results.ElementAt(0), organisation1, registeredProducer1, country, expectedAmounts1, 5m);
             }
         }
 
