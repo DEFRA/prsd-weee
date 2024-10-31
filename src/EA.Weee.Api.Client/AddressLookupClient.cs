@@ -13,12 +13,12 @@
 
     public class AddressLookupClient : IAddressLookupClient
     {
+        private const int MaxResultsLimit = 200;
         private readonly IRetryPolicyWrapper retryPolicy;
         private readonly IJsonSerializer jsonSerializer;
         private readonly IHttpClientWrapper httpClient;
         private readonly IOAuthTokenProvider tokenProvider;
         private readonly ILogger logger;
-
         private bool disposed;
 
         public AddressLookupClient(
@@ -38,11 +38,47 @@
             Condition.Requires(logger).IsNotNull();
             Condition.Requires(tokenProvider).IsNotNull();
 
-            this.httpClient = httpClientFactory.CreateHttpClient(baseUrl, config, logger);
+            httpClient = httpClientFactory.CreateHttpClient(baseUrl, config, logger);
             this.retryPolicy = retryPolicy;
             this.jsonSerializer = jsonSerializer;
             this.tokenProvider = tokenProvider;
             this.logger = logger;
+        }
+
+        public async Task<AddressLookupResponse> GetAddressesAsync(string endpoint, string postcode)
+        {
+            Condition.Requires(endpoint).IsNotNullOrWhiteSpace("Endpoint cannot be null or whitespace.");
+
+            if (!IsValidPostcode(postcode))
+            {
+                logger.Warning("Invalid postcode format provided: {Postcode}", postcode);
+                return CreateErrorResponse(postcode, invalidRequest: true);
+            }
+
+            try
+            {
+                var token = await tokenProvider.GetAccessTokenAsync();
+                var initialResponse = await GetPagedResultsAsync(endpoint, postcode, token, 0);
+
+                if (initialResponse.Error)
+                {
+                    return initialResponse;
+                }
+
+                var totalResults = GetTotalResults(initialResponse);
+
+                if (totalResults > MaxResultsLimit)
+                {
+                    return CreateTooManyResultsResponse(postcode, totalResults, initialResponse.Header);
+                }
+
+                return await FetchAllResults(endpoint, postcode, token, initialResponse, totalResults);
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Error attempting to access address lookup API for {Postcode}", postcode);
+                return CreateErrorResponse(postcode);
+            }
         }
 
         public async Task<AddressLookupResponse> GetAddressDetailsAsync(string endpoint, string postcode, string buildingNameOrNumber)
@@ -52,190 +88,177 @@
             if (!IsValidSearchParameter(postcode, buildingNameOrNumber))
             {
                 logger.Warning("Not calling address lookup API invalid search parameters");
-
-                return new AddressLookupResponse()
-                {
-                    InvalidRequest = true
-                };
+                return CreateErrorResponse(postcode, invalidRequest: true);
             }
 
             try
             {
                 var token = await tokenProvider.GetAccessTokenAsync();
-                var allResults = new List<AddressResult>();
-                var offset = 0;
+                var initialResponse = await GetPagedResultsAsync(endpoint, postcode, token, 0);
+                var totalResults = GetTotalResults(initialResponse);
 
-                // Make initial request to get total result count
-                var initialRequestUri = BuildRequestUri(endpoint, postcode);
-                var initialResponse = await retryPolicy.ExecuteAsync(() =>
-                    httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Get, initialRequestUri)
-                    {
-                        Headers = { { "Authorization", $"Bearer {token}" } }
-                    })).ConfigureAwait(false);
-
-                initialResponse.EnsureSuccessStatusCode();
-                var initialContent = await initialResponse.Content.ReadAsStringAsync().ConfigureAwait(false);
-                var firstResponse = jsonSerializer.Deserialize<AddressLookupResponse>(initialContent);
-
-                // Ensure firstResponse is properly initialized
-                if (firstResponse == null)
+                if (totalResults > MaxResultsLimit)
                 {
-                    firstResponse = new AddressLookupResponse
-                    {
-                        Header = new Header
-                        {
-                            TotalResults = "0",
-                            Query = $"postcode={postcode}",
-                            Format = "JSON"
-                        },
-                        Results = new List<AddressResult>()
-                    };
+                    return CreateTooManyResultsResponse(postcode, totalResults, initialResponse.Header);
                 }
 
-                // Check total results count
-                if (!int.TryParse(firstResponse?.Header?.TotalResults, out var totalResults))
-                {
-                    totalResults = 0;
-                }
-
-                // If more than 200 results, return response indicating search is too broad as the Defra API only allows a maximum offset of 200
-                if (totalResults > 200)
-                {
-                    return new AddressLookupResponse()
-                    {
-                        Header = firstResponse?.Header ?? new Header
-                        {
-                            TotalResults = totalResults.ToString(),
-                            Query = $"postcode={postcode}",
-                            Format = "JSON"
-                        },
-                        Results = new List<AddressResult>(),
-                        SearchTooBroad = true
-                    };
-                }
-
-                // Add first page results
-                if (firstResponse.Results != null && firstResponse.Results.Any())
-                {
-                    allResults.AddRange(firstResponse.Results);
-                }
-
-                // Get remaining pages if needed
-                var pageResponse = firstResponse;
-                offset = firstResponse.Results?.Count ?? 0;
-
-                while (offset < totalResults && pageResponse?.Results?.Any() == true)
-                {
-                    var requestUri = BuildRequestUri(endpoint, postcode, offset);
-
-                    var response = await retryPolicy.ExecuteAsync(() =>
-                        httpClient.SendAsync(new HttpRequestMessage(HttpMethod.Get, requestUri)
-                        {
-                            Headers = { { "Authorization", $"Bearer {token}" } }
-                        })).ConfigureAwait(false);
-
-                    response.EnsureSuccessStatusCode();
-
-                    var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-                    pageResponse = jsonSerializer.Deserialize<AddressLookupResponse>(content);
-
-                    if (pageResponse?.Results != null && pageResponse.Results.Any())
-                    {
-                        allResults.AddRange(pageResponse.Results);
-                        offset += pageResponse.Results.Count;
-                    }
-                    else
-                    {
-                        break;
-                    }
-                }
-
-                // Filter collected results
-                if (allResults.Any())
-                {
-                    var filteredResults = allResults
-                        .Where(address =>
-                            ((!string.IsNullOrWhiteSpace(address.BuildingNumber) &&
-                              address.BuildingNumber.IndexOf(buildingNameOrNumber, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                             (!string.IsNullOrWhiteSpace(address.BuildingName) &&
-                              address.BuildingName.IndexOf(buildingNameOrNumber, StringComparison.OrdinalIgnoreCase) >= 0) ||
-                             (!string.IsNullOrWhiteSpace(address.SubBuildingName) &&
-                              address.SubBuildingName.IndexOf(buildingNameOrNumber, StringComparison.OrdinalIgnoreCase) >= 0)))
-                        .ToList();
-
-                    var response = new AddressLookupResponse
-                    {
-                        Header = firstResponse.Header ?? new Header
-                        {
-                            TotalResults = filteredResults.Count.ToString(),
-                            MatchingTotalResults = filteredResults.Count.ToString(),
-                            Query = $"postcode={postcode}",
-                            Format = "JSON"
-                        },
-                        Results = filteredResults,
-                        Info = firstResponse.Info
-                    };
-
-                    // Update the header counts if it exists
-                    if (response.Header != null)
-                    {
-                        response.Header.TotalResults = filteredResults.Count.ToString();
-                        response.Header.MatchingTotalResults = filteredResults.Count.ToString();
-                    }
-
-                    return response;
-                }
-
-                return new AddressLookupResponse
-                {
-                    Header = firstResponse.Header ?? new Header
-                    {
-                        TotalResults = "0",
-                        Query = $"postcode={postcode}",
-                        Format = "JSON"
-                    },
-                    Results = new List<AddressResult>()
-                };
+                var allResults = await FetchAllResults(endpoint, postcode, token, initialResponse, totalResults);
+                return FilterResults(allResults, buildingNameOrNumber, postcode);
             }
             catch (Exception ex)
             {
-                logger.Error($"Error attempting to access address lookup API for {postcode}", ex);
-                return new AddressLookupResponse()
-                {
-                    Error = true,
-                    Header = new Header
-                    {
-                        TotalResults = "0",
-                        Query = $"postcode={postcode}",
-                        Format = "JSON"
-                    },
-                    Results = new List<AddressResult>()
-                };
+                logger.Error(ex, "Error attempting to access address lookup API for {Postcode}", postcode);
+                return CreateErrorResponse(postcode);
             }
         }
-        private static bool IsValidSearchParameter(string postcode, string buildingNameOrNumber)
+
+        private async Task<AddressLookupResponse> GetPagedResultsAsync(string endpoint, string postcode, string token, int offset)
         {
-            if (string.IsNullOrWhiteSpace(postcode) || string.IsNullOrWhiteSpace(buildingNameOrNumber))
+            var requestUri = BuildRequestUri(endpoint, postcode, offset);
+
+            try
+            {
+                using (var request = CreateHttpRequest(requestUri, token))
+                {
+                    var response = await retryPolicy.ExecuteAsync(() => httpClient.SendAsync(request)).ConfigureAwait(false);
+
+                    response.EnsureSuccessStatusCode();
+                    var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+                    return jsonSerializer.Deserialize<AddressLookupResponse>(content) ?? CreateEmptyResponse(postcode);
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, "Failed to get paged results for postcode {Postcode}", postcode);
+                return CreateErrorResponse(postcode);
+            }
+        }
+
+        private async Task<AddressLookupResponse> FetchAllResults(string endpoint, string postcode, string token,
+            AddressLookupResponse initialResponse, int totalResults)
+        {
+            var allResults = new List<AddressResult>();
+            if (initialResponse.Results?.Any() == true)
+            {
+                allResults.AddRange(initialResponse.Results);
+            }
+
+            var offset = allResults.Count;
+            while (offset < totalResults)
+            {
+                var pageResponse = await GetPagedResultsAsync(endpoint, postcode, token, offset);
+
+                if (pageResponse.Error || pageResponse.Results?.Any() != true)
+                {
+                    break;
+                }
+
+                allResults.AddRange(pageResponse.Results);
+                offset += pageResponse.Results.Count;
+            }
+
+            return new AddressLookupResponse
+            {
+                Header = initialResponse.Header ?? CreateDefaultHeader(postcode, allResults.Count),
+                Results = allResults,
+                Info = initialResponse.Info
+            };
+        }
+
+        private static AddressLookupResponse FilterResults(AddressLookupResponse response, string buildingNameOrNumber, string postcode)
+        {
+            var filteredResults = response.Results?.Where(address => MatchesBuildingIdentifier(address, buildingNameOrNumber))
+                .ToList() ?? new List<AddressResult>();
+
+            var header = response.Header ?? CreateDefaultHeader(postcode, filteredResults.Count);
+            header.TotalResults = filteredResults.Count.ToString();
+            header.MatchingTotalResults = filteredResults.Count.ToString();
+
+            return new AddressLookupResponse
+            {
+                Header = header,
+                Results = filteredResults,
+                Info = response.Info
+            };
+        }
+
+        private static bool MatchesBuildingIdentifier(AddressResult address, string buildingNameOrNumber)
+        {
+            return ContainsIgnoreCase(address.BuildingNumber, buildingNameOrNumber) ||
+                   ContainsIgnoreCase(address.BuildingName, buildingNameOrNumber) ||
+                   ContainsIgnoreCase(address.SubBuildingName, buildingNameOrNumber);
+        }
+
+        private static bool ContainsIgnoreCase(string source, string target)
+        {
+            return !string.IsNullOrWhiteSpace(source) &&
+                   source.IndexOf(target, StringComparison.OrdinalIgnoreCase) >= 0;
+        }
+
+        private static HttpRequestMessage CreateHttpRequest(string requestUri, string token)
+        {
+            var request = new HttpRequestMessage(HttpMethod.Get, requestUri);
+            request.Headers.Add("Authorization", $"Bearer {token}");
+            return request;
+        }
+
+        private static bool IsValidPostcode(string postcode)
+        {
+            if (string.IsNullOrWhiteSpace(postcode))
             {
                 return false;
             }
 
             postcode = postcode.Replace(" ", string.Empty).ToUpper();
-
-            var isValidPostcode = ExternalAddressValidator.UkPostcodeRegex.IsMatch(postcode);
-
-            if (!isValidPostcode)
-            {
-                return false;
-            }
-
-            return true;
+            return ExternalAddressValidator.UkPostcodeRegex.IsMatch(postcode);
         }
+
+        private static bool IsValidSearchParameter(string postcode, string buildingNameOrNumber)
+        {
+            return !string.IsNullOrWhiteSpace(buildingNameOrNumber) && IsValidPostcode(postcode);
+        }
+
+        private static int GetTotalResults(AddressLookupResponse response)
+        {
+            return int.TryParse(response?.Header?.TotalResults, out var total) ? total : 0;
+        }
+
+        private static Header CreateDefaultHeader(string postcode, int totalResults) =>
+            new Header
+            {
+                TotalResults = totalResults.ToString(),
+                Query = $"postcode={postcode}",
+                Format = "JSON"
+            };
+
+        private static AddressLookupResponse CreateEmptyResponse(string postcode) =>
+            new AddressLookupResponse
+            {
+                Header = CreateDefaultHeader(postcode, 0),
+                Results = new List<AddressResult>()
+            };
+
+        private static AddressLookupResponse CreateErrorResponse(string postcode, bool invalidRequest = false) =>
+            new AddressLookupResponse
+            {
+                Error = !invalidRequest,
+                InvalidRequest = invalidRequest,
+                Header = CreateDefaultHeader(postcode, 0),
+                Results = new List<AddressResult>()
+            };
+
+        private static AddressLookupResponse CreateTooManyResultsResponse(string postcode, int totalResults, Header existingHeader) =>
+            new AddressLookupResponse
+            {
+                Header = existingHeader ?? CreateDefaultHeader(postcode, totalResults),
+                Results = new List<AddressResult>(),
+                SearchTooBroad = true
+            };
 
         private string BuildRequestUri(string endpoint, string postcode, int? offset = null)
         {
             endpoint = endpoint.TrimEnd('?', '&');
-
             var requestUri = endpoint;
 
             if (!endpoint.Contains("?postcode=") && !endpoint.Contains("&postcode="))
