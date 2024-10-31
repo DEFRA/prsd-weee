@@ -24,7 +24,7 @@
         public async Task Execute_HappyPath_ReturnsProducerWithSelectedSchemeandAA()
         {
             using (DatabaseWrapper db = new DatabaseWrapper())
-            {
+            { 
                 // Arrange
                 ModelHelper helper = new ModelHelper(db.Model);
 
