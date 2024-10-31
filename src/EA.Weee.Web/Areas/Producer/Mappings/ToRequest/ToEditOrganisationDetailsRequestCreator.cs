@@ -22,7 +22,7 @@
             var address = mapper.Map<ExternalAddressData, AddressData>(viewModel.Organisation.Address);
 
             return new EditOrganisationDetailsRequest(viewModel.DirectRegistrantId, viewModel.Organisation.CompanyName, viewModel.Organisation.BusinessTradingName,
-                address, viewModel.Organisation.EEEBrandNames);
+                address, viewModel.Organisation.EEEBrandNames, viewModel.Organisation.CompaniesRegistrationNumber);
         }
     }
 }

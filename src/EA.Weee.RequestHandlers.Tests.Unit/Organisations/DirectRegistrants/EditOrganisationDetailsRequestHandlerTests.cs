@@ -211,7 +211,7 @@
         {
             var address = TestFixture.Build<AddressData>().With(a => a.CountryId, countryId).Create();
             return new EditOrganisationDetailsRequest(directRegistrantId, TestFixture.Create<string>(),
-                TestFixture.Create<string>(), address, brandNames);
+                TestFixture.Create<string>(), address, brandNames, TestFixture.Create<string>());
         }
 
         private DirectRegistrant SetupValidDirectRegistrant(bool existingBrandName = false, bool existingAddress = false)
