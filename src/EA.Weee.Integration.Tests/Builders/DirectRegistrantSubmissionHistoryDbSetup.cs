@@ -19,8 +19,7 @@
             instance = new DirectProducerSubmissionHistory
             {
                 CompanyName = Faker.Company.Name(),
-                TradingName = Faker.Company.Name(),
-                CompanyRegistrationNumber = Faker.RandomNumber.Next(1000000, 100000000000).ToString()
+                TradingName = Faker.Company.Name()
             };
 
             return instance;

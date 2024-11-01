@@ -89,6 +89,50 @@
             return submission;
         }
 
+        public static async Task<DirectProducerSubmission> SubmitSubmission(
+            DatabaseWrapper wrapper,
+            DirectProducerSubmission submission,
+            IEnumerable<EeeOutputAmountData> amounts,
+            int? sellingTechniqueType = null)
+        {
+            var returnVersion = new Domain.DataReturns.EeeOutputReturnVersion();
+
+            foreach (var amount in amounts)
+            {
+                returnVersion.EeeOutputAmounts.Add(new Domain.DataReturns.EeeOutputAmount(amount.ObligationType, amount.Category, amount.Amount, submission.RegisteredProducer));
+            }
+
+            submission.CurrentSubmission.EeeOutputReturnVersion = returnVersion;
+            submission.DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Complete;
+            submission.CurrentSubmission.SubmittedDate = SystemTime.UtcNow;
+            
+            if (sellingTechniqueType.HasValue)
+            {
+                submission.CurrentSubmission.SellingTechniqueType = sellingTechniqueType;
+            }
+
+            await wrapper.WeeeContext.SaveChangesAsync();
+
+            return submission;
+        }
+
+        public static async Task<DirectProducerSubmission> ReturnSubmission(
+            DatabaseWrapper wrapper,
+            DirectProducerSubmission submission)
+        {
+            var history = new DirectProducerSubmissionHistory(submission);
+
+            wrapper.WeeeContext.DirectProducerSubmissionHistories.Add(history);
+            await wrapper.WeeeContext.SaveChangesAsync();
+
+            submission.SetCurrentSubmission(history);
+
+            submission.DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Returned;
+            await wrapper.WeeeContext.SaveChangesAsync();
+
+            return submission;
+        }
+
         public class EeeOutputAmountData
         {
             public WeeeCategory Category { get; set; }

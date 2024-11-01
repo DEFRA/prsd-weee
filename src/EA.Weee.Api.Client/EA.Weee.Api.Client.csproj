@@ -130,8 +130,6 @@
     <Compile Include="ApiClientModule.cs" />
     <Compile Include="AddressLookupClient.cs" />
     <Compile Include="CompaniesHouseClient.cs" />
-    <Compile Include="Entities\AddressLookup\Address.cs" />
-    <Compile Include="Entities\AddressLookup\AddressLookupResponse.cs" />
     <Compile Include="Entities\ErrorData.cs" />
     <Compile Include="Entities\ExternalUserCreationData.cs" />
     <Compile Include="Entities\InternalUserCreationData.cs" />
@@ -153,7 +151,10 @@
     <Compile Include="IHttpClientWrapperFactory.cs" />
     <Compile Include="IOAuthTokenProvider.cs" />
     <Compile Include="IPayClient.cs" />
-    <Compile Include="Models\CompaniesHouseApiModel.cs" />
+    <Compile Include="Models\AddressLookup\AddressLookupResponse.cs" />
+    <Compile Include="Models\AddressLookup\AddressResult.cs" />
+    <Compile Include="Models\AddressLookup\Header.cs" />
+    <Compile Include="Models\AddressLookup\RequestInfo.cs" />
     <Compile Include="Models\Country.cs" />
     <Compile Include="Models\DefraCompaniesHouseModel.cs" />
     <Compile Include="Models\Organisation.cs" />

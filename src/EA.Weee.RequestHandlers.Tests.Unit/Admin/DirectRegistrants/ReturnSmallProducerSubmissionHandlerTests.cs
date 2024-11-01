@@ -51,8 +51,7 @@
             currentSubmission = new DirectProducerSubmissionHistory(submission)
             {
                 CompanyName = "Test Company",
-                TradingName = "Test Trading",
-                CompanyRegistrationNumber = "12345"
+                TradingName = "Test Trading"
             };
 
             submission.SetCurrentSubmission(currentSubmission);
@@ -100,7 +99,7 @@
             await handler.HandleAsync(request);
 
             // Assert
-            A.CallTo(() => authorization.EnsureUserInRole(Roles.InternalUser))
+            A.CallTo(() => authorization.EnsureUserInRole(Roles.InternalAdmin))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -160,7 +159,6 @@
             A.CallTo(() => context.DirectProducerSubmissionHistories.Add(A<DirectProducerSubmissionHistory>.That.Matches(h =>
                         h.CompanyName == currentSubmission.CompanyName &&
                         h.TradingName == currentSubmission.TradingName &&
-                        h.CompanyRegistrationNumber == currentSubmission.CompanyRegistrationNumber &&
                         h.SellingTechniqueType == currentSubmission.SellingTechniqueType)))
                 .MustHaveHappenedOnceExactly();
         }
