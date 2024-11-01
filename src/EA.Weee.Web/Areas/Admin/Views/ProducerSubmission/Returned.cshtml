@@ -1,11 +1,11 @@
 ﻿@using EA.Weee.Web.RazorHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.Producers.RemovedViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.Producers.ReturnedViewModel
 @{
-    var title = "Removed producer registration";
+    var title = "Producer submission returned";
     ViewBag.Title = @title + " - GOV.UK";
 }
 
-@section full_main_content {
+@section main_content {
 
     <header class="hgroup">
         <h1 class="govuk-heading-l">@title</h1>
@@ -15,7 +15,7 @@
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.RegistrationNumber)
 
-        <p>You have successfully removed the producer registration for '@Model.ProducerName', for @Model.ComplianceYear.</p>
+        <p>You have successfully returned this producer submission. You will need to let them know they are now able to edit their submission.</p>
 
         @(this.WeeeGds().Submit("Continue"))
     }

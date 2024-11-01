@@ -15,7 +15,6 @@
             Property(e => e.SubmittedDate).IsOptional();
             Property(e => e.CompanyName).HasMaxLength(256).IsOptional();
             Property(e => e.TradingName).HasMaxLength(256).IsOptional();
-            Property(e => e.CompanyRegistrationNumber).HasMaxLength(15).IsOptional();
 
             HasRequired(e => e.DirectProducerSubmission)
                 .WithMany(ed => ed.SubmissionHistory)

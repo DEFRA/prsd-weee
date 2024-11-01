@@ -215,14 +215,12 @@
             var directRegistrant = SetupValidDirectRegistrant(true, true);
             directProducerSubmissionCurrentYear.CurrentSubmission.CompanyName = TestFixture.Create<string>();
             directProducerSubmissionCurrentYear.CurrentSubmission.TradingName = TestFixture.Create<string>();
-            directProducerSubmissionCurrentYear.CurrentSubmission.CompanyRegistrationNumber = "1234567X";
 
             // Act
             await handler.HandleAsync(request);
 
             // Assert
             directRegistrant.Organisation.Name.Should().Be(directProducerSubmissionCurrentYear.CurrentSubmission.CompanyName);
-            directRegistrant.Organisation.CompanyRegistrationNumber.Should().Be(directProducerSubmissionCurrentYear.CurrentSubmission.CompanyRegistrationNumber);
             directRegistrant.Organisation.TradingName.Should().Be(directProducerSubmissionCurrentYear.CurrentSubmission.TradingName);
         }
 

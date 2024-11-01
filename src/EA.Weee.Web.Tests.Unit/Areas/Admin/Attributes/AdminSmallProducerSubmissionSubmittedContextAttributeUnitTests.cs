@@ -21,7 +21,7 @@
     using System.Web.Routing;
     using Xunit;
 
-    public class AdminSmallProducerSubmissionContextAttributeTests
+    public class AdminSmallProducerSubmissionSubmittedContextAttributeUnitTests
     {
         private readonly IWeeeClient client;
         private readonly HttpContextBase httpContext;
@@ -31,7 +31,7 @@
         private readonly RequestContext requestContext;
         private readonly HttpRequestBase request;
 
-        public AdminSmallProducerSubmissionContextAttributeTests()
+        public AdminSmallProducerSubmissionSubmittedContextAttributeUnitTests()
         {
             client = A.Fake<IWeeeClient>();
             httpContext = A.Fake<HttpContextBase>();
@@ -52,53 +52,51 @@
         }
 
         [Fact]
-        public void OnActionExecuting_GivenValidSubmissionData_SetsControllerData()
+        public void OnActionExecuting_GivenNoSubmissions_RedirectsToNoSubmissionsAction()
         {
             // Arrange
-            var attribute = new AdminSmallProducerSubmissionContextAttribute { Client = () => client };
-            SetupQueryString("REG123");
+            var attribute = new AdminSmallProducerSubmissionSubmittedContextAttribute { Client = () => client };
 
-            var submissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>
-            {
-                {
-                    2024,
-                    new SmallProducerSubmissionHistoryData
-                    {
-                        ComplianceYear = 2024,
-                        Status = SubmissionStatus.Submitted
-                    }
-                }
-            };
+            var organisationId = Guid.NewGuid();
 
-            var submissionData = CreateSubmissionData(Guid.NewGuid(), submissionHistory);
-            SetupClientResponse(submissionData);
+            var submissionData = CreateSubmissionData(
+                organisationId,
+                new Dictionary<int, SmallProducerSubmissionHistoryData>());
+
+            controller.SmallProducerSubmissionData = submissionData;
 
             // Act
             attribute.OnActionExecuting(actionContext);
 
             // Assert
-            controller.SmallProducerSubmissionData.Should().BeEquivalentTo(submissionData);
-            actionContext.Result.Should().BeNull();
+            var result = actionContext.Result.Should().BeOfType<RedirectToRouteResult>().Subject;
+            result.RouteValues["action"].Should().Be(nameof(ProducerSubmissionController.OrganisationHasNoSubmissions));
+            result.RouteValues["controller"].Should().Be(typeof(ProducerSubmissionController).GetControllerName());
+            result.RouteValues["organisationId"].Should().Be(organisationId);
         }
 
         [Fact]
-        public void OnActionExecuting_VerifiesClientIsCalledWithCorrectRegistrationNumber()
+        public void OnActionExecuting_GivenSomeSubmissions_DoesNotRedirectToNoSubmissionsAction()
         {
             // Arrange
-            var attribute = new AdminSmallProducerSubmissionContextAttribute { Client = () => client };
-            const string registrationNumber = "REG123";
-            SetupQueryString(registrationNumber);
-            SetupClientResponse(CreateSubmissionData(Guid.NewGuid(), new Dictionary<int, SmallProducerSubmissionHistoryData>()));
+            var attribute = new AdminSmallProducerSubmissionSubmittedContextAttribute { Client = () => client };
+
+            var organisationId = Guid.NewGuid();
+
+            var submissionData = CreateSubmissionData(
+                organisationId,
+                new Dictionary<int, SmallProducerSubmissionHistoryData>()
+                {
+                    { 2024, new SmallProducerSubmissionHistoryData() },
+                });
+
+            controller.SmallProducerSubmissionData = submissionData;
 
             // Act
             attribute.OnActionExecuting(actionContext);
 
             // Assert
-            A.CallTo(() => client.SendAsync(
-                A<string>.Ignored,
-                A<GetSmallProducerSubmissionByRegistrationNumber>.That.Matches(
-                    x => x.RegistrationNumber == registrationNumber)))
-                .MustHaveHappenedOnceExactly();
+            var result = actionContext.Result.Should().BeNull();
         }
 
         private static SmallProducerSubmissionData CreateSubmissionData(Guid organisationId, IDictionary<int, SmallProducerSubmissionHistoryData> submissionHistory)
@@ -115,25 +113,6 @@
                 ServiceOfNoticeData = new AddressData(),
                 ProducerRegistrationNumber = "TEST1234"
             };
-        }
-
-        private void SetupQueryString(string registrationNumber)
-        {
-            var queryString = new System.Collections.Specialized.NameValueCollection();
-            if (!string.IsNullOrWhiteSpace(registrationNumber))
-            {
-                queryString.Add("RegistrationNumber", registrationNumber);
-            }
-
-            A.CallTo(() => request.QueryString).Returns(queryString);
-        }
-
-        private void SetupClientResponse(SmallProducerSubmissionData response)
-        {
-            A.CallTo(() => client.SendAsync(
-                    A<string>.Ignored,
-                    A<GetSmallProducerSubmissionByRegistrationNumber>.Ignored))
-                .Returns(response);
         }
     }
 }
