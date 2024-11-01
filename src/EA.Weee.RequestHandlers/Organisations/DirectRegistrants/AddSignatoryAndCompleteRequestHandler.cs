@@ -34,7 +34,6 @@
             currentYearSubmission.DirectRegistrant.Organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, currentYearSubmission.CurrentSubmission.BusinessAddress);
 
             currentYearSubmission.DirectRegistrant.Organisation.UpdateDirectRegistrantDetails(currentYearSubmission.CurrentSubmission.CompanyName,
-                currentYearSubmission.CurrentSubmission.CompanyRegistrationNumber,
                 currentYearSubmission.CurrentSubmission.TradingName);
 
             currentYearSubmission.DirectRegistrant.AddOrUpdateMainContactPerson(currentYearSubmission.CurrentSubmission.Contact);
