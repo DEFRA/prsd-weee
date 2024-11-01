@@ -278,7 +278,7 @@
             SetBreadcrumb();
             ViewBag.TriggerDownload = false;
 
-            var model = new ProducersDataViewModel();
+            var model = new ProducersIncSmallProducersDataViewModel();
             await PopulateFilters(model, true, true);
 
             return View(model);
@@ -286,7 +286,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ProducerEeeData(ProducersDataViewModel model)
+        public async Task<ActionResult> ProducerEeeData(ProducersIncSmallProducersDataViewModel model)
         {
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
@@ -534,7 +534,7 @@
             model.ComplianceYears = new SelectList(FetchAllComplianceYears());
         }
 
-        private async Task PopulateFilters(ProducersDataViewModel model, bool populateSchemes, bool includeDirectRegistrants = false)
+        private async Task PopulateFilters(ProducersDataViewModelBase model, bool populateSchemes, bool includeDirectRegistrants = false)
         {
             var years = await FetchComplianceYearsForDataReturns();
 
