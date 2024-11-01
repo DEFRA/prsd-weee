@@ -24,7 +24,7 @@
         public async Task Execute_HappyPath_ReturnsProducerWithSelectedSchemeandAA()
         {
             using (DatabaseWrapper db = new DatabaseWrapper())
-            {
+            { 
                 // Arrange
                 ModelHelper helper = new ModelHelper(db.Model);
 
@@ -534,7 +534,7 @@
                 var (_, country) = DirectRegistrantHelper.SetupCommonTestData(wrapper);
 
                 var complianceYear = 2080;
-                var (organisation1, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear);
+                var (_, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear);
 
                 var amounts1 = new List<DirectRegistrantHelper.EeeOutputAmountData>
                 {
@@ -542,7 +542,7 @@
                     new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C }
                 };
 
-                var submission1 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear, amounts1, DirectProducerSubmissionStatus.Complete, SellingTechniqueType.Both.Value);
+                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear, amounts1, DirectProducerSubmissionStatus.Complete, SellingTechniqueType.Both.Value);
 
                 var authorisedRep = new Domain.Producer.AuthorisedRepresentative("authed rep name",
                     new ProducerContact("rep title", "rep first name", "rep surname",
@@ -551,14 +551,19 @@
                             "rep town", "rep locality", "rep admin area", country, "rep postcode")));
 
                 var brandNames = new BrandName("brand name");
-                var (organisation2, directRegistrant2, registeredProducer2) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 2", "WEE/AG48365JX", complianceYear,  "987654321", authorisedRep, brandNames);
+                var (_, directRegistrant2, registeredProducer2) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 2", "WEE/AG48365JX", complianceYear,  "987654321", authorisedRep, brandNames);
 
                 var amounts2 = new List<DirectRegistrantHelper.EeeOutputAmountData>
                 {
                     new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.MedicalDevices, Amount = 4.456m, ObligationType = Domain.Obligation.ObligationType.B2B }
                 };
 
-                var submission2 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant2, registeredProducer2, complianceYear, amounts2, DirectProducerSubmissionStatus.Complete, SellingTechniqueType.IndirectSellingtoEndUser.Value);
+                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant2, registeredProducer2, complianceYear, amounts2, DirectProducerSubmissionStatus.Complete, SellingTechniqueType.IndirectSellingtoEndUser.Value);
+
+                // should include removed
+                registeredProducer2.Remove();
+                
+                await wrapper.WeeeContext.SaveChangesAsync();
 
                 // Create a scheme for test or ordering
                 var organisation =
@@ -730,7 +735,7 @@
                 result1.OverseasContactAdministrativeArea.Should().Be("rep admin area");
                 result1.OverseasContactPostcode.Should().Be("rep postcode");
                 result1.OverseasContactCountry.Should().Be("Azerbaijan");
-                result1.RemovedFromScheme.Should().Be("No");
+                result1.RemovedFromScheme.Should().Be("Yes");
                 result1.DateAmended.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
                 result1.DateRegistered.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
                 result1.BrandNames.Should().Be("brand name");
@@ -817,6 +822,152 @@
                 result2.DateAmended.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
                 result2.DateRegistered.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
                 result2.BrandNames.Should().BeNullOrWhiteSpace();
+            }
+        }
+
+        [Fact]
+        public async Task Execute_WithDirectRegistrantSubmissions_WithExcludeRemovedProducer_ShouldReturnNoResults()
+        {
+            using (var wrapper = new DatabaseWrapper())
+            {
+                DirectRegistrantHelper.SetupCommonTestData(wrapper);
+
+                const int complianceYear = 2080;
+                var (_, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear);
+
+                var amounts1 = new List<DirectRegistrantHelper.EeeOutputAmountData>
+                {
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 123.456m, ObligationType = Domain.Obligation.ObligationType.B2C },
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C }
+                };
+
+                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear, amounts1, DirectProducerSubmissionStatus.Complete, SellingTechniqueType.Both.Value);
+
+                registeredProducer1.Remove();
+
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                var results = await wrapper.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(complianceYear, false, true, null, null, false);
+
+                results.Should().BeEmpty();
+            }
+        }
+
+        [Fact]
+        public async Task Execute_WithDirectRegistrantSubmissions_WithReturnedSubmission_ShouldUseRecentSubmittedData()
+        {
+            using (var wrapper = new DatabaseWrapper())
+            {
+                var (_, country) = DirectRegistrantHelper.SetupCommonTestData(wrapper);
+
+                const int complianceYear = 2082;
+                var (_, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG43365JN", complianceYear);
+                
+                // initially no EEE and selling technique type of both
+                var submission1 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete, SellingTechniqueType.Both.Value);
+
+                // return the submission 
+                await DirectRegistrantHelper.ReturnSubmission(wrapper, submission1);
+
+                var amounts1 = new List<DirectRegistrantHelper.EeeOutputAmountData>
+                {
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 123.456m, ObligationType = Domain.Obligation.ObligationType.B2C },
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C }
+                };
+
+                // resubmit with EEE and update the selling technique, this data should be the data returned as its most recent
+                await DirectRegistrantHelper.SubmitSubmission(wrapper, submission1,
+                    amounts1,
+                    SellingTechniqueType.DirectSellingtoEndUser.Value);
+
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                var results = await wrapper.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(complianceYear, true, true, null, null, false);
+
+                results.Count.Should().Be(1);
+             
+                var result1 = results.ElementAt(0);
+                result1.CompanyName.Should().Be("My company");
+                result1.SchemeName.Should().Be("Direct registrant");
+                result1.TradingName.Should().BeNullOrWhiteSpace();
+                result1.ProducerType.Should().Be("Registered company");
+                result1.ProducerName.Should().Be("My company");
+                result1.PRN.Should().Be("WEE/AG43365JN");
+                result1.SICCodes.Should().BeNull();
+                result1.VATRegistered.Should().BeNull();
+                result1.AnnualTurnover.Should().BeNull();
+                result1.AnnualTurnoverBandType.Should().BeNull();
+                result1.EEEPlacedOnMarketBandType.Should().Be("Less than 5T EEE placed on market");
+                result1.ObligationType.Should().Be("B2C");
+                result1.ChargeBandType.Should().BeNull();
+                result1.SellingTechniqueType.Should().Be("Direct Selling to End User");
+                result1.CeaseToExist.Should().BeNull();
+                result1.CNTitle.Should().BeNull();
+                result1.CNForename.Should().BeNull();
+                result1.CNSurname.Should().BeNull();
+                result1.CNTelephone.Should().BeNull();
+                result1.CNMobile.Should().BeNull();
+                result1.CNFax.Should().BeNull();
+                result1.CNEmail.Should().BeNull();
+                result1.CNPrimaryName.Should().BeNull();
+                result1.CNSecondaryName.Should().BeNull();
+                result1.CNStreet.Should().BeNull();
+                result1.CNTown.Should().BeNull();
+                result1.CNLocality.Should().BeNull();
+                result1.CNAdministrativeArea.Should().BeNull();
+                result1.CNPostcode.Should().BeNull();
+                result1.CNCountry.Should().BeNull();
+                result1.CNCountry.Should().BeNull();
+                result1.CompanyNumber.Should().Be("123456789");
+                result1.CompanyContactTitle.Should().BeNull();
+                result1.CompanyContactForename.Should().Be("first name");
+                result1.CompanyContactSurname.Should().Be("last name");
+                result1.CompanyContactTelephone.Should().Be("12345678");
+                result1.CompanyContactMobile.Should().BeNull();
+                result1.CompanyContactFax.Should().BeNull();
+                result1.CompanyContactCountry.Should().Be("Azerbaijan");
+                result1.CompanyContactEmail.Should().Be("test@co.uk");
+                result1.CompanyContactPrimaryName.Should().Be("primary 1");
+                result1.CompanyContactSecondaryName.Should().BeNull();
+                result1.CompanyContactStreet.Should().Be("street");
+                result1.CompanyContactTown.Should().Be("Woking");
+                result1.CompanyContactLocality.Should().Be("Hampshire");
+                result1.CompanyContactAdministrativeArea.Should().BeNull();
+                result1.CompanyContactPostcode.Should().Be("GU21 5EE");
+                result1.CompanyContactCountry.Should().Be("Azerbaijan");
+                result1.PPOBContactTitle.Should().BeNull();
+                result1.PPOBContactForename.Should().BeNull();
+                result1.PPOBContactSurname.Should().BeNull();
+                result1.PPOBContactTelephone.Should().BeNull();
+                result1.PPOBContactMobile.Should().BeNull();
+                result1.PPOBContactFax.Should().BeNull();
+                result1.PPOBContactEmail.Should().BeNull();
+                result1.PPOBContactPrimaryName.Should().BeNull();
+                result1.PPOBContactSecondaryName.Should().BeNull();
+                result1.PPOBContactStreet.Should().BeNull();
+                result1.PPOBContactTown.Should().BeNull();
+                result1.PPOBContactLocality.Should().BeNull();
+                result1.PPOBContactAdministrativeArea.Should().BeNull();
+                result1.PPOBContactPostcode.Should().BeNull();
+                result1.OverseasProducerName.Should().BeNull();
+                result1.OverseasContactForename.Should().BeNull();
+                result1.OverseasContactSurname.Should().BeNull();
+                result1.OverseasContactTelephone.Should().BeNull();
+                result1.OverseasContactMobile.Should().BeNull();
+                result1.OverseasContactFax.Should().BeNull();
+                result1.OverseasContactEmail.Should().BeNull();
+                result1.OverseasContactPrimaryName.Should().BeNull();
+                result1.OverseasContactSecondaryName.Should().BeNull();
+                result1.OverseasContactStreet.Should().BeNull();
+                result1.OverseasContactTown.Should().BeNull();
+                result1.OverseasContactLocality.Should().BeNull();
+                result1.OverseasContactAdministrativeArea.Should().BeNull();
+                result1.OverseasContactPostcode.Should().BeNull();
+                result1.OverseasContactCountry.Should().BeNull();
+                result1.RemovedFromScheme.Should().Be("No");
+                result1.DateAmended.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
+                result1.DateRegistered.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
+                result1.BrandNames.Should().BeNullOrWhiteSpace();
             }
         }
     }
