@@ -70,7 +70,7 @@ namespace Resources.ProducerSubmission {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Changing the details on this page, on submission of your application, will update your organisation details on your account..
+        ///   Looks up a localized string similar to Changing the details on this page, on submission of your application, will update your organisation details for your organisation..
         /// </summary>
         public static string OrganisationDetailsWarningText {
             get {
@@ -79,7 +79,7 @@ namespace Resources.ProducerSubmission {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Changing the details on this page, on submission of your application, will update your producer details on your account..
+        ///   Looks up a localized string similar to Changing the details on this page, on submission of your application, will update your producer details for your organisation..
         /// </summary>
         public static string RepresentingCompanyDetailsWarningText {
             get {
@@ -106,7 +106,16 @@ namespace Resources.ProducerSubmission {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Changing the details on this page, on submission of your application, will update your contact details on your account..
+        ///   Looks up a localized string similar to Changing the details on this page, on submission of your application, will update your service of notice details for your organisation..
+        /// </summary>
+        public static string ServiceOfNoticeWarningText {
+            get {
+                return ResourceManager.GetString("ServiceOfNoticeWarningText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Changing the details on this page, on submission of your application, will update your contact details for your organisation..
         /// </summary>
         public static string WarningText {
             get {
