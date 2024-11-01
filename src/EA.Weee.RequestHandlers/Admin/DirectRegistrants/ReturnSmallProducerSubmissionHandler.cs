@@ -188,7 +188,6 @@
 
             target.CompanyName = source.CompanyName;
             target.TradingName = source.TradingName;
-            target.CompanyRegistrationNumber = source.CompanyRegistrationNumber;
             target.SellingTechniqueType = source.SellingTechniqueType;
         }
 
