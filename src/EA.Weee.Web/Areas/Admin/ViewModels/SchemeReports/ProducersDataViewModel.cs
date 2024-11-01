@@ -9,14 +9,26 @@
 
     public class ProducersDataViewModel
     {
+        private readonly string selectedSchemeDisplay;
+
+        public ProducersDataViewModel(string selectedSchemeDisplay = "PCS name or direct registrants")
+        {
+            this.selectedSchemeDisplay = selectedSchemeDisplay;
+        }
+
         [Required(ErrorMessage = "Select a compliance year")]
         [DisplayName("Compliance year")]
         public int SelectedYear { get; set; }
 
         public IEnumerable<SelectListItem> ComplianceYears { get; set; }
 
-        [DisplayName("PCS name or direct registrants")]
+        //[DisplayName("PCS name or direct registrants")]
         public Guid? SelectedSchemeId { get; set; }
+
+        public string GetSchemeDisplayName()
+        {
+            return selectedSchemeDisplay;
+        }
 
         public IEnumerable<SelectListItem> Schemes { get; set; }
 

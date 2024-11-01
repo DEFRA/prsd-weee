@@ -9,7 +9,7 @@
 @if (Model.Schemes != null)
 {
     <div class="govuk-form-group  @Html.Gds().FormGroupClass(m => m.SelectedSchemeId)">
-        @Html.Gds().LabelFor(m => m.SelectedSchemeId)
+        @Html.Gds().LabelForWithText(m => m.SelectedSchemeId, Model.GetSchemeDisplayName())
         @Html.Gds().DropDownListFor(m => m.SelectedSchemeId, Model.Schemes, string.Empty, new { @class = "govuk-!-width-one-half", autocomplete = "false" })
     </div>
 }
