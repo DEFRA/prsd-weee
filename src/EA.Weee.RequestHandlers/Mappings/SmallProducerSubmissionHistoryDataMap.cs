@@ -41,7 +41,6 @@
                 EEEBrandNames = MapBrandNames(currentSubmission, directRegistrant),
                 CompanyName = MapCompanyName(currentSubmission, directRegistrant.Organisation),
                 TradingName = MapTradingName(currentSubmission, directRegistrant.Organisation),
-                CompanyRegistrationNumber = MapCompanyRegistrationNumber(currentSubmission, directRegistrant.Organisation),
                 SellingTechnique = MapSellingTechnique(currentSubmission),
 
                 AdditionalCompanyDetailsData = mapper.Map<ICollection<AdditionalCompanyDetails>, IList<AdditionalCompanyDetailsData>>(directRegistrant.AdditionalCompanyDetails),
@@ -101,13 +100,6 @@
             return !string.IsNullOrWhiteSpace(currentSubmission.TradingName)
                 ? currentSubmission.TradingName
                 : organisation.TradingName;
-        }
-
-        private static string MapCompanyRegistrationNumber(DirectProducerSubmissionHistory currentSubmission, Organisation organisation)
-        {
-            return !string.IsNullOrWhiteSpace(currentSubmission.CompanyRegistrationNumber)
-                ? currentSubmission.CompanyRegistrationNumber
-                : organisation.CompanyRegistrationNumber;
         }
 
         private static SellingTechniqueType? MapSellingTechnique(DirectProducerSubmissionHistory currentSubmission)
