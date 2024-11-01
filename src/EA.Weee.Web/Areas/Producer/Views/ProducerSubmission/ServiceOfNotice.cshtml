@@ -90,6 +90,8 @@
             @Html.Gds().TextBoxFor(m => m.Address.Telephone, new { @maxlength = CommonMaxFieldLengths.Telephone })
         </div>
 
+        @(this.WeeeGds().Warning(Resources.ProducerSubmission.ProducerSubmission.ServiceOfNoticeWarningText))
+
         <div class="govuk-button-group govuk-!-padding-top-3">
             @if (Model.RedirectToCheckAnswers == true)
             {
