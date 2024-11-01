@@ -26,8 +26,6 @@
 
         public string CompanyName { get; set; }
 
-        public string CompanyRegistrationNumber { get; set; }
-
         public string TradingName { get; set; }
 
         public SellingTechniqueType? SellingTechnique { get; set; }

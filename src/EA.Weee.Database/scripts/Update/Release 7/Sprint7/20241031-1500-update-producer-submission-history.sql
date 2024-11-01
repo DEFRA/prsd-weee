@@ -1,0 +1,1 @@
+ALTER TABLE [Producer].DirectProducerSubmissionHistory DROP COLUMN CompanyRegistrationNumber;
