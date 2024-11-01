@@ -210,7 +210,7 @@
                     .WithTestData()
                     .WithInternalUserAccess(true);
 
-                Query.SetupUserWithRole(UserId.ToString(), "Standard", CompetentAuthority.England);
+                Query.SetupUserWithRole(UserId.ToString(), "Administrator", CompetentAuthority.England);
 
                 directRegistrant = DirectRegistrantDbSetup.Init()
                     .Create();
