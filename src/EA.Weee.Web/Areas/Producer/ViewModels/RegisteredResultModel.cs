@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class PaymentResultModel
+    public class RegisteredResultModel
     {
         public Guid OrganisationId { get; set; }
 
