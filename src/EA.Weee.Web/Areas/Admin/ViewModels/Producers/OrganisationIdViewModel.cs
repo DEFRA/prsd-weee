@@ -5,5 +5,7 @@
     public class OrganisationIdViewModel
     {
         public Guid OrganisationId { get; set; }
+
+        public bool DisplayBack { get; set; }
     }
 }
