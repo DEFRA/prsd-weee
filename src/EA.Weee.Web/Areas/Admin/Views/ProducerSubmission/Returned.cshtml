@@ -15,7 +15,7 @@
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.RegistrationNumber)
 
-        <p>You have successfully returned this producer submission. You will need to let them know they are now able to edit their submission.</p>
+        <p class="govuk-body">You have successfully returned this producer submission. You will need to let them know they are now able to edit their submission.</p>
 
         @(this.WeeeGds().Submit("Continue"))
     }

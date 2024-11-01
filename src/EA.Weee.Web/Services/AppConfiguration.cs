@@ -107,13 +107,13 @@
         [DefaultValue(false)]
         public bool ProxyUseDefaultCredentials { get; set; }
 
-        public string CompaniesHousePassword { get; set; }
-
         public string CompaniesHouseReferencePath { get; set; }
 
-        public string CompaniesCertificateName { get; set; }
-
         public string CompaniesHouseBaseUrl { get; set; }
+
+        public string AddressLookupReferencePath { get; set; }
+
+        public string AddressLookupBaseUrl { get; set; }
 
         public string GovUkPayBaseUrl { get; set; }
 
@@ -139,5 +139,7 @@
         public string OAuthTokenClientSecret { get; set; }
 
         public string CompaniesHouseScope { get; set; }
+
+        public string AddressLookupScope { get; set; }
     }
 }

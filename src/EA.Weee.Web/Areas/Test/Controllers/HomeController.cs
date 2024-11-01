@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Test.Controllers
 {
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Web.Areas.Test.ViewModels;
     using System;
     using System.Web.Mvc;
@@ -33,8 +34,8 @@
                     case HomeViewModel.ManageSystemDate:
                         return RedirectToAction("Settings", "ManagePcsReturnsSubmissionWindow");
 
-                    case HomeViewModel.CopyAndPaste:
-                        return RedirectToAction("Index", "CopyValues");
+                    case HomeViewModel.ApiTest:
+                        return RedirectToAction(nameof(Index), typeof(ApiIntegrationController).GetControllerName());
 
                     default:
                         throw new NotSupportedException();

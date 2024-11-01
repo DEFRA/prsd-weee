@@ -76,13 +76,13 @@
 
         bool ProxyUseDefaultCredentials { get; set; }
 
-        string CompaniesHousePassword { get; set; }
-
         string CompaniesHouseReferencePath { get; set; }
 
-        string CompaniesCertificateName { get; set; }
-
         string CompaniesHouseBaseUrl { get; set; }
+
+        string AddressLookupReferencePath { get; set; }
+
+        string AddressLookupBaseUrl { get; set; }
 
         string GovUkPayBaseUrl { get; set; }
 
@@ -107,5 +107,7 @@
         string OAuthTokenClientSecret { get; set; }
 
         string CompaniesHouseScope { get; set; }
+
+        string AddressLookupScope { get; set; }
     }
 }
