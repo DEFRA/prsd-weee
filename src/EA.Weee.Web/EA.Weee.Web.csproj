@@ -1168,6 +1168,7 @@
     <Content Include="Areas\Admin\Views\ProducerSubmission\OrganisationHasNoSubmissions.cshtml" />
     <Content Include="Areas\Admin\Views\ProducerSubmission\Returned.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\Registered.cshtml" />
+    <Content Include="Areas\Producer\Views\ProducerSubmission\_ContactPartial.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
