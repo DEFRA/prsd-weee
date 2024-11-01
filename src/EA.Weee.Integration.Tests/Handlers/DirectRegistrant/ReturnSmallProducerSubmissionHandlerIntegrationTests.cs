@@ -212,7 +212,7 @@
                 var setup = SetupTest(IocApplication.RequestHandler)
                     .WithIoC()
                     .WithTestData()
-                    .WithInternalUserAccess(false);
+                    .WithInternalUserAccess(true);
 
                 Query.SetupUserWithRole(UserId.ToString(), "Standard", CompetentAuthority.England);
 
