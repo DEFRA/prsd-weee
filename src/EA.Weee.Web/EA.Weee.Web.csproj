@@ -622,7 +622,7 @@
     <Compile Include="Areas\Producer\Mappings\ToViewModel\SmallProducerSubmissionMapperData.cs" />
     <Compile Include="Areas\Producer\ViewModels\EditContactDetailsViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\CheckAnswersViewModel.cs" />
-    <Compile Include="Areas\Producer\ViewModels\PaymentResultModel.cs" />
+    <Compile Include="Areas\Producer\ViewModels\RegisteredResultModel.cs" />
     <Compile Include="ViewModels\Organisation\Mapping\ToViewModel\RepresentingCompaniesViewModelMap.cs" />
     <Compile Include="ViewModels\Organisation\Mapping\ToViewModel\RepresentingCompaniesViewModelMapSource.cs" />
     <Compile Include="ViewModels\Organisation\RepresentingCompany.cs" />
@@ -1167,6 +1167,8 @@
     <Content Include="Areas\Admin\Views\ProducerSubmission\Removed.cshtml" />
     <Content Include="Areas\Admin\Views\ProducerSubmission\OrganisationHasNoSubmissions.cshtml" />
     <Content Include="Areas\Admin\Views\ProducerSubmission\Returned.cshtml" />
+    <Content Include="Areas\Producer\Views\ProducerSubmission\Registered.cshtml" />
+    <Content Include="Areas\Producer\Views\ProducerSubmission\_ContactPartial.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
