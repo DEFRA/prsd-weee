@@ -17,32 +17,7 @@
     </div>
     <div class="govuk-!-width-two-thirds">
         <p class="govuk-body">Your registration has been resubmitted and you are now registered as a small producer.</p>
-        <h2 class="govuk-heading-m">What happens next</h2>
-        <p class="govuk-body">
-            If you have any queries about your application, please contact us.
-        </p>
-        <p class="govuk-body">
-            @(this.WeeeGds().ActionLinkWithEventTracking("What did you think of this service?",
-                "What did you think of this service?",
-                Url.UrlFor<NewUserController>(c => c.Feedback()),
-                "Feedback",
-                "Producer Registration",
-                "Feedback link",
-                null,
-                true
-            ))
-            (takes 30 seconds)
-        </p>
-        @using (Html.BeginForm("SignOut", "Account", new { area = string.Empty }, FormMethod.Post, new { id = "logout" }))
-        {
-            <p class="govuk-body">
-                You can
-                @Html.AntiForgeryToken()
-                @this.WeeeGds().CreateLinkButtonWithEventTracking("sign out", "Producer Registration", "sign out", "Sign out")
-                or proceed to perform more activities.
-            </p>
-        }
-
+        @Html.Partial("_ContactPartial")
     </div>
 
     @Html.ActionLink("Perform other activities", "ChooseActivity", "Home", new { area = "Scheme", pcsId = Model.OrganisationId }, new { @class = "govuk-button" })
