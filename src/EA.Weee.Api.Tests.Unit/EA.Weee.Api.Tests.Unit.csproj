@@ -209,6 +209,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client\AddressLookupClientTests.cs" />
     <Compile Include="Client\CompaniesHouseClientUnitTests.cs" />
     <Compile Include="Client\PayClientUnitTests.cs" />
     <Compile Include="Controllers\MediatorControllerTests.cs" />
