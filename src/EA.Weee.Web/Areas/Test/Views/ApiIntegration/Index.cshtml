@@ -1,0 +1,53 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Test.ViewModels.ApiIntegration.ApiModel
+@{
+    ViewBag.Title = "API test - GOV.UK";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">
+            API Test
+        </h1>
+    </header>
+
+    <h1 class="govuk-heading-l">Post code lookup</h1>
+    @using (Html.BeginForm("AddressLookup", "ApiIntegration"))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("SubmittedForm", "postcode")
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PostcodeValue)" id="postcode-options">
+            @Html.Gds().ValidationMessageFor(m => m.PostcodeValue)
+            @Html.Gds().TextBoxFor(m => m.PostcodeValue)
+        </div>
+        @(this.WeeeGds().Submit("Continue"))
+    }
+
+    <h1 class="govuk-heading-l">Companies house</h1>
+    @using (Html.BeginForm("CompaniesHouseLookup", "ApiIntegration"))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("SubmittedForm", "company")
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompanyValue)" id="company-options">
+            @Html.Gds().ValidationMessageFor(m => m.CompanyValue)
+            @Html.Gds().TextBoxFor(m => m.CompanyValue)
+        </div>
+        @(this.WeeeGds().Submit("Continue"))
+    }
+    
+    <h1 class="govuk-heading-l">Payment</h1>
+    @using (Html.BeginForm("Payment", "ApiIntegration"))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Hidden("SubmittedForm", "payment")
+        @(this.WeeeGds().Submit("Continue"))
+    }
+
+    @if (!string.IsNullOrEmpty(Model.Result))
+    {
+        <h2 class="govuk-heading-m">Result</h2>
+        <pre>@Model.Result</pre>
+    }
+}
