@@ -73,13 +73,11 @@
             For non-UK addresses, enter your details manually.
         </div>
 
-
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AddressData.Postcode)">
             @Html.Gds().LabelFor(m => m.AddressData.Postcode)
             @Html.Gds().ValidationMessageFor(m => m.AddressData.Postcode)
             @Html.Gds().TextBoxFor(m => m.AddressData.Postcode, new { @maxlength = CommonMaxFieldLengths.Postcode })
         </div>
-
 
         <button type="button"
                 name="Find address"
@@ -90,14 +88,22 @@
             Find address
         </button>
 
+        <div class="govuk-warning-text" style="display: none;">
+            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            <strong class="govuk-warning-text__text">
+                <span class="govuk-visually-hidden">Warning</span>
+                <span id="text"></span>
+            </strong>
+        </div>
+
         <div class="govuk-form-group">
             <h1 class="govuk-label-wrapper">
-                <label class="govuk-label govuk-label--l" for="address-results">
+                <label class="govuk-label" for="address-results">
                     Select address
                 </label>
             </h1>
-            <select class="govuk-select gds-auto-complete ui-autocomplete-input" 
-                    id="address-results" 
+            <select class="govuk-select gds-auto-complete ui-autocomplete-input govuk-!-width-one-half"
+                    id="address-results"
                     name="Address Results"
                     data-module="autocomplete">
             </select>
@@ -141,28 +147,8 @@
     }
 }
 
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-        $(() => {
-            let config = {
-                inputFieldId: "AddressData_Postcode",
-                selectFieldId: "address-results",
-                endpoint: "@Url.Action("GetAddresses")?postcode=",
-                findButtonId: "find-address",
-                onSelected: (selected) => {
-                    $("#AddressData_Address1").val(selected.BuildingName || selected.BuildingNumber + " " + selected.Street);
-                    $("#AddressData_TownOrCity").val(selected.Town);
-                    $("#AddressData_CountyOrRegion").val(selected.AdministrativeArea || selected.HistoricCounty || selected.HistoricCounty);
-                    $("#AddressData_Postcode").val(selected.Postcode);
-                },
-                mappedFields: {
-                    key: "Uprn",
-                    value: "AddressLine",
-                    output: "Results"
-                }
-            }
-
-            searchAutocomplete(config)
-        });
-    });
-</script>
+@section scripts {
+    <script>
+           window.contactDetailsPostCodeSearch("@Url.Action("GetAddresses")?postcode=");
+    </script>
+}
