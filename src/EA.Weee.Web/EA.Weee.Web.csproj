@@ -556,6 +556,8 @@
     <Compile Include="Areas\Admin\ViewModels\Producers\OrganisationIdViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\PaymentDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ReturnedViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\SchemeReports\ProducersDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\SchemeReports\ProducersDataViewModelBase.cs" />
     <Compile Include="Areas\Test\Controllers\ApiIntegrationController.cs" />
     <Compile Include="Areas\Test\ViewModels\ApiIntegration\ApiModel.cs" />
     <Compile Include="Services\SubmissionsService\ISubmissionService.cs" />
@@ -1082,7 +1084,7 @@
     <Compile Include="Areas\Admin\ViewModels\Producers\RemovedViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\SchemeReports\ChooseSchemeReportViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\SchemeReports\ProducerPublicRegisterViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\SchemeReports\ProducersDataViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\SchemeReports\ProducersIncSmallProducersDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\SchemeReports\ReportsFilterViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Reports\Reports.cs" />
     <Compile Include="Areas\Admin\ViewModels\SchemeReports\SchemeObligationDataViewModel.cs" />
@@ -1172,6 +1174,8 @@
     <Content Include="Areas\Producer\Views\ProducerSubmission\Registered.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\_ContactPartial.cshtml" />
     <Content Include="Areas\Test\Views\ApiIntegration\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\EditorTemplates\ProducersIncSmallProducersDataViewModel.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\EditorTemplates\ProducersDataViewModel.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
@@ -2211,6 +2215,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Areas\Admin\Views\Shared\DisplayTemplates\" />
     <Folder Include="Areas\Admin\Views\SmokeTest\" />
     <Folder Include="Areas\AeReturn\Views\Shared\" />
     <Folder Include="Areas\Scheme\Views\Shared\EditorTemplates\" />
