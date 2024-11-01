@@ -9,14 +9,15 @@
         public const string CreatePcsDataReturnXmlFile = "Create PCS Data Return XML File";
         public const string ManageCache = "Manage Cache";
         public const string ManageSystemDate = "Manage Returns and Evidence System Date";
-        public const string CopyAndPaste = "Copy and paste";
+        public const string ApiTest = "API Test";
 
         public HomeViewModel() : base(new List<string>
             {
                 CreatePcsMemberXmlFile,
                 CreatePcsDataReturnXmlFile,
                 ManageCache,
-                ManageSystemDate
+                ManageSystemDate,
+                ApiTest
             })
         {
         }
