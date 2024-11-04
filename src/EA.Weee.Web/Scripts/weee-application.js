@@ -592,7 +592,10 @@ function initialiseTabs() {
             },
             selectMessage: "Search for a postcode",
             onSelected: (selected) => {
-                $("#AddressData_Address1").val(buildLineOne(selected));
+                let address = buildLineOneAndTwo(selected);
+
+                $("#AddressData_Address1").val(address.one);
+                $("#AddressData_Address2").val(address.two);
                 $("#AddressData_TownOrCity").val(selected.Town);
                 $("#AddressData_CountyOrRegion").val(selected.AdministrativeArea || selected.HistoricCounty || selected.CeremonialCounty);
                 $("#AddressData_Postcode").val(selected.Postcode);
@@ -623,20 +626,32 @@ function initialiseTabs() {
             }
         }
 
-        function orEmpty(val) {
-            return val || "";
-        }
+        function buildLineOneAndTwo(selected) {
+            let one = orEmpty((orEmpty(selected.BuildingNumber) || (orEmpty(selected.SubBuildingName)) + " " + (orEmpty(selected.BuildingName))))
 
-        function buildLineOne(selected) {
-            let first = orEmpty((orEmpty(selected.BuildingNumber) || (orEmpty(selected.SubBuildingName)) + " " + (orEmpty(selected.BuildingName))))
-
-            if (selected.SubBuildingName && first.includes(selected.SubBuildingName) == false) {
-                first = selected.SubBuildingName + " " + first;
+            if (selected.BuildingName && !one.includes(selected.BuildingName)) {
+                one = selected.BuildingName + " " + one;
             }
 
-            let result = (first + " " + selected.Street)
+            if (selected.SubBuildingName && !one.includes(selected.SubBuildingName)) {
+                one = selected.SubBuildingName + " " + one;
+            }
 
-            return result;
+            let showStreet = (!selected.BuildingName && !selected.SubBuildingName) || (!selected.BuildingNumber && !selected.SubBuildingName);
+
+            if (showStreet) {
+                one = (one + " " + selected.Street)
+            }
+
+            let two = (!showStreet)
+                ? selected.Street
+                : "";
+
+            return { one: one, two: two };
+        }
+
+        function orEmpty(val) {
+            return val || "";
         }
 
         $(document).ready(() => window.searchAutocomplete(config));
