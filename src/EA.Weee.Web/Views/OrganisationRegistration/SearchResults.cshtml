@@ -1,4 +1,6 @@
-﻿@using EA.Weee.Web.RazorHelpers
+﻿@using EA.Weee.Web.Extensions
+@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.ViewModels.OrganisationRegistration
 @model EA.Weee.Web.ViewModels.OrganisationRegistration.SearchResultsViewModel
 @{
     ViewBag.Title = "Choose your organisation";
@@ -13,6 +15,9 @@
             </h1>
             <h2 class="govuk-heading-s">We found results for ‘@Model.SearchTerm’</h2>
         </header>
+
+        var hasError = Html.ViewData.ModelState.HasErrorForProperty<OrganisationsFoundViewModel, Guid?>(m => m.SelectedOrganisationId);
+        var errorStyle = hasError ? "govuk-form-group--error" : "";
 
         using (Html.BeginForm())
         {
@@ -31,35 +36,37 @@
             </p>
             <fieldset class="prsd-table-fieldset">
                 <legend class="govuk-visually-hidden">select organisation</legend>
-                <table id="organisationSearchResultsTable" class="govuk-table prsd-table hover-effect">
-                    <thead class="govuk-table__head">
-                        <tr class="govuk-table__row">
-                            <th class="govuk-table__header" style="width: 5%" scope="col">Select</th>
-                            <th class="govuk-table__header" style="width: 40%" scope="col">Name</th>
-                            <th class="govuk-table__header" style="width: 40%" scope="col">Address</th>
-                            <th class="govuk-table__header" style="width: 5%" scope="col">PCS</th>
-                            <th class="govuk-table__header" style="width: 5%" scope="col">AATF</th>
-                            <th class="govuk-table__header" style="width: 5%; padding-right: 20px;" scope="col">AE</th>
-                        </tr>
-                    </thead>
-                    <tbody class="govuk-table__body">
-                        @foreach (var org in Model.Results)
-                        {
+                <div class="@errorStyle">
+                    <table id="organisationSearchResultsTable" class="govuk-table prsd-table hover-effect">
+                        <thead class="govuk-table__head">
+                            <tr class="govuk-table__row">
+                                <th class="govuk-table__header" style="width: 5%" scope="col">Select</th>
+                                <th class="govuk-table__header" style="width: 40%" scope="col">Name</th>
+                                <th class="govuk-table__header" style="width: 40%" scope="col">Address</th>
+                                <th class="govuk-table__header" style="width: 5%" scope="col">PCS</th>
+                                <th class="govuk-table__header" style="width: 5%" scope="col">AATF</th>
+                                <th class="govuk-table__header" style="width: 5%; padding-right: 20px;" scope="col">AE</th>
+                            </tr>
+                        </thead>
+                        <tbody class="govuk-table__body">
+                            @foreach (var org in Model.Results)
                             {
-                                var id = "selectOrg" + org.OrganisationId;
+                                {
+                                    var id = "selectOrg" + org.OrganisationId;
 
-                                <tr>
-                                    <td class="govuk-table__cell" style="text-align: center;"><label class="govuk-visually-hidden" for="@id">select</label> @Html.RadioButtonFor(m => m.SelectedOrganisationId, org.OrganisationId, new { id = @id })</td>
-                                    <td style="word-break: break-word" class="govuk-table__cell">@org.Name</td>
-                                    <td style="word-break: break-word" class="govuk-table__cell">@Html.Raw(@org.AddressString)</td>
-                                    <td class="govuk-table__cell" style="text-align: center;">@org.PcsCount</td>
-                                    <td class="govuk-table__cell" style="text-align: center;">@org.AatfCount</td>
-                                    <td class="govuk-table__cell" style="text-align: center; padding-right: 10px;">@org.AeCount</td>
-                                </tr>
+                                    <tr>
+                                        <td class="govuk-table__cell" style="text-align: center;"><label class="govuk-visually-hidden" for="@id">select</label> @Html.RadioButtonFor(m => m.SelectedOrganisationId, org.OrganisationId, new { id = @id })</td>
+                                        <td style="word-break: break-word" class="govuk-table__cell">@org.Name</td>
+                                        <td style="word-break: break-word" class="govuk-table__cell">@Html.Raw(@org.AddressString)</td>
+                                        <td class="govuk-table__cell" style="text-align: center;">@org.PcsCount</td>
+                                        <td class="govuk-table__cell" style="text-align: center;">@org.AatfCount</td>
+                                        <td class="govuk-table__cell" style="text-align: center; padding-right: 10px;">@org.AeCount</td>
+                                    </tr>
+                                }
                             }
-                        }
-                    </tbody>
-                </table>
+                        </tbody>
+                    </table>
+                </div>
             </fieldset>
             @(this.WeeeGds().Submit("Continue"))
         }
