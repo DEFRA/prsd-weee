@@ -169,7 +169,7 @@
                 .And.Subject.As<StringLengthAttribute>().MaximumLength.Should().Be(CommonMaxFieldLengths.DefaultString);
 
             displayNameAttr.Should().NotBeNull()
-                .And.Subject.As<System.ComponentModel.DisplayNameAttribute>().DisplayName.Should().Be("If you are registering as an Authorised Representative of a non-UK established organisation, enter the brands they place on the market.");
+                .And.Subject.As<System.ComponentModel.DisplayNameAttribute>().DisplayName.Should().Be("If you are registering as an authorised representative of a non-UK established organisation, enter the brands they place on the market.");
         }
 
         [Fact]
