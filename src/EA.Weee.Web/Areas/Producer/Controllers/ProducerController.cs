@@ -55,11 +55,6 @@
             this.submissionService = submissionService;
         }
 
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         [HttpGet]
         [SmallProducerSubmissionContext]
         public ActionResult AlreadySubmittedAndPaid()
