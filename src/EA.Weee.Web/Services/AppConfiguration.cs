@@ -141,5 +141,8 @@
         public string CompaniesHouseScope { get; set; }
 
         public string AddressLookupScope { get; set; }
+
+        [DefaultValue("01/01/2025")]
+        public DateTime SmallProducerFeatureEnabledFrom { get; set; }
     }
 }

@@ -1120,7 +1120,6 @@
     <Content Include="Views\OrganisationRegistration\ContactDetails.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\RepresentingCompanyAddressData.cshtml" />
     <Content Include="Areas\Producer\Views\ProducerSubmission\Index.cshtml" />
-    <Content Include="Areas\Producer\Views\Producer\Index.cshtml" />
     <Content Include="Views\OrganisationRegistration\RegistrationComplete.cshtml" />
     <Content Include="Views\OrganisationRegistration\OrganisationDetails.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\RegisteredCompanyDetailsViewModel.cshtml" />
