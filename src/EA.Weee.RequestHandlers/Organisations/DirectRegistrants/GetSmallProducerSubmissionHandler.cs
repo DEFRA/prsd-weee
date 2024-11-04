@@ -32,7 +32,7 @@
 
             authorization.EnsureOrganisationAccess(directRegistrant.OrganisationId);
 
-            return await smallProducerSubmissionService.GetSmallProducerSubmissionData(directRegistrant);
+            return await smallProducerSubmissionService.GetSmallProducerSubmissionData(directRegistrant, false);
         }
     }
 }

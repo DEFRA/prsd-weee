@@ -7,9 +7,11 @@
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.Organisation;
+    using EA.Weee.Domain.Producer;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Organisations;
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
@@ -91,25 +93,48 @@
 
         private async Task SetDirectRegistrants(OrganisationData organisationData, Guid organisationId)
         {
-            var directRegistrants = await context.DirectRegistrants
-                .Where(o => o.OrganisationId == organisationId)
-                .Include(directRegistrant => directRegistrant.DirectProducerSubmissions)
-                .Include(directRegistrant1 => directRegistrant1.AuthorisedRepresentative)
-                .ToListAsync();
+            if (organisationData.DirectRegistrants == null)
+            {
+                organisationData.DirectRegistrants = new List<DirectRegistrantInfo>();
+            }
 
             var systemTime = await systemDataDataAccess.GetSystemDateTime();
             var currentYear = systemTime.Year;
 
+            var validStatuses = new[]
+            {
+                DirectProducerSubmissionStatus.Complete.Value,
+                DirectProducerSubmissionStatus.Returned.Value
+            };
+
+            var directRegistrants = await context.DirectRegistrants
+                .Where(o => o.OrganisationId == organisationId)
+                .Select(dr => new
+                {
+                    dr.Id,
+                    dr.AuthorisedRepresentativeId,
+                    OverseasProducerName = dr.AuthorisedRepresentative.OverseasProducerName,
+                    HasCurrentYearSubmission = dr.DirectProducerSubmissions
+                        .Any(submission => submission.ComplianceYear == currentYear),
+                    MostRecentSubmittedYear = dr.DirectProducerSubmissions
+                        .Where(submission => validStatuses.Contains(submission.DirectProducerSubmissionStatus.Value))
+                        .OrderByDescending(submission => submission.ComplianceYear)
+                        .Select(submission => submission.ComplianceYear)
+                        .DefaultIfEmpty(0)
+                        .FirstOrDefault()
+                })
+                .ToListAsync();
+
             foreach (var directRegistrant in directRegistrants)
             {
-                var yearSubmissionStarted = directRegistrant.DirectProducerSubmissions
-                    .Any(submission => submission.ComplianceYear == currentYear);
-
                 organisationData.DirectRegistrants.Add(new DirectRegistrantInfo
                 {
                     DirectRegistrantId = directRegistrant.Id,
-                    YearSubmissionStarted = yearSubmissionStarted,
-                    RepresentedCompanyName = directRegistrant.AuthorisedRepresentativeId.HasValue ? directRegistrant.AuthorisedRepresentative.OverseasProducerName : null
+                    YearSubmissionStarted = directRegistrant.HasCurrentYearSubmission,
+                    RepresentedCompanyName = directRegistrant.AuthorisedRepresentativeId.HasValue
+                        ? directRegistrant.OverseasProducerName
+                        : null,
+                    MostRecentSubmittedYear = directRegistrant.MostRecentSubmittedYear
                 });
             }
         }

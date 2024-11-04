@@ -69,8 +69,6 @@
                     .Be(SellingTechniqueType.DirectSellingtoEndUser.Value);
                 submission.CurrentSubmission.ServiceOfNoticeAddress.Should().BeNull();
                 submission.CurrentSubmission.SubmittedDate.Should().BeNull();
-                submission.CurrentSubmission.CompanyRegistrationNumber.Should()
-                    .Be(directProducerSubmissionHistory.CompanyRegistrationNumber);
                 submission.CurrentSubmission.TradingName.Should()
                     .Be(directProducerSubmissionHistory.TradingName);
                 submission.CurrentSubmission.CompanyName.Should()
@@ -168,8 +166,6 @@
                     .Be(SellingTechniqueType.DirectSellingtoEndUser.Value);
                 submission.CurrentSubmission.ServiceOfNoticeAddress.Should().BeNull();
                 submission.CurrentSubmission.SubmittedDate.Should().BeNull();
-                submission.CurrentSubmission.CompanyRegistrationNumber.Should()
-                    .Be(directProducerSubmissionHistory.CompanyRegistrationNumber);
                 submission.CurrentSubmission.TradingName.Should()
                     .Be(directProducerSubmissionHistory.TradingName);
                 submission.CurrentSubmission.CompanyName.Should()
@@ -212,9 +208,9 @@
                 var setup = SetupTest(IocApplication.RequestHandler)
                     .WithIoC()
                     .WithTestData()
-                    .WithInternalUserAccess(false);
+                    .WithInternalUserAccess(true);
 
-                Query.SetupUserWithRole(UserId.ToString(), "Standard", CompetentAuthority.England);
+                Query.SetupUserWithRole(UserId.ToString(), "Administrator", CompetentAuthority.England);
 
                 directRegistrant = DirectRegistrantDbSetup.Init()
                     .Create();

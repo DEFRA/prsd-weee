@@ -345,7 +345,7 @@
                     return RedirectToAction("Details", new { model.RegistrationNumber });
                 }
 
-                return RedirectToAction("Search");
+                return RedirectToAction("Search", new { searchType = SearchTypeEnum.Producer });
             }
         }
 

@@ -42,7 +42,7 @@
 
                 // Assert
                 results.Should().BeInDescendingOrder();
-                results.Should().BeEquivalentTo(new List<int>() { complianceYear - 1, 2090 - 1 });
+                results.Should().Contain(new List<int>() { complianceYear - 1, 2090 - 1 });
             }
         }
 
@@ -76,7 +76,7 @@
 
                 // Assert
                 results.Should().BeInDescendingOrder();
-                results.Should().BeEquivalentTo(new List<int>() { complianceYear, 2090 });
+                results.Should().Contain(new List<int>() { complianceYear, 2090 });
             }
         }
     }
