@@ -29,7 +29,7 @@
             authorization.EnsureCanAccessInternalArea();
             var directRegistrant = await registeredProducerDataAccess.GetDirectRegistrantByRegistration(request.RegistrationNumber);
 
-            return await smallProducerSubmissionService.GetSmallProducerSubmissionData(directRegistrant);
+            return await smallProducerSubmissionService.GetSmallProducerSubmissionData(directRegistrant, true);
         }
     }
 }

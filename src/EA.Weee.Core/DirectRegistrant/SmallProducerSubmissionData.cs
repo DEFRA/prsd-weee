@@ -16,11 +16,11 @@
 
         public IDictionary<int, SmallProducerSubmissionHistoryData> SubmissionHistory {get; set; }
 
-        public bool AnySubmissionSubmitted
+        public bool AnySubmissionsToDisplay
         {
             get
             {
-                return SubmissionHistory.Any(s => s.Value.Status == SubmissionStatus.Submitted);
+                return SubmissionHistory.Any(s => s.Value.Status == SubmissionStatus.Submitted || s.Value.Status == SubmissionStatus.Returned);
             }
         }
 
