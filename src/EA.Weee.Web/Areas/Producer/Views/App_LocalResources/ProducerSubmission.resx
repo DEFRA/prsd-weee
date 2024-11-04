@@ -135,4 +135,7 @@
   <data name="WarningText" xml:space="preserve">
     <value>Changing the details on this page, on submission of your application, will update your contact details on your account.</value>
   </data>
+  <data name="BrandNamesDescription" xml:space="preserve">
+    <value>Enter EEE brand names that you place on the UK market (optional)</value>
+  </data>
 </root>
