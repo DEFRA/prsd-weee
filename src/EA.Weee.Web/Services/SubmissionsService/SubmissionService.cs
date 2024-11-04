@@ -128,28 +128,30 @@
             }
         }
 
-        private Task SetViewBreadcrumb() => 
-            SetBreadcrumb(smallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.ViewOrganisation);
+        private Task SetViewBreadcrumb(Guid organisationId) => 
+            SetBreadcrumb(organisationId, ProducerSubmissionConstant.ViewOrganisation);
 
-        private Task SetHistoricBreadcrumb() =>
-            SetBreadcrumb(smallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
+        private Task SetHistoricBreadcrumb(Guid organisationId) =>
+            SetBreadcrumb(organisationId, ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
 
-        private Task SetInternalBreadcrumb() =>
-           SetBreadcrumb(smallProducerSubmissionData.OrganisationData.Id, InternalUserActivity.DirectRegistrantDetails);
+        private Task SetInternalBreadcrumb(Guid organisationId) =>
+           SetBreadcrumb(organisationId, InternalUserActivity.DirectRegistrantDetails);
 
-        public Task SetTabsCrumb(int? year = null)
+        private Task SetTabsCrumb(int? year = null)
         {
+            var organisationIdValue = this.smallProducerSubmissionData.OrganisationData.Id;
+
             if (this.isInternal)
             {
-                return SetInternalBreadcrumb();
+                return SetInternalBreadcrumb(organisationIdValue);
             }
 
             if (year.HasValue)
             {
-                return SetHistoricBreadcrumb();
+                return SetHistoricBreadcrumb(organisationIdValue);
             }
 
-            return SetViewBreadcrumb();
+            return SetViewBreadcrumb(organisationIdValue);
         }
 
         private IEnumerable<int> YearsDropdownData(SmallProducerSubmissionData data)

@@ -2,6 +2,7 @@
 {
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Web.Areas.Producer.ViewModels;
+    using System;
     using System.Threading.Tasks;
 
     public interface ISubmissionService
@@ -12,7 +13,6 @@
         Task<OrganisationDetailsTabsViewModel> ServiceOfNoticeDetails(int? year = null);
         Task<OrganisationDetailsTabsViewModel> Submissions(int? year = null);
         Task<OrganisationDetailsTabsViewModel> TotalEEEDetails(int? year = null);
-        Task SetTabsCrumb(int? year = null);
         SubmissionService WithSubmissionData(SmallProducerSubmissionData data, bool isInternal = false);
     }
 }

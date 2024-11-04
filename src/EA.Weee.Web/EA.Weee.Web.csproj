@@ -551,6 +551,7 @@
       <DependentUpon>AatfResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Admin\Controllers\Base\AdminBreadcrumbBaseController.cs" />
+    <Compile Include="Areas\Admin\Filters\AdminSmallProducerSubmissionSubmittedContextAttribute.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\OrganisationIdViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\PaymentDetailsViewModel.cs" />
     <Compile Include="Services\SubmissionsService\ISubmissionService.cs" />
@@ -559,7 +560,7 @@
     <Compile Include="Areas\Admin\Controllers\TransferEvidenceReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\EvidenceReportsController.cs" />
     <Compile Include="Areas\Admin\Controllers\ManageEvidenceNotesController.cs" />
-    <Compile Include="Areas\Admin\Filters\SmallProducerSubmissionContextAttribute.cs" />
+    <Compile Include="Areas\Admin\Filters\AdminSmallProducerSubmissionContextAttribute.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllTransferNotesMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewAllEvidenceNotesMap.cs" />
     <Compile Include="Areas\Admin\Mappings\ToViewModel\ViewObligationsAndEvidenceSummaryViewModelMap.cs" />
