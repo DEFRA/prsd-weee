@@ -409,8 +409,20 @@
                 }
             };
 
+            var organisationSearcher = A.Fake<ISearcher<OrganisationSearchResult>>();
             A.CallTo(() => organisationSearcher.Search("testSearchTerm", 5, false))
                 .Returns(fakeResults);
+
+            var weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            var controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher,
+                configurationService,
+                transactionService,
+                weeeCache,
+                () => companiesHouseClient,
+                () => addressLookupClient);
 
             // Act
             var result = await controller.SearchResults("testSearchTerm");
@@ -432,7 +444,6 @@
         [Fact]
         public async Task PostSearchResults_WithInvalidModel_DoesSearchForFiveResultsAndReturnsSearchReturnsView()
         {
-            // Arrange
             var fakeResults = new List<OrganisationSearchResult>()
             {
                 new OrganisationSearchResult()
@@ -442,8 +453,20 @@
                 }
             };
 
+            var organisationSearcher = A.Fake<ISearcher<OrganisationSearchResult>>();
             A.CallTo(() => organisationSearcher.Search("testSearchTerm", 5, false))
                 .Returns(fakeResults);
+
+            var weeeClient = A.Dummy<Func<IWeeeClient>>();
+
+            var controller = new OrganisationRegistrationController(
+                weeeClient,
+                organisationSearcher,
+                configurationService,
+                transactionService,
+                weeeCache,
+                () => companiesHouseClient,
+                () => addressLookupClient);
 
             var viewModel = new SearchResultsViewModel { SearchTerm = "testSearchTerm" };
             controller.ModelState.AddModelError("SomeProperty", "Exception");
