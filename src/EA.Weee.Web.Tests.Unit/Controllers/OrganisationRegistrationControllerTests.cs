@@ -1490,6 +1490,27 @@
         }
 
         [Fact]
+        public async Task GetAddresses_Get_GetsAddresses()
+        {
+            // Act
+            var postcode = "ui7 5yhh";
+
+            var result = await controller.GetAddresses(postcode) as JsonResult;
+
+            result.Should().BeOfType<JsonResult>();
+            result.JsonRequestBehavior.Should().Be(JsonRequestBehavior.AllowGet);
+
+            A.CallTo(() =>
+              addressLookupClient.GetAddressesAsync(
+                  configurationService.CurrentConfiguration.AddressLookupReferencePath,
+                  postcode))
+                .MustHaveHappenedOnceExactly();
+
+            // Assert
+            result.Should().NotBeNull();
+        }
+
+        [Fact]
         public async Task PartnerDetails_Get_ReturnsViewWithSavedData()
         {
             // Arrange
