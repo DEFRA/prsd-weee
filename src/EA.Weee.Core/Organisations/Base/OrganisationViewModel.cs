@@ -32,7 +32,7 @@
         public string CompaniesRegistrationNumber { get; set; }
 
         [StringLength(CommonMaxFieldLengths.DefaultString)]
-        [DisplayName("If you are registering as an Authorised Representative of a non-UK established organisation, enter the brands they place on the market.")]
+        [DisplayName("If you are registering as an authorised representative of a non-UK established organisation, enter the brands they place on the market.")]
         public string EEEBrandNames { get; set; }
 
         [DisplayName("Organisation type")]
