@@ -62,7 +62,7 @@
             var directRegistrant = SetupValidDirectRegistrant();
             var smallProducerData = TestFixture.Create<SmallProducerSubmissionData>();
 
-            A.CallTo(() => smallProducerSubmissionService.GetSmallProducerSubmissionData(directRegistrant)).Returns(smallProducerData);
+            A.CallTo(() => smallProducerSubmissionService.GetSmallProducerSubmissionData(directRegistrant, true)).Returns(smallProducerData);
 
             // Act
             var result = await handler.HandleAsync(request);
