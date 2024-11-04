@@ -54,7 +54,7 @@
             var submissionHistoryData = A.Fake<SmallProducerSubmissionHistoryData>();
             A.CallTo(() => mapper.Map<SmallProducerSubmissionHistoryData>(A<DirectProducerSubmissionSource>._)).Returns(submissionHistoryData);
 
-            var result = await service.GetSmallProducerSubmissionData(directRegistrant);
+            var result = await service.GetSmallProducerSubmissionData(directRegistrant, true);
 
             result.Should().NotBeNull();
             result.DirectRegistrantId.Should().Be(directRegistrantId);
@@ -67,7 +67,7 @@
         public async Task GetSmallProducerSubmissionData_WhenNoCurrentYearSubmission_ReturnsNull()
         {
             var directRegistrant = SetupValidDirectRegistrant(false);
-            var result = await service.GetSmallProducerSubmissionData(directRegistrant);
+            var result = await service.GetSmallProducerSubmissionData(directRegistrant, true);
 
             result.CurrentSubmission.Should().BeNull();
         }
@@ -80,7 +80,7 @@
             var organisationData = A.Fake<OrganisationData>();
             A.CallTo(() => mapper.Map<Organisation, OrganisationData>(directRegistrant.Organisation)).Returns(organisationData);
             
-            await service.GetSmallProducerSubmissionData(directRegistrant);
+            await service.GetSmallProducerSubmissionData(directRegistrant, true);
 
             A.CallTo(() => mapper.Map<SmallProducerSubmissionHistoryData>(A<DirectProducerSubmissionSource>.That.Matches(s => 
                 s.DirectRegistrant == directRegistrant &&
@@ -99,7 +99,7 @@
             A.CallTo(() => mapper.Map<Contact, ContactData>(contact)).Returns(contactData);
 
             // Act
-            var result = await service.GetSmallProducerSubmissionData(directRegistrant);
+            var result = await service.GetSmallProducerSubmissionData(directRegistrant, true);
 
             // Assert
             result.ContactData.Should().Be(contactData);
@@ -114,7 +114,7 @@
             A.CallTo(() => directRegistrant.Contact).Returns(null);
 
             // Act
-            var result = await service.GetSmallProducerSubmissionData(directRegistrant);
+            var result = await service.GetSmallProducerSubmissionData(directRegistrant, true);
 
             // Assert
             result.ContactData.Should().BeNull();
@@ -132,7 +132,7 @@
             A.CallTo(() => mapper.Map<Address, AddressData>(address)).Returns(addressData);
 
             // Act
-            var result = await service.GetSmallProducerSubmissionData(directRegistrant);
+            var result = await service.GetSmallProducerSubmissionData(directRegistrant, true);
 
             // Assert
             result.ContactAddressData.Should().Be(addressData);
@@ -147,7 +147,7 @@
             A.CallTo(() => directRegistrant.Address).Returns(null);
 
             // Act
-            var result = await service.GetSmallProducerSubmissionData(directRegistrant);
+            var result = await service.GetSmallProducerSubmissionData(directRegistrant, true);
 
             // Assert
             result.ContactAddressData.Should().BeNull();
@@ -174,7 +174,7 @@
                 .ReturnsNextFromSequence(submissionHistory1, submissionHistory2, submissionHistory3);
 
             // Act
-            var result = await service.GetSmallProducerSubmissionData(directRegistrant);
+            var result = await service.GetSmallProducerSubmissionData(directRegistrant, true);
 
             // Assert
             result.SubmissionHistory.Should().HaveCount(3);
@@ -193,7 +193,7 @@
             A.CallTo(() => directRegistrant.DirectProducerSubmissions).Returns(new List<DirectProducerSubmission>());
 
             // Act
-            var result = await service.GetSmallProducerSubmissionData(directRegistrant);
+            var result = await service.GetSmallProducerSubmissionData(directRegistrant, true);
 
             // Assert
             result.SubmissionHistory.Should().BeEmpty();
@@ -211,7 +211,7 @@
                 .Returns(new SmallProducerSubmissionHistoryData { ComplianceYear = ComplianceYear });
 
             // Act
-            var result = await service.GetSmallProducerSubmissionData(directRegistrant);
+            var result = await service.GetSmallProducerSubmissionData(directRegistrant, true);
 
             // Assert
             result.CurrentSubmission.Should().NotBeNull();
@@ -230,7 +230,7 @@
                 smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(directRegistrantId,
                     ComplianceYear)).Returns<DirectProducerSubmission>(null);
             // Act
-            var result = await service.GetSmallProducerSubmissionData(directRegistrant);
+            var result = await service.GetSmallProducerSubmissionData(directRegistrant, true);
 
             // Assert
             result.CurrentSubmission.Should().BeNull();
@@ -249,7 +249,7 @@
             A.CallTo(() => mapper.Map<AuthorisedRepresentative, AuthorisedRepresentitiveData>(authorisedRepresentative)).Returns(authorisedRepresentitiveData);
 
             // Act
-            var result = await service.GetSmallProducerSubmissionData(directRegistrant);
+            var result = await service.GetSmallProducerSubmissionData(directRegistrant, true);
 
             // Assert
             result.AuthorisedRepresentitiveData.Should().Be(authorisedRepresentitiveData);
@@ -264,7 +264,7 @@
             A.CallTo(() => directRegistrant.AuthorisedRepresentative).Returns(null);
 
             // Act
-            var result = await service.GetSmallProducerSubmissionData(directRegistrant);
+            var result = await service.GetSmallProducerSubmissionData(directRegistrant, true);
 
             // Assert
             result.AuthorisedRepresentitiveData.Should().BeNull();
@@ -319,7 +319,7 @@
             A.CallTo(() => directRegistrant.DirectProducerSubmissions).Returns(submissions);
 
             // Act
-            var result = await service.GetSmallProducerSubmissionData(directRegistrant);
+            var result = await service.GetSmallProducerSubmissionData(directRegistrant, true);
 
             // Assert
             result.ProducerRegistrationNumber.Should().Be(expectedRegNumber);
@@ -333,10 +333,90 @@
             A.CallTo(() => directRegistrant.DirectProducerSubmissions).Returns(new List<DirectProducerSubmission>());
 
             // Act
-            var result = await service.GetSmallProducerSubmissionData(directRegistrant);
+            var result = await service.GetSmallProducerSubmissionData(directRegistrant, true);
 
             // Assert
             result.ProducerRegistrationNumber.Should().BeEmpty();
+        }
+
+        [Fact]
+        public async Task GetSmallProducerSubmissionData_ExternalUser_PreviousYear_AddsSubmissionToHistory()
+        {
+            // Arrange
+            var submissionYear = ComplianceYear - 1;
+            var registeredProducer = A.Fake<RegisteredProducer>();
+            var directRegistrant = SetupValidDirectRegistrant(hasCurrentYearSubmission: false);
+            var directProducerSubmission = new DirectProducerSubmission(directRegistrant, registeredProducer, submissionYear);
+            directRegistrant.DirectProducerSubmissions.Add(directProducerSubmission);
+
+            var submissionHistoryData = A.Fake<SmallProducerSubmissionHistoryData>();
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionHistoryData>(A<DirectProducerSubmissionSource>._)).Returns(submissionHistoryData);
+
+            // Act
+            var result = await service.GetSmallProducerSubmissionData(directRegistrant, internalUser: false);
+
+            // Assert
+            result.SubmissionHistory.Should().ContainKey(submissionYear);
+            result.SubmissionHistory[submissionYear].Should().Be(submissionHistoryData);
+        }
+
+        [Fact]
+        public async Task GetSmallProducerSubmissionData_ExternalUser_CurrentYearCompleteSubmission_AddsSubmissionToHistory()
+        {
+            // Arrange
+            var registeredProducer = A.Fake<RegisteredProducer>();
+            var directRegistrant = SetupValidDirectRegistrant(hasCurrentYearSubmission: false);
+            var directProducerSubmission = new DirectProducerSubmission(directRegistrant, registeredProducer, ComplianceYear);
+            directProducerSubmission.DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Complete;
+            directRegistrant.DirectProducerSubmissions.Add(directProducerSubmission);
+
+            var submissionHistoryData = A.Fake<SmallProducerSubmissionHistoryData>();
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionHistoryData>(A<DirectProducerSubmissionSource>._)).Returns(submissionHistoryData);
+
+            // Act
+            var result = await service.GetSmallProducerSubmissionData(directRegistrant, internalUser: false);
+
+            // Assert
+            result.SubmissionHistory.Should().ContainKey(ComplianceYear);
+            result.SubmissionHistory[ComplianceYear].Should().Be(submissionHistoryData);
+        }
+
+        [Fact]
+        public async Task GetSmallProducerSubmissionData_ExternalUser_CurrentYearReturnedSubmission_DoesNotAddSubmissionToHistory()
+        {
+            // Arrange
+            var registeredProducer = A.Fake<RegisteredProducer>();
+            var directRegistrant = SetupValidDirectRegistrant(hasCurrentYearSubmission: false);
+            var directProducerSubmission = new DirectProducerSubmission(directRegistrant, registeredProducer, ComplianceYear);
+            directProducerSubmission.DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Returned;
+            directRegistrant.DirectProducerSubmissions.Add(directProducerSubmission);
+
+            // Act
+            var result = await service.GetSmallProducerSubmissionData(directRegistrant, internalUser: false);
+
+            // Assert
+            result.SubmissionHistory.Should().NotContainKey(ComplianceYear);
+        }
+
+        [Fact]
+        public async Task GetSmallProducerSubmissionData_InternalUser_CurrentYearReturnedSubmission_AddsSubmissionToHistory()
+        {
+            // Arrange
+            var registeredProducer = A.Fake<RegisteredProducer>();
+            var directRegistrant = SetupValidDirectRegistrant(hasCurrentYearSubmission: false);
+            var directProducerSubmission = new DirectProducerSubmission(directRegistrant, registeredProducer, ComplianceYear);
+            directProducerSubmission.DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Returned;
+            directRegistrant.DirectProducerSubmissions.Add(directProducerSubmission);
+
+            var submissionHistoryData = A.Fake<SmallProducerSubmissionHistoryData>();
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionHistoryData>(A<DirectProducerSubmissionSource>._)).Returns(submissionHistoryData);
+
+            // Act
+            var result = await service.GetSmallProducerSubmissionData(directRegistrant, internalUser: true);
+
+            // Assert
+            result.SubmissionHistory.Should().ContainKey(ComplianceYear);
+            result.SubmissionHistory[ComplianceYear].Should().Be(submissionHistoryData);
         }
 
         private static DirectProducerSubmission CreateSubmission(int year)

@@ -6,6 +6,6 @@
 
     public interface ISmallProducerSubmissionService
     {
-        Task<SmallProducerSubmissionData> GetSmallProducerSubmissionData(DirectRegistrant directRegistrant);
+        Task<SmallProducerSubmissionData> GetSmallProducerSubmissionData(DirectRegistrant directRegistrant, bool internalUser);
     }
 }
