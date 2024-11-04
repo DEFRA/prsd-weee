@@ -27,7 +27,7 @@
             this.smallProducerDataAccess = smallProducerDataAccess;
         }
 
-        public async Task<SmallProducerSubmissionData> GetSmallProducerSubmissionData(DirectRegistrant directRegistrant)
+        public async Task<SmallProducerSubmissionData> GetSmallProducerSubmissionData(DirectRegistrant directRegistrant, bool internalUser)
         {
             var organisation = mapper.Map<Organisation, OrganisationData>(directRegistrant.Organisation);
             var systemTime = await systemDataDataAccess.GetSystemDateTime();
@@ -59,9 +59,19 @@
 
             foreach (var directProducerSubmission in submissionHistory)
             {
-                var history = mapper.Map<SmallProducerSubmissionHistoryData>(
+                if ((!internalUser && systemTime.Year != directProducerSubmission.ComplianceYear) ||
+                    directProducerSubmission.DirectProducerSubmissionStatus == DirectProducerSubmissionStatus.Complete)
+                {
+                    var history = mapper.Map<SmallProducerSubmissionHistoryData>(
                     new DirectProducerSubmissionSource(directRegistrant, directProducerSubmission));
-                submissionData.SubmissionHistory.Add(directProducerSubmission.ComplianceYear, history);
+                    submissionData.SubmissionHistory.Add(directProducerSubmission.ComplianceYear, history);
+                }
+                else if (internalUser)
+                {
+                    var history = mapper.Map<SmallProducerSubmissionHistoryData>(
+                    new DirectProducerSubmissionSource(directRegistrant, directProducerSubmission));
+                    submissionData.SubmissionHistory.Add(directProducerSubmission.ComplianceYear, history);
+                }
             }
 
             return submissionData;

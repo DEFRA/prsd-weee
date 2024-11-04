@@ -311,10 +311,21 @@
                 {
                     using (var client = apiClient())
                     {
-                        var systemTime = new GetApiUtcDate();
-                        var date = await client.SendAsync(User.GetAccessToken(), systemTime);
+                        var organisationDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(viewModel.OrganisationId));
 
-                        return this.RedirectToAction(nameof(ProducerController.Submissions), typeof(ProducerController).GetControllerName(), new { area = "Producer", organisationId = viewModel.OrganisationId, directRegistrantId = viewModel.DirectRegistrantId, year = date.Year });
+                        var year = organisationDetails.DirectRegistrants.FirstOrDefault(d =>
+                            d.DirectRegistrantId == viewModel.DirectRegistrantId);
+
+                        return this.RedirectToAction(
+                            nameof(ProducerController.Submissions),
+                            typeof(ProducerController).GetControllerName(),
+                            new
+                            {
+                                area = "Producer",
+                                organisationId = viewModel.OrganisationId,
+                                directRegistrantId = viewModel.DirectRegistrantId,
+                                year = year?.MostRecentSubmittedYear > 0 ? (int?)year.MostRecentSubmittedYear : null
+                            });
                     }
                 }
 
