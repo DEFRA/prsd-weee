@@ -122,13 +122,8 @@
                     await client.SendAsync(User.GetAccessToken(), request);
                 }
 
-                if (model.RedirectToCheckAnswers == true)
-                {
-                    return RedirectToAction(nameof(ProducerController.CheckAnswers),
-                    typeof(ProducerController).GetControllerName());
-                }
-                return RedirectToAction(nameof(ProducerController.TaskList),
-                    typeof(ProducerController).GetControllerName());
+                return RedirectToAction(model.RedirectToCheckAnswers == true ? nameof(ProducerController.CheckAnswers) : 
+                    nameof(ProducerController.TaskList), typeof(ProducerController).GetControllerName());
             }
 
             await SetBreadcrumb(model.OrganisationId, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);

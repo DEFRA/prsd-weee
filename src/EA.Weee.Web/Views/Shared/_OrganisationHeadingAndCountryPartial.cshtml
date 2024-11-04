@@ -11,7 +11,7 @@
 <h2 class="govuk-heading-s">Enter the details of the organisation or business applying to register.</h2>
 @Html.Gds().HintParagraph("If you don't have a company registration number, leave this field blank")
 
-<div class="govuk-form-group @(!Model.LookupFound && Model.Action == "Find Company" ? "govuk-form-group--error" : "")">
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesRegistrationNumber) @(!Model.LookupFound && Model.Action == "Find Company" ? "govuk-form-group--error" : "")">
     @Html.Gds().LabelFor(m => m.CompaniesRegistrationNumber)
     @Html.Gds().ValidationMessageFor(m => m.CompaniesRegistrationNumber)
     @if (Model.LookupFound == false && Model.Action == "Find Company")
