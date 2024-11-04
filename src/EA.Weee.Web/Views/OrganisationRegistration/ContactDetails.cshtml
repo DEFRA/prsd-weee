@@ -81,14 +81,14 @@
 
         <button type="button"
                 name="Find address"
-                class="govuk-button"
+                class="govuk-button only-js-enabled"
                 id="find-address"
                 data-module="govuk-button"
                 data-prevent-double-click="true">
             Find address
         </button>
 
-        <div class="govuk-warning-text" style="display: none;">
+        <div class="govuk-warning-text only-js-enabled" style="display: none;">
             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
             <strong class="govuk-warning-text__text">
                 <span class="govuk-visually-hidden">Warning</span>
@@ -96,7 +96,7 @@
             </strong>
         </div>
 
-        <div class="govuk-form-group">
+        <div class="govuk-form-group only-js-enabled">
             <h1 class="govuk-label-wrapper">
                 <label class="govuk-label" for="address-results">
                     Select address
@@ -146,6 +146,14 @@
         @(this.WeeeGds().BackToTopLink())
     }
 }
+
+<noscript>
+    <style>
+        .only-js-enabled {
+            display: none;
+        }
+    </style>
+</noscript>
 
 @section scripts {
     @Scripts.Render("~/bundles/address-postcode-search")
