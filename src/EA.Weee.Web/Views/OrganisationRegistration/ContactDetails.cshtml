@@ -102,7 +102,7 @@
                     Select address
                 </label>
             </h1>
-            <select class="govuk-select gds-auto-complete ui-autocomplete-input govuk-!-width-one-half"
+            <select class="govuk-select ui-autocomplete-input govuk-!-width-one-half"
                     id="address-results"
                     name="Address Results"
                     data-module="autocomplete">
@@ -148,7 +148,9 @@
 }
 
 @section scripts {
+    @Scripts.Render("~/bundles/address-postcode-search")
+
     <script>
-           window.contactDetailsPostCodeSearch("@Url.Action("GetAddresses")?postcode=");
+        window.contactDetailsPostCodeSearch("@Url.Action("GetAddresses")?postcode=");
     </script>
 }
