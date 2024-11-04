@@ -52,7 +52,7 @@
         private void EnsureAuthorisation()
         {
             authorization.EnsureCanAccessInternalArea();
-            authorization.EnsureUserInRole(Roles.InternalUser);
+            authorization.EnsureUserInRole(Roles.InternalAdmin);
         }
 
         private async Task<DirectProducerSubmission> GetAndValidateSubmission(Guid submissionId)
@@ -188,7 +188,6 @@
 
             target.CompanyName = source.CompanyName;
             target.TradingName = source.TradingName;
-            target.CompanyRegistrationNumber = source.CompanyRegistrationNumber;
             target.SellingTechniqueType = source.SellingTechniqueType;
         }
 

@@ -33,8 +33,7 @@
             using (var client = weeeClient())
             {
                 var secureId = secureReturnUrlHelper.GenerateSecureRandomString(directRegistrantId);
-                var returnUrl = string.Format(configurationService.CurrentConfiguration.GovUkPayReturnBaseUrl,
-                    directRegistrantId.ToString(), secureId);
+                var returnUrl = string.Format(configurationService.CurrentConfiguration.GovUkPayReturnBaseUrl, secureId);
 
                 var paymentRequest = new CreateCardPaymentRequest
                 {

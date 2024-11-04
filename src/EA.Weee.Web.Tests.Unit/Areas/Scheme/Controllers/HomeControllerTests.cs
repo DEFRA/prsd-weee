@@ -257,7 +257,7 @@
             {
                 HasAatfs = true
             };
-            
+
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
               .Returns(organisationData);
 
@@ -363,7 +363,7 @@
 
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
               .Returns(organisationData);
-            
+
             var result = await HomeControllerSetupForAATFEvidenceNotesAndPBSEvidenceNotes(true, true).GetActivities(A.Dummy<Guid>(), organisationData, null);
 
             Assert.DoesNotContain(PcsAction.ManageAeContactDetails, result);
@@ -2225,10 +2225,10 @@
         [Fact]
         public async Task ChooseActivityPOST_HistoricProducerRegistrationSubmission_ShouldRedirectToProducerSubmissions()
         {
+            // Arrange
             var organisationId = Guid.NewGuid();
             var directRegistrantId = Guid.NewGuid();
-            var date = SystemTime.UtcNow.Year;
-
+            var submittedYear = 2024;
             var model = new ChooseActivityViewModel
             {
                 SelectedValue = ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
@@ -2236,19 +2236,34 @@
                 DirectRegistrantId = directRegistrantId
             };
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(date, 1, 1));
+            var organisationData = new OrganisationData
+            {
+                DirectRegistrants = new List<DirectRegistrantInfo>
+                {
+                    new DirectRegistrantInfo
+                    {
+                        DirectRegistrantId = directRegistrantId,
+                        MostRecentSubmittedYear = submittedYear
+                    }
+                }
+            };
 
-            var result = await HomeController().ChooseActivity(model) as RedirectToRouteResult;
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(organisationData);
 
-            Assert.NotNull(result);
-            Assert.Equal("Submissions", result.RouteValues["action"]);
-            Assert.Equal("Producer", result.RouteValues["controller"]);
-            Assert.Equal("Producer", result.RouteValues["area"]);
-            Assert.Equal(organisationId, result.RouteValues["organisationId"]);
-            Assert.Equal(directRegistrantId, result.RouteValues["directRegistrantId"]);
-            Assert.Equal(date, result.RouteValues["year"]);
+            // Act
+            var result = await HomeController().ChooseActivity(model);
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappenedOnceExactly();
+            // Assert
+            result.Should().BeOfType<RedirectToRouteResult>()
+                .Which.RouteValues.Should().ContainKeys("action", "controller", "area", "organisationId", "directRegistrantId", "year")
+                .And.ContainValues(
+                    nameof(ProducerController.Submissions),
+                    typeof(ProducerController).GetControllerName(),
+                    "Producer",
+                    organisationId,
+                    directRegistrantId,
+                    submittedYear);
         }
 
         [Fact]
@@ -2376,7 +2391,7 @@
             // Arrange
             var organisationId = Guid.NewGuid();
             var directRegistrantId = Guid.NewGuid();
-            var currentYear = 2023;
+            const int submittedYear = 2023;
             var viewModel = new ChooseActivityViewModel
             {
                 OrganisationId = organisationId,
@@ -2384,8 +2399,20 @@
                 SelectedValue = ProducerSubmissionConstant.HistoricProducerRegistrationSubmission
             };
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._))
-                .Returns(new DateTime(currentYear, 1, 1));
+            var organisationData = new OrganisationData
+            {
+                DirectRegistrants = new List<DirectRegistrantInfo>
+                {
+                    new DirectRegistrantInfo
+                    {
+                        DirectRegistrantId = directRegistrantId,
+                        MostRecentSubmittedYear = submittedYear
+                    }
+                }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(organisationData);
 
             // Act
             var result = await HomeController().ChooseActivity(viewModel);
@@ -2393,7 +2420,16 @@
             // Assert
             result.Should().BeOfType<RedirectToRouteResult>()
                 .Which.RouteValues.Should().ContainKeys("action", "controller", "area", "organisationId", "directRegistrantId", "year")
-                .And.ContainValues(nameof(ProducerController.Submissions), typeof(ProducerController).GetControllerName(), "Producer", organisationId, directRegistrantId, currentYear);
+                .And.ContainValues(
+                    nameof(ProducerController.Submissions),
+                    typeof(ProducerController).GetControllerName(),
+                    "Producer",
+                    organisationId,
+                    directRegistrantId,
+                    submittedYear);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>.That.Matches(x => x.OrganisationId == organisationId)))
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -2631,6 +2667,136 @@
 
             var result = HomeController().HasOnlySmallProducerActivities(activities);
             Assert.False(result);
+        }
+
+        [Fact]
+        public async Task ChooseActivityPOST_HistoricProducerRegistrationSubmission_WithNoSubmittedYear_ShouldRedirectWithNullYear()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var directRegistrantId = Guid.NewGuid();
+            var model = new ChooseActivityViewModel
+            {
+                SelectedValue = ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
+                OrganisationId = organisationId,
+                DirectRegistrantId = directRegistrantId
+            };
+
+            var organisationData = new OrganisationData
+            {
+                DirectRegistrants = new List<DirectRegistrantInfo>
+                {
+                    new DirectRegistrantInfo
+                    {
+                        DirectRegistrantId = directRegistrantId,
+                        MostRecentSubmittedYear = 0
+                    }
+                }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(organisationData);
+
+            // Act
+            var result = await HomeController().ChooseActivity(model);
+
+            // Assert
+            result.Should().BeOfType<RedirectToRouteResult>()
+                .Which.RouteValues.Should().ContainKeys("action", "controller", "area", "organisationId", "directRegistrantId", "year")
+                .And.ContainValues(
+                    nameof(ProducerController.Submissions),
+                    typeof(ProducerController).GetControllerName(),
+                    "Producer",
+                    organisationId,
+                    directRegistrantId,
+                    null);
+        }
+
+        [Fact]
+        public async Task ChooseActivityPOST_HistoricProducerRegistrationSubmission_WithSubmittedYear_ShouldRedirectWithYear()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var directRegistrantId = Guid.NewGuid();
+            const int submittedYear = 2023;
+            var model = new ChooseActivityViewModel
+            {
+                SelectedValue = ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
+                OrganisationId = organisationId,
+                DirectRegistrantId = directRegistrantId
+            };
+
+            var organisationData = new OrganisationData
+            {
+                DirectRegistrants = new List<DirectRegistrantInfo>
+                {
+                    new DirectRegistrantInfo
+                    {
+                        DirectRegistrantId = directRegistrantId,
+                        MostRecentSubmittedYear = submittedYear
+                    }
+                }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(organisationData);
+
+            // Act
+            var result = await HomeController().ChooseActivity(model);
+
+            // Assert
+            result.Should().BeOfType<RedirectToRouteResult>()
+                .Which.RouteValues.Should().ContainKeys("action", "controller", "area", "organisationId", "directRegistrantId", "year")
+                .And.ContainValues(
+                    nameof(ProducerController.Submissions),
+                    typeof(ProducerController).GetControllerName(),
+                    "Producer",
+                    organisationId,
+                    directRegistrantId,
+                    submittedYear);
+        }
+
+        [Fact]
+        public async Task ChooseActivityPOST_HistoricProducerRegistrationSubmission_WithNoMatchingDirectRegistrant_ShouldRedirectWithNullYear()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var directRegistrantId = Guid.NewGuid();
+            var model = new ChooseActivityViewModel
+            {
+                SelectedValue = ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
+                OrganisationId = organisationId,
+                DirectRegistrantId = directRegistrantId
+            };
+
+            var organisationData = new OrganisationData
+            {
+                DirectRegistrants = new List<DirectRegistrantInfo>
+                {
+                    new DirectRegistrantInfo
+                    {
+                        DirectRegistrantId = Guid.NewGuid(),
+                        MostRecentSubmittedYear = 2023
+                    }
+                }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(organisationData);
+
+            // Act
+            var result = await HomeController().ChooseActivity(model);
+
+            // Assert
+            result.Should().BeOfType<RedirectToRouteResult>()
+                .Which.RouteValues.Should().ContainKeys("action", "controller", "area", "organisationId", "directRegistrantId", "year")
+                .And.ContainValues(
+                    nameof(ProducerController.Submissions),
+                    typeof(ProducerController).GetControllerName(),
+                    "Producer",
+                    organisationId,
+                    directRegistrantId,
+                    null);
         }
 
         private void SetupCommonFakes(OrganisationData organisationDetails)

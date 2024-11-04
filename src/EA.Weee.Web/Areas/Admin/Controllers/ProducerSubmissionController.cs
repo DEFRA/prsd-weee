@@ -188,6 +188,8 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RemoveSubmission(ConfirmRemovalViewModel viewModel)
         {
+            SetBreadcrumb();
+
             if (ModelState.IsValid)
             {
                 if (viewModel.SelectedValue == "Yes")
@@ -222,6 +224,8 @@
         [HttpGet]
         public ActionResult Removed(string registrationNumber, string producerName, int year)
         {
+            SetBreadcrumb();
+
             return View(new RemovedViewModel
             {
                 RegistrationNumber = registrationNumber,
@@ -249,14 +253,98 @@
             }
         }
 
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        [AdminSmallProducerSubmissionContext(Order = 1)]
         [HttpGet]
-        public ActionResult OrganisationHasNoSubmissions(Guid organisationId)
+        public ActionResult ReturnProducerRegistration(string registrationNumber, int year)
+        {
+            SetBreadcrumb();
+
+            var submission = SmallProducerSubmissionData.SubmissionHistory[year];
+            var selectedValue = string.Empty;
+            var model = new ConfirmReturnViewModel
+            {
+                SelectedValue = selectedValue,
+                Producer = new ProducerDetailsScheme
+                {
+                    ComplianceYear = year,
+                    ProducerName = SmallProducerSubmissionData.HasAuthorisedRepresentitive ? SmallProducerSubmissionData.AuthorisedRepresentitiveData.CompanyName : submission.CompanyName,
+                    RegistrationNumber = registrationNumber,
+                    RegisteredProducerId = submission.RegisteredProducerId
+                },
+                DirectProducerSubmissionId = submission.DirectProducerSubmissionId
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ReturnProducerRegistration(ConfirmReturnViewModel viewModel)
+        {
+            SetBreadcrumb();
+
+            if (ModelState.IsValid)
+            {
+                if (viewModel.SelectedValue == "Yes")
+                {
+                    using (IWeeeClient client = apiClient())
+                    {
+                        await client.SendAsync(User.GetAccessToken(), new ReturnSmallProducerSubmission(viewModel.DirectProducerSubmissionId));
+                    }
+
+                    return RedirectToAction(nameof(Returned),
+                        new { registrationNumber = viewModel.Producer.RegistrationNumber, producerName = viewModel.Producer.ProducerName, year = viewModel.Producer.ComplianceYear });
+                }
+                else
+                {
+                    return RedirectToAction(nameof(Submissions),
+                        new { viewModel.Producer.RegistrationNumber });
+                }
+            }
+            else
+            {
+                return View(viewModel);
+            }
+        }
+
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        [HttpGet]
+        public ActionResult Returned(string registrationNumber, string producerName, int year)
+        {
+            SetBreadcrumb();
+
+            return View(new ReturnedViewModel
+            {
+                RegistrationNumber = registrationNumber,
+                ProducerName = producerName,
+                ComplianceYear = year
+            });
+        }
+
+        [AuthorizeInternalClaims(Claims.InternalAdmin)]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Returned(ReturnedViewModel model)
+        {
+            using (var client = apiClient())
+            {
+                SmallProducerSubmissionData = await client.SendAsync(User.GetAccessToken(), new GetSmallProducerSubmissionByRegistrationNumber(model.RegistrationNumber));
+
+                return RedirectToAction(nameof(Submissions),
+                    new { model.RegistrationNumber });
+            }
+        }
+
+        [HttpGet]
+        public ActionResult OrganisationHasNoSubmissions(Guid organisationId, bool? fromRemoved = false)
         {
             SetBreadcrumb();
 
             var model = new OrganisationIdViewModel()
             {
-                OrganisationId = organisationId
+                OrganisationId = organisationId,
+                DisplayBack = fromRemoved == false
             };
 
             return View(model);
@@ -264,7 +352,7 @@
 
         private ActionResult RedirectToOrganisationHasNoSubmissions(Guid organisationId)
         {
-            return RedirectToAction("OrganisationHasNoSubmissions", new { organisationId });
+            return RedirectToAction("OrganisationHasNoSubmissions", new { organisationId, fromRemoved = true});
         }
 
         private async Task<ManualPaymentResult> SendPaymentDetails(PaymentDetailsViewModel model)

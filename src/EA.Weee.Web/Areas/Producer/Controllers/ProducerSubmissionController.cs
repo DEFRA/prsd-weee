@@ -122,13 +122,8 @@
                     await client.SendAsync(User.GetAccessToken(), request);
                 }
 
-                if (model.RedirectToCheckAnswers == true)
-                {
-                    return RedirectToAction(nameof(ProducerController.CheckAnswers),
-                    typeof(ProducerController).GetControllerName());
-                }
-                return RedirectToAction(nameof(ProducerController.TaskList),
-                    typeof(ProducerController).GetControllerName());
+                return RedirectToAction(model.RedirectToCheckAnswers == true ? nameof(ProducerController.CheckAnswers) : 
+                    nameof(ProducerController.TaskList), typeof(ProducerController).GetControllerName());
             }
 
             await SetBreadcrumb(model.OrganisationId, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
@@ -394,8 +389,28 @@
             return View(model);
         }
 
+        [HttpGet]
+        [SmallProducerSubmissionContext]
+        public async Task<ActionResult> Registered()
+        {
+            var model = new RegisteredResultModel
+            {
+                OrganisationId = SmallProducerSubmissionData.OrganisationData.Id,
+                ComplianceYear = SmallProducerSubmissionData.CurrentSubmission.ComplianceYear,
+            };
+
+            await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+
+            return View(model);
+        }
+
         private async Task<ActionResult> RedirectToNextUrl()
         {
+            if (SmallProducerSubmissionData.CurrentSubmission.HasPaid)
+            {
+                return RedirectToAction(nameof(Registered));
+            }
+
             var existingPaymentInProgress = await paymentService.CheckInProgressPaymentAsync(User.GetAccessToken(),
                             SmallProducerSubmissionData.DirectRegistrantId);
 
@@ -429,7 +444,7 @@
         [SmallProducerSubmissionContext]
         public async Task<ActionResult> PaymentSuccess(string reference)
         {
-            var model = new PaymentResultModel()
+            var model = new RegisteredResultModel
             {
                 PaymentReference = reference,
                 OrganisationId = SmallProducerSubmissionData.OrganisationData.Id,

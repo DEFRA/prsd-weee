@@ -688,6 +688,7 @@
             var routeValues = ((RedirectToRouteResult)result).RouteValues;
 
             Assert.Equal("Search", routeValues["action"]);
+            Assert.Equal(SearchTypeEnum.Producer, routeValues["searchType"]);
         }
 
         [Fact]

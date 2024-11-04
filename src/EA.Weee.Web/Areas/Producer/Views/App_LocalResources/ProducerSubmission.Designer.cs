@@ -61,6 +61,15 @@ namespace Resources.ProducerSubmission {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Enter EEE brand names that you place on the UK market (optional).
+        /// </summary>
+        public static string BrandNamesDescription {
+            get {
+                return ResourceManager.GetString("BrandNamesDescription", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Discard changes.
         /// </summary>
         public static string DiscardChanges {
