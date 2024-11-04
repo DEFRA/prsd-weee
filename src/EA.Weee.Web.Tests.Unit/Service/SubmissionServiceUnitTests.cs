@@ -183,50 +183,6 @@
                 .MustHaveHappenedOnceExactly();
         }
 
-        [Fact]
-        public async Task SetTabsCrumb_InternalSetCorrectCrumb()
-        {
-            var data = GetDefaultSmallProducerData();
-
-            service.WithSubmissionData(data, true);
-
-            await service.SetTabsCrumb();
-
-            breadcrumb.InternalActivity.Should().Be(InternalUserActivity.DirectRegistrantDetails);
-        }
-
-        [Fact]
-        public async Task SetTabsCrumb_ExternalSetCorrectCrumb()
-        {
-            var data = GetDefaultSmallProducerData();
-
-            service.WithSubmissionData(data);
-
-            A.CallTo(() => weeeCache.FetchOrganisationName(data.OrganisationData.Id)).Returns(data.OrganisationData.Name);
-
-            await service.SetTabsCrumb(2004);
-
-            breadcrumb.OrganisationId.Should().Be(data.OrganisationData.Id);
-            breadcrumb.ExternalOrganisation.Should().Be(data.OrganisationData.Name);
-            breadcrumb.ExternalActivity.Should().Be(ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
-        }
-
-        [Fact]
-        public async Task SetTabsCrumb_ExternalSetCorrectCrumbForView()
-        {
-            var data = GetDefaultSmallProducerData();
-
-            service.WithSubmissionData(data);
-
-            A.CallTo(() => weeeCache.FetchOrganisationName(data.OrganisationData.Id)).Returns(data.OrganisationData.Name);
-
-            await service.SetTabsCrumb();
-
-            breadcrumb.OrganisationId.Should().Be(data.OrganisationData.Id);
-            breadcrumb.ExternalOrganisation.Should().Be(data.OrganisationData.Name);
-            breadcrumb.ExternalActivity.Should().Be(ProducerSubmissionConstant.ViewOrganisation);
-        }
-
         [Theory]
         [InlineData("ContactDetails")]
         [InlineData("OrganisationDetails")]
@@ -290,6 +246,32 @@
 
             Assert.Equal(breadcrumb.OrganisationId, data.OrganisationData.Id);
             Assert.Equal(breadcrumb.ExternalOrganisation, expected);
+        }
+
+        [Theory]
+        [InlineData(null, "ContactDetails")]
+        [InlineData(null, "OrganisationDetails")]
+        [InlineData(null, "RepresentedOrganisationDetails")]
+        [InlineData(null, "ServiceOfNoticeDetails")]
+        [InlineData(null, "TotalEEEDetails")]
+        public async Task SetBreadcrumbsInternal(int? year, string method)
+        {
+            var data = GetDefaultSmallProducerData();
+
+            service.WithSubmissionData(data, true);
+
+            var expected = "org name";
+
+            A.CallTo(() => weeeCache
+            .FetchOrganisationName(data.OrganisationData.Id))
+                .Returns(expected);
+
+            var methodInfo = typeof(SubmissionService).GetMethod(method, new[] { typeof(int?) });
+            var task = (Task<OrganisationDetailsTabsViewModel>)methodInfo.Invoke(service, new object[] { year });
+
+            var result = await task;
+
+            Assert.Equal(breadcrumb.InternalActivity, InternalUserActivity.DirectRegistrantDetails);
         }
 
         private IEnumerable<int> ExpectedYears(SmallProducerSubmissionData d) => 

@@ -38,16 +38,6 @@
 
             controller.SmallProducerSubmissionData = data;
 
-            if (!data.AnySubmissions)
-            {
-                context.Result = new RedirectToRouteResult(new System.Web.Routing.RouteValueDictionary
-                {
-                    { "action", nameof(Areas.Admin.Controllers.ProducerSubmissionController.OrganisationHasNoSubmissions) },
-                    { "controller", typeof(Areas.Admin.Controllers.ProducerSubmissionController).GetControllerName() },
-                    { "organisationId", data.OrganisationData.Id }
-                });
-            }
-
             base.OnActionExecuting(context);
         }
     }
