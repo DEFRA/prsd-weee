@@ -88,7 +88,7 @@
                     config.OAuthTokenClientId, config.OAuthTokenClientSecret, config.AddressLookupScope,
                     config.OAuthTokenEndpoint);
 
-                return new AddressLookupClient(config.CompaniesHouseBaseUrl, httpClient, retryPolicy,
+                return new AddressLookupClient(config.AddressLookupBaseUrl, httpClient, retryPolicy,
                     jsonSerializer, httpClientHandlerConfig, logger, oauthProvider);
             }).As<IAddressLookupClient>();
 
