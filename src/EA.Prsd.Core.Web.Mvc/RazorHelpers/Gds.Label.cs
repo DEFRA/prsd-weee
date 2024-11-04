@@ -36,64 +36,6 @@
         {
             return LabelFor(expression, htmlAttributes, CssLabelClass, optionalMessage);
         }
-
-        public MvcHtmlString LabelForWithText<TValue>(Expression<Func<TModel, TValue>> expression, string labelText, bool showOptionalLabel = true)
-        {
-            return LabelForWithCustomText(expression, labelText, new RouteValueDictionary(), CssLabelClass, string.Empty, showOptionalLabel);
-        }
-
-        private MvcHtmlString LabelForWithCustomText<TValue>(
-            Expression<Func<TModel, TValue>> expression,
-            string customLabelText,
-            IDictionary<string, object> htmlAttributes,
-            string cssClass,
-            string optionalMessage = "",
-            bool showOptionalLabel = true)
-        {
-            var modelMetadata = ModelMetadata.FromLambdaExpression(expression, htmlHelper.ViewData);
-
-            var containsRequiredIfAttribute = ContainsAttribute<RequiredIfAttribute>(modelMetadata, modelMetadata.PropertyName);
-
-            string appendOptional;
-            if (string.IsNullOrWhiteSpace(optionalMessage))
-            {
-                appendOptional = modelMetadata.IsRequired || containsRequiredIfAttribute || !showOptionalLabel ? string.Empty : "(optional)";
-            }
-            else
-            {
-                appendOptional = optionalMessage;
-            }
-
-            var htmlFieldName = ExpressionHelper.GetExpressionText(expression);
-
-            if (string.IsNullOrEmpty(customLabelText))
-            {
-                return MvcHtmlString.Empty;
-            }
-
-            var labelTag = new TagBuilder("label");
-
-            labelTag.MergeAttributes(htmlAttributes);
-
-            if (!labelTag.Attributes.ContainsKey("id"))
-            {
-                labelTag.Attributes.Add("id",
-                    $"{htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId(htmlFieldName)}-label");
-            }
-
-            if (!labelTag.Attributes.ContainsKey("for"))
-            {
-                labelTag.Attributes.Add("for",
-                    htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId(htmlFieldName));
-            }
-
-            labelTag.InnerHtml = customLabelText + " " + appendOptional;
-
-            labelTag.AddCssClass(cssClass);
-
-            return MvcHtmlString.Create(labelTag.ToString(TagRenderMode.Normal));
-        }
-
         private MvcHtmlString LabelFor<TValue>(Expression<Func<TModel, TValue>> expression, IDictionary<string, object> htmlAttributes, string cssClass, string optionalMessage = "", bool showOptionalLabel = true)
         {
             var modelMetadata = ModelMetadata.FromLambdaExpression(expression, htmlHelper.ViewData);
