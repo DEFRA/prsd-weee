@@ -112,7 +112,7 @@
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.EEEBrandNames)">
-            <h2 class="govuk-heading-s">Enter EEE brand names that you place on the UK market</h2>
+            <h2 class="govuk-heading-s">@Resources.ProducerSubmission.ProducerSubmission.BrandNamesDescription</h2>
             @Html.Gds().LabelFor(m => m.Organisation.EEEBrandNames, showOptionalLabel: false)
             @Html.Gds().ValidationMessageFor(m => m.Organisation.EEEBrandNames)
             @Html.Gds().TextAreaFor(m => m.Organisation.EEEBrandNames)
