@@ -95,7 +95,7 @@
             {
                 return AppendHiddenErrorText(generatedHtml);
             }
-            
+
             return null;
         }
 
@@ -171,7 +171,7 @@
                         fieldName = fieldName[0].ToString().ToUpper() + fieldName.Substring(1);
                     }
                 }
-                
+
                 errorListBuilder.AppendLine("<li>");
                 errorListBuilder.AppendFormat("<a href=\"#{0}\">{1}</a>", fieldName,
                     modelError.ModelError.ErrorMessage);
@@ -223,6 +223,85 @@
             public ModelError ModelError { get; private set; }
 
             public string FieldId { get; private set; }
+        }
+
+        public string FormGroupClassWithNested<TProperty>(Expression<Func<TModel, TProperty>> expression)
+        {
+            var propertyName = GetIndexedPropertyNameForNested(expression);
+            if (string.IsNullOrWhiteSpace(propertyName))
+            {
+                return null;
+            }
+
+            // Get the current model prefix (if any)
+            var prefix = htmlHelper.ViewData.TemplateInfo.HtmlFieldPrefix;
+
+            // Check both the prefixed and direct property names
+            var fullPath = !string.IsNullOrWhiteSpace(prefix)
+                ? $"{prefix}.{propertyName}"
+                : propertyName;
+
+            var modelState = htmlHelper.ViewData.ModelState[fullPath]
+                             ?? htmlHelper.ViewData.ModelState[propertyName];
+
+            if (modelState == null || modelState.Errors.Count == 0)
+            {
+                return null;
+            }
+
+            return "govuk-form-group govuk-form-group--error error";
+        }
+
+        private static string GetIndexedPropertyNameForNested(Expression expression)
+        {
+            if (expression == null)
+            {
+                return null;
+            }
+
+            if (expression is LambdaExpression lambda)
+            {
+                expression = lambda.Body;
+            }
+
+            switch (expression)
+            {
+                case MemberExpression memberExp:
+                    var parts = new List<string>();
+                    var currentExp = memberExp;
+
+                    while (currentExp != null)
+                    {
+                        parts.Add(currentExp.Member.Name);
+                        currentExp = currentExp.Expression as MemberExpression;
+                    }
+
+                    parts.Reverse();
+                    return string.Join(".", parts);
+
+                case MethodCallExpression methodExp:
+                    if (methodExp.Object is MemberExpression memberExpression)
+                    {
+                        return memberExpression.Member.Name;
+                    }
+                    return methodExp.Method.Name;
+
+                case UnaryExpression unaryExp:
+                    return GetIndexedPropertyName(unaryExp.Operand);
+
+                default:
+                    return null;
+            }
+        }
+
+        private static string GetPropertyName<TModel, TProperty>(HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression)
+        {
+            if (expression == null)
+            {
+                return null;
+            }
+
+            return ExpressionHelper.GetExpressionText(expression);
         }
     }
 }
