@@ -99,12 +99,7 @@
                 $("#AddressData_CountyOrRegion").val(selected.CeremonialCounty || selected.AdministrativeArea || selected.HistoricCounty);
                 $("#AddressData_Postcode").val(selected.Postcode);
                
-                let $dropdownParent = $("#operator-country-dropdown-list");
-                let $select = $dropdownParent.find("select");
-
-                $select.find("option[value='${selected.CountryId}']").prop('selected', true);
-                $select.val(selected.CountryId);
-                $dropdownParent.find("input").val($select.find("option:selected").text());
+                setCountry(selected);
             },
             onRetreived: (response, input) => {
                 let $banner = $(".govuk-warning-text");
@@ -156,6 +151,15 @@
             return { one: one, two: two };
         }
 
+        function setCountry(selected) {
+            let $dropdownParent = $("#operator-country-dropdown-list");
+            let $select = $dropdownParent.find("select");
+
+            $select.find("option[value='${selected.CountryId}']").prop('selected', true);
+            $select.val(selected.CountryId);
+            $dropdownParent.find("input").val($select.find("option:selected").text());
+        }
+
         function orEmpty(val) {
             return val || "";
         }
@@ -163,3 +167,5 @@
         $(document).ready(() => window.searchAutocomplete(config));
     }
 })();
+
+
