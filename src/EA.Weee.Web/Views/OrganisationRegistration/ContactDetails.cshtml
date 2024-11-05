@@ -79,15 +79,18 @@
             @Html.Gds().TextBoxFor(m => m.AddressData.Postcode, new { @maxlength = CommonMaxFieldLengths.Postcode })
         </div>
 
-        <button type="button"
-                name="Find address"
-                class="govuk-button only-js-enabled"
-                id="find-address"
-                data-module="govuk-button"
-                data-prevent-double-click="true">
-            Find address
-        </button>
-
+        <div class="left-cleared">
+            <button type="button"
+                    name="Find address"
+                    class="govuk-button only-js-enabled"
+                    id="find-address"
+                    data-module="govuk-button"
+                    data-prevent-double-click="true">
+                Find address
+            </button>
+            @(this.WeeeGds().GetSpinnerHtml())
+        </div>
+  
         <div class="govuk-warning-text only-js-enabled" style="display: none;">
             <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
             <strong class="govuk-warning-text__text">
@@ -154,6 +157,12 @@
         }
     </style>
 </noscript>
+
+<style>
+    .spinner-image {
+        margin-top: 2px;
+    }
+</style>
 
 @section scripts {
     @Scripts.Render("~/bundles/address-postcode-search")
