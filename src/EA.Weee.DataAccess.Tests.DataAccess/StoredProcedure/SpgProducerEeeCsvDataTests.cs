@@ -637,6 +637,47 @@
             }
         }
 
+        [Fact]
+        public async Task Execute_WithDirectRegistrantSubmissionsThatHaveBeenReturned_ShouldUseLatestSubmittedNumbers()
+        {
+            using (var wrapper = new DatabaseWrapper())
+            {
+                var (_, country) = DirectRegistrantHelper.SetupCommonTestData(wrapper);
+
+                const int complianceYear = 2053;
+                
+                var (organisation1, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear);
+
+                var amounts1 = new List<DirectRegistrantHelper.EeeOutputAmountData>
+                {
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 1m, ObligationType = Domain.Obligation.ObligationType.B2C },
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C }
+                };
+
+                var submission = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear + 1, amounts1, DirectProducerSubmissionStatus.Complete);
+
+                DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 2", "WEE/AG37365JX", complianceYear);
+
+                // should use the original amounts in the report as these amounts are not submitted
+                var updatedAmounts = new List<DirectRegistrantHelper.EeeOutputAmountData>
+                {
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C },
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 3m, ObligationType = Domain.Obligation.ObligationType.B2C }
+                };
+
+                await DirectRegistrantHelper.ReturnSubmission(wrapper, submission, updatedAmounts);
+
+                var results = await wrapper.WeeeContext.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, "B2C", false);
+
+                results.Should().NotBeNull();
+
+                results.Count.Should().Be(1);
+
+                var expectedAmounts1 = new Dictionary<string, decimal> { { "Cat1Q4", 1m }, { "Cat4Q4", 2m } };
+                AssertEeeElementData(results.ElementAt(0), organisation1, registeredProducer1, country, expectedAmounts1, 3m);
+            }
+        }
+
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
