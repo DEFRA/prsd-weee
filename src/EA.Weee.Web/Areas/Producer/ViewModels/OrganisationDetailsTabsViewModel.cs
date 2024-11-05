@@ -34,7 +34,7 @@
         {
             get
             {
-                return this.OrganisationViewModel.Status == EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted && this.OrganisationViewModel.HasPaid;
+                return this.Status == EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted && this.HasPaid;
             }
         }
 
@@ -42,13 +42,17 @@
         {
             get
             {
-                return this.IsInternalAdmin && (IsRegistered || this.OrganisationViewModel.Status == EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted);
+                return this.IsInternalAdmin && (IsRegistered || this.Status == EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted);
             }
         }
 
         public string RegistrationNumber { get; set; }
 
         public OrganisationDetailsDisplayOption ActiveOption { get; set; }
+
+        public bool HasPaid { get; set; } = false;
+
+        public SubmissionStatus Status { get; set; }
 
         public SmallProducerSubmissionData SmallProducerSubmissionData { get; set; }
 
