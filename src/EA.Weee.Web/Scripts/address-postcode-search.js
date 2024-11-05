@@ -96,8 +96,15 @@
                 $("#AddressData_Address1").val(address.one);
                 $("#AddressData_Address2").val(address.two);
                 $("#AddressData_TownOrCity").val(selected.Town);
-                $("#AddressData_CountyOrRegion").val(selected.AdministrativeArea || selected.HistoricCounty || selected.CeremonialCounty);
+                $("#AddressData_CountyOrRegion").val(selected.CeremonialCounty || selected.AdministrativeArea || selected.HistoricCounty);
                 $("#AddressData_Postcode").val(selected.Postcode);
+               
+                let $dropdownParent = $("#operator-country-dropdown-list");
+                let $select = $dropdownParent.find("select");
+
+                $select.find("option[value='${selected.CountryId}']").prop('selected', true);
+                $select.val(selected.CountryId);
+                $dropdownParent.find("input").val($select.find("option:selected").text());
             },
             onRetreived: (response, input) => {
                 let $banner = $(".govuk-warning-text");
