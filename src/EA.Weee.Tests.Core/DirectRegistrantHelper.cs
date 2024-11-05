@@ -118,10 +118,23 @@
 
         public static async Task<DirectProducerSubmission> ReturnSubmission(
             DatabaseWrapper wrapper,
-            DirectProducerSubmission submission)
+            DirectProducerSubmission submission,
+            IEnumerable<EeeOutputAmountData> amounts = null)
         {
             var history = new DirectProducerSubmissionHistory(submission);
 
+            if (amounts != null)
+            {
+                var returnVersion = new Domain.DataReturns.EeeOutputReturnVersion();
+
+                foreach (var amount in amounts)
+                {
+                    returnVersion.EeeOutputAmounts.Add(new Domain.DataReturns.EeeOutputAmount(amount.ObligationType, amount.Category, amount.Amount, submission.RegisteredProducer));
+                }
+
+                history.EeeOutputReturnVersion = returnVersion;
+            }
+            
             wrapper.WeeeContext.DirectProducerSubmissionHistories.Add(history);
             await wrapper.WeeeContext.SaveChangesAsync();
 
