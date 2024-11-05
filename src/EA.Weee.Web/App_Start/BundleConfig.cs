@@ -42,6 +42,9 @@
             bundles.Add(new ScriptBundle("~/bundles/weee_tonnage_totals").Include(
                 "~/Scripts/weee-tonnage-totals.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/address-postcode-search").Include(
+             "~/Scripts/address-postcode-search.js"));
+
             bundles.Add(new ScriptBundle("~/bundles/sent-on-operator-address").Include(
                 "~/Scripts/sent-on-operator-address.js"));
 
