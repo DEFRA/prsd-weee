@@ -1,10 +1,11 @@
 ﻿(() => {
     window.searchAutocomplete = (config) => {
-        let $select, $findButton;
+        let $select, $findButton, $spinner;
 
         let init = () => {
             $findButton = getById(config.findButtonId);
             $select = getById(config.selectFieldId);
+            $spinner = $("#spinner");
 
             checkHasValue();
 
@@ -29,12 +30,15 @@
 
             $findButton.prop("disabled", true);
 
+            $spinner.show();
+
             $.get(config.endpoint + inputValue, (res) => {
                 let results = res[config.mappedFields.output];
 
                 $select.off('change');
                 $select.empty();
 
+                $spinner.hide();
                 $select.change(function () {
                     let id = $(this).val();
 
