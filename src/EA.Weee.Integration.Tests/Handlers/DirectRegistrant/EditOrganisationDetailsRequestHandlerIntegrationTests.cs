@@ -100,6 +100,51 @@
         }
 
         [Component]
+        public class WhenIUpdateOrganisationDetailsWithEmptyBrandName : EditOrganisationDetailsRequestHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                var address = AddressDbSetup.Init().Create();
+
+                var directProducerSubmissionHistory = DirectRegistrantSubmissionHistoryDbSetup.Init()
+                    .WithBusinessAddress(address)
+                    .WithBrandName(fixture.Create<string>())
+                    .WithDirectProducerSubmission(directProducerSubmission).Create();
+
+                Query.UpdateCurrentProducerSubmission(directProducerSubmission.Id, directProducerSubmissionHistory.Id);
+
+                request = new EditOrganisationDetailsRequest(directRegistrant.Id, "New company name",
+                    "New trading name", requestAddress, string.Empty);
+            };
+
+            private readonly Because of = () =>
+            {
+                result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
+            };
+
+            private readonly It shouldUpdateTheData = () =>
+            {
+                var entity = Query.GetDirectProducerSubmissionById(directProducerSubmission.Id);
+
+                entity.Should().NotBeNull();
+                entity.CurrentSubmission.CompanyName.Should().Be(request.CompanyName);
+                entity.CurrentSubmission.TradingName.Should().Be(request.TradingName);
+                entity.CurrentSubmission.BrandName.Should().BeNull();
+                entity.CurrentSubmission.BusinessAddress.Address1.Should().Be(request.BusinessAddressData.Address1);
+                entity.CurrentSubmission.BusinessAddress.Address2.Should().Be(request.BusinessAddressData.Address2);
+                entity.CurrentSubmission.BusinessAddress.TownOrCity.Should().Be(request.BusinessAddressData.TownOrCity);
+                entity.CurrentSubmission.BusinessAddress.CountyOrRegion.Should().Be(request.BusinessAddressData.CountyOrRegion);
+                entity.CurrentSubmission.BusinessAddress.CountryId.Should().Be(request.BusinessAddressData.CountryId);
+                entity.CurrentSubmission.BusinessAddress.Postcode.Should().Be(request.BusinessAddressData.Postcode);
+                entity.CurrentSubmission.BusinessAddress.WebAddress.Should().Be(request.BusinessAddressData.WebAddress);
+                entity.CurrentSubmission.BusinessAddress.Telephone.Should().Be(request.BusinessAddressData.Telephone);
+                entity.CurrentSubmission.BusinessAddress.Email.Should().Be(request.BusinessAddressData.Email);
+            };
+        }
+
+        [Component]
         public class WhenUserIsNotAuthorised : EditOrganisationDetailsRequestHandlerIntegrationTestBase
         {
             protected static IRequestHandler<EditOrganisationDetailsRequest, bool> authHandler;
@@ -128,6 +173,7 @@
             protected static Domain.Producer.DirectRegistrant directRegistrant;
             protected static Domain.Producer.DirectProducerSubmission directProducerSubmission;
             protected static EditOrganisationDetailsRequest request;
+            protected static AddressData requestAddress;
             protected static bool result;
             protected static Country country;
 
@@ -154,10 +200,10 @@
 
                 country = AsyncHelper.RunSync(() => Query.GetCountryByNameAsync("UK - England"));
 
-                var address = fixture.Build<AddressData>().With(a => a.CountryId, country.Id).Create();
+                requestAddress = fixture.Build<AddressData>().With(a => a.CountryId, country.Id).Create();
 
                 request = new EditOrganisationDetailsRequest(directRegistrant.Id, "New company name",
-                    "New trading name", address, "New brand names");
+                    "New trading name", requestAddress, "New brand names");
 
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, directRegistrant.OrganisationId).Create();
 
