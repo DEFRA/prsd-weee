@@ -2670,11 +2670,12 @@
         }
 
         [Fact]
-        public async Task ChooseActivityPOST_HistoricProducerRegistrationSubmission_WithNoSubmittedYear_ShouldRedirectWithNullYear()
+        public async Task ChooseActivityPOST_HistoricProducerRegistrationSubmission_WithNoSubmittedYear_ShouldRedirectWithCurrentSystemYear()
         {
             // Arrange
             var organisationId = Guid.NewGuid();
             var directRegistrantId = Guid.NewGuid();
+            var systemDate = new DateTime(2024, 1, 1);
             var model = new ChooseActivityViewModel
             {
                 SelectedValue = ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
@@ -2694,6 +2695,7 @@
                 }
             };
 
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(systemDate);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(organisationData);
 
@@ -2709,7 +2711,8 @@
                     "Producer",
                     organisationId,
                     directRegistrantId,
-                    null);
+                    systemDate.Year);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -2762,6 +2765,7 @@
             // Arrange
             var organisationId = Guid.NewGuid();
             var directRegistrantId = Guid.NewGuid();
+            var systemDate = new DateTime(2024, 1, 1);
             var model = new ChooseActivityViewModel
             {
                 SelectedValue = ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
@@ -2781,6 +2785,7 @@
                 }
             };
 
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(systemDate);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
                 .Returns(organisationData);
 
@@ -2796,7 +2801,8 @@
                     "Producer",
                     organisationId,
                     directRegistrantId,
-                    null);
+                    systemDate.Year);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappenedOnceExactly();
         }
 
         private void SetupCommonFakes(OrganisationData organisationDetails)
