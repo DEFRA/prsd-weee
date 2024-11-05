@@ -23,5 +23,9 @@
         <div class="govuk-button-group govuk-!-padding-top-3">
             @this.WeeeGds().Button("Retry payment")
         </div>
+
+        <p class="govuk-body">
+            @Html.ActionLink("Perform other activities", "ChooseActivity", "Home", new { area = "Scheme", pcsId = Model.OrganisationId }, new { @class = "govuk-link" })
+        </p>
     }
 }
