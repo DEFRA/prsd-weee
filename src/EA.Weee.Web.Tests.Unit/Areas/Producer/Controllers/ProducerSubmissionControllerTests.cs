@@ -890,13 +890,49 @@
         }
 
         [Fact]
-        public void PaymentFailure_ShouldReturnView()
+        public async Task PaymentFailure_ShouldReturnViewWithCorrectModel()
         {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
+            {
+                OrganisationData = new OrganisationData { Id = organisationId },
+                CurrentSubmission = new SmallProducerSubmissionHistoryData { ComplianceYear = SystemTime.UtcNow.Year }
+            };
+
             // Act
-            var result = controller.PaymentFailure();
+            var result = await controller.PaymentFailure() as ViewResult;
 
             // Assert
-            result.Should().BeOfType<ViewResult>();
+            result.Should().NotBeNull();
+            result.Model.Should().BeOfType<RegisteredResultModel>();
+            var model = (RegisteredResultModel)result.Model;
+            model.OrganisationId.Should().Be(organisationId);
+            model.ComplianceYear.Should().Be(controller.SmallProducerSubmissionData.CurrentSubmission.ComplianceYear);
+        }
+
+        [Fact]
+        public async Task PaymentFailure_ShouldSetBreadcrumb()
+        {
+            // Arrange
+            var reference = TestFixture.Create<string>();
+            var organisationId = Guid.NewGuid();
+            var organisationName = TestFixture.Create<string>();
+            controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
+            {
+                OrganisationData = new OrganisationData { Id = organisationId },
+                CurrentSubmission = new SmallProducerSubmissionHistoryData { ComplianceYear = SystemTime.UtcNow.Year }
+            };
+
+            A.CallTo(() => weeeCache.FetchOrganisationName(organisationId)).Returns(organisationName);
+
+            // Act
+            await controller.PaymentFailure();
+
+            // Assert
+            A.CallTo(() => weeeCache.FetchOrganisationName(organisationId)).MustHaveHappenedOnceExactly();
+            breadcrumbService.ExternalOrganisation.Should().Be(organisationName);
+            breadcrumbService.OrganisationId.Should().Be(organisationId);
         }
 
         [Fact]
