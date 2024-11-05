@@ -1102,6 +1102,7 @@
     <Content Include="Content\govuk_frontend\components\task-list\template.jsdom.test.js" />
     <Content Include="Scripts\jquery-ui-1-13.3.js" />
     <Content Include="Scripts\jquery-ui-1.13.3.min.js" />
+    <Content Include="Scripts\address-postcode-search.js" />
     <Content Include="Views\Shared\EditorTemplates\RecipientFiltersViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ObligationTypeFiltersViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\StatusFiltersViewModel.cshtml" />
