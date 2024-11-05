@@ -459,9 +459,17 @@
 
         [HttpGet]
         [SmallProducerSubmissionContext]
-        public ActionResult PaymentFailure()
+        public async Task<ActionResult> PaymentFailure()
         {
-            return View();
+            var model = new RegisteredResultModel
+            {
+                OrganisationId = SmallProducerSubmissionData.OrganisationData.Id,
+                ComplianceYear = SmallProducerSubmissionData.CurrentSubmission.ComplianceYear
+            };
+
+            await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+
+            return View(model);
         }
 
         [HttpPost]
