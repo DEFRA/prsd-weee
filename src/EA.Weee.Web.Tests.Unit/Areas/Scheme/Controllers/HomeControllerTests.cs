@@ -2760,7 +2760,7 @@
         }
 
         [Fact]
-        public async Task ChooseActivityPOST_HistoricProducerRegistrationSubmission_WithNoMatchingDirectRegistrant_ShouldRedirectWithNullYear()
+        public async Task ChooseActivityPOST_HistoricProducerRegistrationSubmission_WithNoMatchingDirectRegistrant_ShouldRedirectWithCurrentSystemYear()
         {
             // Arrange
             var organisationId = Guid.NewGuid();
