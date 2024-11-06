@@ -118,5 +118,11 @@
 
             AppropriateSignatory = contact.OverwriteWhereNull(AppropriateSignatory);
         }
+
+        public void RemoveBrandName()
+        {
+            BrandName = null;
+            BrandNameId = null;
+        }
     }
 }

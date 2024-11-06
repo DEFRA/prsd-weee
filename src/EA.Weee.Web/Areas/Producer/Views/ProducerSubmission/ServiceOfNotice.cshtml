@@ -24,7 +24,7 @@
 
     <p>Provide your address for the service of notices.</p>
 
-    <p>For Authorised Representatives of non-UK established producers, this will be your preferred address.</p>
+    <p>For authorised representatives of non-UK established producers, this will be your preferred address.</p>
 
     @using (Html.BeginForm("ServiceOfNotice", "ProducerSubmission", FormMethod.Get, new { id = "sameAsOrganisationAddressForm" }))
     {
@@ -89,6 +89,8 @@
             @Html.Gds().ValidationMessageFor(m => m.Address.Telephone)
             @Html.Gds().TextBoxFor(m => m.Address.Telephone, new { @maxlength = CommonMaxFieldLengths.Telephone })
         </div>
+
+        @(this.WeeeGds().Warning(Resources.ProducerSubmission.ProducerSubmission.ServiceOfNoticeWarningText))
 
         <div class="govuk-button-group govuk-!-padding-top-3">
             @if (Model.RedirectToCheckAnswers == true)
