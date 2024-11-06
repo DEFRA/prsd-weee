@@ -46,9 +46,9 @@
         {
             await SetTabsCrumb(year);
 
-            var years = YearsDropdownData(smallProducerSubmissionData);
+            var years = YearsDropdownData(smallProducerSubmissionData).ToList();
 
-            int? yearParam = year ?? (years.FirstOrDefault() == 0 ? (int?)null : years.First());
+            var yearParam = year ?? (years.FirstOrDefault() == 0 ? (int?)null : years.First());
 
             return await OrganisationDetails(yearParam);
         }
