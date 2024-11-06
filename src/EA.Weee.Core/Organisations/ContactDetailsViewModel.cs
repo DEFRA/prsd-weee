@@ -3,6 +3,7 @@
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.DataStandards;
     using EA.Weee.Core.Validation;
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
 
@@ -24,7 +25,7 @@
 
         public virtual bool HasAuthorisedRepresentitive { get; set; }
 
-        public Shared.AddressPostcodeRequiredData AddressData { get; set; } = new Shared.AddressPostcodeRequiredData() { CountryId = UkCountry.Ids.England };
+        public Shared.AddressPostcodeRequiredData AddressData { get; set; } = new Shared.AddressPostcodeRequiredData() { CountryId = Guid.Empty };
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
