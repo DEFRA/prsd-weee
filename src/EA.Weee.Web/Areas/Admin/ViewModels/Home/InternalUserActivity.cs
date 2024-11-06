@@ -6,7 +6,7 @@
         public const string ManageAatfs = "Manage AATFs";
         public const string ManageAes = "Manage AEs";
         public const string SubmissionsHistory = "PCS submission history";
-        public const string ProducerDetails = "PCS member and small producer details and data";
+        public const string ProducerDetails = "PCS member details and data";
         public const string DirectRegistrantDetails = "Small producer (direct registrant) details and data";
         public const string ManageUsers = "Manage users";
         public const string ViewReports = "View reports";

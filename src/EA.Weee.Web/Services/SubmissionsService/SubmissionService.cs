@@ -46,9 +46,9 @@
         {
             await SetTabsCrumb(year);
 
-            var years = YearsDropdownData(smallProducerSubmissionData);
+            var years = YearsDropdownData(smallProducerSubmissionData).ToList();
 
-            int? yearParam = year ?? (years.FirstOrDefault() == 0 ? (int?)null : years.First());
+            var yearParam = year ?? (years.FirstOrDefault() == 0 ? (int?)null : years.First());
 
             return await OrganisationDetails(yearParam);
         }
@@ -102,13 +102,21 @@
         {
             await SetTabsCrumb(year);
 
+            var current = this.smallProducerSubmissionData.CurrentSubmission;
+
+            var submission = year.HasValue
+            ? this.smallProducerSubmissionData.SubmissionHistory[year.Value]
+            : current;
+
             return new OrganisationDetailsTabsViewModel
             {
                 Years = YearsDropdownData(smallProducerSubmissionData),
                 Year = year,
                 ActiveOption = option,
                 SmallProducerSubmissionData = this.smallProducerSubmissionData,
-                IsInternal = this.isInternal
+                IsInternal = this.isInternal,
+                Status = submission?.Status ?? current.Status,
+                HasPaid = submission?.HasPaid ?? current.HasPaid
             };
         }
 

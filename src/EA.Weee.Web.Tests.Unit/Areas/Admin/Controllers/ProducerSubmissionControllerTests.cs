@@ -192,6 +192,10 @@
         {
             SetupDefaultControllerData();
 
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, "InternalAdmin") }, "TestAuthentication"));
+            controller.ControllerContext = A.Fake<ControllerContext>();
+            A.CallTo(() => controller.ControllerContext.HttpContext.User).Returns(user);
+
             var expcted = new OrganisationDetailsTabsViewModel();
             expcted.ContactDetailsViewModel = new ContactDetailsViewModel();
 
@@ -219,6 +223,10 @@
         public async Task ServiceOfNoticeDetails_ReturnViewModelAndCallsService(int? year)
         {
             SetupDefaultControllerData();
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, "InternalAdmin") }, "TestAuthentication"));
+            controller.ControllerContext = A.Fake<ControllerContext>();
+            A.CallTo(() => controller.ControllerContext.HttpContext.User).Returns(user);
 
             var expcted = new OrganisationDetailsTabsViewModel();
             expcted.ServiceOfNoticeViewModel = new ServiceOfNoticeViewModel();
@@ -248,6 +256,10 @@
         {
             SetupDefaultControllerData();
 
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, "InternalAdmin") }, "TestAuthentication"));
+            controller.ControllerContext = A.Fake<ControllerContext>();
+            A.CallTo(() => controller.ControllerContext.HttpContext.User).Returns(user);
+
             var expcted = new OrganisationDetailsTabsViewModel();
             expcted.RepresentingCompanyDetailsViewModel = new RepresentingCompanyDetailsViewModel();
 
@@ -275,6 +287,10 @@
         public async Task TotalEEEDetails_ReturnViewModelAndCallsService(int? year)
         {
             SetupDefaultControllerData();
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, "InternalAdmin") }, "TestAuthentication"));
+            controller.ControllerContext = A.Fake<ControllerContext>();
+            A.CallTo(() => controller.ControllerContext.HttpContext.User).Returns(user);
 
             var expcted = new OrganisationDetailsTabsViewModel();
             expcted.EditEeeDataViewModel = new EditEeeDataViewModel();
@@ -977,6 +993,94 @@
             //Assert
             result.RouteValues["RegistrationNumber"].Should().Be(vm.RegistrationNumber);
             result.RouteValues["action"].Should().Be(nameof(ProducerSubmissionController.Submissions));
+        }
+
+        [Theory]
+        [InlineData("InternalAdmin", true)]
+        [InlineData("", false)]
+        public async Task ContactDetails_ReturnViewModelWithCorrectClaims(string role, bool isAdmin)
+        {
+            int? year = 2004;
+
+            SetupDefaultControllerData();
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, role) }, "TestAuthentication"));
+            controller.ControllerContext = A.Fake<ControllerContext>();
+            A.CallTo(() => controller.ControllerContext.HttpContext.User).Returns(user);
+
+            var result = (await controller.ContactDetails("reg", year)) as ViewResult;
+
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+
+            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
+
+            model.IsAdmin.Should().Be(isAdmin);
+        }
+
+        [Theory]
+        [InlineData("InternalAdmin", true)]
+        [InlineData("", false)]
+        public async Task ServiceOfNoticeDetails_ReturnViewModelWithCorrectClaims(string role, bool isAdmin)
+        {
+            int? year = 2004;
+
+            SetupDefaultControllerData();
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, role) }, "TestAuthentication"));
+            controller.ControllerContext = A.Fake<ControllerContext>();
+            A.CallTo(() => controller.ControllerContext.HttpContext.User).Returns(user);
+
+            var result = (await controller.ServiceOfNoticeDetails("reg", year)) as ViewResult;
+
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+
+            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
+
+            model.IsAdmin.Should().Be(isAdmin);
+        }
+
+        [Theory]
+        [InlineData("InternalAdmin", true)]
+        [InlineData("", false)]
+        public async Task RepresentedOrganisationDetails_ReturnViewModelWithCorrectClaims(string role, bool isAdmin)
+        {
+            int? year = 2004;
+
+            SetupDefaultControllerData();
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, role) }, "TestAuthentication"));
+            controller.ControllerContext = A.Fake<ControllerContext>();
+            A.CallTo(() => controller.ControllerContext.HttpContext.User).Returns(user);
+
+            var result = (await controller.RepresentedOrganisationDetails("reg", year)) as ViewResult;
+
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+
+            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
+
+            model.IsAdmin.Should().Be(isAdmin);
+        }
+
+        [Theory]
+        [InlineData("InternalAdmin", true)]
+        [InlineData("", false)]
+        public async Task TotalEEEDetails_ReturnViewModelWithCorrectClaims(string role, bool isAdmin)
+        {
+            int? year = 2004;
+
+            SetupDefaultControllerData();
+
+            var user = new ClaimsPrincipal(new ClaimsIdentity(new Claim[] { new Claim(ClaimTypes.Role, role) }, "TestAuthentication"));
+            controller.ControllerContext = A.Fake<ControllerContext>();
+            A.CallTo(() => controller.ControllerContext.HttpContext.User).Returns(user);
+
+            var result = (await controller.TotalEEEDetails("reg", year)) as ViewResult;
+
+            var viewResult = result.Should().BeOfType<ViewResult>().Subject;
+
+            var model = viewResult.Model as OrganisationDetailsTabsViewModel;
+
+            model.IsAdmin.Should().Be(isAdmin);
         }
 
         private void SetupDefaultControllerData()

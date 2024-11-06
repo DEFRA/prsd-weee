@@ -13,18 +13,18 @@
             var model = new OrganisationDetailsTabsViewModel();
             model.OrganisationViewModel = new OrganisationViewModel { };
 
-            model.OrganisationViewModel.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
-            model.OrganisationViewModel.HasPaid = true;
+            model.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
+            model.HasPaid = true;
 
             model.IsRegistered.Should().Be(true);
 
-            model.OrganisationViewModel.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.InComplete;
-            model.OrganisationViewModel.HasPaid = true;
+            model.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.InComplete;
+            model.HasPaid = true;
 
             model.IsRegistered.Should().Be(false);
 
-            model.OrganisationViewModel.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.InComplete;
-            model.OrganisationViewModel.HasPaid = false;
+            model.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.InComplete;
+            model.HasPaid = false;
 
             model.IsRegistered.Should().Be(false);
         }
@@ -35,36 +35,36 @@
             var model = new OrganisationDetailsTabsViewModel();
             model.OrganisationViewModel = new OrganisationViewModel { };
 
-            model.OrganisationViewModel.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
-            model.OrganisationViewModel.HasPaid = true;
+            model.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
+            model.HasPaid = true;
             model.IsInternal = true;
             model.IsAdmin = true;
 
             model.ShowReturnRegistrationToUser.Should().Be(true);
 
-            model.OrganisationViewModel.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
-            model.OrganisationViewModel.HasPaid = false;
+            model.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
+            model.HasPaid = false;
             model.IsInternal = true;
             model.IsAdmin = true;
 
             model.ShowReturnRegistrationToUser.Should().Be(true);
 
-            model.OrganisationViewModel.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
-            model.OrganisationViewModel.HasPaid = true;
+            model.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
+            model.HasPaid = true;
             model.IsInternal = false;
             model.IsAdmin = true;
 
             model.ShowReturnRegistrationToUser.Should().Be(false);
 
-            model.OrganisationViewModel.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
-            model.OrganisationViewModel.HasPaid = false;
+            model.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
+            model.HasPaid = false;
             model.IsInternal = true;
             model.IsAdmin = true;
 
             model.ShowReturnRegistrationToUser.Should().Be(true);
 
-            model.OrganisationViewModel.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
-            model.OrganisationViewModel.HasPaid = true;
+            model.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
+            model.HasPaid = true;
             model.IsInternal = true;
             model.IsAdmin = false;
 
