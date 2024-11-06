@@ -165,9 +165,9 @@
 </style>
 
 @section scripts {
-    @Scripts.Render("~/bundles/address-postcode-search")
+    @Scripts.Render("~/bundles/contact-details-address-lookup")
 
     <script>
-        window.contactDetailsPostCodeSearch("@Url.Action("GetAddresses")?postcode=");
+        window.contactDetailsAddressLookup("@Url.Action("GetAddresses")?postcode=");
     </script>
 }

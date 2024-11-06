@@ -42,11 +42,16 @@
             bundles.Add(new ScriptBundle("~/bundles/weee_tonnage_totals").Include(
                 "~/Scripts/weee-tonnage-totals.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/address-postcode-search").Include(
-             "~/Scripts/address-postcode-search.js"));
+            bundles.Add(new ScriptBundle("~/bundles/contact-details-address-lookup")
+                .Include("~/Scripts/lookup/lookup-search.js")
+                .Include("~/Scripts/lookup/contact-details-address-lookup.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/sent-on-operator-address").Include(
-                "~/Scripts/sent-on-operator-address.js"));
+            bundles.Add(new ScriptBundle("~/bundles/org-details-company-lookup")
+               .Include("~/Scripts/lookup/lookup-search.js")
+               .Include("~/Scripts/lookup/org-details-company-lookup.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/sent-on-operator-address")
+                .Include("~/Scripts/sent-on-operator-address.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/weee-collapsible-link").Include(
                 "~/Scripts/weee-collapsible-link.js"));
