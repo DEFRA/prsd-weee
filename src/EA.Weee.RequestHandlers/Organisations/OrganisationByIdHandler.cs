@@ -107,6 +107,7 @@
                 DirectProducerSubmissionStatus.Returned.Value
             };
 
+            // Ensure proper materialization of the query with explicit ordering
             var directRegistrants = await context.DirectRegistrants
                 .Where(o => o.OrganisationId == organisationId)
                 .Select(dr => new
@@ -118,9 +119,8 @@
                         .Any(submission => submission.ComplianceYear == currentYear),
                     MostRecentSubmittedYear = dr.DirectProducerSubmissions
                         .Where(submission => validStatuses.Contains(submission.DirectProducerSubmissionStatus.Value))
-                        .OrderByDescending(submission => submission.ComplianceYear)
                         .Select(submission => submission.ComplianceYear)
-                        .DefaultIfEmpty(0)
+                        .OrderByDescending(x => x)
                         .FirstOrDefault()
                 })
                 .ToListAsync();
