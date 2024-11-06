@@ -36,7 +36,6 @@
         {
             return LabelFor(expression, htmlAttributes, CssLabelClass, optionalMessage);
         }
-
         private MvcHtmlString LabelFor<TValue>(Expression<Func<TModel, TValue>> expression, IDictionary<string, object> htmlAttributes, string cssClass, string optionalMessage = "", bool showOptionalLabel = true)
         {
             var modelMetadata = ModelMetadata.FromLambdaExpression(expression, htmlHelper.ViewData);

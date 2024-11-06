@@ -2,6 +2,9 @@
 @using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Web.Controllers
 @using MvcNavigationHelpers
+
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+
 @model EA.Weee.Core.Organisations.ContactDetailsViewModel
 @{
     const string title = "Contact details";
@@ -28,7 +31,7 @@
 
         if (Model.HasAuthorisedRepresentitive)
         {
-            <p class="govuk-body">For Authorised Representatives of non-UK established producers this will be your own primary contact details.</p>
+            <p class="govuk-body">For authorised representatives of non-UK established producers this will be your own primary contact details.</p>
         }
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.FirstName)">
@@ -70,6 +73,45 @@
             For non-UK addresses, enter your details manually.
         </div>
 
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AddressData.Postcode)">
+            @Html.Gds().LabelFor(m => m.AddressData.Postcode)
+            @Html.Gds().ValidationMessageFor(m => m.AddressData.Postcode)
+            @Html.Gds().TextBoxFor(m => m.AddressData.Postcode, new { @maxlength = CommonMaxFieldLengths.Postcode })
+        </div>
+
+        <div class="left-cleared">
+            <button type="button"
+                    name="Find address"
+                    class="govuk-button only-js-enabled"
+                    id="find-address"
+                    data-module="govuk-button"
+                    data-prevent-double-click="true">
+                Find address
+            </button>
+            @(this.WeeeGds().GetSpinnerHtml())
+        </div>
+  
+        <div class="govuk-warning-text only-js-enabled" style="display: none;">
+            <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+            <strong class="govuk-warning-text__text">
+                <span class="govuk-visually-hidden">Warning</span>
+                <span id="text"></span>
+            </strong>
+        </div>
+
+        <div class="govuk-form-group only-js-enabled">
+            <h1 class="govuk-label-wrapper">
+                <label class="govuk-label" for="address-results">
+                    Select address
+                </label>
+            </h1>
+            <select class="govuk-select ui-autocomplete-input govuk-!-width-one-half"
+                    id="address-results"
+                    name="Address Results"
+                    data-module="autocomplete">
+            </select>
+        </div>
+
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AddressData.Address1)">
             @Html.Gds().LabelFor(m => m.AddressData.Address1)
             @Html.Gds().ValidationMessageFor(m => m.AddressData.Address1)
@@ -94,12 +136,6 @@
             @Html.Gds().TextBoxFor(m => m.AddressData.CountyOrRegion, new { @maxlength = CommonMaxFieldLengths.TownCounty })
         </div>
 
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.AddressData.Postcode)">
-            @Html.Gds().LabelFor(m => m.AddressData.Postcode)
-            @Html.Gds().ValidationMessageFor(m => m.AddressData.Postcode)
-            @Html.Gds().TextBoxFor(m => m.AddressData.Postcode, new { @maxlength = CommonMaxFieldLengths.Postcode })
-        </div>
-
         <div class="govuk-form-group countries govuk-!-margin-bottom-8 @Html.Gds().FormGroupClass(m => m.AddressData.CountryId)" id="operator-country-dropdown-list">
             @Html.Gds().LabelFor(m => m.AddressData.CountryId, new { id = "country-dropdown-list" })
             @Html.Gds().ValidationMessageFor(m => m.AddressData.CountryId)
@@ -107,9 +143,31 @@
         </div>
 
         <div class="govuk-form-group">
-            @(this.WeeeGds().Submit("Continue"))
+            @(this.WeeeGds().Submit("Continue", new { id = "contact-continue" }))
         </div>
 
         @(this.WeeeGds().BackToTopLink())
     }
+}
+
+<noscript>
+    <style>
+        .only-js-enabled {
+            display: none;
+        }
+    </style>
+</noscript>
+
+<style>
+    .spinner-image {
+        margin-top: 2px;
+    }
+</style>
+
+@section scripts {
+    @Scripts.Render("~/bundles/address-postcode-search")
+
+    <script>
+        window.contactDetailsPostCodeSearch("@Url.Action("GetAddresses")?postcode=");
+    </script>
 }

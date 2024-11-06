@@ -39,6 +39,10 @@
                 var brandNames = new BrandName(request.EEEBrandNames);
                 currentYearSubmission.CurrentSubmission.AddOrUpdateBrandName(brandNames);
             }
+            else
+            {
+                currentYearSubmission.CurrentSubmission.RemoveBrandName();
+            }
 
             await weeeContext.SaveChangesAsync();
 

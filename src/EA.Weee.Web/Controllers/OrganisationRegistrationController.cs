@@ -8,6 +8,7 @@
     using Core.Shared;
     using EA.Prsd.Core.Extensions;
     using EA.Prsd.Core.Helpers;
+    using EA.Weee.Api.Client.Models.AddressLookup;
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
@@ -38,13 +39,15 @@
         private readonly IWeeeCache cache;
         private readonly int maxPartnersAllowed = 10;
         private readonly Func<ICompaniesHouseClient> companiesHouseClient;
+        private readonly Func<IAddressLookupClient> addressLookupClient;
         private readonly ConfigurationService configurationService;
 
         public OrganisationRegistrationController(Func<IWeeeClient> apiClient,
             ISearcher<OrganisationSearchResult> organisationSearcher,
             ConfigurationService configurationService, IOrganisationTransactionService transactionService,
             IWeeeCache cache,
-            Func<ICompaniesHouseClient> companiesHouseClient)
+            Func<ICompaniesHouseClient> companiesHouseClient,
+            Func<IAddressLookupClient> addressLookupClient)
         {
             this.apiClient = apiClient;
             this.organisationSearcher = organisationSearcher;
@@ -52,7 +55,7 @@
             this.transactionService = transactionService;
             this.cache = cache;
             this.companiesHouseClient = companiesHouseClient;
-
+            this.addressLookupClient = addressLookupClient;
             maximumSearchResults = configurationService.CurrentConfiguration.MaximumOrganisationSearchResults;
         }
 
@@ -913,6 +916,17 @@
             await transactionService.CaptureData(User.GetAccessToken(), model);
 
             return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName());
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> GetAddresses(string postcode)
+        {
+            using (var client = addressLookupClient())
+            {
+                AddressLookupResponse addresses = await client.GetAddressesAsync(configurationService.CurrentConfiguration.AddressLookupReferencePath, postcode);
+
+                return Json(addresses, JsonRequestBehavior.AllowGet);
+            }
         }
 
         private async Task<IEnumerable<ValidationResult>> ValidateProducerRegistrationNumber(OrganisationViewModel model)
