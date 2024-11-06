@@ -479,7 +479,7 @@
         }
 
         [Fact]
-        public async Task Execute_WithDirectRegistrantSubmissionsThatHaveBeenReturned_ShouldReturnMostRecentSubmittedData()
+        public async Task Execute_WithDirectRegistrantSubmissionsThatHaveBeenReturnedAndResubmitted_ShouldReturnMostRecentSubmittedData()
         {
             using (var wrapper = new DatabaseWrapper())
             {
@@ -515,6 +515,78 @@
                 result1.ProducerName.Should().Be("My company");
                 result1.PRN.Should().Be("WEE/AZ48365JN");
                 result1.ObligationType.Should().Be("B2B");
+                result1.ROAPrimaryName.Should().Be("primary 1");
+                result1.ROASecondaryName.Should().BeNull();
+                result1.ROATown.Should().Be("Woking");
+                result1.ROALocality.Should().Be("Hampshire");
+                result1.ROAAdministrativeArea.Should().BeNull();
+                result1.ROAPostCode.Should().Be("GU21 5EE");
+                result1.ROACountry.Should().Be("Azerbaijan");
+                result1.ROATelephone.Should().Be("12345678");
+                result1.ROAEmail.Should().Be("test@co.uk");
+                result1.CSROAAddress1.Should().BeNull();
+                result1.CSROAAddress2.Should().BeNull();
+                result1.CSROATownOrCity.Should().BeNull();
+                result1.CSROATownOrCity.Should().BeNull();
+                result1.CSROACountyOrRegion.Should().BeNull();
+                result1.CSROAPostcode.Should().BeNull();
+                result1.CSROACountry.Should().BeNull();
+                result1.OPNAName.Should().BeNull();
+                result1.OPNAPrimaryName.Should().BeNull();
+                result1.OPNASecondaryName.Should().BeNull();
+                result1.OPNAStreet.Should().BeNull();
+                result1.OPNATown.Should().BeNull();
+                result1.OPNALocality.Should().BeNull();
+                result1.OPNAAdministrativeArea.Should().BeNull();
+                result1.OPNACountry.Should().BeNull();
+                result1.OPNAPostCode.Should().BeNull();
+                result1.ComplianceYear.Should().Be(complianceYear);
+                result1.PPOBPrimaryName.Should().BeNull();
+                result1.PPOBSecondaryName.Should().BeNull();
+                result1.PPOBStreet.Should().BeNull();
+                result1.PPOBTown.Should().BeNull();
+                result1.PPOBLocality.Should().BeNull();
+                result1.PPOBAdministrativeArea.Should().BeNull();
+                result1.PPOBCountry.Should().BeNull();
+                result1.PPOBPostcode.Should().BeNull();
+            }
+        }
+
+        [Fact]
+        public async Task Execute_WithDirectRegistrantSubmissionsThatHaveBeenReturnedAndNotResubmitted_ShouldReturnMostRecentSubmittedData()
+        {
+            using (var wrapper = new DatabaseWrapper())
+            {
+                DirectRegistrantHelper.SetupCommonTestData(wrapper);
+
+                const int complianceYear = 2045;
+                var (_, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AZ18365JN", complianceYear);
+
+                // first submission is B2C
+                var amounts1 = new List<DirectRegistrantHelper.EeeOutputAmountData>
+                {
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 1m, ObligationType = Domain.Obligation.ObligationType.B2C },
+                };
+
+                var submission = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear, amounts1, DirectProducerSubmissionStatus.Complete, SellingTechniqueType.Both.Value);
+
+                // re-submission submission is B2B and should use original submitted record
+                var amounts2 = new List<DirectRegistrantHelper.EeeOutputAmountData>
+                {
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 1m, ObligationType = Domain.Obligation.ObligationType.B2B },
+                };
+
+                await DirectRegistrantHelper.ReturnSubmission(wrapper, submission, amounts2);
+
+                var results = await wrapper.StoredProcedures.SpgProducerPublicRegisterCSVDataByComplianceYear(complianceYear);
+
+                var result1 = results.ElementAt(0);
+                result1.CompanyName.Should().Be("My company");
+                result1.SchemeName.Should().Be("Direct registrant");
+                result1.TradingName.Should().BeNullOrWhiteSpace();
+                result1.ProducerName.Should().Be("My company");
+                result1.PRN.Should().Be("WEE/AZ18365JN");
+                result1.ObligationType.Should().Be("B2C");
                 result1.ROAPrimaryName.Should().Be("primary 1");
                 result1.ROASecondaryName.Should().BeNull();
                 result1.ROATown.Should().Be("Woking");
