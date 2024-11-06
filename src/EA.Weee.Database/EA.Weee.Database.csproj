@@ -398,6 +398,7 @@
     <Content Include="scripts\Update\Release 5\Sprint17\20221027-1100-alter-getSchemeObligationAndEvidenceTotals.sql" />
     <Content Include="scripts\Update\Release 6\20230427-1317-alter-getSchemeObligationAndEvidenceTotals.sql" />
     <Content Include="scripts\Update\Release 7\20240820-1300-serilog.sql" />
+    <Content Include="scripts\Update\Release 7\Sprint1\20240829-1352-registrants-schema-update-address.sql" />
     <Content Include="scripts\Update\Release 7\Sprint1\20240903-0910-add-authorised-rep.sql" />
     <Content Include="scripts\Update\Release 7\Sprint1\20240829-1351-registrants-schema-update.sql" />
     <Content Include="scripts\Update\Release 7\Sprint1\20240823-1137-registrants-schema.sql" />
@@ -416,12 +417,18 @@
     <Content Include="scripts\Update\Release 7\Sprint3\2024918-1537-paymentupdates.sql" />
     <Content Include="scripts\Update\Release 7\Sprint4\20241003-0847-add-removed.sql" />
     <Content Include="scripts\Update\Release 7\Sprint4\20241002-1348-add-missing-foreign-key.sql" />
+    <Content Include="scripts\Update\Release 7\Sprint4\20241004-0947-producer-eee-sp-update.sql" />
+    <Content Include="scripts\Update\Release 7\Sprint4\20241008-0949-producer-eee-sp-update.sql" />
     <Content Include="scripts\Update\Release 7\Sprint5\20241010-1030-payment-session-update.sql" />
     <Content Include="scripts\Update\Release 7\Sprint5\20241008-1610-hangfire.sql" />
     <Content Include="scripts\Update\Release 7\Sprint4\20241002-1011-move-status.sql" />
     <Content Include="scripts\Update\Release 7\Sprint5\20241016-1206-get-obligation-type-function.sql" />
     <Content Include="scripts\Update\Release 7\Sprint5\20241016-1207-producer-register-report.sql" />
+    <Content Include="scripts\Update\Release 7\Sprint5\20241016-1208-producer-details-sp-update.sql" />
+    <Content Include="scripts\Update\Release 7\Sprint5\20241017-1140-producer-ukeee-sp-update.sql" />
+    <Content Include="scripts\Update\Release 7\Sprint6\20241017-1103-producer-details-sp-update.sql" />
     <Content Include="scripts\Update\Release 7\Sprint6\20241022-1113-producer-eee-sp-update-direct-registrant.sql" />
+    <Content Include="scripts\Update\Release 7\Sprint7\20241106-1651-producer-ukeee-sp-update.sql" />
     <Content Include="scripts\Update\Release 7\Sprint7\20241105-1141-producer-register-report-returned.sql" />
     <Content Include="scripts\Update\Release 7\Sprint7\20241105-1120-producer-eee-sp-update-returned.sql" />
     <Content Include="scripts\Update\Release 7\Sprint7\20241031-1359-producer-register-report-returned.sql" />
