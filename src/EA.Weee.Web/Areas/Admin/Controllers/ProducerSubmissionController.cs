@@ -82,6 +82,7 @@
 
             var model = await submissionService.ContactDetails(year);
 
+            model.IsAdmin = new ClaimsPrincipal(User).HasClaim(p => p.Value == Claims.InternalAdmin);
             model.RegistrationNumber = registrationNumber;
 
             return View("Producer/ViewOrganisation/ContactDetails", model);
@@ -96,6 +97,7 @@
 
             var model = await submissionService.ServiceOfNoticeDetails(year);
 
+            model.IsAdmin = new ClaimsPrincipal(User).HasClaim(p => p.Value == Claims.InternalAdmin);
             model.RegistrationNumber = registrationNumber;
 
             return View("Producer/ViewOrganisation/ServiceOfNoticeDetails", model);
@@ -110,6 +112,7 @@
 
             var model = await submissionService.RepresentedOrganisationDetails(year);
 
+            model.IsAdmin = new ClaimsPrincipal(User).HasClaim(p => p.Value == Claims.InternalAdmin);
             model.RegistrationNumber = registrationNumber;
 
             return View("Producer/ViewOrganisation/RepresentedOrganisationDetails", model);
@@ -124,6 +127,7 @@
 
             var model = await submissionService.TotalEEEDetails(year);
 
+            model.IsAdmin = new ClaimsPrincipal(User).HasClaim(p => p.Value == Claims.InternalAdmin);
             model.RegistrationNumber = registrationNumber;
 
             return View("Producer/ViewOrganisation/TotalEEEDetails", model);

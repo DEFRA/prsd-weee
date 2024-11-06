@@ -274,7 +274,200 @@
             Assert.Equal(InternalUserActivity.DirectRegistrantDetails, breadcrumb.InternalActivity);
         }
 
-        private IEnumerable<int> ExpectedYears(SmallProducerSubmissionData d) => 
+        [Theory]
+        [InlineData(null, SubmissionStatus.Submitted, true)]
+        [InlineData(2024, SubmissionStatus.Submitted, true)]
+        [InlineData(2026, SubmissionStatus.InComplete, false)]
+        [InlineData(2030, SubmissionStatus.Submitted, true)]
+        public async Task OrganisationDetails_ReturnsExpectedModel(int? year, SubmissionStatus expectedStatus, bool expectedHasPaid)
+        {
+            // Arrange
+            var data = GetDefaultSmallProducerData();
+            service.WithSubmissionData(data);
+
+            // Act
+            var result = await service.OrganisationDetails(year);
+
+            // Assert
+            var model = result.Should().BeOfType<OrganisationDetailsTabsViewModel>().Subject;
+
+            model.Year.Should().Be(year);
+            model.Status.Should().Be(expectedStatus);
+            model.HasPaid.Should().Be(expectedHasPaid);
+        }
+
+        [Theory]
+        [InlineData(null, SubmissionStatus.Submitted, true)]
+        [InlineData(2024, SubmissionStatus.Submitted, true)]
+        [InlineData(2026, SubmissionStatus.InComplete, false)]
+        [InlineData(2030, SubmissionStatus.Submitted, true)]
+        public async Task ContactDetails_ReturnsExpectedModel(int? year, SubmissionStatus expectedStatus, bool expectedHasPaid)
+        {
+            // Arrange
+            var data = GetDefaultSmallProducerData();
+            service.WithSubmissionData(data);
+
+            // Act
+            var result = await service.ContactDetails(year);
+
+            // Assert
+            var model = result.Should().BeOfType<OrganisationDetailsTabsViewModel>().Subject;
+
+            model.Year.Should().Be(year);
+            model.Status.Should().Be(expectedStatus);
+            model.HasPaid.Should().Be(expectedHasPaid);
+        }
+
+        [Theory]
+        [InlineData(null, SubmissionStatus.Submitted, true)]
+        [InlineData(2024, SubmissionStatus.Submitted, true)]
+        [InlineData(2026, SubmissionStatus.InComplete, false)]
+        [InlineData(2030, SubmissionStatus.Submitted, true)]
+        public async Task ServiceOfNoticeDetails_ReturnsExpectedModel(int? year, SubmissionStatus expectedStatus, bool expectedHasPaid)
+        {
+            // Arrange
+            var data = GetDefaultSmallProducerData();
+            service.WithSubmissionData(data);
+
+            // Act
+            var result = await service.ServiceOfNoticeDetails(year);
+
+            // Assert
+            var model = result.Should().BeOfType<OrganisationDetailsTabsViewModel>().Subject;
+
+            model.Year.Should().Be(year);
+            model.Status.Should().Be(expectedStatus);
+            model.HasPaid.Should().Be(expectedHasPaid);
+        }
+
+        [Theory]
+        [InlineData(null, SubmissionStatus.Submitted, true)]
+        [InlineData(2024, SubmissionStatus.Submitted, true)]
+        [InlineData(2026, SubmissionStatus.InComplete, false)]
+        [InlineData(2030, SubmissionStatus.Submitted, true)]
+        public async Task TotalEEEDetails_ReturnsExpectedModel(int? year, SubmissionStatus expectedStatus, bool expectedHasPaid)
+        {
+            // Arrange
+            var data = GetDefaultSmallProducerData();
+            service.WithSubmissionData(data);
+
+            // Act
+            var result = await service.TotalEEEDetails(year);
+
+            // Assert
+            var model = result.Should().BeOfType<OrganisationDetailsTabsViewModel>().Subject;
+
+            model.EditEeeDataViewModel.Should().NotBeNull();
+            model.Year.Should().Be(year);
+            model.Status.Should().Be(expectedStatus);
+            model.HasPaid.Should().Be(expectedHasPaid);
+        }
+
+        [Theory]
+        [InlineData(null, SubmissionStatus.Submitted, true)]
+        [InlineData(2024, SubmissionStatus.Submitted, true)]
+        [InlineData(2026, SubmissionStatus.InComplete, false)]
+        [InlineData(2030, SubmissionStatus.Submitted, true)]
+        public async Task RepresentedOrganisationDetails_ReturnsExpectedModel(int? year, SubmissionStatus expectedStatus, bool expectedHasPaid)
+        {
+            // Arrange
+            var data = GetDefaultSmallProducerData();
+
+            // Ensure the year exists in submission history if it's provided
+            if (year.HasValue && !data.SubmissionHistory.ContainsKey(year.Value))
+            {
+                data.SubmissionHistory.Add(year.Value, TestFixture.Build<SmallProducerSubmissionHistoryData>()
+                    .With(s => s.Status, expectedStatus)
+                    .With(s => s.HasPaid, expectedHasPaid)
+                    .Create());
+            }
+
+            service.WithSubmissionData(data);
+
+            // Act
+            var result = await service.RepresentedOrganisationDetails(year);
+
+            // Assert
+            var model = result.Should().BeOfType<OrganisationDetailsTabsViewModel>().Subject;
+
+            model.RepresentingCompanyDetailsViewModel.Should().NotBeNull();
+            model.Year.Should().Be(year);
+            model.Status.Should().Be(expectedStatus);
+            model.HasPaid.Should().Be(expectedHasPaid);
+        }
+
+        [Theory]
+        [InlineData(SubmissionStatus.Submitted)]
+        [InlineData(SubmissionStatus.Returned)]
+        public async Task YearsDropdownData_IncludesCorrectStatuses(SubmissionStatus status)
+        {
+            // Arrange
+            var data = GetDefaultSmallProducerData();
+            data.SubmissionHistory.Add(2025, new SmallProducerSubmissionHistoryData
+            {
+                Status = status
+            });
+
+            service.WithSubmissionData(data);
+
+            // Act
+            var result = await service.OrganisationDetails(null);
+
+            // Assert
+            result.Years.Should().Contain(2025);
+        }
+
+        [Fact]
+        public async Task YearsDropdownData_ExcludesIncompleteStatus()
+        {
+            // Arrange
+            var data = GetDefaultSmallProducerData();
+            data.SubmissionHistory.Add(2025, new SmallProducerSubmissionHistoryData
+            {
+                Status = SubmissionStatus.InComplete
+            });
+
+            service.WithSubmissionData(data);
+
+            // Act
+            var result = await service.OrganisationDetails(null);
+
+            // Assert
+            result.Years.Should().NotContain(2025);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(2024)]
+        public async Task GetSubmissionTabModel_SetsStatusAndPayment(int? year)
+        {
+            // Arrange
+            var data = GetDefaultSmallProducerData();
+            var expectedStatus = SubmissionStatus.Submitted;
+            var expectedHasPaid = true;
+
+            if (year.HasValue)
+            {
+                data.SubmissionHistory[year.Value].Status = expectedStatus;
+                data.SubmissionHistory[year.Value].HasPaid = expectedHasPaid;
+            }
+            else
+            {
+                data.CurrentSubmission.Status = expectedStatus;
+                data.CurrentSubmission.HasPaid = expectedHasPaid;
+            }
+
+            service.WithSubmissionData(data);
+
+            // Act
+            var result = await service.OrganisationDetails(year);
+
+            // Assert
+            result.Status.Should().Be(expectedStatus);
+            result.HasPaid.Should().Be(expectedHasPaid);
+        }
+
+        private static IEnumerable<int> ExpectedYears(SmallProducerSubmissionData d) => 
              d.SubmissionHistory
               .Where(x => x.Value.Status == SubmissionStatus.Submitted)
               .OrderByDescending(x => x.Key)
@@ -286,8 +479,47 @@
             {
                 SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>()
                 {
-                    { 2024, TestFixture.Build<SmallProducerSubmissionHistoryData>().With(s => s.Status, SubmissionStatus.Submitted).Create() },
+                    { 2004, TestFixture.Build<SmallProducerSubmissionHistoryData>()
+                        .With(s => s.Status, SubmissionStatus.Submitted)
+                        .With(s => s.HasPaid, true)
+                        .Create() },
+                    { 2024, TestFixture.Build<SmallProducerSubmissionHistoryData>()
+                        .With(s => s.Status, SubmissionStatus.Submitted)
+                        .With(s => s.HasPaid, true)
+                        .Create() },
+                    { 2026, TestFixture.Build<SmallProducerSubmissionHistoryData>()
+                        .With(s => s.Status, SubmissionStatus.InComplete)
+                        .With(s => s.HasPaid, false)
+                        .Create() },
+                    { 2030, TestFixture.Build<SmallProducerSubmissionHistoryData>()
+                        .With(s => s.Status, SubmissionStatus.Submitted)
+                        .With(s => s.HasPaid, true)
+                        .Create() }
                 },
+                CurrentSubmission = new Core.DirectRegistrant.SmallProducerSubmissionHistoryData
+                {
+                    ComplianceYear = 2005,
+                    OrganisationDetailsComplete = true,
+                    ContactDetailsComplete = true,
+                    ServiceOfNoticeComplete = true,
+                    RepresentingCompanyDetailsComplete = true,
+                    EEEDetailsComplete = true,
+                    Status = SubmissionStatus.Submitted,
+                    HasPaid = true,
+                    ServiceOfNoticeData = new Core.Shared.AddressData
+                    {
+                        Address1 = Guid.NewGuid().ToString(),
+                        Address2 = Guid.NewGuid().ToString(),
+                        TownOrCity = Guid.NewGuid().ToString(),
+                        CountryName = Guid.NewGuid().ToString(),
+                        WebAddress = Guid.NewGuid().ToString(),
+                        Telephone = "4567894563",
+                        Postcode = Guid.NewGuid().ToString()
+                    },
+                    AuthorisedRepresentitiveData = TestFixture.Create<AuthorisedRepresentitiveData>()
+                },
+                HasAuthorisedRepresentitive = true,
+                AuthorisedRepresentitiveData = TestFixture.Create<AuthorisedRepresentitiveData>(),
                 OrganisationData = new OrganisationData
                 {
                     Id = Guid.NewGuid(),
@@ -305,45 +537,7 @@
                         Telephone = "4567894563",
                         Postcode = Guid.NewGuid().ToString()
                     }
-                },
-                CurrentSubmission = new Core.DirectRegistrant.SmallProducerSubmissionHistoryData
-                {
-                    ComplianceYear = 2005,
-                    OrganisationDetailsComplete = true,
-                    ContactDetailsComplete = true,
-                    ServiceOfNoticeComplete = true,
-                    RepresentingCompanyDetailsComplete = true,
-                    EEEDetailsComplete = true,
-                    ServiceOfNoticeData = new Core.Shared.AddressData
-                    {
-                        Address1 = Guid.NewGuid().ToString(),
-                        Address2 = Guid.NewGuid().ToString(),
-                        TownOrCity = Guid.NewGuid().ToString(),
-                        CountryName = Guid.NewGuid().ToString(),
-                        WebAddress = Guid.NewGuid().ToString(),
-                        Telephone = "4567894563",
-                        Postcode = Guid.NewGuid().ToString()
-                    },
-                    AuthorisedRepresentitiveData = TestFixture.Create<AuthorisedRepresentitiveData>()
-                },
-                HasAuthorisedRepresentitive = true,
-                AuthorisedRepresentitiveData = TestFixture.Create<AuthorisedRepresentitiveData>()
-            };
-
-            var firstSub = TestFixture.Create<SmallProducerSubmissionHistoryData>();
-            firstSub.Status = SubmissionStatus.Submitted;
-
-            var secondSub = TestFixture.Create<SmallProducerSubmissionHistoryData>();
-            secondSub.Status = SubmissionStatus.Submitted;
-
-            var thirdSub = TestFixture.Create<SmallProducerSubmissionHistoryData>();
-            thirdSub.Status = SubmissionStatus.InComplete;
-
-            result.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>()
-            {
-                { 2024, firstSub },
-                { 2025, secondSub },
-                { 2026, thirdSub }
+                }
             };
 
             return result;

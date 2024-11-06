@@ -71,6 +71,14 @@
 
 
         </div>
+        @if (Model.ShowReturnRegistrationToUser)
+        {
+            <div class="govuk-button-group govuk-!-padding-top-3">
+                <a href="@Url.Action("ReturnProducerRegistration", new { registrationNumber = Model.RegistrationNumber, year = Model.Year })" class="govuk-button">
+                    Return submission to user
+                </a>
+            </div>
+        }
     </div>
 
     @(this.WeeeGds().BackToTopLink())
