@@ -34,3 +34,12 @@
         @(this.WeeeGds().BackToTopLink())
     }
 }
+
+
+@section scripts {
+    @Scripts.Render("~/bundles/org-details-company-lookup")
+
+    <script>
+        window.orgDetailsCompanyLookup("@Url.Action("FindCompany")?companiesRegistrationNumber=");
+    </script>
+}
