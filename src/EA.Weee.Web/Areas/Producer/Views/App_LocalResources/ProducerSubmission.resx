@@ -121,10 +121,10 @@
     <value>Discard changes</value>
   </data>
   <data name="OrganisationDetailsWarningText" xml:space="preserve">
-    <value>Changing the details on this page, on submission of your application, will update your organisation details on your account.</value>
+    <value>Changing the details on this page, on submission of your application, will update your organisation details for your organisation.</value>
   </data>
   <data name="RepresentingCompanyDetailsWarningText" xml:space="preserve">
-    <value>Changing the details on this page, on submission of your application, will update your producer details on your account.</value>
+    <value>Changing the details on this page, on submission of your application, will update your producer details for your organisation.</value>
   </data>
   <data name="SaveAndReturnCheckAnswers" xml:space="preserve">
     <value>Save and return to check answers</value>
@@ -132,8 +132,11 @@
   <data name="SaveAndReturnTaskList" xml:space="preserve">
     <value>Save and return to task list</value>
   </data>
+  <data name="ServiceOfNoticeWarningText" xml:space="preserve">
+    <value>Changing the details on this page, on submission of your application, will update your service of notice details for your organisation.</value>
+  </data>
   <data name="WarningText" xml:space="preserve">
-    <value>Changing the details on this page, on submission of your application, will update your contact details on your account.</value>
+    <value>Changing the details on this page, on submission of your application, will update your contact details for your organisation.</value>
   </data>
   <data name="BrandNamesDescription" xml:space="preserve">
     <value>Enter EEE brand names that you place on the UK market (optional)</value>

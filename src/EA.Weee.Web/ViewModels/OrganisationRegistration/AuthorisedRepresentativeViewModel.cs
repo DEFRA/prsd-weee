@@ -6,7 +6,7 @@
 
     public class AuthorisedRepresentativeViewModel : YesNoChoiceViewModel
     {
-        [Required(ErrorMessage = "Please indicate whether or not you are applying as an Authorised Representative of a non-UK established company")]
+        [Required(ErrorMessage = "Please indicate whether or not you are applying as an authorised representative of a non-UK established company")]
         public override string SelectedValue { get; set; }
 
         public AuthorisedRepresentativeViewModel()
