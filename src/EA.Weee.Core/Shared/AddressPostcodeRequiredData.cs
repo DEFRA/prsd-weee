@@ -22,7 +22,7 @@
         [Required]
         [StringLength(CommonMaxFieldLengths.EmailAddress)]
         [EmailAddress]
-        [Display(Name = "Email")]
+        [Display(Name = "Email address")]
         public string Email { get; set; }
 
         [Required]

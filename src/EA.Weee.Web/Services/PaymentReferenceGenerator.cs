@@ -2,11 +2,13 @@
 {
     using EA.Prsd.Core;
     using System;
+    using System.Security.Cryptography;
     using System.Text;
 
     public class PaymentReferenceGenerator : IPaymentReferenceGenerator
     {
-        private static readonly Random Random = new Random();
+        private const string Chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
+        private static readonly char[] CharArray = Chars.ToCharArray();
 
         public string GeneratePaymentReference(int length = 20)
         {
@@ -16,17 +18,19 @@
             }
 
             var builder = new StringBuilder("WEEE");
-
             builder.Append(SystemTime.UtcNow.Year);
-
             builder.Append((DateTimeOffset.UtcNow.ToUnixTimeSeconds() % 1000000).ToString("D6"));
 
             var remainingLength = length - builder.Length;
-            const string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 
-            for (var i = 0; i < remainingLength; i++)
+            using (var randomNumberGenerator = RandomNumberGenerator.Create())
             {
-                builder.Append(chars[Random.Next(chars.Length)]);
+                var randomNumber = new byte[1];
+                for (var i = 0; i < remainingLength; i++)
+                {
+                    randomNumberGenerator.GetBytes(randomNumber);
+                    builder.Append(CharArray[randomNumber[0] % (byte)CharArray.Length]);
+                }
             }
 
             return builder.ToString();
@@ -41,7 +45,6 @@
 
             var baseReference = GeneratePaymentReference(length - 3);
 
-            // Insert separators
             return $"{baseReference.Substring(0, 4)}-" +
                    $"{baseReference.Substring(4, 4)}-" +
                    $"{baseReference.Substring(8, 6)}-" +

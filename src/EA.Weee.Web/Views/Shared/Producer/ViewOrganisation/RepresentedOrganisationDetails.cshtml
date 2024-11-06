@@ -65,13 +65,21 @@
                     </tr>
 
                     <tr class="govuk-table__row">
-                        <th class="govuk-table__header" style="width: 30%;" scope="row">Email</th>
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Email address</th>
                         <td class="govuk-table__cell">@Model.RepresentingCompanyDetailsViewModel.Address.Email</td>
                     </tr>
                 </tbody>
             </table>
 
         </div>
+        @if (Model.ShowReturnRegistrationToUser)
+        {
+            <div class="govuk-button-group govuk-!-padding-top-3">
+                <a href="@Url.Action("ReturnProducerRegistration", new { registrationNumber = Model.RegistrationNumber, year = Model.Year })" class="govuk-button">
+                    Return submission to user
+                </a>
+            </div>
+        }
     </div>
 
     @(this.WeeeGds().BackToTopLink())

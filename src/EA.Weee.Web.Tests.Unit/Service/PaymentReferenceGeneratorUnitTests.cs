@@ -4,6 +4,7 @@
     using EA.Weee.Web.Services;
     using FluentAssertions;
     using System;
+    using System.Collections.Generic;
     using Xunit;
     public class PaymentReferenceGeneratorTests
     {
@@ -36,9 +37,19 @@
         [Fact]
         public void GeneratePaymentReference_ShouldGenerateUniqueReferences()
         {
-            var reference1 = generator.GeneratePaymentReference();
-            var reference2 = generator.GeneratePaymentReference();
-            reference1.Should().NotBe(reference2);
+            // Arrange
+            const int numberOfReferences = 1000;
+            var references = new HashSet<string>();
+
+            // Act
+            for (var i = 0; i < numberOfReferences; i++)
+            {
+                var reference = generator.GeneratePaymentReference();
+                references.Add(reference).Should().BeTrue($"Generated duplicate reference: {reference}");
+            }
+
+            // Assert
+            references.Count.Should().Be(numberOfReferences, "All generated references should be unique");
         }
 
         [Fact]
