@@ -352,6 +352,19 @@
             return View(model);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> FindCompany(string companiesRegistrationNumber)
+        {
+            using (var client = companiesHouseClient())
+            {
+                var result = await client.GetCompanyDetailsAsync(
+                    configurationService.CurrentConfiguration.CompaniesHouseReferencePath,
+                    companiesRegistrationNumber);
+
+                return Json(result, JsonRequestBehavior.AllowGet);
+            }
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> OrganisationDetails(OrganisationViewModel model)
