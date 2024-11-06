@@ -193,18 +193,26 @@
                 .Be(request.BusinessAddressData.WebAddress);
         }
 
-        [Fact]
-        public async Task HandleAsync_DoesNotUpdateBrandName_WhenNotProvided()
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        public async Task HandleAsync_ResetsBrandName_WhenNotProvided(string brandName)
         {
             // Arrange
-            var request = CreateValidRequest();
             var directRegistrant = SetupValidDirectRegistrant();
+            directRegistrant.AddOrUpdateBrandName(new BrandName("name"));
+
+            var address = TestFixture.Build<AddressData>().With(a => a.CountryId, countryId).Create();
+            var brandNameRequest = new EditOrganisationDetailsRequest(directRegistrantId, TestFixture.Create<string>(),
+                TestFixture.Create<string>(), address, brandName);
 
             // Act
-            await handler.HandleAsync(request);
+            await handler.HandleAsync(brandNameRequest);
 
             // Assert
             directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.BrandName.Should().BeNull();
+            directRegistrant.DirectProducerSubmissions.First().CurrentSubmission.BrandNameId.Should().BeNull();
         }
 
         private EditOrganisationDetailsRequest CreateValidRequest(string brandNames = null)

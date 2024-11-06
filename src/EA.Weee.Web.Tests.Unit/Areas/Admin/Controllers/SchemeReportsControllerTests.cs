@@ -1552,7 +1552,7 @@
             var result = await controller.ProducerEeeData() as ViewResult;
 
             // Assert
-            var model = result.Model as ProducersDataViewModel;
+            var model = result.Model as ProducersIncSmallProducersDataViewModel;
             model.Schemes.Should().Contain(s => s.Value == DirectRegistrantFixedIdConstant.DirectRegistrantFixedId.ToString());
         }
 
