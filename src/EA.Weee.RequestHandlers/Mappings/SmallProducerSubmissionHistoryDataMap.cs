@@ -70,7 +70,7 @@
 
         private static string MapPaymentReference(DirectProducerSubmission submission)
         {
-            if (submission.ManualPaymentMethod != null && !submission.FinalPaymentSessionId.HasValue)
+            if (!string.IsNullOrWhiteSpace(submission.ManualPaymentMethod))
             {
                 return submission.ManualPaymentMethod;
             }
