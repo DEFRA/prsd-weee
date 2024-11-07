@@ -142,7 +142,7 @@
 
         public string AddressLookupScope { get; set; }
 
-        [DefaultValue("01/01/2025")]
+        [DefaultValue("2025/01/01")]
         public DateTime SmallProducerFeatureEnabledFrom { get; set; }
     }
 }
