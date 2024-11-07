@@ -428,9 +428,9 @@
     <Content Include="scripts\Update\Release 7\Sprint5\20241017-1140-producer-ukeee-sp-update.sql" />
     <Content Include="scripts\Update\Release 7\Sprint6\20241017-1103-producer-details-sp-update.sql" />
     <Content Include="scripts\Update\Release 7\Sprint6\20241022-1113-producer-eee-sp-update-direct-registrant.sql" />
-    <Content Include="scripts\Update\Release 7\Sprint7\20241106-1651-producer-ukeee-sp-update.sql" />
+    <Content Include="scripts\Update\Release 7\Sprint7\20241107-1132-producer-ukeee-sp-update.sql" />
     <Content Include="scripts\Update\Release 7\Sprint7\20241105-1141-producer-register-report-returned.sql" />
-    <Content Include="scripts\Update\Release 7\Sprint7\20241105-1120-producer-eee-sp-update-returned.sql" />
+    <Content Include="scripts\Update\Release 7\Sprint7\20241107-1133-producer-eee-sp-update-returned.sql" />
     <Content Include="scripts\Update\Release 7\Sprint7\20241031-1359-producer-register-report-returned.sql" />
     <Content Include="scripts\Update\Release 7\Sprint7\20241031-1150-producer-eee-sp-update-returned.sql" />
     <Content Include="scripts\Update\Release 7\Sprint7\20241031-0955-producer-details-sp-update-returned.sql" />

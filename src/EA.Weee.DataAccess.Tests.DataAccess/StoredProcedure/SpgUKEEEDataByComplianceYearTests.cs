@@ -126,11 +126,11 @@
             // Arrange
             using (var wrapper = new DatabaseWrapper())
             {
-                var (_, country) = DirectRegistrantHelper.SetupCommonTestData(wrapper);
+                DirectRegistrantHelper.SetupCommonTestData(wrapper);
 
                 var complianceYear = 2060;
                 // Direct registrant data is for the previous year
-                var (organisation1, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear - 1);
+                var (_, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear - 1);
 
                 var amounts1 = new List<DirectRegistrantHelper.EeeOutputAmountData>
                 {
@@ -139,16 +139,27 @@
                     new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C }
                 };
 
-                var submission1 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear + 1, amounts1, DirectProducerSubmissionStatus.Complete);
+                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear + 1, amounts1, DirectProducerSubmissionStatus.Complete, null, true);
 
-                var (organisation2, directRegistrant2, registeredProducer2) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 2", "WEE/AG48365JX", complianceYear - 1);
+                var (_, directRegistrant2, registeredProducer2) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 2", "WEE/AG48365JX", complianceYear - 1);
 
                 var amounts2 = new List<DirectRegistrantHelper.EeeOutputAmountData>
                 {
                     new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.MedicalDevices, Amount = 4.456m, ObligationType = Domain.Obligation.ObligationType.B2C }
                 };
 
-                var submission2 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant2, registeredProducer2, complianceYear + 1, amounts2, DirectProducerSubmissionStatus.Complete);
+                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant2, registeredProducer2, complianceYear + 1, amounts2, DirectProducerSubmissionStatus.Complete, null, true);
+
+                // registered producer will be marked as removed so should not be added to totals
+                var (_, _, registeredProducer3) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 3", "WEE/ZG48365JX", complianceYear - 1);
+
+                var amounts3 = new List<DirectRegistrantHelper.EeeOutputAmountData>
+                {
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.MedicalDevices, Amount = 4.456m, ObligationType = Domain.Obligation.ObligationType.B2C }
+                };
+
+                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant2, registeredProducer2, complianceYear + 1, amounts3, DirectProducerSubmissionStatus.Complete, null, true);
+                registeredProducer3.Remove();
 
                 // Create a scheme for test or ordering
                 var organisation =
@@ -243,12 +254,12 @@
         }
 
         [Fact]
-        public async Task Execute_WithDirectRegistrantSubmissions_WithReturnedSubmissionThatHasNotBeenReSubmitted_ReturnsResults()
+        public async Task Execute_WithDirectRegistrantSubmissions_WithReturnedSubmissionThatHasNotBeenReSubmittedAndHasBeenPaid_ShouldReturnResultsWithoutSubmittedEEE()
         {
             // Arrange
             using (var wrapper = new DatabaseWrapper())
             {
-                var (_, _) = DirectRegistrantHelper.SetupCommonTestData(wrapper);
+                DirectRegistrantHelper.SetupCommonTestData(wrapper);
 
                 var complianceYear = 2037;
                 // Direct registrant data is for the previous year
@@ -261,7 +272,7 @@
                     new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C }
                 };
 
-                var submission1 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear + 1, amounts1, DirectProducerSubmissionStatus.Complete);
+                var submission1 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear + 1, amounts1, DirectProducerSubmissionStatus.Complete, null, true);
 
                 // These amounts should not be considered as they have not been re-submitted
                 var amounts2 = new List<DirectRegistrantHelper.EeeOutputAmountData>
@@ -481,12 +492,12 @@
         }
 
         [Fact]
-        public async Task Execute_WithDirectRegistrantSubmissions_WithReturnedSubmissionThatHasBeenReSubmitted_ReturnsResults()
+        public async Task Execute_WithDirectRegistrantSubmissions_WithReturnedSubmissionThatHasBeenReSubmittedAndPaid_ShouldReturnResultsWithNewlySubmittedEEE()
         {
             // Arrange
             using (var wrapper = new DatabaseWrapper())
             {
-                var (_, _) = DirectRegistrantHelper.SetupCommonTestData(wrapper);
+                DirectRegistrantHelper.SetupCommonTestData(wrapper);
 
                 var complianceYear = 2036;
                 // Direct registrant data is for the previous year
@@ -512,6 +523,7 @@
                 };
 
                 await DirectRegistrantHelper.SubmitSubmission(wrapper, submission1, amounts2);
+                await DirectRegistrantHelper.SetSubmissionAsPaid(wrapper, submission1);
 
                 await wrapper.WeeeContext.SaveChangesAsync();
 
@@ -637,6 +649,461 @@
                         Q3B2CEEE = (decimal?)null,
                         Q4B2BEEE = (decimal?)null,
                         Q4B2CEEE = 3M,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 3M
+                    },
+                    ["10. Automatic dispensers"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["11. Display equipment"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["12. Appliances containing refrigerants"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["13. Gas discharge lamps and LED light sources"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["14. Photovoltaic panels"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    }
+                };
+
+                foreach (var categoryEntry in categoryExpectations)
+                {
+                    var category = results.Should().ContainSingle(r => r.Category == categoryEntry.Key)
+                        .Subject;
+
+                    category.Should().BeEquivalentTo(categoryEntry.Value,
+                        options => options.WithStrictOrdering()
+                            .ComparingByMembers<object>());
+                }
+            }
+        }
+
+        [Fact]
+        public async Task Execute_WithDirectRegistrantSubmissions_WithRemovedProducer_ShouldReturnNoResults()
+        {
+            // Arrange
+            using (var wrapper = new DatabaseWrapper())
+            {
+                DirectRegistrantHelper.SetupCommonTestData(wrapper);
+
+                var complianceYear = 2027;
+                // Direct registrant data is for the previous year
+                var (_, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AZ43345JN", complianceYear - 1);
+
+                var amounts1 = new List<DirectRegistrantHelper.EeeOutputAmountData>
+                {
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 456.789m, ObligationType = Domain.Obligation.ObligationType.B2C },
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 222.111m, ObligationType = Domain.Obligation.ObligationType.B2B },
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C }
+                };
+
+                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear + 1, amounts1, DirectProducerSubmissionStatus.Complete);
+                registeredProducer1.Remove();
+
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                // Act
+                var results = await wrapper.WeeeContext.StoredProcedures.SpgUKEEEDataByComplianceYear(complianceYear);
+
+                results.Should().NotBeNull()
+                    .And.HaveCount(14);
+
+                var categoryExpectations = new Dictionary<string, object>
+                {
+                    ["01. Large household appliances"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["02. Small household appliances"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["03. IT and telecommunications equipment"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["04. Consumer equipment"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["05. Lighting equipment"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["06. Electrical and electronic tools"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["07. Toys, leisure and sports equipment"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["08. Medical devices"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["09. Monitoring and control instruments"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 3M
+                    },
+                    ["10. Automatic dispensers"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["11. Display equipment"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["12. Appliances containing refrigerants"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["13. Gas discharge lamps and LED light sources"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["14. Photovoltaic panels"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    }
+                };
+
+                foreach (var categoryEntry in categoryExpectations)
+                {
+                    var category = results.Should().ContainSingle(r => r.Category == categoryEntry.Key)
+                        .Subject;
+
+                    category.Should().BeEquivalentTo(categoryEntry.Value,
+                        options => options.WithStrictOrdering()
+                            .ComparingByMembers<object>());
+                }
+            }
+        }
+
+        [Fact]
+        public async Task Execute_WithDirectRegistrantSubmissions_WithNoPaidSubmissions_ShouldReturnNoResults()
+        {
+            // Arrange
+            using (var wrapper = new DatabaseWrapper())
+            {
+                DirectRegistrantHelper.SetupCommonTestData(wrapper);
+
+                var complianceYear = 2027;
+                // Direct registrant data is for the previous year
+                var (_, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AZ43345JN", complianceYear - 1);
+
+                var amounts1 = new List<DirectRegistrantHelper.EeeOutputAmountData>
+                {
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 456.789m, ObligationType = Domain.Obligation.ObligationType.B2C },
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 222.111m, ObligationType = Domain.Obligation.ObligationType.B2B },
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C }
+                };
+
+                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear + 1, amounts1, DirectProducerSubmissionStatus.Complete, null, false);
+
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                // Act
+                var results = await wrapper.WeeeContext.StoredProcedures.SpgUKEEEDataByComplianceYear(complianceYear);
+
+                results.Should().NotBeNull()
+                    .And.HaveCount(14);
+
+                var categoryExpectations = new Dictionary<string, object>
+                {
+                    ["01. Large household appliances"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["02. Small household appliances"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["03. IT and telecommunications equipment"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["04. Consumer equipment"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["05. Lighting equipment"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["06. Electrical and electronic tools"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["07. Toys, leisure and sports equipment"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["08. Medical devices"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["09. Monitoring and control instruments"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
                         TotalB2BEEE = 0M,
                         TotalB2CEEE = 3M
                     },

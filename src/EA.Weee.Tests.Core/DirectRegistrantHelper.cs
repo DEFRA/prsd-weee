@@ -10,7 +10,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using EA.Weee.Core.DirectRegistrant;
 
     public static class DirectRegistrantHelper
     {
@@ -48,7 +47,8 @@
             int complianceYear,
             IEnumerable<EeeOutputAmountData> amounts,
             DirectProducerSubmissionStatus status,
-            int? sellingTechniqueType = null)
+            int? sellingTechniqueType = null,
+            bool paid = false)
         {
             var submission = new DirectProducerSubmission
             {
@@ -84,6 +84,12 @@
             submission.SetCurrentSubmission(history);
             
             submission.DirectProducerSubmissionStatus = status;
+
+            if (paid)
+            {
+                submission.PaymentFinished = true;
+            }
+
             await wrapper.WeeeContext.SaveChangesAsync();
 
             return submission;
@@ -110,6 +116,17 @@
             {
                 submission.CurrentSubmission.SellingTechniqueType = sellingTechniqueType;
             }
+
+            await wrapper.WeeeContext.SaveChangesAsync();
+
+            return submission;
+        }
+
+        public static async Task<DirectProducerSubmission> SetSubmissionAsPaid(
+            DatabaseWrapper wrapper,
+            DirectProducerSubmission submission)
+        {
+            submission.PaymentFinished = true;
 
             await wrapper.WeeeContext.SaveChangesAsync();
 

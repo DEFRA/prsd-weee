@@ -76,7 +76,8 @@ FROM
 	LEFT JOIN [Lookup].[Country] AC ON AC.Id = PA.CountryId
 WHERE
     RP.Removed = 0 AND
-    dps.ComplianceYear = (@ComplianceYear + 1)
+    dps.ComplianceYear = (@ComplianceYear + 1) AND
+    dps.PaymentFinished = 1
 
 -- Create pivot table
 SELECT EEEData.ID,
