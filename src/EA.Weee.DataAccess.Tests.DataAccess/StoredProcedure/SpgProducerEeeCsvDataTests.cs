@@ -665,7 +665,9 @@
                     new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 3m, ObligationType = Domain.Obligation.ObligationType.B2C }
                 };
 
-                await DirectRegistrantHelper.ReturnSubmission(wrapper, submission, updatedAmounts);
+                await DirectRegistrantHelper.ReturnSubmission(wrapper, submission);
+
+                await DirectRegistrantHelper.UpdateEeeeAmounts(wrapper, submission, updatedAmounts);
 
                 var results = await wrapper.WeeeContext.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, "B2C", false);
 

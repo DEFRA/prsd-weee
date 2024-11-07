@@ -576,7 +576,9 @@
                     new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 1m, ObligationType = Domain.Obligation.ObligationType.B2B },
                 };
 
-                await DirectRegistrantHelper.ReturnSubmission(wrapper, submission, amounts2);
+                await DirectRegistrantHelper.ReturnSubmission(wrapper, submission);
+
+                await DirectRegistrantHelper.UpdateEeeeAmounts(wrapper, submission, amounts2);
 
                 var results = await wrapper.StoredProcedures.SpgProducerPublicRegisterCSVDataByComplianceYear(complianceYear);
 
