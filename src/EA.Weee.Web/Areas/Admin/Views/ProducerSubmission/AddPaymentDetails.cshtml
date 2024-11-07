@@ -29,7 +29,7 @@
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PaymentMethod)">
                     @Html.Gds().LabelFor(m => m.PaymentMethod)
                     @Html.Gds().ValidationMessageFor(m => m.PaymentMethod)
-                    @Html.Gds().TextBoxFor(m => m.PaymentMethod, new { @maxlength = CommonMaxFieldLengths.DefaultString })
+                    @Html.Gds().TextBoxFor(m => m.PaymentMethod, new { @maxlength = CommonMaxFieldLengths.LongDefaultString })
                 </div>
             </div>
 
