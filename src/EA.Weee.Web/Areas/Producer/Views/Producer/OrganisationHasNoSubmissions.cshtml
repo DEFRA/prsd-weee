@@ -3,7 +3,7 @@
 @model EA.Weee.Web.Areas.Producer.ViewModels.AlreadySubmittedAndPaidViewModel
 
 @{
-    const string title = "This organisation has no registration submissions yet";
+    const string title = "This organisation has no registration yet";
     ViewBag.Title = title + " - GOV.UK";
 }
 @section full_main_content
@@ -15,7 +15,7 @@
     </header>
 
     <p class="govuk-body">
-        This organisation has not yet made a registration submission. When they do, it will appear here.
+        This organisation has not yet submitted a registration. When they do, it will appear here.
     </p>
 
     @this.WeeeGds().GovUkButtonLink("Perform another activity", @Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.OrganisationId, null)))
