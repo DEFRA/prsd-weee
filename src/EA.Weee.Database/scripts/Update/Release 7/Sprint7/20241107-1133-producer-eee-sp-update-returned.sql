@@ -103,7 +103,8 @@ BEGIN
     WHERE
         rp.Removed = 0 AND
         eoa.ObligationType = @ObligationType AND
-        dps.ComplianceYear = (@ComplianceYear + 1)
+        dps.ComplianceYear = (@ComplianceYear + 1) AND
+        dps.PaymentFinished = 1
 
     -- Create pivot table
     SELECT EeeData.PRN, EeeData.ProducerName, EeeData.ProducerCountry, EeeData.SchemeId, 
