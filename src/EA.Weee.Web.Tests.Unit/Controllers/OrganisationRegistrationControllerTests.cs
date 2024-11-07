@@ -2043,5 +2043,53 @@
             model.IsPreviousSchemeMember.Should().BeTrue();
             model.Address.Countries.Should().BeEquivalentTo(countries);
         }
+
+        [Theory]
+        [InlineData("2024-11-06", true)]  // currentDate >= featureEnabledDate (Should show the message)
+        [InlineData("2024-11-08", false)] // currentDate < featureEnabledDate (Should not show the message)
+        public async Task SearchResults_SetsShowSmallProducerMessageCorrectly(DateTime featureEnabledDate, bool expectedMessageFlag)
+        {
+            // Arrange
+            var fakeResults = new List<OrganisationSearchResult>
+            {
+                new OrganisationSearchResult
+                {
+                    OrganisationId = new Guid("05DF9AE8-DACE-4173-A227-16933EB5D5F8"),
+                    Name = "Test Company"
+                }
+            };
+
+            var organisationSearcher = A.Fake<ISearcher<OrganisationSearchResult>>();
+            A.CallTo(() => organisationSearcher.Search("testSearchTerm", 5, false))
+                .Returns(fakeResults);
+
+            A.CallTo(() => configurationService.CurrentConfiguration.SmallProducerFeatureEnabledFrom)
+                .Returns(featureEnabledDate);
+
+            var weeeClient = A.Fake<IWeeeClient>();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._))
+                .Returns(DateTime.Now);
+
+            var controller = new OrganisationRegistrationController(
+                () => weeeClient,
+                organisationSearcher,
+                configurationService,
+                transactionService,
+                weeeCache,
+                () => companiesHouseClient,
+                () => addressLookupClient);
+
+            // Act
+            var result = await controller.SearchResults("testSearchTerm");
+
+            // Assert
+            var viewResult = result as ViewResult;
+            Assert.NotNull(viewResult);
+
+            var viewModel = viewResult.Model as SearchResultsViewModel;
+            Assert.NotNull(viewModel);
+
+            Assert.Equal(expectedMessageFlag, viewModel.ShowSmallProducerMessage);
+        }
     }
 }

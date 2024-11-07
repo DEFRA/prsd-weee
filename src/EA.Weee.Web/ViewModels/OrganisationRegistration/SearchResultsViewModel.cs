@@ -17,5 +17,7 @@
         [Required(ErrorMessage = "You must choose an organisation")]
         [DisplayName("Select an organisation to add")]
         public Guid? SelectedOrganisationId { get; set; }
+
+        public bool ShowSmallProducerMessage { get; set; }
     }
 }
