@@ -1,6 +1,7 @@
 ﻿(() => {
     window.orgDetailsCompanyLookup = function (endpoint) {
         let findButtonId = "find-company";
+
         let config = {
             inputFieldId: "CompaniesRegistrationNumber",
             endpoint: endpoint,
