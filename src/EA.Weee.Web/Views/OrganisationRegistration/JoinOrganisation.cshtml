@@ -1,10 +1,15 @@
+@using MvcNavigationHelpers
 @using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.Controllers
+@using EA.Weee.Web.ViewModels.OrganisationRegistration
 @model EA.Weee.Web.ViewModels.OrganisationRegistration.JoinOrganisationViewModel
 @{
     ViewBag.Title = "Access Organisation";
 }
+@section full_main_content 
+{
+    @(this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.OrganisationFound())))
 
-@section main_content {
     <header class="hgroup">
         <h1 class="govuk-heading-l">
             Are you sure you want to request access to @Model.OrganisationName?
