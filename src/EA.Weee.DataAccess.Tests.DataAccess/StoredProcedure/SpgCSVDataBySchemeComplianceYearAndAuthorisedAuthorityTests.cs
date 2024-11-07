@@ -991,7 +991,9 @@
                     new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C }
                 };
 
-                await DirectRegistrantHelper.ReturnSubmission(wrapper, submission1, amounts1);
+                await DirectRegistrantHelper.ReturnSubmission(wrapper, submission1);
+
+                await DirectRegistrantHelper.UpdateEeeeAmounts(wrapper, submission1, amounts1);
 
                 await wrapper.WeeeContext.SaveChangesAsync();
 
