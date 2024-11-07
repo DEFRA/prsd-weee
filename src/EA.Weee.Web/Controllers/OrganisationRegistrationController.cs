@@ -357,17 +357,22 @@
         {
             var result = await GetCompany(companiesRegistrationNumber);
 
-            return Json(result, JsonRequestBehavior.AllowGet);
-        }
-
-        private async Task<Api.Client.Models.DefraCompaniesHouseApiModel> GetCompany(string companiesRegistrationNumber)
-        {
-            using (var client = companiesHouseClient())
+            var orgModel = new OrganisationViewModel()
             {
-                return await client.GetCompanyDetailsAsync(
-                    configurationService.CurrentConfiguration.CompaniesHouseReferencePath,
-                    companiesRegistrationNumber);
-            }
+                CompanyName = result.Organisation.Name,
+                CompaniesRegistrationNumber = result.Organisation?.RegistrationNumber,
+                LookupFound = !result.HasError,
+                Address = new ExternalAddressData
+                {
+                    Address1 = result.Organisation?.RegisteredOffice?.BuildingNumber,
+                    Address2 = result.Organisation?.RegisteredOffice?.Street,
+                    TownOrCity = result.Organisation?.RegisteredOffice?.Town,
+                    Postcode = result.Organisation?.RegisteredOffice?.Postcode,
+                    CountryId = UkCountry.GetIdByName(result.Organisation?.RegisteredOffice?.Country.Name)
+                },
+            };
+
+            return Json(orgModel, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -969,6 +974,16 @@
             }
 
             return results;
+        }
+
+        private async Task<Api.Client.Models.DefraCompaniesHouseApiModel> GetCompany(string companiesRegistrationNumber)
+        {
+            using (var client = companiesHouseClient())
+            {
+                return await client.GetCompanyDetailsAsync(
+                    configurationService.CurrentConfiguration.CompaniesHouseReferencePath,
+                    companiesRegistrationNumber);
+            }
         }
     }
 }
