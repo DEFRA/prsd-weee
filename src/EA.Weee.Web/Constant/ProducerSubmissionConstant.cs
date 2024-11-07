@@ -4,9 +4,9 @@
 
     public static class ProducerSubmissionConstant
     {
-        public static string HistoricProducerRegistrationSubmission = "Producer registration submissions";
-        public static string NewProducerRegistrationSubmission = "New producer registration submission";
-        public static string ContinueProducerRegistrationSubmission = "Continue producer registration submission";
+        public static string HistoricProducerRegistrationSubmission = "Producer registrations";
+        public static string NewProducerRegistrationSubmission = "New producer registration application";
+        public static string ContinueProducerRegistrationSubmission = "Continue producer registration application";
         public static string ViewOrganisation = "View organisation";
         public static string ManageRepresentingCompany = "Manage producer submissions";
 
