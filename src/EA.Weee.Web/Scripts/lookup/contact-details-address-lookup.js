@@ -76,7 +76,7 @@
             let $dropdownParent = $("#operator-country-dropdown-list");
             let $select = $dropdownParent.find("select");
 
-            $select.find("option[value='${selected.CountryId}']").prop('selected', true);
+            $select.find(`option[value='${selected.CountryId}']`).prop('selected', true);
             $select.val(selected.CountryId);
             $dropdownParent.find("input").val($select.find("option:selected").text());
         }
