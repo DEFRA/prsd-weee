@@ -16,11 +16,17 @@
 <h2 class="govuk-heading-s">Enter the details of the organisation or business applying to register.</h2>
 @Html.Gds().HintParagraph("If you don't have a company registration number, leave this field blank")
 
-<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesRegistrationNumber)">
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesRegistrationNumber) @(!Model.LookupFound && Model.Action == "Find Company" ? "govuk-form-group--error" : "")">
     @Html.Gds().LabelFor(m => m.CompaniesRegistrationNumber)
     @Html.Gds().ValidationMessageFor(m => m.CompaniesRegistrationNumber)
+    @if (Model.LookupFound == false && Model.Action == "Find Company")
+    {
+        <div class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> Company details could not be found
+        </div>
+    }
 
-    <div class="govuk-error-message companies-house-search-error" style="display: none">
+    <div class="govuk-error-message companies-house-search-error only-js-enabled" style="display: none">
         <span class="govuk-visually-hidden">Error:</span> Company details could not be found
     </div>
 
@@ -29,9 +35,16 @@
     </div>
 
     <div class="left-cleared govuk-!-margin-top-5">
+        <noscript>
+            <input type="submit"
+                   value="Find Company"
+                   name="action"
+                   class="govuk-button govuk-button--secondary"
+                   data-prevent-double-click="true" />
+        </noscript>
 
         <button type="button"
-                name="Find company"
+                name="Find Company"
                 class="govuk-button govuk-button--secondary only-js-enabled"
                 id="find-company"
                 data-module="govuk-button"
@@ -52,6 +65,13 @@
     </div>
 }
 
+<noscript>
+    <style>
+        .only-js-enabled {
+            display: none;
+        }
+    </style>
+</noscript>
 
 <style>
     .spinner-image {

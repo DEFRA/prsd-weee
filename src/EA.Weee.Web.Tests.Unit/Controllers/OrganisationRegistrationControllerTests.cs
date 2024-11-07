@@ -1534,6 +1534,27 @@
         }
 
         [Fact]
+        public async Task FindCompany_Get_GetsCompany()
+        {
+            // Act
+            var input = "456";
+
+            var result = await controller.FindCompany(input) as JsonResult;
+
+            result.Should().BeOfType<JsonResult>();
+            result.JsonRequestBehavior.Should().Be(JsonRequestBehavior.AllowGet);
+
+            A.CallTo(() =>
+              companiesHouseClient.GetCompanyDetailsAsync(
+                  configurationService.CurrentConfiguration.CompaniesHouseReferencePath,
+                  input))
+                .MustHaveHappenedOnceExactly();
+
+            // Assert
+            result.Should().NotBeNull();
+        }
+
+        [Fact]
         public async Task PartnerDetails_Get_ReturnsViewWithSavedData()
         {
             // Arrange
