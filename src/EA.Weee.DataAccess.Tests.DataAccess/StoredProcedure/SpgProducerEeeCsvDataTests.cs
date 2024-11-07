@@ -461,7 +461,8 @@
                     new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C }
                 };
 
-                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear + 1, amounts1, DirectProducerSubmissionStatus.Complete);
+                var submission = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear + 1, amounts1, DirectProducerSubmissionStatus.Complete);
+                await DirectRegistrantHelper.SetSubmissionAsPaid(wrapper, submission);
 
                 var (organisation2, directRegistrant2, registeredProducer2) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 2", "WEE/AG48365JX", complianceYear);
 
@@ -470,7 +471,8 @@
                     new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.MedicalDevices, Amount = 4.456m, ObligationType = Domain.Obligation.ObligationType.B2C }
                 };
 
-                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant2, registeredProducer2, complianceYear + 1, amounts2, DirectProducerSubmissionStatus.Complete);
+                var submission2 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant2, registeredProducer2, complianceYear + 1, amounts2, DirectProducerSubmissionStatus.Complete);
+                await DirectRegistrantHelper.SetSubmissionAsPaid(wrapper, submission2);
 
                 // should not affect the sums as producer submission has been removed
                 var (_, directRegistrant3, registeredProducer3) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 3", "WEE/AG28165JX", complianceYear);
@@ -480,7 +482,8 @@
                     new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.MedicalDevices, Amount = 4.456m, ObligationType = Domain.Obligation.ObligationType.B2C }
                 };
 
-                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant3, registeredProducer3, complianceYear + 1, amounts3, DirectProducerSubmissionStatus.Complete);
+                var submission3 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant3, registeredProducer3, complianceYear + 1, amounts3, DirectProducerSubmissionStatus.Complete);
+                await DirectRegistrantHelper.SetSubmissionAsPaid(wrapper, submission3);
 
                 registeredProducer3.Remove();
 
@@ -595,7 +598,7 @@
         }
 
         [Fact]
-        public async Task Execute_WithDirectRegistrantSubmissionsThatHaveBeenReturnedAndReSubmitted_ShouldUseLatestSubmittedNumbers()
+        public async Task Execute_WithDirectRegistrantSubmissionsThatHaveBeenReturnedAndReSubmittedAndPaid_ShouldUseLatestSubmittedEEE()
         {
             using (var wrapper = new DatabaseWrapper())
             {
@@ -612,6 +615,7 @@
                 };
 
                 var submission = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear + 1, amounts1, DirectProducerSubmissionStatus.Complete);
+                await DirectRegistrantHelper.SetSubmissionAsPaid(wrapper, submission);
 
                 DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 2", "WEE/AG38365JX", complianceYear);
 
@@ -638,7 +642,7 @@
         }
 
         [Fact]
-        public async Task Execute_WithDirectRegistrantSubmissionsThatHaveBeenReturned_ShouldUseLatestSubmittedNumbers()
+        public async Task Execute_WithDirectRegistrantSubmissionsThatHaveBeenReturnedAndPaid_ShouldUseSubmittedEEE()
         {
             using (var wrapper = new DatabaseWrapper())
             {
@@ -655,6 +659,7 @@
                 };
 
                 var submission = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear + 1, amounts1, DirectProducerSubmissionStatus.Complete);
+                await DirectRegistrantHelper.SetSubmissionAsPaid(wrapper, submission);
 
                 DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 2", "WEE/AG37365JX", complianceYear);
 
@@ -665,7 +670,9 @@
                     new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 3m, ObligationType = Domain.Obligation.ObligationType.B2C }
                 };
 
-                await DirectRegistrantHelper.ReturnSubmission(wrapper, submission, updatedAmounts);
+                await DirectRegistrantHelper.ReturnSubmission(wrapper, submission);
+
+                await DirectRegistrantHelper.UpdateEeeeAmounts(wrapper, submission, updatedAmounts);
 
                 var results = await wrapper.WeeeContext.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, "B2C", false);
 
@@ -685,8 +692,8 @@
         {
             using (var wrapper = new DatabaseWrapper())
             {
-                var setupData = DirectRegistrantHelper.SetupCommonTestData(wrapper);
-                var complianceYear = 2070;
+                DirectRegistrantHelper.SetupCommonTestData(wrapper);
+                const int complianceYear = 2070;
 
                 var (_, directRegistrant, registeredProducer) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear);
 
@@ -694,7 +701,8 @@
                 {
                     new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 123.456m, ObligationType = Domain.Obligation.ObligationType.B2C }
                 };
-                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant, registeredProducer, complianceYear + 1, amounts, DirectProducerSubmissionStatus.Incomplete);
+                var submission = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant, registeredProducer, complianceYear + 1, amounts, DirectProducerSubmissionStatus.Incomplete);
+                await DirectRegistrantHelper.SetSubmissionAsPaid(wrapper, submission);
 
                 var results = await wrapper.WeeeContext.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, "B2C", directRegistrantFilter);
 
@@ -708,7 +716,7 @@
         {
             using (var wrapper = new DatabaseWrapper())
             {
-                var complianceYear = 1010;
+                const int complianceYear = 1010;
 
                 var (_, directRegistrant, registeredProducer) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", 1000);
 
@@ -716,7 +724,63 @@
                 {
                     new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 123.456m, ObligationType = Domain.Obligation.ObligationType.B2C }
                 };
-                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant, registeredProducer, 1000, amounts, DirectProducerSubmissionStatus.Complete);
+                var submission = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant, registeredProducer, 1000, amounts, DirectProducerSubmissionStatus.Complete);
+                await DirectRegistrantHelper.SetSubmissionAsPaid(wrapper, submission);
+                
+                var results = await wrapper.WeeeContext.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, "B2C", false);
+
+                results.Should().NotBeNull();
+                results.Should().BeEmpty();
+            }
+        }
+
+        [Fact]
+        public async Task Execute_WithDirectRegistrantSubmissionsWithRemovedProducer_ReturnsEmptyResults()
+        {
+            using (var wrapper = new DatabaseWrapper())
+            {
+                const int complianceYear = 1978;
+
+                var (_, directRegistrant, registeredProducer) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear);
+
+                var amounts = new List<DirectRegistrantHelper.EeeOutputAmountData>
+                {
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 123.456m, ObligationType = Domain.Obligation.ObligationType.B2C }
+                };
+                
+                var submission = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant, registeredProducer, complianceYear + 1, amounts, DirectProducerSubmissionStatus.Complete);
+                await DirectRegistrantHelper.SetSubmissionAsPaid(wrapper, submission);
+
+                registeredProducer.Remove();
+
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                var results = await wrapper.WeeeContext.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, "B2C", false);
+
+                results.Should().NotBeNull();
+                results.Should().BeEmpty();
+            }
+        }
+
+        [Fact]
+        public async Task Execute_WithDirectRegistrantSubmissionsThatHaveNotBeenPaid_ReturnsEmptyResults()
+        {
+            using (var wrapper = new DatabaseWrapper())
+            {
+                const int complianceYear = 1978;
+
+                var (_, directRegistrant, registeredProducer) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear);
+
+                var amounts = new List<DirectRegistrantHelper.EeeOutputAmountData>
+                {
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 123.456m, ObligationType = Domain.Obligation.ObligationType.B2C }
+                };
+
+                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant, registeredProducer, complianceYear + 1, amounts, DirectProducerSubmissionStatus.Complete, null, false);
+
+                registeredProducer.Remove();
+
+                await wrapper.WeeeContext.SaveChangesAsync();
 
                 var results = await wrapper.WeeeContext.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, "B2C", false);
 

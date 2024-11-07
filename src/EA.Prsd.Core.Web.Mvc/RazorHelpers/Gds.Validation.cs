@@ -294,7 +294,7 @@
             }
         }
 
-        private static string GetPropertyName<TModel, TProperty>(HtmlHelper<TModel> htmlHelper, Expression<Func<TModel, TProperty>> expression)
+        private static string GetPropertyName<TM, TP>(HtmlHelper<TM> htmlHelper, Expression<Func<TM, TP>> expression)
         {
             if (expression == null)
             {

@@ -10,7 +10,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using EA.Weee.Core.DirectRegistrant;
 
     public static class DirectRegistrantHelper
     {
@@ -48,7 +47,8 @@
             int complianceYear,
             IEnumerable<EeeOutputAmountData> amounts,
             DirectProducerSubmissionStatus status,
-            int? sellingTechniqueType = null)
+            int? sellingTechniqueType = null,
+            bool paid = false)
         {
             var submission = new DirectProducerSubmission
             {
@@ -84,6 +84,12 @@
             submission.SetCurrentSubmission(history);
             
             submission.DirectProducerSubmissionStatus = status;
+
+            if (paid)
+            {
+                submission.PaymentFinished = true;
+            }
+
             await wrapper.WeeeContext.SaveChangesAsync();
 
             return submission;
@@ -116,24 +122,22 @@
             return submission;
         }
 
+        public static async Task<DirectProducerSubmission> SetSubmissionAsPaid(
+            DatabaseWrapper wrapper,
+            DirectProducerSubmission submission)
+        {
+            submission.PaymentFinished = true;
+
+            await wrapper.WeeeContext.SaveChangesAsync();
+
+            return submission;
+        }
+
         public static async Task<DirectProducerSubmission> ReturnSubmission(
             DatabaseWrapper wrapper,
-            DirectProducerSubmission submission,
-            IEnumerable<EeeOutputAmountData> amounts = null)
+            DirectProducerSubmission submission)
         {
             var history = new DirectProducerSubmissionHistory(submission);
-
-            if (amounts != null)
-            {
-                var returnVersion = new Domain.DataReturns.EeeOutputReturnVersion();
-
-                foreach (var amount in amounts)
-                {
-                    returnVersion.EeeOutputAmounts.Add(new Domain.DataReturns.EeeOutputAmount(amount.ObligationType, amount.Category, amount.Amount, submission.RegisteredProducer));
-                }
-
-                history.EeeOutputReturnVersion = returnVersion;
-            }
             
             wrapper.WeeeContext.DirectProducerSubmissionHistories.Add(history);
             await wrapper.WeeeContext.SaveChangesAsync();
@@ -141,6 +145,25 @@
             submission.SetCurrentSubmission(history);
 
             submission.DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Returned;
+            await wrapper.WeeeContext.SaveChangesAsync();
+
+            return submission;
+        }
+
+        public static async Task<DirectProducerSubmission> UpdateEeeeAmounts(
+            DatabaseWrapper wrapper,
+            DirectProducerSubmission submission,
+            IEnumerable<EeeOutputAmountData> amounts)
+        {
+            var returnVersion = new Domain.DataReturns.EeeOutputReturnVersion();
+
+            foreach (var amount in amounts)
+            {
+                returnVersion.EeeOutputAmounts.Add(new Domain.DataReturns.EeeOutputAmount(amount.ObligationType, amount.Category, amount.Amount, submission.RegisteredProducer));
+            }
+
+            submission.CurrentSubmission.EeeOutputReturnVersion = returnVersion;
+
             await wrapper.WeeeContext.SaveChangesAsync();
 
             return submission;
