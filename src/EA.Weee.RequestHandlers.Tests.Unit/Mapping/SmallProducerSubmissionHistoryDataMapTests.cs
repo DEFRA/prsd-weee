@@ -143,6 +143,27 @@
         }
 
         [Fact]
+        public void Map_SetsPaymentReferenceCorrectly_WhenManualPayment()
+        {
+            var directRegistrant = CreateDirectRegistrant(true);
+            var currentYearSubmission = CreateCurrentYearSubmission(directRegistrant);
+
+            currentYearSubmission.ManualPaymentMethod = "manual";
+
+            var expectedReference = currentYearSubmission.ManualPaymentMethod;
+            currentYearSubmission.FinalPaymentSessionId = null;
+
+            A.CallTo(() => currentYearSubmission.FinalPaymentSessionId)
+                .Returns(Guid.NewGuid());
+            A.CallTo(() => currentYearSubmission.FinalPaymentSession)
+                .Returns(new PaymentSession { PaymentReference = expectedReference });
+
+            var result = map.Map(new DirectProducerSubmissionSource(directRegistrant, currentYearSubmission));
+
+            result.PaymentReference.Should().Be(expectedReference);
+        }
+
+        [Fact]
         public void Map_SetsPaymentReferenceToEmptyString_WhenNoFinalPaymentSession()
         {
             var directRegistrant = CreateDirectRegistrant(true);
