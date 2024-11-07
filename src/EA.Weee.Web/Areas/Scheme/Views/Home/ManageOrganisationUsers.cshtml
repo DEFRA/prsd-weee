@@ -5,8 +5,10 @@
     ViewBag.Title = "Manage organisation users";
 }
 
-@section main_content
+@section full_main_content
 {
+    @(this.WeeeGds().BackLink(@Url.Action("ChooseActivity", "Home")))
+
     <header class="hgroup">
         <h1 class="govuk-heading-l">Which user would you like to manage?</h1>
     </header>
@@ -27,7 +29,4 @@
 
         @(this.WeeeGds().Submit("Continue"))
     }
-    <div class="govuk-body">
-        @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", new { @class = "govuk-link" })
-    </div>
 }
