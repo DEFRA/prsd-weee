@@ -42,7 +42,7 @@
             this.weeeCache = A.Fake<IWeeeCache>();
             appConfiguration = A.Fake<IAppConfiguration>();
 
-            enabledFromDate = new DateTime(2024, 1, 1);
+            enabledFromDate = new DateTime(2025, 1, 1);
 
             var fakeHttpContext = A.Fake<HttpContextBase>();
 
@@ -71,7 +71,8 @@
             var fakePrincipal = A.Fake<ClaimsPrincipal>();
             A.CallTo(() => fakePrincipal.Identity.IsAuthenticated).Returns(true);
             A.CallTo(() => fakeHttpContext.User).Returns(fakePrincipal);
-            A.CallTo(() => fakeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(Task.FromResult(enabledFromDate.AddDays(1)));
+            A.CallTo(() => fakeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(enabledFromDate.AddDays(1));
+            A.CallTo(() => appConfiguration.SmallProducerFeatureEnabledFrom).Returns(enabledFromDate);
         }
 
         [Fact]
@@ -83,7 +84,7 @@
 
             var expectedData = new SmallProducerSubmissionData();
             A.CallTo(() => fakeClient.SendAsync(A<string>._, A<GetSmallProducerSubmission>.That.Matches(g => g.DirectRegistrantId == directRegistrantId)))
-                .Returns(Task.FromResult(expectedData));
+                .Returns(expectedData);
 
             // Act
             filter.OnActionExecuting(actionExecutingContext);
@@ -124,10 +125,10 @@
             actionExecutingContext.RouteData.Values["directRegistrantId"] = directRegistrantId.ToString();
 
             A.CallTo(() => fakeClient.SendAsync(A<string>._, A<GetSmallProducerSubmission>._))
-                .Returns(Task.FromResult(new SmallProducerSubmissionData()))
+                .Returns(new SmallProducerSubmissionData())
                 .Once()
                 .Then
-                .Returns(Task.FromResult(new SmallProducerSubmissionData()));
+                .Returns(new SmallProducerSubmissionData());
 
             A.CallTo(() => fakeClient.SendAsync(A<string>._, A<AddSmallProducerSubmission>._))
                 .Returns(new AddSmallProducerSubmissionResult(invalidateCache, A.Dummy<Guid>()));
@@ -159,7 +160,7 @@
             actionExecutingContext.Controller = new HomeController();
 
             A.CallTo(() => fakeClient.SendAsync(A<string>._, A<GetSmallProducerSubmission>._))
-                .Returns(Task.FromResult(new SmallProducerSubmissionData()));
+                .Returns(new SmallProducerSubmissionData());
 
             // Act & Assert
             filter.Invoking(f => f.OnActionExecuting(actionExecutingContext))
@@ -175,7 +176,7 @@
             actionExecutingContext.RouteData.Values["directRegistrantId"] = directRegistrantId.ToString();
 
             A.CallTo(() => fakeClient.SendAsync(A<string>._, A<GetApiUtcDate>._))
-                .Returns(Task.FromResult(enabledFromDate.AddDays(-1)));
+                .Returns(enabledFromDate.AddDays(-1));
 
             // Act & Assert
             filter.Invoking(f => f.OnActionExecuting(actionExecutingContext))
@@ -195,7 +196,7 @@
 
             var expectedData = new SmallProducerSubmissionData();
             A.CallTo(() => fakeClient.SendAsync(A<string>._, A<GetSmallProducerSubmission>._))
-                .Returns(Task.FromResult(expectedData));
+                .Returns(expectedData);
 
             // Act
             filter.OnActionExecuting(actionExecutingContext);
@@ -216,11 +217,11 @@
             actionExecutingContext.RouteData.Values["directRegistrantId"] = directRegistrantId.ToString();
 
             A.CallTo(() => fakeClient.SendAsync(A<string>._, A<GetApiUtcDate>._))
-                .Returns(Task.FromResult(enabledFromDate));
+                .Returns(enabledFromDate);
 
             var expectedData = new SmallProducerSubmissionData();
             A.CallTo(() => fakeClient.SendAsync(A<string>._, A<GetSmallProducerSubmission>._))
-                .Returns(Task.FromResult(expectedData));
+                .Returns(expectedData);
 
             // Act
             filter.OnActionExecuting(actionExecutingContext);
