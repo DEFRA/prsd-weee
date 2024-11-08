@@ -28,7 +28,7 @@
         @Html.Partial("_OrganisationDetailsPartial", Model)
 
         <div class="govuk-form-group">
-            @(this.WeeeGds().Submit("Continue"))
+            @(this.WeeeGds().Submit("Continue", new {id ="organisation-continue"}))
         </div>
 
         @(this.WeeeGds().BackToTopLink())
