@@ -1114,16 +1114,19 @@
         {
             // Arrange
             var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
+            string returnUrl = "/organisation-found";
 
             A.CallTo(() =>
                     weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
                 .Returns(countries);
 
             // Act
-            var result = await controller.RepresentingCompanyDetails() as ViewResult;
+            var result = await controller.RepresentingCompanyDetails(returnUrl) as ViewResult;
 
             // Assert
             var resultViewModel = result.Model as RepresentingCompanyDetailsViewModel;
+
+            Assert.Equal(result.ViewBag.ReturnUrl, returnUrl);
 
             resultViewModel.Should().NotBeNull();
             resultViewModel.CompanyName.Should().BeNullOrWhiteSpace();
@@ -1279,9 +1282,10 @@
             var transactionData = new OrganisationTransactionData { OrganisationType = organisationType };
             A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>.Ignored))
                 .Returns(Task.FromResult(transactionData));
+            string returnUrl = null;
 
             // Act
-            var result = await controller.RepresentingCompanyRedirect() as RedirectToRouteResult;
+            var result = await controller.RepresentingCompanyRedirect(returnUrl) as RedirectToRouteResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -1296,9 +1300,10 @@
             var transactionData = new OrganisationTransactionData { OrganisationType = null };
             A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>.Ignored))
                 .Returns(Task.FromResult(transactionData));
+            string returnUrl = null;
 
             // Act
-            var result = await controller.RepresentingCompanyRedirect() as RedirectToRouteResult;
+            var result = await controller.RepresentingCompanyRedirect(returnUrl) as RedirectToRouteResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -1312,14 +1317,32 @@
             // Arrange
             A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>.Ignored))
                 .Returns(Task.FromResult<OrganisationTransactionData>(null));
+            string returnUrl = null;
 
             // Act
-            var result = await controller.RepresentingCompanyRedirect() as RedirectToRouteResult;
+            var result = await controller.RepresentingCompanyRedirect(returnUrl) as RedirectToRouteResult;
 
             // Assert
             result.Should().NotBeNull();
             result.RouteValues["action"].Should().Be("Type");
             result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+        }
+
+        [Fact]
+        public async Task RepresentingCompanyRedirect_ShouldRedirectToReturnUrl_WhenReturnUrlIsNotNull()
+        {
+            // Arrange
+            var transactionData = new OrganisationTransactionData { OrganisationType = ExternalOrganisationType.RegisteredCompany };
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>.Ignored))
+                .Returns(Task.FromResult(transactionData));
+            string returnUrl = "/organisation-found";
+
+            // Act
+            var result = await controller.RepresentingCompanyRedirect(returnUrl) as RedirectResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Url.Should().Be(returnUrl);
         }
 
         [Fact]
