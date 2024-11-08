@@ -337,7 +337,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> RepresentingCompanyDetails()
+        public async Task<ActionResult> RepresentingCompanyDetails(string returnUrl)
         {
             RepresentingCompanyDetailsViewModel model = null;
 
@@ -349,6 +349,7 @@
             var countries = await GetCountries();
             model.Address.Countries = countries;
 
+            ViewBag.ReturnUrl = returnUrl;
             return View(model);
         }
 
@@ -422,7 +423,7 @@
                 return RedirectToAction("OrganisationFound");
             }
 
-            return await CheckAuthorisedRepresentitiveAndRedirect();
+            return await CheckAuthorisedRepresentitiveAndRedirect(null);
         }
 
         [HttpGet]
@@ -473,7 +474,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> RepresentingCompanyRedirect()
+        public async Task<ActionResult> RepresentingCompanyRedirect(string returnUrl)
         {
             var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
 
@@ -482,7 +483,12 @@
                 return RedirectToAction(nameof(Type), typeof(OrganisationRegistrationController).GetControllerName());
             }
 
-            return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName());
+            if (returnUrl is null)
+            {
+                return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName());
+            }
+
+            return new RedirectResult(returnUrl);
         }
 
         private async Task<List<OrganisationData>> GetExistingByRegistrationNumber(OrganisationViewModel model)
@@ -576,7 +582,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> CheckAuthorisedRepresentitiveAndRedirect()
+        public async Task<ActionResult> CheckAuthorisedRepresentitiveAndRedirect(string returnUrl)
         {
             var organisationTransactionData = await transactionService
                                                     .GetOrganisationTransactionData(User.GetAccessToken());
@@ -590,8 +596,9 @@
                 return RedirectToAction(nameof(RegistrationComplete), typeof(OrganisationRegistrationController).GetControllerName(), new { organisationId });
             }
 
+            ViewBag.ReturnUrl = returnUrl;
             return RedirectToAction(nameof(RepresentingCompanyDetails),
-                typeof(OrganisationRegistrationController).GetControllerName());
+                typeof(OrganisationRegistrationController).GetControllerName(), returnUrl);
         }
 
         private async Task<IList<CountryData>> GetCountries()
