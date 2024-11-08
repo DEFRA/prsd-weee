@@ -3,7 +3,7 @@
   <Import Project="..\packages\xunit.runner.visualstudio.2.4.5\build\net462\xunit.runner.visualstudio.props" Condition="Exists('..\packages\xunit.runner.visualstudio.2.4.5\build\net462\xunit.runner.visualstudio.props')" />
   <Import Project="..\packages\xunit.core.2.4.2\build\xunit.core.props" Condition="Exists('..\packages\xunit.core.2.4.2\build\xunit.core.props')" />
   <PropertyGroup>
-	  <LangVersion>11.0</LangVersion>
+    <LangVersion>11.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -251,6 +251,7 @@
     <Compile Include="Validation\ProducerCategoryValuesValidationAttributeTests.cs" />
     <Compile Include="Validation\ReuseTonnageCompareValueAttributeTests.cs" />
     <Compile Include="Validation\TonnageCompareValueAttributeTests.cs" />
+    <Compile Include="Validation\CompaniesRegistrationNumberStringLengthAttributeTests.cs" />
     <Compile Include="Validation\TonnageValueAttributeTests.cs" />
     <Compile Include="Validation\TonnageValueValidatorTests.cs" />
   </ItemGroup>
