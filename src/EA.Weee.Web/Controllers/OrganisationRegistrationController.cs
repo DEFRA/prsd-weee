@@ -359,7 +359,7 @@
 
             var orgModel = new OrganisationViewModel()
             {
-                CompanyName = result.Organisation.Name,
+                CompanyName = result.Organisation?.Name,
                 CompaniesRegistrationNumber = result.Organisation?.RegistrationNumber,
                 LookupFound = !result.HasError,
                 Address = new ExternalAddressData
