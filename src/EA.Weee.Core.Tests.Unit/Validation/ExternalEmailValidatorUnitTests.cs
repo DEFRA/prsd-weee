@@ -72,5 +72,93 @@
             // Assert
             result.Should().BeEmpty();
         }
+
+        [Theory]
+        [InlineData("SW1")]
+        [InlineData("W1")]
+        [InlineData("B33")]
+        [InlineData("M1")]
+        [InlineData("G1")]
+        [InlineData("EH1")]
+        [InlineData("CF10")]
+        [InlineData("BT1")]
+        public void ValidPartialPostcodes_ShouldReturnTrue(string partialPostcode)
+        {
+            // Act
+            var result = ExternalAddressValidator.IsValidPartialPostcode(partialPostcode);
+
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData(null)]
+        [InlineData("123")]
+        [InlineData("AAA")]
+        [InlineData("A")]
+        [InlineData("99AA")]
+        [InlineData("A*1")]
+        public void InvalidPartialPostcodes_ShouldReturnFalse(string partialPostcode)
+        {
+            // Act
+            var result = ExternalAddressValidator.IsValidPartialPostcode(partialPostcode);
+
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("sw1")]
+        [InlineData("w1")] 
+        [InlineData("b33")]
+        [InlineData("m1")] 
+        public void LowercasePartialPostcodes_ShouldReturnTrue(string partialPostcode)
+        {
+            // Act
+            var result = ExternalAddressValidator.IsValidPartialPostcode(partialPostcode);
+
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Fact]
+        public void LongInput_ShouldReturnFalse()
+        {
+            // Arrange
+            var longInput = new string('A', 30) + "1";
+
+            // Act
+            var result = ExternalAddressValidator.IsValidPartialPostcode(longInput);
+
+            // Assert
+            result.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData("SW12")]
+        [InlineData("SW123")]
+        public void ValidExtendedPartialPostcodes_ShouldReturnTrue(string partialPostcode)
+        {
+            // Act
+            var result = ExternalAddressValidator.IsValidPartialPostcode(partialPostcode);
+
+            // Assert
+            result.Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineData("SW 1")]
+        [InlineData(" SW1")]
+        [InlineData("SW1 ")]
+        public void PostcodesWithSpaces_ShouldReturnFalse(string partialPostcode)
+        {
+            // Act
+            var result = ExternalAddressValidator.IsValidPartialPostcode(partialPostcode);
+
+            // Assert
+            result.Should().BeFalse();
+        }
     }
 }
