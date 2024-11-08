@@ -352,54 +352,74 @@
             return View(model);
         }
 
+        [HttpGet]
+        public async Task<ActionResult> FindCompany(string companiesRegistrationNumber)
+        {
+            var result = await GetCompany(companiesRegistrationNumber);
+
+            var orgModel = new OrganisationViewModel()
+            {
+                CompanyName = result.Organisation?.Name,
+                CompaniesRegistrationNumber = result.Organisation?.RegistrationNumber,
+                LookupFound = !result.HasError,
+                Address = new ExternalAddressData
+                {
+                    Address1 = result.Organisation?.RegisteredOffice?.BuildingNumber,
+                    Address2 = result.Organisation?.RegisteredOffice?.Street,
+                    TownOrCity = result.Organisation?.RegisteredOffice?.Town,
+                    Postcode = result.Organisation?.RegisteredOffice?.Postcode,
+                    CountryId = UkCountry.GetIdByName(result.Organisation?.RegisteredOffice?.Country.Name)
+                },
+            };
+
+            return Json(orgModel, JsonRequestBehavior.AllowGet);
+        }
+
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> OrganisationDetails(OrganisationViewModel model)
         {
             if (model.Action == "Find Company")
             {
-                using (var client = companiesHouseClient())
+                var result = await GetCompany(model.CompaniesRegistrationNumber);
+
+                var countries = await GetCountries();
+
+                model.Address.Countries = countries;
+
+                ModelState.Clear();
+
+                if (result.HasError)
                 {
-                    var result = await client.GetCompanyDetailsAsync(configurationService.CurrentConfiguration.CompaniesHouseReferencePath,
-                        model.CompaniesRegistrationNumber);
+                    model.LookupFound = false;
 
-                    var countries = await GetCountries();
-
-                    model.Address.Countries = countries;
-
-                    ModelState.Clear();
-
-                    if (result.HasError)
-                    {
-                        model.LookupFound = false;
-
-                        return View(model.CastToSpecificViewModel(model));
-                    }
-
-                    var orgModel = new OrganisationViewModel()
-                    {
-                        CompanyName = result.Organisation.Name,
-                        CompaniesRegistrationNumber = result.Organisation?.RegistrationNumber,
-                        LookupFound = true,
-                        Address = new ExternalAddressData
-                        {
-                            Address1 = result.Organisation?.RegisteredOffice?.BuildingNumber,
-                            Address2 = result.Organisation?.RegisteredOffice?.Street,
-                            TownOrCity = result.Organisation?.RegisteredOffice?.Town,
-                            Postcode = result.Organisation?.RegisteredOffice?.Postcode,
-                            Countries = countries,
-                            CountryId = UkCountry.GetIdByName(result.Organisation?.RegisteredOffice?.Country.Name)
-                        },
-                    };
-                    return View(model.CastToSpecificViewModel(orgModel));
+                    return View(model.CastToSpecificViewModel(model));
                 }
+
+                var orgModel = new OrganisationViewModel()
+                {
+                    CompanyName = result.Organisation.Name,
+                    CompaniesRegistrationNumber = result.Organisation?.RegistrationNumber,
+                    LookupFound = true,
+                    Address = new ExternalAddressData
+                    {
+                        Address1 = result.Organisation?.RegisteredOffice?.BuildingNumber,
+                        Address2 = result.Organisation?.RegisteredOffice?.Street,
+                        TownOrCity = result.Organisation?.RegisteredOffice?.Town,
+                        Postcode = result.Organisation?.RegisteredOffice?.Postcode,
+                        Countries = countries,
+                        CountryId = UkCountry.GetIdByName(result.Organisation?.RegisteredOffice?.Country.Name)
+                    },
+                };
+
+                return View(model.CastToSpecificViewModel(orgModel));
             }
 
             var castedModel = model.CastToSpecificViewModel(model);
             var isValid = ValidationModel.ValidateModel(castedModel, ModelState);
 
             await ValidateProducerRegistrationNumber(model);
-            
+
             if (!isValid || !ModelState.IsValid)
             {
                 var countries = await GetCountries();
@@ -581,7 +601,7 @@
             var organisationTransactionData = await transactionService
                                                     .GetOrganisationTransactionData(User.GetAccessToken());
 
-            if (organisationTransactionData != null 
+            if (organisationTransactionData != null
                 && organisationTransactionData.AuthorisedRepresentative == YesNoType.No)
             {
                 var organisationId = await transactionService.CompleteTransaction(User.GetAccessToken());
@@ -954,6 +974,16 @@
             }
 
             return results;
+        }
+
+        private async Task<Api.Client.Models.DefraCompaniesHouseApiModel> GetCompany(string companiesRegistrationNumber)
+        {
+            using (var client = companiesHouseClient())
+            {
+                return await client.GetCompanyDetailsAsync(
+                    configurationService.CurrentConfiguration.CompaniesHouseReferencePath,
+                    companiesRegistrationNumber);
+            }
         }
     }
 }
