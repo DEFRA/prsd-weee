@@ -118,15 +118,23 @@
 
             try
             {
-                using (var request = CreateHttpRequest(requestUri, token))
+                var response = await retryPolicy.ExecuteAsync(async () =>
                 {
-                    var response = await retryPolicy.ExecuteAsync(() => httpClient.SendAsync(request)).ConfigureAwait(false);
+                    using (var request = CreateHttpRequest(requestUri, token))
+                    {
+                        return await httpClient.SendAsync(request).ConfigureAwait(false);
+                    }
+                }).ConfigureAwait(false);
 
-                    response.EnsureSuccessStatusCode();
-                    var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
-
-                    return jsonSerializer.Deserialize<AddressLookupResponse>(content) ?? CreateEmptyResponse(postcode);
+                if (response.StatusCode == System.Net.HttpStatusCode.NoContent)
+                {
+                    return CreateEmptyResponse(postcode);
                 }
+
+                response.EnsureSuccessStatusCode();
+                var content = await response.Content.ReadAsStringAsync().ConfigureAwait(false);
+
+                return jsonSerializer.Deserialize<AddressLookupResponse>(content) ?? CreateEmptyResponse(postcode);
             }
             catch (Exception ex)
             {
@@ -211,7 +219,7 @@
             }
 
             postcode = postcode.Replace(" ", string.Empty).ToUpper();
-            return ExternalAddressValidator.UkPostcodeRegex.IsMatch(postcode);
+            return ExternalAddressValidator.IsValidPartialPostcode(postcode);
         }
 
         private static bool IsValidSearchParameter(string postcode, string buildingNameOrNumber)
@@ -224,39 +232,36 @@
             return int.TryParse(response?.Header?.TotalResults, out var total) ? total : 0;
         }
 
-        private static Header CreateDefaultHeader(string postcode, int totalResults) =>
-            new Header
-            {
-                TotalResults = totalResults.ToString(),
-                Query = $"postcode={postcode}",
-                Format = "JSON"
-            };
+        private static Header CreateDefaultHeader(string postcode, int totalResults) => new Header()
+        {
+            TotalResults = totalResults.ToString(),
+            Query = $"postcode={postcode}",
+            Format = "JSON"
+        };
 
-        private static AddressLookupResponse CreateEmptyResponse(string postcode) =>
-            new AddressLookupResponse
-            {
+        private static AddressLookupResponse CreateEmptyResponse(string postcode) => new AddressLookupResponse() 
+        {
                 Header = CreateDefaultHeader(postcode, 0),
                 Results = new List<AddressResult>()
-            };
+        };
 
-        private static AddressLookupResponse CreateErrorResponse(string postcode, bool invalidRequest = false) =>
-            new AddressLookupResponse
-            {
+        private static AddressLookupResponse CreateErrorResponse(string postcode, bool invalidRequest = false) => new AddressLookupResponse() 
+        {
                 Error = !invalidRequest,
                 InvalidRequest = invalidRequest,
                 Header = CreateDefaultHeader(postcode, 0),
                 Results = new List<AddressResult>()
-            };
+        };
 
         private static AddressLookupResponse CreateTooManyResultsResponse(string postcode, int totalResults, Header existingHeader) =>
-            new AddressLookupResponse
+            new AddressLookupResponse()
             {
                 Header = existingHeader ?? CreateDefaultHeader(postcode, totalResults),
                 Results = new List<AddressResult>(),
                 SearchTooBroad = true
             };
 
-        private string BuildRequestUri(string endpoint, string postcode, int? offset = null)
+        private static string BuildRequestUri(string endpoint, string postcode, int? offset = null)
         {
             endpoint = endpoint.TrimEnd('?', '&');
             var requestUri = endpoint;
