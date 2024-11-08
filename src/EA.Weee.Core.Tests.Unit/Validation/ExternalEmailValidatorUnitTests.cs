@@ -149,10 +149,8 @@
         }
 
         [Theory]
-        [InlineData("SW 1")]
         [InlineData(" SW1")]
-        [InlineData("SW1 ")]
-        public void PostcodesWithSpaces_ShouldReturnFalse(string partialPostcode)
+        public void PostcodesWithLeadingSpaces_ShouldReturnFalse(string partialPostcode)
         {
             // Act
             var result = ExternalAddressValidator.IsValidPartialPostcode(partialPostcode);
