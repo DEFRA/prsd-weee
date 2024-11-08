@@ -9,7 +9,5 @@
         public string County { get; set; }
         public Country Country { get; set; }
         public string Postcode { get; set; }
-        public bool IsUkAddress { get; set; }
-        public string Checksum { get; set; }
     }
 }

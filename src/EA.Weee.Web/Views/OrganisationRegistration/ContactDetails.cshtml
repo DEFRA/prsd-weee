@@ -82,7 +82,7 @@
         <div class="left-cleared">
             <button type="button"
                     name="Find address"
-                    class="govuk-button only-js-enabled"
+                    class="govuk-button govuk-button--secondary only-js-enabled"
                     id="find-address"
                     data-module="govuk-button"
                     data-prevent-double-click="true">
@@ -165,9 +165,9 @@
 </style>
 
 @section scripts {
-    @Scripts.Render("~/bundles/address-postcode-search")
+    @Scripts.Render("~/bundles/contact-details-address-lookup")
 
     <script>
-        window.contactDetailsPostCodeSearch("@Url.Action("GetAddresses")?postcode=");
+        window.contactDetailsAddressLookup("@Url.Action("GetAddresses")?postcode=");
     </script>
 }
