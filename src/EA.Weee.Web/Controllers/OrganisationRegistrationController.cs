@@ -444,6 +444,7 @@
             {
                 return new OrganisationViewModel
                 {
+                    Address = new ExternalAddressData() { },
                     OrganisationType = ExternalOrganisationType.RegisteredCompany
                 };
             }

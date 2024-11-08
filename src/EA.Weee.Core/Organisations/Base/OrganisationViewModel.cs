@@ -27,8 +27,9 @@
 
         public ExternalAddressData Address { get; set; } = new ExternalAddressData() { CountryId = UkCountry.Ids.England };
 
-        [StringLength(maximumLength: EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber, MinimumLength = 7, ErrorMessage = "The company registration number should be 7 to 15 characters long")]
+        [CompaniesRegistrationNumberStringLength]
         [Display(Name = "Company registration number (CRN)")]
+        [RequiredWhenUK]
         public string CompaniesRegistrationNumber { get; set; }
 
         [StringLength(CommonMaxFieldLengths.DefaultString)]
@@ -58,6 +59,15 @@
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
+
+            //if (OrganisationType == ExternalOrganisationType.RegisteredCompany && UkCountry.ValidIds.Contains(Address.CountryId))
+            //{
+            //    if (CompaniesRegistrationNumber.Count() > 8)
+            //    {
+            //        results.Add(new ValidationResult("Company registration number (CRN) can have a maximum of 8 numbers",
+            //       new[] { "CompaniesRegistrationNumber" }));
+            //    }
+            //}
 
             results.AddRange(ExternalAddressValidator.Validate(Address.CountryId, Address.Postcode, "Address.CountryId", "Address.Postcode"));
 
