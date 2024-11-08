@@ -1,88 +1,5 @@
 ﻿(() => {
-    window.searchAutocomplete = (config) => {
-        let $select, $findButton, $spinner;
-
-        let init = () => {
-            $findButton = getById(config.findButtonId);
-            $select = getById(config.selectFieldId);
-            $spinner = $("#spinner");
-
-            checkHasValue();
-
-            addOption("SelectMessage", config.selectMessage, true);
-
-            getById(config.inputFieldId).on("keyup change paste", checkHasValue);
-
-            getById(config.inputFieldId).on("keypress", (event) => {
-                if (event.which != 13) return;
-
-                event.preventDefault();
-
-                $findButton.click();
-                $findButton.focus();
-            });
-
-            $findButton.click(search);
-        };
-
-        let search = () => {
-            let inputValue = getById(config.inputFieldId).val();
-
-            $findButton.prop("disabled", true);
-
-            $spinner.show();
-
-            $.get(config.endpoint + inputValue, (res) => {
-                let results = res[config.mappedFields.output];
-
-                $select.off('change');
-                $select.empty();
-
-                $spinner.hide();
-                $select.change(function () {
-                    let id = $(this).val();
-
-                    let selected = results.find(x => x[config.mappedFields.key] == id);
-
-                    config.onSelected(selected);
-                });
-
-                if (config.onRetreived) config.onRetreived(res, inputValue);
-
-                $findButton.prop("disabled", false);
-
-                if (results.length > 0) {
-                    results.forEach((item) => addOption(item[config.mappedFields.key], item[config.mappedFields.value]));
-
-                    $select.find("option:odd").addClass('autocomplete__option--odd');
-                }
-            });
-        };
-
-        function checkHasValue() {
-            let inputValue = getById(config.inputFieldId).val();
-
-            $findButton.prop("disabled", !inputValue);
-        }
-
-        function getById(id) { return $('#' + id); };
-
-        function addOption(val, html, disabled) {
-            let select = $select
-                .append($('<option></option>').val(val)
-                    .html(html));
-
-            if (disabled === true) {
-                $(select).find(`option[value='${val}']`).prop("disabled", "disabled");
-            }
-        };
-
-        init();
-
-        this.addOption = addOption;
-    }
-
-    window.contactDetailsPostCodeSearch = (endpoint) => {
+    window.contactDetailsAddressLookup = (endpoint) => {
         let config = {
             inputFieldId: "AddressData_Postcode",
             selectFieldId: "address-results",
@@ -102,7 +19,7 @@
                 $("#AddressData_TownOrCity").val(selected.Town);
                 $("#AddressData_CountyOrRegion").val(selected.CeremonialCounty || selected.AdministrativeArea || selected.HistoricCounty);
                 $("#AddressData_Postcode").val(selected.Postcode);
-               
+
                 setCountry(selected);
             },
             onRetreived: (response, input) => {
@@ -159,7 +76,7 @@
             let $dropdownParent = $("#operator-country-dropdown-list");
             let $select = $dropdownParent.find("select");
 
-            $select.find("option[value='${selected.CountryId}']").prop('selected', true);
+            $select.find(`option[value='${selected.CountryId}']`).prop('selected', true);
             $select.val(selected.CountryId);
             $dropdownParent.find("input").val($select.find("option:selected").text());
         }
@@ -168,7 +85,7 @@
             return val || "";
         }
 
-        $(document).ready(() => window.searchAutocomplete(config));
+        $(document).ready(() => window.selectLookupSearch(config));
     }
 })();
 
