@@ -49,6 +49,7 @@
 
             var result = attribute.GetValidationResult(viewModel.CompaniesRegistrationNumber, new ValidationContext(viewModel));
 
+            // Assert
             if (string.IsNullOrEmpty(errorMessage) == false)
             {
                 result.ErrorMessage.Should().Be(errorMessage);
