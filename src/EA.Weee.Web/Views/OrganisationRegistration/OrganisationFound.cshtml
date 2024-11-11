@@ -11,6 +11,8 @@
 }
 @section full_main_content
 {
+    @(this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.OrganisationDetails())))
+
     <header class="hgroup">
         <h1 class="govuk-heading-l">@title</h1>
     </header>
@@ -36,11 +38,11 @@
     {
         @Html.AntiForgeryToken()
         @Html.HiddenFor(m => m.OrganisationFoundType)
-            
+
         var hasError = Html.ViewData.ModelState.HasErrorForProperty<OrganisationsFoundViewModel, Guid?>(m => m.SelectedOrganisationId);
         var errorStyle = hasError ? "govuk-form-group--error" : "";
 
-        
+
         <fieldset class="prsd-table-fieldset">
             <legend class="govuk-visually-hidden">select organisation</legend>
             <div class="@errorStyle">
@@ -86,7 +88,7 @@
             }
             @if (Model.OrganisationFoundType == OrganisationFoundType.CompanyName)
             {
-                @(this.WeeeGds().GovUkButtonLink("Continue", @Url.UrlFor<OrganisationRegistrationController>(a => a.CheckAuthorisedRepresentitiveAndRedirect(@Request.Url.AbsolutePath))))
+                @(this.WeeeGds().GovUkButtonLink("Continue", @Url.UrlFor<OrganisationRegistrationController>(a => a.CheckAuthorisedRepresentitiveAndRedirect(@Request.Url.AbsolutePath)), true))
             }
         </div>
     }
