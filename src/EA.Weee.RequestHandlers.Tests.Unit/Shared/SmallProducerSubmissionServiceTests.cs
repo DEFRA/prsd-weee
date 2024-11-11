@@ -419,6 +419,22 @@
             result.SubmissionHistory[ComplianceYear].Should().Be(submissionHistoryData);
         }
 
+        [Fact]
+        public async Task GetSmallProducerSubmissionData_ExternalUser_FutureYear_DoesNotAddSubmissionToHistory()
+        {
+            // Arrange
+            const int futureYear = ComplianceYear + 1;
+            var directRegistrant = SetupValidDirectRegistrant();
+            var submission = CreateSubmission(futureYear);
+            directRegistrant.DirectProducerSubmissions.Add(submission);
+
+            // Act
+            var result = await service.GetSmallProducerSubmissionData(directRegistrant, internalUser: false);
+
+            // Assert
+            result.SubmissionHistory.Should().NotContainKey(futureYear);
+        }
+
         private static DirectProducerSubmission CreateSubmission(int year)
         {
             var submission = A.Fake<DirectProducerSubmission>();

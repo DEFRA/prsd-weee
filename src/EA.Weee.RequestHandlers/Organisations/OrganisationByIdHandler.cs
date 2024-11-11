@@ -103,8 +103,7 @@
 
             var validStatuses = new[]
             {
-                DirectProducerSubmissionStatus.Complete.Value,
-                DirectProducerSubmissionStatus.Returned.Value
+                DirectProducerSubmissionStatus.Complete.Value
             };
 
             // Ensure proper materialization of the query with explicit ordering
@@ -118,7 +117,8 @@
                     HasCurrentYearSubmission = dr.DirectProducerSubmissions
                         .Any(submission => submission.ComplianceYear == currentYear),
                     MostRecentSubmittedYear = dr.DirectProducerSubmissions
-                        .Where(submission => validStatuses.Contains(submission.DirectProducerSubmissionStatus.Value))
+                        .Where(submission => (currentYear > submission.ComplianceYear) ||
+                                             validStatuses.Contains(submission.DirectProducerSubmissionStatus.Value))
                         .Select(submission => submission.ComplianceYear)
                         .OrderByDescending(x => x)
                         .FirstOrDefault()
