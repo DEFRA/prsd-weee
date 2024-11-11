@@ -71,6 +71,22 @@
 
 
         </div>
+        @if (Model.IsInternalAdmin)
+        {
+            <div>
+                <p class="govuk-body">
+                    @Html.ActionLink("Download as PDF", "DownloadSubmission", "ProducerSubmission", new { registrationNumber = Model.RegistrationNumber, complianceYear = Model.Year }, new { @class = "govuk-link" })
+                </p>
+            </div>
+        }
+        @if (!Model.IsInternalAdmin)
+        {
+            <div>
+                <p class="govuk-body">
+                    @Html.ActionLink("Download as PDF", "DownloadSubmission", "Producer", new { registrationNumber = Model.RegistrationNumber, complianceYear = Model.Year }, new { @class = "govuk-link" })
+                </p>
+            </div>
+        }
         @if (Model.ShowReturnRegistrationToUser)
         {
             <div class="govuk-button-group govuk-!-padding-top-3">

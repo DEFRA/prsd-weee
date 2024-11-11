@@ -3,7 +3,7 @@
   <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-	  <LangVersion>11.0</LangVersion>
+    <LangVersion>11.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -1156,8 +1156,8 @@
     <Content Include="Areas\Producer\Views\Producer\SubmitRegistration.cshtml" />
     <Content Include="Views\OrganisationRegistration\OrganisationFound.cshtml" />
     <Content Include="Areas\Admin\Views\ProducerSubmission\Submissions.cshtml" />
-    <Content Include="Areas\Producer\Views\Producer\DownloadSubmission.cshtml" />
-    <Content Include="Areas\Producer\Views\Shared\_CheckAnswersContentPartial.cshtml" />
+    <Content Include="Views\Shared\DownloadSubmission.cshtml" />
+    <Content Include="Views\Shared\_CheckAnswersContentPartial.cshtml" />
     <Content Include="Views\Shared\_PdfLayout.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\AlreadySubmittedAndPaid.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\OrganisationHasNoSubmissions.cshtml" />
@@ -2222,6 +2222,7 @@
     <Folder Include="Areas\Admin\Views\Shared\DisplayTemplates\" />
     <Folder Include="Areas\Admin\Views\SmokeTest\" />
     <Folder Include="Areas\AeReturn\Views\Shared\" />
+    <Folder Include="Areas\Producer\Views\Shared\" />
     <Folder Include="Areas\Scheme\Views\Shared\EditorTemplates\" />
     <Folder Include="Areas\Shared\ViewModels\" />
     <Folder Include="Areas\Test\Views\TestControllerBase\" />
