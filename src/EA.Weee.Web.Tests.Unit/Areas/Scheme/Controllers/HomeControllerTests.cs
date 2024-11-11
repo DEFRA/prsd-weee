@@ -2847,6 +2847,7 @@
                     new OrganisationUserData 
                     { 
                         UserId = Guid.NewGuid().ToString(),
+                        User = new UserData()
                     }
                 });
 
