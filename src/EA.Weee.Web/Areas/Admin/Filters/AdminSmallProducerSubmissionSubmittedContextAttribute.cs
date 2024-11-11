@@ -2,7 +2,6 @@
 {
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Helpers;
-    using EA.Weee.Web.Services.SubmissionService;
     using System;
     using System.Web.Mvc;
 

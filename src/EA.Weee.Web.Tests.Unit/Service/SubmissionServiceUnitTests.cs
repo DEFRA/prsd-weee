@@ -12,14 +12,13 @@
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using EA.Weee.Web.Services.SubmissionService;
+    using EA.Weee.Web.Services.SubmissionsService;
     using FakeItEasy;
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Web.Caching;
     using Xunit;
 
     public class SubmissionServiceUnitTests : SimpleUnitTestBase

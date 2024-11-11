@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Services.SubmissionService
+﻿namespace EA.Weee.Web.Services.SubmissionsService
 {
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.DirectRegistrant;
@@ -108,16 +108,18 @@
             ? this.smallProducerSubmissionData.SubmissionHistory[year.Value]
             : current;
 
-            return new OrganisationDetailsTabsViewModel
+            var model = new OrganisationDetailsTabsViewModel
             {
                 Years = YearsDropdownData(smallProducerSubmissionData),
                 Year = year,
                 ActiveOption = option,
                 SmallProducerSubmissionData = this.smallProducerSubmissionData,
                 IsInternal = this.isInternal,
-                Status = submission?.Status ?? current.Status,
-                HasPaid = submission?.HasPaid ?? current.HasPaid
+                Status = submission?.Status ?? SubmissionStatus.InComplete,
+                HasPaid = submission != null && ((bool)submission?.HasPaid)
             };
+
+            return model;
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
