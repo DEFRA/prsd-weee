@@ -1,6 +1,6 @@
 ﻿@using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
-@model Guid?
+@model Guid
 
 @{
     const string title = "This organisation has no registration yet";
@@ -18,5 +18,5 @@
         This organisation has not yet submitted a registration. When they do, it will appear here.
     </p>
 
-    @this.WeeeGds().GovUkButtonLink("Perform another activity", @Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model, null)))
+    @(this.WeeeGds().GovUkButtonLink("Perform another activity", @Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model, null))))
 }
