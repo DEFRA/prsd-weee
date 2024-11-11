@@ -25,6 +25,20 @@
         identityWidth = "govuk-grid-column-one-third";
     }
 }
+
+@functions {
+    private Guid? GetDirectRegistrantIdFromQueryString()
+    {
+        var directRegistrantStr = Request.QueryString["directRegistrantId"];
+        if (string.IsNullOrEmpty(directRegistrantStr))
+            return null;
+
+        return Guid.TryParse(directRegistrantStr, out Guid directRegistrantId)
+            ? directRegistrantId
+            : (Guid?)null;
+    }
+}
+
 @if (TempData[Constants.ErrorOccurred] == null || (TempData[Constants.ErrorOccurred] != null && (bool)TempData[Constants.ErrorOccurred] != true))
 {
     if (showTitle)
@@ -152,7 +166,7 @@
                                 {
                                     @Html.AntiForgeryToken()
 
-                                    <input class="link-submit" id="link-sign-out" type="submit" value="Sign out"/>
+                                    <input class="link-submit" id="link-sign-out" type="submit" value="Sign out" />
                                 }
                             </li>
                         </ul>
