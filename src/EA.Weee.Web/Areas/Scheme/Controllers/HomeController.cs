@@ -288,7 +288,7 @@
                 // 7. Manage Organisation Users
                 if (viewModel.SelectedValue == PcsAction.ManageOrganisationUsers)
                 {
-                    return RedirectToAction("ManageOrganisationUsers", new { pcsId = viewModel.OrganisationId });
+                    return RedirectToAction("ManageOrganisationUsers", new { pcsId = viewModel.OrganisationId, directRegistrantId = viewModel.DirectRegistrantId });
                 }
 
                 // 8. Manage PBS Evidence Notes
