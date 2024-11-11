@@ -23,7 +23,7 @@
 
             var val = value as string;
 
-            var count = val.Count();
+            var count = val?.Count() ?? 0;
 
             if (count < min || count > max)
             {

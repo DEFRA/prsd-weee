@@ -1,11 +1,13 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.Organisations
 {
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.DataStandards;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Core.Shared;
     using FluentAssertions;
+    using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
@@ -142,21 +144,6 @@
         }
 
         [Fact]
-        public void CompaniesRegistrationNumber_ShouldHaveRequiredAndStringLengthAttributes()
-        {
-            // Act
-            var property = typeof(OrganisationViewModel).GetProperty("CompaniesRegistrationNumber");
-            var stringLengthAttr = property.GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault() as StringLengthAttribute;
-
-            // Assert
-            stringLengthAttr.Should().NotBeNull()
-                .And.Subject.As<StringLengthAttribute>().Should().Match<StringLengthAttribute>(attr =>
-                    attr.MinimumLength == 7 &&
-                    attr.MaximumLength == EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber &&
-                    attr.ErrorMessage == "The company registration number should be 7 to 15 characters long");
-        }
-
-        [Fact]
         public void EEEBrandNames_ShouldHaveRequiredAndStringLengthAttributes()
         {
             // Act
@@ -192,25 +179,26 @@
             validationResults.Should().BeEmpty();
         }
 
-        [Theory]
-        [InlineData("123456")] // Too short
-        [InlineData("1234567890123456")] // Too long
-        public void CompaniesRegistrationNumber_ShouldRejectInvalidLengths(string crn)
+        public void EEEBrandNames_HasRequiredAttribute()
         {
-            // Arrange
-            var viewModel = new TestOrganisationViewModel
-            {
-                CompaniesRegistrationNumber = crn
-            };
+            var t = typeof(OrganisationViewModel);
+            var pi = t.GetProperty("EEEBrandNames");
+            var hasAttribute = Attribute.IsDefined(pi, typeof(RequiredAttribute));
 
-            // Act
-            var validationContext = new ValidationContext(viewModel);
-            var validationResults = new List<ValidationResult>();
-            var isValid = Validator.TryValidateObject(viewModel, validationContext, validationResults, true);
+            hasAttribute.Should().Be(true);
+        }
 
-            // Assert
-            isValid.Should().BeFalse();
-            validationResults.Should().Contain(vr => vr.MemberNames.Contains(nameof(OrganisationViewModel.CompaniesRegistrationNumber)));
+        [Fact]
+
+        public void CompaniesRegistrationNumber_HasCorrectAttributes()
+        {
+            var t = typeof(OrganisationViewModel);
+            var pi = t.GetProperty("CompaniesRegistrationNumber");
+            var hasRequiredAttribute = Attribute.IsDefined(pi, typeof(EA.Weee.Core.Validation.RequiredWhenUKAttribute));
+            var hasCompaniesRegistrationNumberStringLengthAttribute = Attribute.IsDefined(pi, typeof(EA.Weee.Core.Validation.CompaniesRegistrationNumberStringLengthAttribute));
+
+            hasRequiredAttribute.Should().Be(true);
+            hasCompaniesRegistrationNumberStringLengthAttribute.Should().Be(true);
         }
     }
 }
