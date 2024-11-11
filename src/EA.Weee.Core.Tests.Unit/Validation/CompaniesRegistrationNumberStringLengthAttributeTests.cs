@@ -52,6 +52,7 @@
 
             var result = attribute.GetValidationResult(viewModel.CompaniesRegistrationNumber, new ValidationContext(viewModel));
 
+            // Assert
             result.ErrorMessage.Should().Be(errorMessage);
         }
 
@@ -86,6 +87,7 @@
 
             var result = attribute.GetValidationResult(viewModel.CompaniesRegistrationNumber, new ValidationContext(viewModel));
 
+            // Assert
             result.Should().BeNull();
         }
     }
