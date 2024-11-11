@@ -56,7 +56,7 @@
         public CheckAnswersViewModel Map(SmallProducerSubmissionMapperData source)
         {
             // Uses the current year if no explicit year is provided
-            int year = source.Year ?? DateTime.Now.Year;
+            int year = source.Year ?? source.SmallProducerSubmissionData.CurrentSubmission.ComplianceYear;
             return Map(source, year);
         }
     }

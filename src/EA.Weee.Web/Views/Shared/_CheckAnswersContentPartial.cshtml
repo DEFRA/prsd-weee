@@ -168,7 +168,9 @@
             <tr class="govuk-table__row">
                 <th scope="col" class="govuk-table__header govuk-!-text-align-left" style="width: 28%;">Selling technique(s) that you use</th>
                 <td class="govuk-table__cell" colspan="2">
-                    @Model.EeeData.SellingTechnique.ToSellingTechniqueType().GetDisplayName()
+                    @(Model.EeeData.SellingTechnique.IsDirectSelling || Model.EeeData.SellingTechnique.IsIndirectSelling
+                    ? Model.EeeData.SellingTechnique.ToSellingTechniqueType().GetDisplayName()
+                    : string.Empty)
                 </td>
             </tr>
         }
