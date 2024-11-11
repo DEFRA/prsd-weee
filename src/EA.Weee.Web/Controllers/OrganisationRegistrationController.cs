@@ -598,7 +598,7 @@
 
             ViewBag.ReturnUrl = returnUrl;
             return RedirectToAction(nameof(RepresentingCompanyDetails),
-                typeof(OrganisationRegistrationController).GetControllerName(), returnUrl);
+                typeof(OrganisationRegistrationController).GetControllerName(), new { returnUrl });
         }
 
         private async Task<IList<CountryData>> GetCountries()
