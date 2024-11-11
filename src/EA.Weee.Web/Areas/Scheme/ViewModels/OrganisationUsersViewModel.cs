@@ -12,5 +12,7 @@
         [Required(ErrorMessage = "Select a user to manage")]
         [DisplayName("Select a user to manage")]
         public Guid? SelectedOrganisationUser { get; set; }
+
+        public Guid? DirectRegistrantId { get; set; }
     }
 }

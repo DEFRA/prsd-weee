@@ -16,6 +16,7 @@
     @using (Html.BeginForm(actionName: "ManageOrganisationUsers", controllerName: "Home", method: FormMethod.Post))
     {
         @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.DirectRegistrantId)
         @Html.AntiForgeryToken()
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedOrganisationUser)">
