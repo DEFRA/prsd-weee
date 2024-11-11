@@ -277,11 +277,12 @@
 
         [HttpGet]
         [SmallProducerSubmissionContext]
-        public ActionResult DownloadSubmission()
+        public ActionResult DownloadSubmission(int? complianceYear = null)
         {
             var source = new SmallProducerSubmissionMapperData()
             {
-                SmallProducerSubmissionData = SmallProducerSubmissionData
+                SmallProducerSubmissionData = SmallProducerSubmissionData,
+                Year = complianceYear
             };
 
             var model = mapper.Map<SmallProducerSubmissionMapperData, CheckAnswersViewModel>(source);

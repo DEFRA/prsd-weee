@@ -4,12 +4,17 @@
     using Base;
     using Core.DirectRegistrant;
     using Core.PaymentDetails;
+    using EA.Prsd.Core;
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Admin;
+    using EA.Weee.Core.Constants;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Admin.DirectRegistrants;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
-    using EA.Weee.Web.Areas.Producer.Filters;
+    using EA.Weee.Web.Areas.Producer.Mappings.ToViewModel;
+    using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Filters;
+    using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.Services;
     using Filters;
     using Infrastructure;
@@ -29,18 +34,27 @@
         private readonly ISubmissionService submissionService;
         private readonly BreadcrumbService breadcrumbService;
         private readonly Func<IWeeeClient> apiClient;
+        private readonly IMvcTemplateExecutor templateExecutor;
+        private readonly IMapper mapper;
+        private readonly IPdfDocumentProvider pdfDocumentProvider;
 
         public ProducerSubmissionController(
             Func<IWeeeClient> apiClient,
             IWeeeCache cache,
             ISubmissionService submissionService,
-            BreadcrumbService breadcrumbService)
+            BreadcrumbService breadcrumbService,
+            IMvcTemplateExecutor templateExecutor,
+            IMapper mapper,
+            IPdfDocumentProvider pdfDocumentProvider)
         {
             this.apiClient = apiClient;
             this.cache = cache;
             this.submissionService = submissionService;
             this.breadcrumbService = breadcrumbService;
             this.apiClient = apiClient;
+            this.templateExecutor = templateExecutor;
+            this.mapper = mapper;
+            this.pdfDocumentProvider = pdfDocumentProvider;
         }
 
         [AdminSmallProducerSubmissionContext(Order = 1)]
@@ -352,6 +366,30 @@
             };
 
             return View(model);
+        }
+
+        [HttpGet]
+        [AdminSmallProducerSubmissionContext(Order = 1)]
+        public ActionResult DownloadSubmission(string registrationNumber, int? complianceYear = null)
+        {
+            var source = new SmallProducerSubmissionMapperData()
+            {
+                SmallProducerSubmissionData = SmallProducerSubmissionData,
+                Year = complianceYear
+            };
+
+            var model = mapper.Map<SmallProducerSubmissionMapperData, CheckAnswersViewModel>(source);
+
+            model.IsPdfDownload = true;
+
+            var content = templateExecutor.RenderRazorView(ControllerContext, "DownloadSubmission", model);
+
+            var pdf = pdfDocumentProvider.GeneratePdfFromHtml(content);
+
+            var timestamp = SystemTime.Now;
+            var fileName = $"producer_submission{timestamp.ToString(DateTimeConstants.SubmissionTimestamp)}.pdf";
+
+            return File(pdf, "application/pdf", fileName);
         }
 
         private ActionResult RedirectToOrganisationHasNoSubmissions(Guid organisationId)

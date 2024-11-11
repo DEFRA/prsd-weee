@@ -5,6 +5,7 @@
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Producer.ViewModels;
+    using System;
 
     public class CheckAnswersMap : IMap<SmallProducerSubmissionMapperData, CheckAnswersViewModel>
     {
@@ -15,7 +16,7 @@
             this.mapper = mapper;
         }
 
-        public CheckAnswersViewModel Map(SmallProducerSubmissionMapperData source)
+        public CheckAnswersViewModel Map(SmallProducerSubmissionMapperData source, int year)
         {
             var submissionData = source.SmallProducerSubmissionData;
 
@@ -46,10 +47,17 @@
                 ServiceOfNoticeData = serviceOfNoticemodel,
                 RepresentingCompanyDetails = representingCompanyDetailsmodel,
                 EeeData = editEeeDatamodel,
-                ComplianceYear = submissionData.CurrentSubmission.ComplianceYear
+                ComplianceYear = year
             };
 
             return viewModel;
+        }
+
+        public CheckAnswersViewModel Map(SmallProducerSubmissionMapperData source)
+        {
+            // Uses the current year if no explicit year is provided
+            int year = source.Year ?? DateTime.Now.Year;
+            return Map(source, year);
         }
     }
 }
