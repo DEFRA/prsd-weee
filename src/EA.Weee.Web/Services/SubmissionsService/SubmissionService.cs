@@ -116,7 +116,7 @@
                 SmallProducerSubmissionData = this.smallProducerSubmissionData,
                 IsInternal = this.isInternal,
                 Status = submission?.Status ?? SubmissionStatus.InComplete,
-                HasPaid = submission != null && ((bool)submission?.HasPaid)
+                HasPaid = submission != null && (bool)submission?.HasPaid
             };
 
             return model;
