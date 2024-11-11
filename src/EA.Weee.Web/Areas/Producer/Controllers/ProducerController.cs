@@ -2,14 +2,9 @@
 {
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Api.Client;
     using EA.Weee.Core;
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.DirectRegistrant;
-    using EA.Weee.Core.Organisations;
-    using EA.Weee.Core.Organisations.Base;
-    using EA.Weee.Web.Areas.Admin.Controllers;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview;
     using EA.Weee.Web.Areas.Producer.Filters;
     using EA.Weee.Web.Areas.Producer.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Producer.ViewModels;
@@ -19,11 +14,9 @@
     using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using EA.Weee.Web.Services.SubmissionService;
+    using EA.Weee.Web.Services.SubmissionsService;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime;
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
@@ -55,11 +48,6 @@
             this.submissionService = submissionService;
         }
 
-        public ActionResult Index()
-        {
-            return View();
-        }
-
         [HttpGet]
         [SmallProducerSubmissionContext]
         public ActionResult AlreadySubmittedAndPaid()
@@ -77,19 +65,14 @@
         [SmallProducerSubmissionContext]
         public ActionResult OrganisationHasNoSubmissions()
         {
-            var model = new AlreadySubmittedAndPaidViewModel()
-            {
-                OrganisationId = SmallProducerSubmissionData.OrganisationData.Id,
-                ComplianceYear = SmallProducerSubmissionData.CurrentSubmission.ComplianceYear
-            };
-
             SetHistoricBreadcrumb();
 
-            return View(model);
+            return View(SmallProducerSubmissionData.OrganisationData.Id);
         }
 
-        [SmallProducerSubmissionContext(Order = 1)]
-        [SmallProducerSubmissionSubmitted(Order = 2)]
+        [SmallProducerStartSubmissionContext(Order = 1)]
+        [SmallProducerSubmissionContext(Order = 2)]
+        [SmallProducerSubmissionSubmitted(Order = 3)]
         [HttpGet]
         public async Task<ActionResult> TaskList()
         {
