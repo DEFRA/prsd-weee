@@ -801,7 +801,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ManageOrganisationUsers(A.Dummy<Guid>()));
+            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ManageOrganisationUsers(A.Dummy<Guid>(), A.Dummy<Guid>()));
         }
 
         [Fact]
@@ -821,7 +821,7 @@
                     },
                 });
 
-            var result = await HomeController().ManageOrganisationUsers(A.Dummy<Guid>());
+            var result = await HomeController().ManageOrganisationUsers(A.Dummy<Guid>(), A.Dummy<Guid>());
 
             Assert.IsType<ViewResult>(result);
             Assert.Equal("ManageOrganisationUsers", ((ViewResult)result).ViewName);
@@ -839,7 +839,7 @@
                     new OrganisationUserData(),
                 });
 
-            await Assert.ThrowsAsync<InvalidOperationException>(() => HomeController().ManageOrganisationUsers(A.Dummy<Guid>()));
+            await Assert.ThrowsAsync<InvalidOperationException>(() => HomeController().ManageOrganisationUsers(A.Dummy<Guid>(), A.Dummy<Guid>()));
         }
 
         [Fact]
@@ -874,7 +874,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ManageOrganisationUser(A.Dummy<Guid>(), A.Dummy<Guid>()));
+            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ManageOrganisationUser(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>()));
         }
 
         [Fact]
@@ -891,7 +891,7 @@
                     User = new UserData()
                 });
 
-            var result = await HomeController().ManageOrganisationUser(A.Dummy<Guid>(), A.Dummy<Guid>());
+            var result = await HomeController().ManageOrganisationUser(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>());
 
             Assert.IsType<ViewResult>(result);
             Assert.Equal("ManageOrganisationUser", ((ViewResult)result).ViewName);
@@ -900,7 +900,7 @@
         [Fact]
         public async Task GetManageOrganisationUser_NullOrganisationUserId_RedirectsToManageOrganisationUsers()
         {
-            var result = await HomeController().ManageOrganisationUser(A.Dummy<Guid>(), (Guid?)null);
+            var result = await HomeController().ManageOrganisationUser(A.Dummy<Guid>(), (Guid?)null, A.Dummy<Guid>());
 
             Assert.NotNull(result);
             Assert.IsType<RedirectToRouteResult>(result);
@@ -1068,7 +1068,7 @@
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
                 .Returns(false);
 
-            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ManageOrganisationUsers(A.Dummy<Guid>()));
+            await Assert.ThrowsAsync<ArgumentException>(() => HomeController().ManageOrganisationUsers(A.Dummy<Guid>(), A.Dummy<Guid>()));
         }
 
         [Fact]
@@ -2803,6 +2803,85 @@
                     directRegistrantId,
                     systemDate.Year);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task ChooseActivity_GET_WithDirectRegistrantId_SetsCorrectViewModel()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var directRegistrantId = Guid.NewGuid();
+            var organisationDetails = new OrganisationData
+            {
+                DirectRegistrants = new List<DirectRegistrantInfo>
+                {
+                    new DirectRegistrantInfo { DirectRegistrantId = directRegistrantId }
+                }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(true);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(organisationDetails);
+
+            // Act
+            var result = await HomeController().ChooseActivity(organisationId, directRegistrantId);
+
+            // Assert
+            result.Should().BeOfType<ViewResult>()
+                .Which.Model.Should().BeOfType<ChooseActivityViewModel>()
+                .Which.DirectRegistrantId.Should().Be(directRegistrantId);
+        }
+
+        [Fact]
+        public async Task ManageOrganisationUsers_WithDirectRegistrantId_PreservesIdInModel()
+        {
+            // Arrange
+            var pcsId = Guid.NewGuid();
+            var directRegistrantId = Guid.NewGuid();
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(true);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetManageableOrganisationUsers>._))
+                .Returns(new List<OrganisationUserData>
+                {
+                    new OrganisationUserData 
+                    { 
+                        UserId = Guid.NewGuid().ToString(),
+                    }
+                });
+
+            // Act
+            var result = await HomeController().ManageOrganisationUsers(pcsId, directRegistrantId);
+
+            // Assert
+            result.Should().BeOfType<ViewResult>()
+                .Which.Model.Should().BeOfType<OrganisationUsersViewModel>()
+                .Which.DirectRegistrantId.Should().Be(directRegistrantId);
+        }
+
+        [Fact]
+        public async Task ChooseActivity_IsRepresentingCompanyWithOnlySmallProducerActivities_RedirectsToRepresentingCompanies()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var organisationDetails = new OrganisationData
+            {
+                IsRepresentingCompany = true,
+                DirectRegistrants = new List<DirectRegistrantInfo> { new DirectRegistrantInfo() }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<VerifyOrganisationExists>._))
+                .Returns(true);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(organisationDetails);
+
+            // Act
+            var result = await HomeController().ChooseActivity(organisationId);
+
+            // Assert
+            result.Should().BeOfType<RedirectToRouteResult>()
+                .Which.RouteValues.Should().ContainKeys("action", "area")
+                .And.ContainValues("RepresentingCompanies", string.Empty);
         }
 
         private void SetupCommonFakes(OrganisationData organisationDetails)
