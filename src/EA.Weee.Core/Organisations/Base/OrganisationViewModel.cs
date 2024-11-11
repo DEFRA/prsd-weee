@@ -29,9 +29,10 @@
 
         [CompaniesRegistrationNumberStringLength]
         [Display(Name = "Company registration number (CRN)")]
-        [RequiredWhenUK]
+        [RequiredWhenUK("Company registration number")]
         public string CompaniesRegistrationNumber { get; set; }
 
+        [Required(ErrorMessage = "EEE Brand names is required")]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         [DisplayName("If you are registering as an authorised representative of a non-UK established organisation, enter the brands they place on the market.")]
         public string EEEBrandNames { get; set; }
@@ -59,15 +60,6 @@
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
-
-            //if (OrganisationType == ExternalOrganisationType.RegisteredCompany && UkCountry.ValidIds.Contains(Address.CountryId))
-            //{
-            //    if (CompaniesRegistrationNumber.Count() > 8)
-            //    {
-            //        results.Add(new ValidationResult("Company registration number (CRN) can have a maximum of 8 numbers",
-            //       new[] { "CompaniesRegistrationNumber" }));
-            //    }
-            //}
 
             results.AddRange(ExternalAddressValidator.Validate(Address.CountryId, Address.Postcode, "Address.CountryId", "Address.Postcode"));
 

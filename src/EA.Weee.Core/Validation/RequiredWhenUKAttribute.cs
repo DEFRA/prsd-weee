@@ -7,6 +7,12 @@
 
     public class RequiredWhenUKAttribute : ValidationAttribute
     {
+        private readonly string fieldName;
+
+        public RequiredWhenUKAttribute(string fieldName)
+        {
+            this.fieldName = fieldName;
+        }
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             var model = (OrganisationViewModel)validationContext.ObjectInstance;
@@ -15,7 +21,7 @@
             {
                 var val = value as string;
                 return string.IsNullOrWhiteSpace(val)
-                    ? new ValidationResult($"Company registration number is required.")
+                    ? new ValidationResult($"{fieldName} is required.")
                     : ValidationResult.Success;
             }
 
