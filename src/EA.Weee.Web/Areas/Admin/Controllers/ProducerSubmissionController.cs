@@ -8,14 +8,13 @@
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Admin.DirectRegistrants;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
-    using EA.Weee.Web.Areas.Producer.Filters;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Services;
+    using EA.Weee.Web.Services.SubmissionsService;
     using Filters;
     using Infrastructure;
     using Security;
     using Services.Caching;
-    using Services.SubmissionService;
     using System;
     using System.Security.Claims;
     using System.Threading.Tasks;
