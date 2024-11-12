@@ -4,7 +4,7 @@
   <Import Project="..\packages\xunit.core.2.4.2\build\xunit.core.props" Condition="Exists('..\packages\xunit.core.2.4.2\build\xunit.core.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-	  <LangVersion>11.0</LangVersion>
+    <LangVersion>11.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -420,6 +420,7 @@
     <Compile Include="Areas\Payment\Controller\PaymentControllerTests.cs" />
     <Compile Include="Areas\Producer\Controllers\ProducerSubmissionControllerTests.cs" />
     <Compile Include="Areas\Producer\Filters\AuthoriseRouteClaimsAttributeTests.cs" />
+    <Compile Include="Areas\Producer\Filters\SmallProducerStartSubmissionContextAttributeTests.cs" />
     <Compile Include="Areas\Producer\Filters\SmallProducerSubmissionSubmittedAttributeTests.cs" />
     <Compile Include="Areas\Producer\Filters\SmallProducerSubmissionContextAttributeTests.cs" />
     <Compile Include="Areas\Producer\Mapping\ReverseServiceOfNoticeAddressMapUnitTests.cs" />

@@ -16,12 +16,12 @@
     using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Filters;
+    using EA.Weee.Web.Services.SubmissionsService;
     using FakeItEasy;
     using FluentAssertions;
     using Security;
     using Services;
     using Services.Caching;
-    using Services.SubmissionService;
     using System;
     using System.Collections.Generic;
     using System.Security.Claims;

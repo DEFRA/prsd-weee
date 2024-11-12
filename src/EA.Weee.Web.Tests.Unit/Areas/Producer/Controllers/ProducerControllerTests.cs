@@ -6,9 +6,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core;
     using EA.Weee.Core.DirectRegistrant;
-    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations.Base;
-    using EA.Weee.Core.Shared;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.Producer.Controllers;
     using EA.Weee.Web.Areas.Producer.Filters;
@@ -19,7 +17,7 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.Services.Caching;
-    using EA.Weee.Web.Services.SubmissionService;
+    using EA.Weee.Web.Services.SubmissionsService;
     using FakeItEasy;
     using FluentAssertions;
     using Services;
@@ -297,6 +295,30 @@
         }
 
         [Fact]
+        public void TaskList_ShouldHaveAllRequiredAttributes()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerController).GetMethod(nameof(ProducerController.TaskList));
+
+            methodInfo.Should().NotBeNull("TaskList method should exist");
+
+            // Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerStartSubmissionContextAttribute>(
+                attr => attr.Order == 1,
+                "should have SmallProducerStartSubmissionContext with Order = 1");
+
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>(
+                attr => attr.Order == 2,
+                "should have SmallProducerSubmissionContext with Order = 2");
+
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionSubmittedAttribute>(
+                attr => attr.Order == 3,
+                "should have SmallProducerSubmissionSubmitted with Order = 3");
+
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
         public async Task TaskList_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             controller.SmallProducerSubmissionData = new Core.DirectRegistrant.SmallProducerSubmissionData
@@ -399,11 +421,9 @@
 
             // Assert
             result.Should().NotBeNull();
-            result.Model.Should().BeOfType<AlreadySubmittedAndPaidViewModel>();
+            result.Model.Should().BeOfType<Guid>();
 
-            var model = result.Model as AlreadySubmittedAndPaidViewModel;
-            model.OrganisationId.Should().Be(id);
-            model.ComplianceYear.Should().Be(complianceYear);
+            result.Model.Should().Be(id);
 
             result.ViewName.Should().BeEmpty();
         }
