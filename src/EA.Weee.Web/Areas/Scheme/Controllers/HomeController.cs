@@ -309,25 +309,16 @@
 
                 if (viewModel.SelectedValue == ProducerSubmissionConstant.HistoricProducerRegistrationSubmission)
                 {
-                    using (var client = apiClient())
-                    {
-                        var organisationDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(viewModel.OrganisationId));
-                        var systemTime = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
-
-                        var year = organisationDetails.DirectRegistrants.FirstOrDefault(d =>
-                            d.DirectRegistrantId == viewModel.DirectRegistrantId);
-
-                        return this.RedirectToAction(
-                            nameof(ProducerController.Submissions),
-                            typeof(ProducerController).GetControllerName(),
-                            new
-                            {
-                                area = "Producer",
-                                organisationId = viewModel.OrganisationId,
-                                directRegistrantId = viewModel.DirectRegistrantId,
-                                year = year?.MostRecentSubmittedYear > 0 ? (int?)year.MostRecentSubmittedYear : systemTime.Year
-                            });
-                    }
+                    return this.RedirectToAction(
+                        nameof(ProducerController.Submissions),
+                        typeof(ProducerController).GetControllerName(),
+                        new
+                        {
+                            area = "Producer",
+                            organisationId = viewModel.OrganisationId,
+                            directRegistrantId = viewModel.DirectRegistrantId,
+                            year = -1
+                        });
                 }
 
                 if (viewModel.SelectedValue == ProducerSubmissionConstant.ViewOrganisation)

@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Services.SubmissionService
+﻿namespace EA.Weee.Web.Services.SubmissionsService
 {
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.DirectRegistrant;
@@ -48,7 +48,21 @@
 
             var years = YearsDropdownData(smallProducerSubmissionData).ToList();
 
-            var yearParam = year ?? (years.FirstOrDefault() == 0 ? (int?)null : years.First());
+            // -1 value here will / should only be set for the external user when they are redirecting from the Choose Activity screen.
+            // It is to enable the latest available year to be set in the year dropdown.
+            int? yearParam;
+            switch (year)
+            {
+                case -1:
+                    yearParam = years.FirstOrDefault(); // Gets highest year since list is already ordered descending
+                    break;
+                case null:
+                    yearParam = years.FirstOrDefault() == 0 ? (int?)null : years.First();
+                    break;
+                default:
+                    yearParam = year;
+                    break;
+            }
 
             return await OrganisationDetails(yearParam);
         }
@@ -108,16 +122,18 @@
             ? this.smallProducerSubmissionData.SubmissionHistory[year.Value]
             : current;
 
-            return new OrganisationDetailsTabsViewModel
+            var model = new OrganisationDetailsTabsViewModel
             {
                 Years = YearsDropdownData(smallProducerSubmissionData),
                 Year = year,
                 ActiveOption = option,
                 SmallProducerSubmissionData = this.smallProducerSubmissionData,
                 IsInternal = this.isInternal,
-                Status = submission?.Status ?? current.Status,
-                HasPaid = submission?.HasPaid ?? current.HasPaid
+                Status = submission?.Status ?? SubmissionStatus.InComplete,
+                HasPaid = submission != null && (bool)submission?.HasPaid
             };
+
+            return model;
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)

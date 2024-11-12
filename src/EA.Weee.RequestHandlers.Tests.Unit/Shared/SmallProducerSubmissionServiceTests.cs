@@ -76,13 +76,13 @@
         public async Task GetSmallProducerSubmissionData_WhenCurrentYearSubmissionExists_CallsMapperCorrectly()
         {
             var directRegistrant = SetupValidDirectRegistrant(true);
-            
+
             var organisationData = A.Fake<OrganisationData>();
             A.CallTo(() => mapper.Map<Organisation, OrganisationData>(directRegistrant.Organisation)).Returns(organisationData);
-            
+
             await service.GetSmallProducerSubmissionData(directRegistrant, true);
 
-            A.CallTo(() => mapper.Map<SmallProducerSubmissionHistoryData>(A<DirectProducerSubmissionSource>.That.Matches(s => 
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionHistoryData>(A<DirectProducerSubmissionSource>.That.Matches(s =>
                 s.DirectRegistrant == directRegistrant &&
                 s.DirectProducerSubmission.Equals(currentYearSubmission)))).MustHaveHappenedTwiceExactly();
         }
