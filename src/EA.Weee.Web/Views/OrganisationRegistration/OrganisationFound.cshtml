@@ -6,7 +6,12 @@
 @using EA.Weee.Web.ViewModels.OrganisationRegistration
 @model EA.Weee.Web.ViewModels.OrganisationRegistration.OrganisationsFoundViewModel
 @{
-    const string title = "Your organisation has been found";
+    var title = "Your organisation has been found";
+    if (Model.OrganisationFoundType == OrganisationFoundType.CompanyName)
+    {
+        title = "Your organisation may have been found";
+    }
+
     ViewBag.Title = title + " - GOV.UK";
 }
 @section full_main_content
