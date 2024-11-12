@@ -25,6 +25,20 @@
         identityWidth = "govuk-grid-column-one-third";
     }
 }
+
+@functions {
+    private Guid? GetDirectRegistrantIdFromQueryString()
+    {
+        var directRegistrantStr = Request.QueryString["directRegistrantId"];
+        if (string.IsNullOrEmpty(directRegistrantStr))
+            return null;
+
+        return Guid.TryParse(directRegistrantStr, out var directRegistrantId)
+            ? directRegistrantId
+            : (Guid?)null;
+    }
+}
+
 @if (TempData[Constants.ErrorOccurred] == null || (TempData[Constants.ErrorOccurred] != null && (bool)TempData[Constants.ErrorOccurred] != true))
 {
     if (showTitle)
@@ -61,10 +75,12 @@
                             {
                                 <li>
                                     <span>Activity:&nbsp;<strong>@Model.Breadcrumb.ExternalActivity</strong> &nbsp;</span>
-
+                                    @{
+                                        var directRegistrantId = GetDirectRegistrantIdFromQueryString();
+                                    }
                                     @(this.WeeeGds().ActionLinkWithEventTracking("Change activity",
                                         string.Empty,
-                                        Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.Breadcrumb.OrganisationId, null)),
+                                        Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.Breadcrumb.OrganisationId, directRegistrantId)),
                                         "Navigation",
                                         "External activity",
                                         null,
@@ -152,7 +168,7 @@
                                 {
                                     @Html.AntiForgeryToken()
 
-                                    <input class="link-submit" id="link-sign-out" type="submit" value="Sign out"/>
+                                    <input class="link-submit" id="link-sign-out" type="submit" value="Sign out" />
                                 }
                             </li>
                         </ul>
