@@ -2228,7 +2228,6 @@
             // Arrange
             var organisationId = Guid.NewGuid();
             var directRegistrantId = Guid.NewGuid();
-            var submittedYear = 2024;
             var model = new ChooseActivityViewModel
             {
                 SelectedValue = ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
@@ -2242,8 +2241,7 @@
                 {
                     new DirectRegistrantInfo
                     {
-                        DirectRegistrantId = directRegistrantId,
-                        MostRecentSubmittedYear = submittedYear
+                        DirectRegistrantId = directRegistrantId
                     }
                 }
             };
@@ -2263,7 +2261,7 @@
                     "Producer",
                     organisationId,
                     directRegistrantId,
-                    submittedYear);
+                    -1);
         }
 
         [Fact]
@@ -2391,7 +2389,6 @@
             // Arrange
             var organisationId = Guid.NewGuid();
             var directRegistrantId = Guid.NewGuid();
-            const int submittedYear = 2023;
             var viewModel = new ChooseActivityViewModel
             {
                 OrganisationId = organisationId,
@@ -2406,7 +2403,6 @@
                     new DirectRegistrantInfo
                     {
                         DirectRegistrantId = directRegistrantId,
-                        MostRecentSubmittedYear = submittedYear
                     }
                 }
             };
@@ -2426,10 +2422,7 @@
                     "Producer",
                     organisationId,
                     directRegistrantId,
-                    submittedYear);
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>.That.Matches(x => x.OrganisationId == organisationId)))
-                .MustHaveHappenedOnceExactly();
+                    -1);
         }
 
         [Fact]
@@ -2668,143 +2661,6 @@
             var result = HomeController().HasOnlySmallProducerActivities(activities);
             Assert.False(result);
         }
-
-        [Fact]
-        public async Task ChooseActivityPOST_HistoricProducerRegistrationSubmission_WithNoSubmittedYear_ShouldRedirectWithCurrentSystemYear()
-        {
-            // Arrange
-            var organisationId = Guid.NewGuid();
-            var directRegistrantId = Guid.NewGuid();
-            var systemDate = new DateTime(2024, 1, 1);
-            var model = new ChooseActivityViewModel
-            {
-                SelectedValue = ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
-                OrganisationId = organisationId,
-                DirectRegistrantId = directRegistrantId
-            };
-
-            var organisationData = new OrganisationData
-            {
-                DirectRegistrants = new List<DirectRegistrantInfo>
-                {
-                    new DirectRegistrantInfo
-                    {
-                        DirectRegistrantId = directRegistrantId,
-                        MostRecentSubmittedYear = 0
-                    }
-                }
-            };
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(systemDate);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-                .Returns(organisationData);
-
-            // Act
-            var result = await HomeController().ChooseActivity(model);
-
-            // Assert
-            result.Should().BeOfType<RedirectToRouteResult>()
-                .Which.RouteValues.Should().ContainKeys("action", "controller", "area", "organisationId", "directRegistrantId", "year")
-                .And.ContainValues(
-                    nameof(ProducerController.Submissions),
-                    typeof(ProducerController).GetControllerName(),
-                    "Producer",
-                    organisationId,
-                    directRegistrantId,
-                    systemDate.Year);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappenedOnceExactly();
-        }
-
-        [Fact]
-        public async Task ChooseActivityPOST_HistoricProducerRegistrationSubmission_WithSubmittedYear_ShouldRedirectWithYear()
-        {
-            // Arrange
-            var organisationId = Guid.NewGuid();
-            var directRegistrantId = Guid.NewGuid();
-            const int submittedYear = 2023;
-            var model = new ChooseActivityViewModel
-            {
-                SelectedValue = ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
-                OrganisationId = organisationId,
-                DirectRegistrantId = directRegistrantId
-            };
-
-            var organisationData = new OrganisationData
-            {
-                DirectRegistrants = new List<DirectRegistrantInfo>
-                {
-                    new DirectRegistrantInfo
-                    {
-                        DirectRegistrantId = directRegistrantId,
-                        MostRecentSubmittedYear = submittedYear
-                    }
-                }
-            };
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-                .Returns(organisationData);
-
-            // Act
-            var result = await HomeController().ChooseActivity(model);
-
-            // Assert
-            result.Should().BeOfType<RedirectToRouteResult>()
-                .Which.RouteValues.Should().ContainKeys("action", "controller", "area", "organisationId", "directRegistrantId", "year")
-                .And.ContainValues(
-                    nameof(ProducerController.Submissions),
-                    typeof(ProducerController).GetControllerName(),
-                    "Producer",
-                    organisationId,
-                    directRegistrantId,
-                    submittedYear);
-        }
-
-        [Fact]
-        public async Task ChooseActivityPOST_HistoricProducerRegistrationSubmission_WithNoMatchingDirectRegistrant_ShouldRedirectWithCurrentSystemYear()
-        {
-            // Arrange
-            var organisationId = Guid.NewGuid();
-            var directRegistrantId = Guid.NewGuid();
-            var systemDate = new DateTime(2024, 1, 1);
-            var model = new ChooseActivityViewModel
-            {
-                SelectedValue = ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
-                OrganisationId = organisationId,
-                DirectRegistrantId = directRegistrantId
-            };
-
-            var organisationData = new OrganisationData
-            {
-                DirectRegistrants = new List<DirectRegistrantInfo>
-                {
-                    new DirectRegistrantInfo
-                    {
-                        DirectRegistrantId = Guid.NewGuid(),
-                        MostRecentSubmittedYear = 2023
-                    }
-                }
-            };
-
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(systemDate);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
-                .Returns(organisationData);
-
-            // Act
-            var result = await HomeController().ChooseActivity(model);
-
-            // Assert
-            result.Should().BeOfType<RedirectToRouteResult>()
-                .Which.RouteValues.Should().ContainKeys("action", "controller", "area", "organisationId", "directRegistrantId", "year")
-                .And.ContainValues(
-                    nameof(ProducerController.Submissions),
-                    typeof(ProducerController).GetControllerName(),
-                    "Producer",
-                    organisationId,
-                    directRegistrantId,
-                    systemDate.Year);
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).MustHaveHappenedOnceExactly();
-        }
-
         private void SetupCommonFakes(OrganisationData organisationDetails)
         {
             A.CallTo(() => weeeClient.SendAsync(

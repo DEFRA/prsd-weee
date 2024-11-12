@@ -48,7 +48,21 @@
 
             var years = YearsDropdownData(smallProducerSubmissionData).ToList();
 
-            var yearParam = year ?? (years.FirstOrDefault() == 0 ? (int?)null : years.First());
+            // -1 value here will / should only be set for the external user when they are redirecting from the Choose Activity screen.
+            // It is to enable the latest available year to be set in the year dropdown.
+            int? yearParam;
+            switch (year)
+            {
+                case -1:
+                    yearParam = years.FirstOrDefault(); // Gets highest year since list is already ordered descending
+                    break;
+                case null:
+                    yearParam = years.FirstOrDefault() == 0 ? (int?)null : years.First();
+                    break;
+                default:
+                    yearParam = year;
+                    break;
+            }
 
             return await OrganisationDetails(yearParam);
         }
