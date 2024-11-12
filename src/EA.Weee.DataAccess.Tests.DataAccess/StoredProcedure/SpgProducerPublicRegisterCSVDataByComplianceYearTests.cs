@@ -289,7 +289,7 @@
                             "rep town", "rep locality", "rep admin area", country, "rep postcode")));
 
                 var brandNames = new BrandName("brand name");
-                var (_, directRegistrant2, registeredProducer2) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 2", "WEE/AG48365JX", complianceYear, "987654321", authorisedRep, brandNames);
+                var (_, directRegistrant2, registeredProducer2) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 2", "WEE/AG48365JX", complianceYear, "987654321", authorisedRep, brandNames, "My company 2 trading");
 
                 var amounts2 = new List<DirectRegistrantHelper.EeeOutputAmountData>
                 {
@@ -393,12 +393,12 @@
                 schemeResult.SchemeName.Should().Be(scheme1.SchemeName);
 
                 var result1 = results.ElementAt(1);
-                result1.CompanyName.Should().Be("My company 2");
+                result1.CompanyName.Should().Be("My company");
                 result1.SchemeName.Should().Be("Direct registrant");
                 result1.TradingName.Should().BeNullOrWhiteSpace();
-                result1.ProducerName.Should().Be("authed rep name");
-                result1.PRN.Should().Be("WEE/AG48365JX");
-                result1.ObligationType.Should().Be("Both");
+                result1.ProducerName.Should().Be("My company");
+                result1.PRN.Should().Be("WEE/AG48365JN");
+                result1.ObligationType.Should().Be("B2C");
                 result1.ROAPrimaryName.Should().Be("primary 1");
                 result1.ROASecondaryName.Should().BeNull();
                 result1.ROATown.Should().Be("Woking");
@@ -415,15 +415,15 @@
                 result1.CSROACountyOrRegion.Should().BeNull();
                 result1.CSROAPostcode.Should().BeNull();
                 result1.CSROACountry.Should().BeNull();
-                result1.OPNAName.Should().Be("authed rep name");
-                result1.OPNAPrimaryName.Should().Be("rep address1");
-                result1.OPNASecondaryName.Should().Be("rep secondary");
-                result1.OPNAStreet.Should().Be("rep street");
-                result1.OPNATown.Should().Be("rep town");
-                result1.OPNALocality.Should().Be("rep locality");
-                result1.OPNAAdministrativeArea.Should().Be("rep admin area");
-                result1.OPNACountry.Should().Be("Azerbaijan");
-                result1.OPNAPostCode.Should().Be("rep postcode");
+                result1.OPNAName.Should().BeNull();
+                result1.OPNAPrimaryName.Should().BeNull();
+                result1.OPNASecondaryName.Should().BeNull();
+                result1.OPNAStreet.Should().BeNull();
+                result1.OPNATown.Should().BeNull();
+                result1.OPNALocality.Should().BeNull();
+                result1.OPNAAdministrativeArea.Should().BeNull();
+                result1.OPNACountry.Should().BeNull();
+                result1.OPNAPostCode.Should().BeNull();
                 result1.ComplianceYear.Should().Be(complianceYear);
                 result1.PPOBPrimaryName.Should().BeNull();
                 result1.PPOBSecondaryName.Should().BeNull();
@@ -435,12 +435,12 @@
                 result1.PPOBPostcode.Should().BeNull();
 
                 var result2 = results.ElementAt(2);
-                result2.CompanyName.Should().Be("My company");
+                result2.CompanyName.Should().Be("My company 2");
                 result2.SchemeName.Should().Be("Direct registrant");
-                result2.TradingName.Should().BeNullOrWhiteSpace();
-                result2.ProducerName.Should().Be("My company");
-                result2.PRN.Should().Be("WEE/AG48365JN");
-                result2.ObligationType.Should().Be("B2C");
+                result2.TradingName.Should().Be("My company 2 trading");
+                result2.ProducerName.Should().Be("My company 2");
+                result2.PRN.Should().Be("WEE/AG48365JX");
+                result2.ObligationType.Should().Be("Both");
                 result2.ROAPrimaryName.Should().Be("primary 1");
                 result2.ROASecondaryName.Should().BeNull();
                 result2.ROATown.Should().Be("Woking");
@@ -457,15 +457,15 @@
                 result2.CSROACountyOrRegion.Should().BeNull();
                 result2.CSROAPostcode.Should().BeNull();
                 result2.CSROACountry.Should().BeNull();
-                result2.OPNAName.Should().BeNull();
-                result2.OPNAPrimaryName.Should().BeNull();
-                result2.OPNASecondaryName.Should().BeNull();
-                result2.OPNAStreet.Should().BeNull();
-                result2.OPNATown.Should().BeNull();
-                result2.OPNALocality.Should().BeNull();
-                result2.OPNAAdministrativeArea.Should().BeNull();
-                result2.OPNACountry.Should().BeNull();
-                result2.OPNAPostCode.Should().BeNull();
+                result2.OPNAName.Should().Be("authed rep name");
+                result2.OPNAPrimaryName.Should().Be("rep address1");
+                result2.OPNASecondaryName.Should().Be("rep secondary");
+                result2.OPNAStreet.Should().Be("rep street");
+                result2.OPNATown.Should().Be("rep town");
+                result2.OPNALocality.Should().Be("rep locality");
+                result2.OPNAAdministrativeArea.Should().Be("rep admin area");
+                result2.OPNACountry.Should().Be("Azerbaijan");
+                result2.OPNAPostCode.Should().Be("rep postcode");
                 result2.ComplianceYear.Should().Be(complianceYear);
                 result2.PPOBPrimaryName.Should().BeNull();
                 result2.PPOBSecondaryName.Should().BeNull();

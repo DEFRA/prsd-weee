@@ -24,10 +24,10 @@
             return Tuple.Create(complianceYear, country);
         }
 
-        public static Tuple<Domain.Organisation.Organisation, DirectRegistrant, Domain.Producer.RegisteredProducer> CreateOrganisationWithRegisteredProducer(DatabaseWrapper wrapper, string companyName, string prn, int complianceYear, string companyNumber = null, Domain.Producer.AuthorisedRepresentative authorisedRepresentative = null, BrandName brandNames = null)
+        public static Tuple<Domain.Organisation.Organisation, DirectRegistrant, Domain.Producer.RegisteredProducer> CreateOrganisationWithRegisteredProducer(DatabaseWrapper wrapper, string companyName, string prn, int complianceYear, string companyNumber = null, Domain.Producer.AuthorisedRepresentative authorisedRepresentative = null, BrandName brandNames = null, string tradingName = null)
         {
             companyNumber = companyNumber ?? "123456789";
-            var organisation = Domain.Organisation.Organisation.CreateRegisteredCompany(companyName, "123456789");
+            var organisation = Domain.Organisation.Organisation.CreateRegisteredCompany(companyName, "123456789", tradingName);
             var address = new Domain.Organisation.Address("primary 1", "street", "Woking", "Hampshire", "GU21 5EE", wrapper.WeeeContext.Countries.First(), "12345678", "test@co.uk");
             organisation.AddOrUpdateAddress(Domain.AddressType.RegisteredOrPPBAddress, address);
 
