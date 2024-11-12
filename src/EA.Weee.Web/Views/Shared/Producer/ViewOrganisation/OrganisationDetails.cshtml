@@ -36,12 +36,22 @@
 
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" style="width: 30%;" scope="row">Registration date</th>
-                            <td class="govuk-table__cell">@Model.OrganisationViewModel.RegistrationDate</td>
+                            <td class="govuk-table__cell">
+                                @if (Model.OrganisationViewModel.RegistrationDate.HasValue)
+                                {
+                                    @Model.OrganisationViewModel.RegistrationDate.Value.ToString("dd MMMM yyyy")
+                                }
+                            </td>
                         </tr>
 
                         <tr class="govuk-table__row">
                             <th class="govuk-table__header" style="width: 30%;" scope="row">Submission date</th>
-                            <td class="govuk-table__cell">@Model.OrganisationViewModel.SubmittedDate</td>
+                            <td class="govuk-table__cell">
+                                @if (Model.OrganisationViewModel.SubmittedDate.HasValue)
+                                {
+                                    @Model.OrganisationViewModel.SubmittedDate.Value.ToString("dd MMMM yyyy")
+                                }
+                            </td>
                         </tr>
 
                         <tr class="govuk-table__row">
