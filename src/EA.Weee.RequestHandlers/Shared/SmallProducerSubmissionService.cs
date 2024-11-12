@@ -59,7 +59,7 @@
 
             foreach (var directProducerSubmission in submissionHistory)
             {
-                if ((!internalUser && systemTime.Year > directProducerSubmission.ComplianceYear) ||
+                if ((!internalUser && systemTime.Year != directProducerSubmission.ComplianceYear) ||
                     directProducerSubmission.DirectProducerSubmissionStatus == DirectProducerSubmissionStatus.Complete)
                 {
                     var history = mapper.Map<SmallProducerSubmissionHistoryData>(
