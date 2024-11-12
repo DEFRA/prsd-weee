@@ -25,7 +25,7 @@
         [DisplayName("Business trading name")]
         public virtual string BusinessTradingName { get; set; }
 
-        public ExternalAddressData Address { get; set; } = new ExternalAddressData() { CountryId = UkCountry.Ids.England };
+        public ExternalAddressData Address { get; set; } = new ExternalAddressData();
 
         [CompaniesRegistrationNumberStringLength]
         [Display(Name = "Company registration number (CRN)")]
@@ -57,11 +57,21 @@
         [DisplayName("Producer registration number (PRN)")]
         public virtual string ProducerRegistrationNumber { get; set; }
 
+        public bool HasAuthorisedRepresentitive { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
 
             results.AddRange(ExternalAddressValidator.Validate(Address.CountryId, Address.Postcode, "Address.CountryId", "Address.Postcode"));
+
+            var isUkCountry = UkCountry.ValidIds.Contains(Address.CountryId);
+            if (isUkCountry == false && HasAuthorisedRepresentitive)
+            {
+                var validationsResult = new ValidationResult("Selected country must be a UK country.", new[] { "Address.CountryId" });
+
+                results.Add(validationsResult);
+            }
 
             return results;
         }
