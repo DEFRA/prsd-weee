@@ -444,7 +444,6 @@
             {
                 return new OrganisationViewModel
                 {
-                    Address = new ExternalAddressData() { },
                     OrganisationType = ExternalOrganisationType.RegisteredCompany
                 };
             }
@@ -455,7 +454,7 @@
                 OrganisationType = existingTransaction.OrganisationType ?? ExternalOrganisationType.RegisteredCompany
             };
 
-            model.OrganisationType = existingTransaction.OrganisationType;
+            model.HasAuthorisedRepresentitive = existingTransaction?.AuthorisedRepresentative == YesNoType.Yes;
 
             if (existingTransaction.PreviousRegistration == PreviouslyRegisteredProducerType.YesPreviousSchemeMember)
             {
