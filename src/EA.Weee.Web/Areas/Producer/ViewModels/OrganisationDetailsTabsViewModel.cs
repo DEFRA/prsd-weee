@@ -22,29 +22,13 @@
 
         public bool IsAdmin { get; set; } = false;
 
-        public bool IsInternalAdmin
-        {
-            get
-            {
-                return this.IsAdmin && this.IsInternal;
-            }
-        }
+        public bool IsInternalAdmin => this.IsAdmin && this.IsInternal;
 
-        public bool IsRegistered
-        {
-            get
-            {
-                return this.Status == EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted && this.HasPaid;
-            }
-        }
+        public bool IsRegistered => this.Status == SubmissionStatus.Submitted && this.HasPaid;
 
-        public bool ShowReturnRegistrationToUser
-        {
-            get
-            {
-                return this.IsInternalAdmin && (IsRegistered || this.Status == EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted);
-            }
-        }
+        public bool ShowReturnRegistrationToUser => this.IsInternalAdmin && (IsRegistered || this.Status == SubmissionStatus.Submitted);
+
+        public bool ShowPaymentLink => this.IsInternalAdmin && this.Status == SubmissionStatus.Submitted && HasPaid == false;
 
         public string RegistrationNumber { get; set; }
 

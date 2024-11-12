@@ -64,7 +64,7 @@
                             <td class="govuk-table__cell">
                                 @(Model.OrganisationViewModel.HasPaid ? "Paid" : "Not paid")
 
-                                @if (Model.OrganisationViewModel.HasPaid == false && Model.IsInternalAdmin)
+                                @if (Model.ShowPaymentLink)
                                 {
                                     <div style="float: right">
                                         @Html.ActionLink("Add payment details", "AddPaymentDetails", "ProducerSubmission",
