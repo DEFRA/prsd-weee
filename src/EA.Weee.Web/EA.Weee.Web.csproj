@@ -1180,6 +1180,7 @@
     <Content Include="Areas\Test\Views\ApiIntegration\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\ProducersIncSmallProducersDataViewModel.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\ProducersDataViewModel.cshtml" />
+    <Content Include="Views\Shared\Producer\ViewOrganisation\_OrganisationDetailsTabsBottomButtons.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
