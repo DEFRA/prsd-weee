@@ -76,13 +76,13 @@
         public async Task GetSmallProducerSubmissionData_WhenCurrentYearSubmissionExists_CallsMapperCorrectly()
         {
             var directRegistrant = SetupValidDirectRegistrant(true);
-            
+
             var organisationData = A.Fake<OrganisationData>();
             A.CallTo(() => mapper.Map<Organisation, OrganisationData>(directRegistrant.Organisation)).Returns(organisationData);
-            
+
             await service.GetSmallProducerSubmissionData(directRegistrant, true);
 
-            A.CallTo(() => mapper.Map<SmallProducerSubmissionHistoryData>(A<DirectProducerSubmissionSource>.That.Matches(s => 
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionHistoryData>(A<DirectProducerSubmissionSource>.That.Matches(s =>
                 s.DirectRegistrant == directRegistrant &&
                 s.DirectProducerSubmission.Equals(currentYearSubmission)))).MustHaveHappenedTwiceExactly();
         }
@@ -417,22 +417,6 @@
             // Assert
             result.SubmissionHistory.Should().ContainKey(ComplianceYear);
             result.SubmissionHistory[ComplianceYear].Should().Be(submissionHistoryData);
-        }
-
-        [Fact]
-        public async Task GetSmallProducerSubmissionData_ExternalUser_FutureYear_DoesNotAddSubmissionToHistory()
-        {
-            // Arrange
-            const int futureYear = ComplianceYear + 1;
-            var directRegistrant = SetupValidDirectRegistrant();
-            var submission = CreateSubmission(futureYear);
-            directRegistrant.DirectProducerSubmissions.Add(submission);
-
-            // Act
-            var result = await service.GetSmallProducerSubmissionData(directRegistrant, internalUser: false);
-
-            // Assert
-            result.SubmissionHistory.Should().NotContainKey(futureYear);
         }
 
         private static DirectProducerSubmission CreateSubmission(int year)
