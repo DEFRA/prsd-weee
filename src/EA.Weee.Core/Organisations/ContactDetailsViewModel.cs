@@ -35,14 +35,6 @@
 
             results.AddRange(ExternalAddressValidator.Validate(AddressData.CountryId, AddressData.Postcode, "AddressData.CountryId", "AddressData.Postcode"));
 
-            var isUkCountry = UkCountry.ValidIds.Contains(AddressData.CountryId);
-            if (isUkCountry == false && HasAuthorisedRepresentitive)
-            {
-                var validationsResult = new ValidationResult("Selected country must be a UK country.", new[] { "AddressData.CountryId" });
-
-                results.Add(validationsResult);
-            }
-
             return results;
         }
     }
