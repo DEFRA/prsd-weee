@@ -288,7 +288,7 @@
                 // 7. Manage Organisation Users
                 if (viewModel.SelectedValue == PcsAction.ManageOrganisationUsers)
                 {
-                    return RedirectToAction("ManageOrganisationUsers", new { pcsId = viewModel.OrganisationId });
+                    return RedirectToAction("ManageOrganisationUsers", new { pcsId = viewModel.OrganisationId, directRegistrantId = viewModel.DirectRegistrantId });
                 }
 
                 // 8. Manage PBS Evidence Notes
@@ -423,7 +423,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ManageOrganisationUsers(Guid pcsId)
+        public async Task<ActionResult> ManageOrganisationUsers(Guid pcsId, Guid? directRegistrantId)
         {
             using (var client = apiClient())
             {
@@ -452,7 +452,8 @@
 
                 var model = new OrganisationUsersViewModel
                 {
-                    OrganisationUsers = orgUsersKeyValuePairs.ToList()
+                    OrganisationUsers = orgUsersKeyValuePairs.ToList(),
+                    DirectRegistrantId = directRegistrantId
                 };
 
                 return View("ManageOrganisationUsers", model);
@@ -482,11 +483,11 @@
             }
 
             return RedirectToAction("ManageOrganisationUser", "Home",
-                   new { area = "Scheme", pcsId, organisationUserId = model.SelectedOrganisationUser });
+                   new { area = "Scheme", pcsId, organisationUserId = model.SelectedOrganisationUser, directRegistrantId = model.DirectRegistrantId });
         }
 
         [HttpGet]
-        public async Task<ActionResult> ManageOrganisationUser(Guid pcsId, Guid? organisationUserId)
+        public async Task<ActionResult> ManageOrganisationUser(Guid pcsId, Guid? organisationUserId, Guid? directRegistrantId)
         {
             if (organisationUserId.HasValue)
             {
