@@ -51,7 +51,7 @@
 
             csvWriter.DefineColumn(@"PCS name or direct registrant", i => i.SchemeName);
             csvWriter.DefineColumn(@"PCS approval number", i => i.ApprovalNumber);
-            csvWriter.DefineColumn(@"Producer / authorised representative name", i => i.ProducerName);
+            csvWriter.DefineColumn(@"Producer name", i => i.ProducerName);
             csvWriter.DefineColumn(@"Producer type", i => i.ProducerType);
             csvWriter.DefineColumn(@"Company registration number", i => i.CompanyNumber);
             csvWriter.DefineColumn(@"Partnership names", i => i.Partners);
