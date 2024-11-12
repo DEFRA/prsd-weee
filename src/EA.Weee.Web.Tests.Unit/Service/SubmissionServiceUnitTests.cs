@@ -570,6 +570,50 @@
             result.HasPaid.Should().BeFalse();
         }
 
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(null)]
+        [InlineData(2024)]
+        public async Task Submissions_HandlesYearParameterCorrectly(int? year)
+        {
+            // Arrange
+            var data = GetDefaultSmallProducerData();
+            service.WithSubmissionData(data);
+
+            // Act
+            var result = await service.Submissions(year);
+
+            // Assert
+            if (year == -1 || year == null)
+            {
+                // Should get highest available year
+                result.Year.Should().Be(2030);
+            }
+            else
+            {
+                result.Year.Should().Be(year);
+            }
+        }
+
+        [Fact]
+        public async Task YearsDropdownData_ExternalUser_IncludesReturnedStatus()
+        {
+            // Arrange
+            var data = GetDefaultSmallProducerData();
+            data.SubmissionHistory.Add(2025, new SmallProducerSubmissionHistoryData
+            {
+                Status = SubmissionStatus.Returned
+            });
+
+            service.WithSubmissionData(data);
+
+            // Act
+            var result = await service.OrganisationDetails(null);
+
+            // Assert
+            result.Years.Should().Contain(2025);
+        }
+
         private static IEnumerable<int> ExpectedYears(SmallProducerSubmissionData d) => 
              d.SubmissionHistory
               .Where(x => x.Value.Status == SubmissionStatus.Submitted)
