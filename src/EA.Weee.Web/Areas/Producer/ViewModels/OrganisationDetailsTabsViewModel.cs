@@ -3,6 +3,7 @@
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview;
     using iText.Layout.Element;
     using System;
@@ -27,6 +28,8 @@
         public bool IsRegistered => this.Status == SubmissionStatus.Submitted && this.HasPaid;
 
         public bool ShowReturnRegistrationToUser => this.IsInternalAdmin && (IsRegistered || this.Status == SubmissionStatus.Submitted);
+        public bool ShowContinueRegistrationToUser => !this.IsInternalAdmin && this.Status == SubmissionStatus.InComplete && this.ApiDateYear == this.Year;
+        public int ApiDateYear { get; set; }
 
         public bool ShowPaymentLink => this.IsInternalAdmin && this.Status == SubmissionStatus.Submitted && HasPaid == false;
 
