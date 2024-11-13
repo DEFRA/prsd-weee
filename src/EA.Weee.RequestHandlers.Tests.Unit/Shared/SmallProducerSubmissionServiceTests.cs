@@ -381,29 +381,14 @@
             result.SubmissionHistory[ComplianceYear].Should().Be(submissionHistoryData);
         }
 
-        [Fact]
-        public async Task GetSmallProducerSubmissionData_ExternalUser_CurrentYearReturnedSubmission_DoesAddSubmissionToHistory()
+        [Theory]
+        [InlineData(false)]
+        [InlineData(true)]
+        public async Task GetSmallProducerSubmissionData_InternalAndExternalUser_CurrentYearReturnedSubmission_AddsSubmissionToHistory(bool yes)
         {
             // Arrange
             var registeredProducer = A.Fake<RegisteredProducer>();
-            var directRegistrant = SetupValidDirectRegistrant(hasCurrentYearSubmission: false);
-            var directProducerSubmission = new DirectProducerSubmission(directRegistrant, registeredProducer, ComplianceYear);
-            directProducerSubmission.DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Returned;
-            directRegistrant.DirectProducerSubmissions.Add(directProducerSubmission);
-
-            // Act
-            var result = await service.GetSmallProducerSubmissionData(directRegistrant, internalUser: false);
-
-            // Assert
-            result.SubmissionHistory.Should().NotContainKey(ComplianceYear);
-        }
-
-        [Fact]
-        public async Task GetSmallProducerSubmissionData_InternalUser_CurrentYearReturnedSubmission_AddsSubmissionToHistory()
-        {
-            // Arrange
-            var registeredProducer = A.Fake<RegisteredProducer>();
-            var directRegistrant = SetupValidDirectRegistrant(hasCurrentYearSubmission: false);
+            var directRegistrant = SetupValidDirectRegistrant(hasCurrentYearSubmission: yes);
             var directProducerSubmission = new DirectProducerSubmission(directRegistrant, registeredProducer, ComplianceYear);
             directProducerSubmission.DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Returned;
             directRegistrant.DirectProducerSubmissions.Add(directProducerSubmission);
