@@ -382,7 +382,7 @@
         }
 
         [Fact]
-        public async Task GetSmallProducerSubmissionData_ExternalUser_CurrentYearReturnedSubmission_DoesNotAddSubmissionToHistory()
+        public async Task GetSmallProducerSubmissionData_ExternalUser_CurrentYearReturnedSubmission_DoesAddSubmissionToHistory()
         {
             // Arrange
             var registeredProducer = A.Fake<RegisteredProducer>();
