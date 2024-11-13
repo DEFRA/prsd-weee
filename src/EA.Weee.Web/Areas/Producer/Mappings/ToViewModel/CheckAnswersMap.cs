@@ -3,11 +3,12 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
+    using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using System;
 
-    public class CheckAnswersMap : IMap<SmallProducerSubmissionMapperData, CheckAnswersViewModel>
+    public class CheckAnswersMap : IMap<SubmissionsYearDetails, CheckAnswersViewModel>
     {
         private readonly IMapper mapper;
 
@@ -16,26 +17,26 @@
             this.mapper = mapper;
         }
 
-        public CheckAnswersViewModel Map(SmallProducerSubmissionMapperData source, int year)
+        public CheckAnswersViewModel Map(SubmissionsYearDetails source, int year)
         {
             var submissionData = source.SmallProducerSubmissionData;
 
             var editOrganisationDetailsmodel =
-                            mapper.Map<SmallProducerSubmissionMapperData, EditOrganisationDetailsViewModel>(source);
+                            mapper.Map<SubmissionsYearDetails, OrganisationViewModel>(source);
             var editContactDetailsmodel =
-                            mapper.Map<SmallProducerSubmissionMapperData, EditContactDetailsViewModel>(source);
+                            mapper.Map<SubmissionsYearDetails, ContactDetailsViewModel>(source);
             var serviceOfNoticemodel =
-                            mapper.Map<SmallProducerSubmissionMapperData, ServiceOfNoticeViewModel>(source);
+                            mapper.Map<SubmissionsYearDetails, ServiceOfNoticeViewModel>(source);
 
             RepresentingCompanyDetailsViewModel representingCompanyDetailsmodel = null;
 
             if (submissionData.HasAuthorisedRepresentitive)
             {
                 representingCompanyDetailsmodel =
-                            mapper.Map<SmallProducerSubmissionMapperData, RepresentingCompanyDetailsViewModel>(source);
+                            mapper.Map<SubmissionsYearDetails, RepresentingCompanyDetailsViewModel>(source);
             }
             var editEeeDatamodel =
-                            mapper.Map<SmallProducerSubmissionMapperData, EditEeeDataViewModel>(source);
+                            mapper.Map<SubmissionsYearDetails, EditEeeDataViewModel>(source);
 
             var viewModel = new CheckAnswersViewModel()
             {
@@ -53,7 +54,7 @@
             return viewModel;
         }
 
-        public CheckAnswersViewModel Map(SmallProducerSubmissionMapperData source)
+        public CheckAnswersViewModel Map(SubmissionsYearDetails source)
         {
             // Uses the current year if no explicit year is provided
             int year = source.Year ?? source.SmallProducerSubmissionData.CurrentSubmission.ComplianceYear;
