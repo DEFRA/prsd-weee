@@ -740,7 +740,7 @@
         public async Task TotalEEEDetails_IfNoSubmittedSubmissions_RedirectToOrganisationHasNoSubmissions()
         {
             SetupDefaultControllerData();
-            SetupInCompleteSubmission();
+            SetupNoSubmissionForYear(2000);
 
             var result = (await controller.TotalEEEDetails(2000)) as RedirectToRouteResult;
 
@@ -751,7 +751,7 @@
         public async Task RepresentedOrganisationDetails_IfNoSubmittedSubmissions_RedirectToOrganisationHasNoSubmissions()
         {
             SetupDefaultControllerData();
-            SetupInCompleteSubmission();
+            SetupNoSubmissionForYear(2000);
 
             var result = (await controller.RepresentedOrganisationDetails(2000)) as RedirectToRouteResult;
 
@@ -762,7 +762,7 @@
         public async Task ServiceOfNoticeDetails_IfNoSubmittedSubmissions_RedirectToOrganisationHasNoSubmissions()
         {
             SetupDefaultControllerData();
-            SetupInCompleteSubmission();
+            SetupNoSubmissionForYear(2000);
 
             var result = (await controller.ServiceOfNoticeDetails(2000)) as RedirectToRouteResult;
 
@@ -773,7 +773,7 @@
         public async Task ContactDetails_IfNoSubmittedSubmissions_RedirectToOrganisationHasNoSubmissions()
         {
             SetupDefaultControllerData();
-            SetupInCompleteSubmission();
+            SetupNoSubmissionForYear(2000);
 
             var result = (await controller.ContactDetails(2000)) as RedirectToRouteResult;
 
@@ -784,7 +784,7 @@
         public async Task OrganisationDetails_IfNoSubmittedSubmissions_RedirectToOrganisationHasNoSubmissions()
         {
             SetupDefaultControllerData();
-            SetupInCompleteSubmission();
+            SetupNoSubmissionForYear(2000);
 
             var result = (await controller.OrganisationDetails(2000)) as RedirectToRouteResult;
 
@@ -880,13 +880,14 @@
                 attr.VaryByParam == "None");
         }
 
-        private void SetupInCompleteSubmission()
+        private void SetupNoSubmissionForYear(int year)
         {
             controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>();
-            controller.SmallProducerSubmissionData.SubmissionHistory.Add(2000, new SmallProducerSubmissionHistoryData()
+
+            if (controller.SmallProducerSubmissionData.SubmissionHistory.ContainsKey(year))
             {
-                Status = SubmissionStatus.InComplete
-            });
+                controller.SmallProducerSubmissionData.SubmissionHistory.Remove(year);
+            }
         }
     }
 }
