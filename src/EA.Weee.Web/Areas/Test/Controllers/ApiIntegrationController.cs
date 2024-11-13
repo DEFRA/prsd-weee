@@ -100,7 +100,7 @@
 
                 var result = await client.CreatePaymentAsync(Guid.NewGuid().ToString(), new CreateCardPaymentRequest()
                 {
-                    Amount = 1,
+                    Amount = 100,
                     Description = $"WEEE TEST TRANSACTION {DateTime.UtcNow.Ticks.ToString()}",
                     Email = "testtransaction@email.com",
                     Reference = $"testtransactionref{DateTime.UtcNow.Ticks.ToString()}",
