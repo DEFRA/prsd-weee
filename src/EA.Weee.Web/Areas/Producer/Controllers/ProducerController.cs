@@ -155,12 +155,13 @@
         [SmallProducerSubmissionContext(Order = 1)]
         public async Task<ActionResult> CheckAnswers()
         {
-            var source = new SmallProducerSubmissionMapperData()
+            var source = new SubmissionsYearDetails()
             {
-                SmallProducerSubmissionData = SmallProducerSubmissionData
+                SmallProducerSubmissionData = SmallProducerSubmissionData,
+                Year = SmallProducerSubmissionData.CurrentSubmission.ComplianceYear
             };
 
-            var model = mapper.Map<SmallProducerSubmissionMapperData, CheckAnswersViewModel>(source);
+            var model = mapper.Map<SubmissionsYearDetails, CheckAnswersViewModel>(source);
 
             await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
 
