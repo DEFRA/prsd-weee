@@ -208,6 +208,10 @@
             {
                 fileName.AppendFormat("_{0}", DirectRegistrantFixedIdConstant.DirectRegistrant);
             }
+            if (schemeId == DirectRegistrantFixedIdConstant.SchemeFixedId)
+            {
+                fileName.AppendFormat("_{0}", DirectRegistrantFixedIdConstant.AllSchemes);
+            }
 
             if (authorityId != null)
             {
@@ -534,7 +538,7 @@
             model.ComplianceYears = new SelectList(FetchAllComplianceYears());
         }
 
-        private async Task PopulateFilters(ProducersDataViewModelBase model, bool populateSchemes, bool includeDirectRegistrants = false)
+        private async Task PopulateFilters(ProducersDataViewModelBase model, bool populateSchemes, bool includeDirectRegistrants = false, bool includeAllSchemes = false)
         {
             var years = await FetchComplianceYearsForDataReturns();
 
@@ -542,7 +546,7 @@
 
             if (populateSchemes)
             {
-                var schemes = await FetchSchemes(includeDirectRegistrants);
+                var schemes = await FetchSchemes(includeDirectRegistrants, includeAllSchemes);
                 model.Schemes = new SelectList(schemes, "Id", "SchemeName");
             }
         }

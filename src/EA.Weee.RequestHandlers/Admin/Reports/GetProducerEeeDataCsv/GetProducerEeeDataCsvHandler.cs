@@ -33,43 +33,36 @@
         {
             authorization.EnsureCanAccessInternalArea();
 
-            string obligationType = ConvertEnumToDatabaseString(request.ObligationType);
+            var obligationType = ConvertEnumToDatabaseString(request.ObligationType);
 
-            CsvWriter<ProducerEeeCsvData> csvWriter = CreateWriter(obligationType);
+            var csvWriter = CreateWriter(obligationType);
 
-            List<ProducerEeeCsvData> items = await dataAccess.GetItemsAsync(
+            var items = await dataAccess.GetItemsAsync(
                 request.ComplianceYear,
                 request.SchemeId,
                 obligationType);
 
-            string fileContent = csvWriter.Write(items);
+            var fileContent = csvWriter.Write(items);
 
             string fileName;
 
             if (request.SchemeId == null)
             {
-                fileName = string.Format("{0}_{1}_producerEEE_{2:ddMMyyyy_HHmm}.csv",
-                    request.ComplianceYear,
-                    obligationType,
-                    SystemTime.UtcNow);
+                fileName = $"{request.ComplianceYear}_{obligationType}_producerEEE_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
             }
             else if (request.SchemeId == DirectRegistrantFixedIdConstant.DirectRegistrantFixedId)
             {
-                fileName = string.Format("{0}_{1}_{2}_producerEEE_{3:ddMMyyyy_HHmm}.csv",
-                    request.ComplianceYear,
-                    DirectRegistrantFixedIdConstant.DirectRegistrant,
-                    obligationType,
-                    SystemTime.UtcNow);
+                fileName = $"{request.ComplianceYear}_{DirectRegistrantFixedIdConstant.DirectRegistrant}_{obligationType}_producerEEE_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
+            }
+            else if (request.SchemeId == DirectRegistrantFixedIdConstant.SchemeFixedId)
+            {
+                fileName = $"{request.ComplianceYear}_{DirectRegistrantFixedIdConstant.AllSchemes}_{obligationType}_producerEEE_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
             }
             else
             {
                 Domain.Scheme.Scheme scheme = await dataAccess.GetSchemeAsync(request.SchemeId.Value);
 
-                fileName = string.Format("{0}_{1}_{2}_producerEEE_{3:ddMMyyyy_HHmm}.csv",
-                    request.ComplianceYear,
-                    scheme.ApprovalNumber.Replace("/", string.Empty),
-                    obligationType,
-                    SystemTime.UtcNow);
+                fileName = $"{request.ComplianceYear}_{scheme.ApprovalNumber.Replace("/", string.Empty)}_{obligationType}_producerEEE_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
             }
 
             return new CSVFileData

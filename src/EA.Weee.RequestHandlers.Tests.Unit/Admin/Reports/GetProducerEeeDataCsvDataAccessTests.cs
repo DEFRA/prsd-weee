@@ -42,6 +42,7 @@
                 complianceYear,
                 id,
                 obligationType,
+                false,
                 false))
                 .Returns(expectedResult);
 
@@ -54,6 +55,7 @@
                 complianceYear,
                 id,
                 obligationType,
+                false,
                 false))
                 .MustHaveHappenedOnceExactly();
         }
@@ -74,7 +76,8 @@
                 complianceYear,
                 null,
                 obligationType,
-                true))
+                true,
+                false))
                 .Returns(expectedResult);
 
             // Act
@@ -86,7 +89,8 @@
                 complianceYear,
                 null,
                 obligationType,
-                true))
+                true, 
+                false))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -106,6 +110,7 @@
                 complianceYear,
                 null,
                 obligationType,
+                false,
                 false))
                 .Returns(expectedResult);
 
@@ -118,6 +123,7 @@
                 complianceYear,
                 null,
                 obligationType,
+                false,
                 false))
                 .MustHaveHappenedOnceExactly();
         }
@@ -139,6 +145,7 @@
                 complianceYear,
                 id,
                 obligationType,
+                false,
                 false))
                 .Returns(expectedResult);
 
@@ -151,6 +158,7 @@
                 complianceYear,
                 id,
                 obligationType,
+                false,
                 false))
                 .MustHaveHappenedOnceExactly();
         }
