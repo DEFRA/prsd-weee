@@ -372,13 +372,13 @@
         [AdminSmallProducerSubmissionContext(Order = 1)]
         public ActionResult DownloadSubmission(string registrationNumber, int? complianceYear = null)
         {
-            var source = new SmallProducerSubmissionMapperData()
+            var source = new SubmissionsYearDetails()
             {
                 SmallProducerSubmissionData = SmallProducerSubmissionData,
                 Year = complianceYear
             };
 
-            var model = mapper.Map<SmallProducerSubmissionMapperData, CheckAnswersViewModel>(source);
+            var model = mapper.Map<SubmissionsYearDetails, CheckAnswersViewModel>(source);
 
             model.IsPdfDownload = true;
 
