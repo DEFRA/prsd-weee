@@ -180,14 +180,6 @@
 
         private IEnumerable<int> YearsDropdownData(SmallProducerSubmissionData data)
         {
-            if (!isInternal)
-            {
-                return data.SubmissionHistory
-                           .Where(x => x.Value.Status == SubmissionStatus.Submitted || x.Value.Status == SubmissionStatus.Returned)
-                           .OrderByDescending(x => x.Key)
-                           .Select(x => x.Key);
-            }
-
             return data.SubmissionHistory
                     .OrderByDescending(x => x.Key)
                     .Select(x => x.Key);
