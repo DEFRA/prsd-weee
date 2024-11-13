@@ -475,7 +475,7 @@
                 OrganisationType = existingTransaction.OrganisationType ?? ExternalOrganisationType.RegisteredCompany
             };
 
-            model.OrganisationType = existingTransaction.OrganisationType;
+            model.HasAuthorisedRepresentitive = existingTransaction?.AuthorisedRepresentative == YesNoType.Yes;
 
             if (existingTransaction.PreviousRegistration == PreviouslyRegisteredProducerType.YesPreviousSchemeMember)
             {

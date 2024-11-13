@@ -25,12 +25,14 @@
         [DisplayName("Business trading name")]
         public virtual string BusinessTradingName { get; set; }
 
-        public ExternalAddressData Address { get; set; } = new ExternalAddressData() { CountryId = UkCountry.Ids.England };
+        public ExternalAddressData Address { get; set; } = new ExternalAddressData();
 
-        [StringLength(maximumLength: EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber, MinimumLength = 7, ErrorMessage = "The company registration number should be 7 to 15 characters long")]
+        [CompaniesRegistrationNumberStringLength]
         [Display(Name = "Company registration number (CRN)")]
+        [RequiredWhenUK("Company registration number")]
         public string CompaniesRegistrationNumber { get; set; }
 
+        [Required(ErrorMessage = "EEE Brand names is required")]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         [DisplayName("If you are registering as an authorised representative of a non-UK established organisation, enter the brands they place on the market.")]
         public string EEEBrandNames { get; set; }
@@ -55,11 +57,21 @@
         [DisplayName("Producer registration number (PRN)")]
         public virtual string ProducerRegistrationNumber { get; set; }
 
+        public bool HasAuthorisedRepresentitive { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
 
             results.AddRange(ExternalAddressValidator.Validate(Address.CountryId, Address.Postcode, "Address.CountryId", "Address.Postcode"));
+
+            var isUkCountry = UkCountry.ValidIds.Contains(Address.CountryId);
+            if (isUkCountry == false && HasAuthorisedRepresentitive)
+            {
+                var validationsResult = new ValidationResult("Selected country must be a UK country.", new[] { "Address.CountryId" });
+
+                results.Add(validationsResult);
+            }
 
             return results;
         }
