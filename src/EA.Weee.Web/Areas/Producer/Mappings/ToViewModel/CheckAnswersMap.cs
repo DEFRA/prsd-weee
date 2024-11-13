@@ -21,9 +21,9 @@
         {
             var submissionData = source.SmallProducerSubmissionData;
 
-            var editOrganisationDetailsmodel =
+            var organisationDetailsmodel =
                             mapper.Map<SubmissionsYearDetails, OrganisationViewModel>(source);
-            var editContactDetailsmodel =
+            var contactDetailsmodel =
                             mapper.Map<SubmissionsYearDetails, ContactDetailsViewModel>(source);
             var serviceOfNoticemodel =
                             mapper.Map<SubmissionsYearDetails, ServiceOfNoticeViewModel>(source);
@@ -43,8 +43,8 @@
                 DirectRegistrantId = submissionData.DirectRegistrantId,
                 HasAuthorisedRepresentitive = submissionData.HasAuthorisedRepresentitive,
                 OrganisationId = submissionData.OrganisationData.Id,
-                OrganisationDetails = editOrganisationDetailsmodel,
-                ContactDetails = editContactDetailsmodel,
+                OrganisationDetails = organisationDetailsmodel,
+                ContactDetails = contactDetailsmodel,
                 ServiceOfNoticeData = serviceOfNoticemodel,
                 RepresentingCompanyDetails = representingCompanyDetailsmodel,
                 EeeData = editEeeDatamodel,
