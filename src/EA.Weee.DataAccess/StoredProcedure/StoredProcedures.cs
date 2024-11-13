@@ -236,19 +236,22 @@
             return result;
         }
 
-        public async Task<List<ProducerEeeCsvData>> SpgProducerEeeCsvData(int complianceYear, Guid? schemeId, string obligationtype, bool directRegistrantFilter)
+        public async Task<List<ProducerEeeCsvData>> SpgProducerEeeCsvData(int complianceYear, Guid? schemeId, string obligationType, 
+            bool directRegistrantFilter, bool filterBySchemes)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
             var schemeIdParameter = new SqlParameter("@SchemeId", (object)schemeId ?? DBNull.Value);
-            var obligationTypeParameter = new SqlParameter("@ObligationType", obligationtype);
+            var obligationTypeParameter = new SqlParameter("@ObligationType", obligationType);
             var filterByDirectRegistrant = new SqlParameter("@FilterByDirectRegistrant", directRegistrantFilter);
+            var filterByScheme = new SqlParameter("@FilterBySchemes", filterBySchemes);
 
             return await context.Database
-                .SqlQuery<ProducerEeeCsvData>("[Producer].[spgProducerEeeCsvData] @ComplianceYear, @SchemeId, @ObligationType, @FilterByDirectRegistrant",
+                .SqlQuery<ProducerEeeCsvData>("[Producer].[spgProducerEeeCsvData] @ComplianceYear, @SchemeId, @ObligationType, @FilterByDirectRegistrant, @FilterBySchemes",
                     complianceYearParameter,
                     schemeIdParameter,
                     obligationTypeParameter,
-                    filterByDirectRegistrant)
+                    filterByDirectRegistrant,
+                    filterByScheme)
                 .ToListAsync();
         }
 
