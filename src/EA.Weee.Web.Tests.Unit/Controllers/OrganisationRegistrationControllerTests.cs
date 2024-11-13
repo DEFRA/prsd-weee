@@ -737,6 +737,7 @@
             var model = TestFixture.Build<OrganisationViewModel>().Create();
             model.ProducerRegistrationNumber = null;
             model.IsPreviousSchemeMember = false;
+            model.CompaniesRegistrationNumber = "4567894";
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, authorisedRep).Create();
@@ -786,6 +787,7 @@
             var model = TestFixture.Build<OrganisationViewModel>().Create();
             model.ProducerRegistrationNumber = null;
             model.IsPreviousSchemeMember = false;
+            model.CompaniesRegistrationNumber = "4567894";
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, YesNoType.Yes).Create();
@@ -815,6 +817,7 @@
             var model = TestFixture.Build<OrganisationViewModel>().Create();
             model.ProducerRegistrationNumber = null;
             model.IsPreviousSchemeMember = false;
+            model.CompaniesRegistrationNumber = "4567894";
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, YesNoType.Yes).Create();
@@ -848,6 +851,7 @@
             var model = TestFixture.Build<OrganisationViewModel>().Create();
             model.ProducerRegistrationNumber = null;
             model.IsPreviousSchemeMember = false;
+            model.CompaniesRegistrationNumber = "4567894";
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, YesNoType.Yes).Create();
@@ -1804,9 +1808,12 @@
         {
             // Arrange
             var model = new OrganisationViewModel
-                { CompaniesRegistrationNumber = "12345678", CompanyName = "Test Company" };
+            { CompaniesRegistrationNumber = "12345678", CompanyName = "Test Company", Address = new ExternalAddressData { CountryId = Guid.NewGuid() } };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
                 .Returns(Task.FromResult(new List<Core.Organisations.OrganisationData>()));
+
+            model.CompaniesRegistrationNumber = "4567894";
+            model.EEEBrandNames = "s";
 
             // Act
             await controller.OrganisationDetails(model);
@@ -1821,9 +1828,12 @@
         {
             // Arrange
             var model = new OrganisationViewModel
-                { CompaniesRegistrationNumber = "12345678", CompanyName = "Test Company" };
+            { CompaniesRegistrationNumber = "12345678", CompanyName = "Test Company", Address = new ExternalAddressData { CountryId = Guid.NewGuid() } };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
                 .Returns(Task.FromResult(new List<Core.Organisations.OrganisationData>()));
+
+            model.CompaniesRegistrationNumber = "4567894";
+            model.EEEBrandNames = "s";
 
             // Act
             await controller.OrganisationDetails(model);
@@ -1950,6 +1960,7 @@
             model.ProducerRegistrationNumber = "ValidRegistrationNumber";
             model.IsPreviousSchemeMember = true;
             model.OrganisationType = ExternalOrganisationType.RegisteredCompany;
+            model.CompaniesRegistrationNumber = "4567894";
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, YesNoType.No)
@@ -2009,6 +2020,7 @@
             model.ProducerRegistrationNumber = "ValidRegistrationNumber";
             model.IsPreviousSchemeMember = false;
             model.OrganisationType = ExternalOrganisationType.RegisteredCompany;
+            model.CompaniesRegistrationNumber = "4567894";
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, YesNoType.No)
@@ -2062,8 +2074,9 @@
                 PreviousRegistration = PreviouslyRegisteredProducerType.YesPreviousSchemeMember,
                 OrganisationViewModel = new OrganisationViewModel()
                 {
-                    OrganisationType = ExternalOrganisationType.Partnership,
-                    CompanyName = "Test Company"
+                    OrganisationType = ExternalOrganisationType.RegisteredCompany,
+                    CompanyName = "Test Company",
+                    CompaniesRegistrationNumber = "4567894"
                 }
             };
 
