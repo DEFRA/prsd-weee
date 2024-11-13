@@ -398,6 +398,7 @@
         [Theory]
         [InlineData(SubmissionStatus.Submitted)]
         [InlineData(SubmissionStatus.Returned)]
+        [InlineData(SubmissionStatus.InComplete)]
         public async Task YearsDropdownData_IncludesCorrectStatuses(SubmissionStatus status)
         {
             // Arrange
@@ -414,25 +415,6 @@
 
             // Assert
             result.Years.Should().Contain(2025);
-        }
-
-        [Fact]
-        public async Task YearsDropdownData_ExcludesIncompleteStatus()
-        {
-            // Arrange
-            var data = GetDefaultSmallProducerData();
-            data.SubmissionHistory.Add(2025, new SmallProducerSubmissionHistoryData
-            {
-                Status = SubmissionStatus.InComplete
-            });
-
-            service.WithSubmissionData(data);
-
-            // Act
-            var result = await service.OrganisationDetails(null);
-
-            // Assert
-            result.Years.Should().NotContain(2025);
         }
 
         [Theory]
@@ -616,7 +598,6 @@
 
         private static IEnumerable<int> ExpectedYears(SmallProducerSubmissionData d) => 
              d.SubmissionHistory
-              .Where(x => x.Value.Status == SubmissionStatus.Submitted)
               .OrderByDescending(x => x.Key)
               .Select(x => x.Key);
 
