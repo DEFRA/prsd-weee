@@ -96,7 +96,7 @@
             {
                 var id = Guid.NewGuid();
                 var secureId = secureReturnUrlHelper.GenerateSecureRandomString(id);
-                var returnUrl = string.Format(appConfiguration.GovUkPayReturnBaseUrl, id, secureId);
+                var returnUrl = string.Format(appConfiguration.GovUkPayReturnBaseUrl, secureId);
 
                 var result = await client.CreatePaymentAsync(Guid.NewGuid().ToString(), new CreateCardPaymentRequest()
                 {
