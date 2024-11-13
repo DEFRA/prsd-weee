@@ -63,7 +63,7 @@ else
         @Html.ActionLink("Remove " + Model.Year + " producer registration", "RemoveSubmission", "ProducerSubmission", new { registrationNumber = Model.RegistrationNumber, year = Model.Year }, new { @class = "govuk-link" })
     </p>
 }
-@if (!Model.IsInternalAdmin && Model.Status == SubmissionStatus.InComplete && DateTime.Now.Year == Model.Year)
+@if (Model.ShowContinueRegistrationToUser)
 {
     <div class="govuk-button-group govuk-!-padding-top-3">
         <a href="@Url.Action("TaskList", "Producer")" class="govuk-button">
