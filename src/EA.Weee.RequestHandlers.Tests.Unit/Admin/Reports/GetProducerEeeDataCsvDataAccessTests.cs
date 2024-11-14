@@ -65,7 +65,7 @@
         {
             // Arrange
             const int complianceYear = 2024;
-            var directRegistrantId = DirectRegistrantFixedIdConstant.DirectRegistrantFixedId;
+            var directRegistrantId = ReportsFixedIdConstant.AllDirectRegistrantFixedId;
             const string obligationType = "B2C";
             var expectedResult = new List<ProducerEeeCsvData>
             {

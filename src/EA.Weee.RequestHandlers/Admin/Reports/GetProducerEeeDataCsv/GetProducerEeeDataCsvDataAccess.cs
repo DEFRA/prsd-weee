@@ -27,12 +27,12 @@
             var filterByDirectRegistrant = false;
             var filterByAllSchemes = false;
 
-            if (schemeId == DirectRegistrantFixedIdConstant.DirectRegistrantFixedId)
+            if (schemeId == ReportsFixedIdConstant.AllDirectRegistrantFixedId)
             {
                 schemeId = null;
                 filterByDirectRegistrant = true;
             }
-            else if (schemeId == DirectRegistrantFixedIdConstant.SchemeFixedId)
+            else if (schemeId == ReportsFixedIdConstant.AllSchemeFixedId)
             {
                 schemeId = null;
                 filterByAllSchemes = true;

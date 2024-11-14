@@ -193,7 +193,7 @@
 
             fileName.AppendFormat("{0:D4}", complianceYear);
 
-            if (schemeId != null && schemeId != DirectRegistrantFixedIdConstant.DirectRegistrantFixedId)
+            if (schemeId != null && schemeId != ReportsFixedIdConstant.AllDirectRegistrantFixedId && schemeId != ReportsFixedIdConstant.AllSchemeFixedId)
             {
                 using (var client = apiClient())
                 {
@@ -204,13 +204,13 @@
                 }
             }
 
-            if (schemeId == DirectRegistrantFixedIdConstant.DirectRegistrantFixedId)
+            if (schemeId == ReportsFixedIdConstant.AllDirectRegistrantFixedId)
             {
-                fileName.AppendFormat("_{0}", DirectRegistrantFixedIdConstant.DirectRegistrant);
+                fileName.AppendFormat("_{0}", ReportsFixedIdConstant.AllDirectRegistrants);
             }
-            if (schemeId == DirectRegistrantFixedIdConstant.SchemeFixedId)
+            if (schemeId == ReportsFixedIdConstant.AllSchemeFixedId)
             {
-                fileName.AppendFormat("_{0}", DirectRegistrantFixedIdConstant.AllSchemes);
+                fileName.AppendFormat("_{0}", ReportsFixedIdConstant.AllSchemes);
             }
 
             if (authorityId != null)
@@ -283,7 +283,7 @@
             ViewBag.TriggerDownload = false;
 
             var model = new ProducersIncSmallProducersDataViewModel();
-            await PopulateFilters(model, true, true);
+            await PopulateFilters(model, true, true, true);
 
             return View(model);
         }
@@ -295,7 +295,7 @@
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
 
-            await PopulateFilters(model, true, true);
+            await PopulateFilters(model, true, true, true);
 
             return View(model);
         }
@@ -518,7 +518,7 @@
         private async Task PopulateFilters(ReportsFilterViewModel model)
         {
             var years = await FetchComplianceYearsForMemberRegistrations();
-            var schemes = await FetchSchemes(true);
+            var schemes = await FetchSchemes(true, true);
             var authorities = await FetchAuthorities();
 
             model.ComplianceYears = new SelectList(years);

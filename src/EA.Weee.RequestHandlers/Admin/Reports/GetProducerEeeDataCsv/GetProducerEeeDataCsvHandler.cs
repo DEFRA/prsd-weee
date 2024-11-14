@@ -50,13 +50,13 @@
             {
                 fileName = $"{request.ComplianceYear}_{obligationType}_producerEEE_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
             }
-            else if (request.SchemeId == DirectRegistrantFixedIdConstant.DirectRegistrantFixedId)
+            else if (request.SchemeId == ReportsFixedIdConstant.AllDirectRegistrantFixedId)
             {
-                fileName = $"{request.ComplianceYear}_{DirectRegistrantFixedIdConstant.DirectRegistrant}_{obligationType}_producerEEE_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
+                fileName = $"{request.ComplianceYear}_{ReportsFixedIdConstant.AllDirectRegistrants}_{obligationType}_producerEEE_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
             }
-            else if (request.SchemeId == DirectRegistrantFixedIdConstant.SchemeFixedId)
+            else if (request.SchemeId == ReportsFixedIdConstant.AllSchemeFixedId)
             {
-                fileName = $"{request.ComplianceYear}_{DirectRegistrantFixedIdConstant.AllSchemes}_{obligationType}_producerEEE_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
+                fileName = $"{request.ComplianceYear}_{ReportsFixedIdConstant.AllSchemes}_{obligationType}_producerEEE_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
             }
             else
             {
