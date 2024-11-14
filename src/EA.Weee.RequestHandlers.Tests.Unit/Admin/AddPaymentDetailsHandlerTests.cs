@@ -1,8 +1,9 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin
 {
     using AutoFixture;
-    using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
+    using EA.Weee.Core.DirectRegistrant;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.DataAccess.Identity;
@@ -106,7 +107,8 @@
             //arrange
             var directProducerSubmissionId = Guid.NewGuid();
 
-            var submission = A.Dummy<DirectProducerSubmission>();
+            var submission = A.Fake<DirectProducerSubmission>();
+            A.CallTo(() => submission.DirectProducerSubmissionStatus).Returns(DirectProducerSubmissionStatus.Complete);
 
             var userContext = A.Fake<IUserContext>();
 
@@ -133,6 +135,30 @@
 
             handlerResult.RegistrationNumber.Should().Be(submission.RegisteredProducer.ProducerRegistrationNumber);
             handlerResult.ComplianceYear.Should().Be(submission.ComplianceYear);
+        }
+
+        [Theory]
+        [InlineData(SubmissionStatus.Returned)]
+        [InlineData(SubmissionStatus.InComplete)]
+        public void HandleAsync_WithSubmissionThatIsNotComplete_ShouldThrowInvalidOperationException(SubmissionStatus status)
+        {
+            //arrange
+            var directProducerSubmissionId = Guid.NewGuid();
+            var domainStatus = status.ToDomainEnumeration<DirectProducerSubmissionStatus>();
+
+            var submission = A.Fake<DirectProducerSubmission>();
+            A.CallTo(() => submission.DirectProducerSubmissionStatus).Returns(domainStatus);
+
+            var req = fixture.Build<AddPaymentDetails>().With(x => x.DirectProducerSubmissionId, directProducerSubmissionId).Create();
+
+            A.CallTo(() => dataAccess.GetById<DirectProducerSubmission>(directProducerSubmissionId))
+                .Returns(submission);
+
+            //act
+            Func<Task> action = async () => await handler.HandleAsync(req);
+
+            // Assert
+            action.Should().ThrowAsync<InvalidOperationException>();
         }
     }
 }

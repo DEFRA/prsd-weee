@@ -1,4 +1,10 @@
 ﻿@using EA.Weee.Core.DataStandards
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Core.Organisations
+@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.Controllers
+@using MvcNavigationHelpers
 @model EA.Weee.Core.Organisations.Base.OrganisationViewModel
 
 <h2 class="govuk-heading-s">Enter the country your organisation or business is based in.</h2>
@@ -12,7 +18,11 @@
 @Html.Gds().HintParagraph("If you don't have a company registration number, leave this field blank")
 
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesRegistrationNumber) @(!Model.LookupFound && Model.Action == "Find Company" ? "govuk-form-group--error" : "")">
-    @Html.Gds().LabelFor(m => m.CompaniesRegistrationNumber)
+    @{
+        var showOptional = Model.OrganisationType != ExternalOrganisationType.RegisteredCompany;
+    }
+
+    @Html.Gds().LabelFor(m => m.CompaniesRegistrationNumber, showOptionalLabel: showOptional)
     @Html.Gds().ValidationMessageFor(m => m.CompaniesRegistrationNumber)
     @if (Model.LookupFound == false && Model.Action == "Find Company")
     {
@@ -20,10 +30,33 @@
             <span class="govuk-visually-hidden">Error:</span> Company details could not be found
         </div>
     }
-    <div style="display: flex; align-items: center; gap: 10px;">
-        @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @maxlength = EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber, style = "width: 250px;" })
 
-        <input type="submit" value="Find Company" name="action" class="govuk-button govuk-button--secondary" data-prevent-double-click="true" style="margin: 0;" />
+    <div class="govuk-error-message companies-house-search-error only-js-enabled" style="display: none">
+        <span class="govuk-visually-hidden">Error:</span> Company details could not be found
+    </div>
+
+    <div>
+        @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @maxlength = EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber, style = "width: 250px;" })
+    </div>
+
+    <div class="left-cleared govuk-!-margin-top-5">
+        <noscript>
+            <input type="submit"
+                   value="Find Company"
+                   name="action"
+                   class="govuk-button govuk-button--secondary"
+                   data-prevent-double-click="true"/>
+        </noscript>
+
+        <button type="button"
+                name="Find Company"
+                class="govuk-button govuk-button--secondary only-js-enabled"
+                id="find-company"
+                data-module="govuk-button"
+                data-prevent-double-click="true">
+            Find company
+        </button>
+        @(this.WeeeGds().GetSpinnerHtml())
     </div>
 </div>
 
@@ -37,6 +70,16 @@
     </div>
 }
 
+<noscript>
+    <style>
+        .only-js-enabled {
+            display: none;
+        }
+    </style>
+</noscript>
 
-
-
+<style>
+    .spinner-image {
+        margin-top: 2px;
+    }
+</style>

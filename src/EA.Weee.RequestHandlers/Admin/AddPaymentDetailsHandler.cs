@@ -39,6 +39,11 @@
 
             var submission = await dataAccess.GetById<DirectProducerSubmission>(request.DirectProducerSubmissionId);
 
+            if (submission.DirectProducerSubmissionStatus != DirectProducerSubmissionStatus.Complete)
+            {
+                throw new InvalidOperationException("Manual payment cannot be made against non submitted submission");
+            }
+
             if (submission.PaymentFinished)
             {
                 throw new InvalidOperationException("Manual payment for submission has already been made.");

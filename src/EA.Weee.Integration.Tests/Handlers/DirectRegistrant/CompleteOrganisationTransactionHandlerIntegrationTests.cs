@@ -30,6 +30,8 @@
                 LocalSetup();
 
                 var registeredCompanyDetails = fixture.Build<OrganisationViewModel>()
+                    .With(r => r.CompaniesRegistrationNumber, "12345678")
+                    .With(r => r.OrganisationType, ExternalOrganisationType.RegisteredCompany)
                     .With(r => r.Address, addressData).Create();
 
                 registeredCompanyDetails.ProducerRegistrationNumber = null;
@@ -154,6 +156,8 @@
                 LocalSetup();
 
                 var soleTraderDetails = fixture.Build<OrganisationViewModel>()
+                    .With(r => r.CompaniesRegistrationNumber, "1234567")
+                    .With(r => r.OrganisationType, ExternalOrganisationType.SoleTrader)
                     .With(r => r.Address, addressData).Create();
 
                 organisationTransactionData = fixture.Build<OrganisationTransactionData>()
@@ -279,6 +283,8 @@
                 LocalSetup();
 
                 var partnershipDetails = fixture.Build<OrganisationViewModel>()
+                    .With(r => r.CompaniesRegistrationNumber, "1234567")
+                    .With(r => r.OrganisationType, ExternalOrganisationType.Partnership)
                     .With(r => r.Address, addressData).Create();
 
                 organisationTransactionData = fixture.Build<OrganisationTransactionData>()
@@ -391,6 +397,8 @@
                 LocalSetup();
 
                 var registeredCompanyDetails = fixture.Build<OrganisationViewModel>()
+                    .With(r => r.CompaniesRegistrationNumber, "12345678")
+                    .With(r => r.OrganisationType, ExternalOrganisationType.RegisteredCompany)
                     .With(r => r.Address, addressData).Create();
 
                 organisationTransactionData = fixture.Build<OrganisationTransactionData>()
@@ -527,6 +535,8 @@
                     .With(e => e.CountryId, country.Id).Create();
 
                 var registeredCompanyDetails = fixture.Build<OrganisationViewModel>()
+                    .With(r => r.CompaniesRegistrationNumber, "12345678")
+                    .With(r => r.OrganisationType, ExternalOrganisationType.RegisteredCompany)
                     .With(r => r.Address, addressData).Create();
 
                 organisationTransactionData = fixture.Build<OrganisationTransactionData>()
@@ -736,6 +746,8 @@
                 LocalSetup();
 
                 var registeredCompanyDetails = fixture.Build<OrganisationViewModel>()
+                    .With(r => r.CompaniesRegistrationNumber, "12345678")
+                    .With(r => r.OrganisationType, ExternalOrganisationType.RegisteredCompany)
                     .With(r => r.Address, addressData).Create();
 
                 registeredCompanyDetails.ProducerRegistrationNumber = "12345";

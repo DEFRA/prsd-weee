@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Services.SubmissionService
+﻿namespace EA.Weee.Web.Services.SubmissionsService
 {
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Web.Areas.Producer.ViewModels;
@@ -13,6 +13,6 @@
         Task<OrganisationDetailsTabsViewModel> ServiceOfNoticeDetails(int? year = null);
         Task<OrganisationDetailsTabsViewModel> Submissions(int? year = null);
         Task<OrganisationDetailsTabsViewModel> TotalEEEDetails(int? year = null);
-        SubmissionService WithSubmissionData(SmallProducerSubmissionData data, bool isInternal = false);
+        SubmissionsService.SubmissionService WithSubmissionData(SmallProducerSubmissionData data, bool isInternal = false, int? year = null);
     }
 }
