@@ -3,7 +3,7 @@
 @model EA.Weee.Web.Areas.Producer.ViewModels.AlreadySubmittedAndPaidViewModel
 
 @{
-    const string title = "You have already submitted your producer registration for this year";
+    const string title = "You have already completed your producer registration for this year";
     ViewBag.Title = title + " - GOV.UK";
 }
 @section full_main_content
@@ -15,9 +15,7 @@
     </header>
 
     <p class="govuk-body">
-        You have already submitted your producer registration for the current year. If you would like to view you current year submission, click this link:  @Html.ActionLink("Producer registration submission", "OrganisationDetails", "Producer", 
-                                                                                                                                                                                new { area = "Producer", year = Model.ComplianceYear }, 
-                                                                                                                                                                                new { @class = "govuk-link" }).
+        You have already completed your producer registration for the current year. If you would like to view you current year registration, select this link: @Html.ActionLink("Producer registration", "OrganisationDetails", "Producer", new { area = "Producer", year = Model.ComplianceYear }, new { @class = "govuk-link" }).
     </p>
 
     @this.WeeeGds().GovUkButtonLink("Perform another activty", @Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model.OrganisationId, null)))

@@ -1,7 +1,5 @@
-﻿@using EA.Weee.Core.DataStandards
-@using EA.Weee.Core.Organisations
-@using MvcNavigationHelpers
-@using EA.Weee.Web.Controllers
+﻿@using EA.Weee.Web.Controllers
+@using EA.Weee.Core.Helpers
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Core.Organisations.RepresentingCompanyDetailsViewModel
 @{
@@ -10,9 +8,14 @@
 }
 @section full_main_content
 {
+    @{
+        var urlHelper = new UrlHelper(Request.RequestContext);
+        var url = urlHelper.Action(nameof(OrganisationRegistrationController.RepresentingCompanyRedirect), typeof(OrganisationRegistrationController).GetControllerName(),
+            new { returnUrl = ViewBag.ReturnUrl });
+    }
 
-    @this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.RepresentingCompanyRedirect()))
-    
+    @this.WeeeGds().BackLink(url)
+
     <header class="hgroup">
         <h1 class="govuk-heading-l">@title</h1>
     </header>

@@ -11,7 +11,7 @@
     using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using EA.Weee.Web.Services.SubmissionService;
+    using EA.Weee.Web.Services.SubmissionsService;
     using FakeItEasy;
     using FluentAssertions;
     using System;
@@ -52,11 +52,12 @@
             var pdfDocumentProvider = A.Fake<IPdfDocumentProvider>();
            
             submissionService = A.Fake<ISubmissionService>();
+            var apiClient = () => fakeClient;
 
             actionExecutingContext = new ActionExecutingContext
             {
                 ActionParameters = new System.Web.Routing.RouteValueDictionary(),
-                Controller = new ProducerController(breadcrumbService, weeeCache, mapper, templateExecutor, pdfDocumentProvider, submissionService),
+                Controller = new ProducerController(breadcrumbService, weeeCache, mapper, templateExecutor, pdfDocumentProvider, submissionService, apiClient),
                 HttpContext = fakeHttpContext,
                 RouteData = new System.Web.Routing.RouteData()
             };
@@ -113,40 +114,6 @@
             filter.Invoking(f => f.OnActionExecuting(actionExecutingContext))
                 .Should().Throw<ArgumentException>()
                 .WithMessage("The specified direct registrant ID is not valid.");
-        }
-
-        [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public void OnActionExecuting_WhenDataIsNull_CreatesNewSubmission(bool invalidateCache)
-        {
-            // Arrange
-            var directRegistrantId = Guid.NewGuid();
-            actionExecutingContext.RouteData.Values["directRegistrantId"] = directRegistrantId.ToString();
-
-            A.CallTo(() => fakeClient.SendAsync(A<string>._, A<GetSmallProducerSubmission>._))
-                .Returns(new SmallProducerSubmissionData())
-                .Once()
-                .Then
-                .Returns(new SmallProducerSubmissionData());
-
-            A.CallTo(() => fakeClient.SendAsync(A<string>._, A<AddSmallProducerSubmission>._))
-                .Returns(new AddSmallProducerSubmissionResult(invalidateCache, A.Dummy<Guid>()));
-
-            // Act
-            filter.OnActionExecuting(actionExecutingContext);
-
-            // Assert
-            A.CallTo(() => fakeClient.SendAsync(A<string>._, A<AddSmallProducerSubmission>.That.Matches(a => a.DirectRegistrantId == directRegistrantId)))
-                .MustHaveHappenedOnceExactly();
-            if (invalidateCache)
-            {
-                A.CallTo(() => weeeCache.InvalidateSmallProducerSearch()).MustHaveHappenedOnceExactly();
-            }
-            else
-            {
-                A.CallTo(() => weeeCache.InvalidateSmallProducerSearch()).MustNotHaveHappened();
-            }
         }
 
         [Fact]

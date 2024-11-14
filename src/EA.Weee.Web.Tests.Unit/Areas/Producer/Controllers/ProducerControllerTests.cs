@@ -4,11 +4,11 @@
     using Core.Organisations;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
+    using EA.Weee.Api.Client;
     using EA.Weee.Core;
     using EA.Weee.Core.DirectRegistrant;
-    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations.Base;
-    using EA.Weee.Core.Shared;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Areas.Producer.Controllers;
     using EA.Weee.Web.Areas.Producer.Filters;
@@ -19,7 +19,7 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.Services.Caching;
-    using EA.Weee.Web.Services.SubmissionService;
+    using EA.Weee.Web.Services.SubmissionsService;
     using FakeItEasy;
     using FluentAssertions;
     using Services;
@@ -41,6 +41,7 @@
         private readonly IMvcTemplateExecutor templateExecutor;
         private readonly IPdfDocumentProvider pdfDocumentProvider;
         private readonly ISubmissionService submissionService;
+        private readonly Func<IWeeeClient> apiClient;
 
         public ProducerControllerTests()
         {
@@ -49,8 +50,8 @@
             mapper = A.Fake<IMapper>();
             templateExecutor = A.Fake<IMvcTemplateExecutor>();
             pdfDocumentProvider = A.Fake<IPdfDocumentProvider>();
-
             submissionService = A.Fake<ISubmissionService>();
+            var weeeClient = A.Fake<IWeeeClient>();
 
             controller = new ProducerController(
                breadcrumb, 
@@ -58,7 +59,8 @@
                mapper,
                templateExecutor,
                pdfDocumentProvider,
-               submissionService);
+               submissionService,
+               apiClient = () => weeeClient);
         }
 
         [Fact]
@@ -297,6 +299,30 @@
         }
 
         [Fact]
+        public void TaskList_ShouldHaveAllRequiredAttributes()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerController).GetMethod(nameof(ProducerController.TaskList));
+
+            methodInfo.Should().NotBeNull("TaskList method should exist");
+
+            // Assert
+            methodInfo.Should().BeDecoratedWith<SmallProducerStartSubmissionContextAttribute>(
+                attr => attr.Order == 1,
+                "should have SmallProducerStartSubmissionContext with Order = 1");
+
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionContextAttribute>(
+                attr => attr.Order == 2,
+                "should have SmallProducerSubmissionContext with Order = 2");
+
+            methodInfo.Should().BeDecoratedWith<SmallProducerSubmissionSubmittedAttribute>(
+                attr => attr.Order == 3,
+                "should have SmallProducerSubmissionSubmitted with Order = 3");
+
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
+        }
+
+        [Fact]
         public async Task TaskList_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             controller.SmallProducerSubmissionData = new Core.DirectRegistrant.SmallProducerSubmissionData
@@ -399,11 +425,9 @@
 
             // Assert
             result.Should().NotBeNull();
-            result.Model.Should().BeOfType<AlreadySubmittedAndPaidViewModel>();
+            result.Model.Should().BeOfType<Guid>();
 
-            var model = result.Model as AlreadySubmittedAndPaidViewModel;
-            model.OrganisationId.Should().Be(id);
-            model.ComplianceYear.Should().Be(complianceYear);
+            result.Model.Should().Be(id);
 
             result.ViewName.Should().BeEmpty();
         }
@@ -562,7 +586,9 @@
             var expcted = new OrganisationDetailsTabsViewModel();
             expcted.OrganisationViewModel = new OrganisationViewModel();
 
+            int apiYear = 2024;
             A.CallTo(() => this.submissionService.OrganisationDetails(year)).Returns(expcted);
+            A.CallTo(() => this.apiClient().SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(apiYear, 1, 1));
 
             var result = (await controller.OrganisationDetails(year)) as ViewResult;
 
@@ -573,7 +599,7 @@
             model.Should().NotBeNull();
             model.OrganisationViewModel.Should().NotBeNull();
             A.CallTo(() => this.submissionService.OrganisationDetails(year)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false, apiYear)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -586,7 +612,9 @@
             var expcted = new OrganisationDetailsTabsViewModel();
             expcted.ContactDetailsViewModel = new ContactDetailsViewModel();
 
+            int apiYear = 2024;
             A.CallTo(() => this.submissionService.ContactDetails(year)).Returns(expcted);
+            A.CallTo(() => this.apiClient().SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(apiYear, 1, 1));
 
             var result = (await controller.ContactDetails(year)) as ViewResult;
 
@@ -597,7 +625,7 @@
             model.Should().NotBeNull();
             model.ContactDetailsViewModel.Should().NotBeNull();
             A.CallTo(() => this.submissionService.ContactDetails(year)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false, apiYear)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -610,7 +638,9 @@
             var expcted = new OrganisationDetailsTabsViewModel();
             expcted.ServiceOfNoticeViewModel = new ServiceOfNoticeViewModel();
 
+            int apiYear = 2024;
             A.CallTo(() => this.submissionService.ServiceOfNoticeDetails(year)).Returns(expcted);
+            A.CallTo(() => this.apiClient().SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(apiYear, 1, 1));
 
             var result = (await controller.ServiceOfNoticeDetails(year)) as ViewResult;
 
@@ -621,7 +651,7 @@
             model.Should().NotBeNull();
             model.ServiceOfNoticeViewModel.Should().NotBeNull();
             A.CallTo(() => this.submissionService.ServiceOfNoticeDetails(year)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false, apiYear)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -634,7 +664,9 @@
             var expcted = new OrganisationDetailsTabsViewModel();
             expcted.RepresentingCompanyDetailsViewModel = new RepresentingCompanyDetailsViewModel();
 
+            int apiYear = 2024;
             A.CallTo(() => this.submissionService.RepresentedOrganisationDetails(year)).Returns(expcted);
+            A.CallTo(() => this.apiClient().SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(apiYear, 1, 1));
 
             var result = (await controller.RepresentedOrganisationDetails(year)) as ViewResult;
 
@@ -646,7 +678,7 @@
             model.RepresentingCompanyDetailsViewModel.Should().NotBeNull();
 
             A.CallTo(() => this.submissionService.RepresentedOrganisationDetails(year)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false, apiYear)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -659,7 +691,9 @@
             var expcted = new OrganisationDetailsTabsViewModel();
             expcted.EditEeeDataViewModel = new EditEeeDataViewModel();
 
+            int apiYear = 2024;
             A.CallTo(() => this.submissionService.TotalEEEDetails(year)).Returns(expcted);
+            A.CallTo(() => this.apiClient().SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(apiYear, 1, 1));
 
             var result = (await controller.TotalEEEDetails(year)) as ViewResult;
 
@@ -671,7 +705,7 @@
             model.EditEeeDataViewModel.Should().NotBeNull();
 
             A.CallTo(() => this.submissionService.TotalEEEDetails(year)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false, apiYear)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -720,7 +754,7 @@
         public async Task TotalEEEDetails_IfNoSubmittedSubmissions_RedirectToOrganisationHasNoSubmissions()
         {
             SetupDefaultControllerData();
-            SetupInCompleteSubmission();
+            SetupNoSubmissionForYear(2000);
 
             var result = (await controller.TotalEEEDetails(2000)) as RedirectToRouteResult;
 
@@ -731,7 +765,7 @@
         public async Task RepresentedOrganisationDetails_IfNoSubmittedSubmissions_RedirectToOrganisationHasNoSubmissions()
         {
             SetupDefaultControllerData();
-            SetupInCompleteSubmission();
+            SetupNoSubmissionForYear(2000);
 
             var result = (await controller.RepresentedOrganisationDetails(2000)) as RedirectToRouteResult;
 
@@ -742,7 +776,7 @@
         public async Task ServiceOfNoticeDetails_IfNoSubmittedSubmissions_RedirectToOrganisationHasNoSubmissions()
         {
             SetupDefaultControllerData();
-            SetupInCompleteSubmission();
+            SetupNoSubmissionForYear(2000);
 
             var result = (await controller.ServiceOfNoticeDetails(2000)) as RedirectToRouteResult;
 
@@ -753,7 +787,7 @@
         public async Task ContactDetails_IfNoSubmittedSubmissions_RedirectToOrganisationHasNoSubmissions()
         {
             SetupDefaultControllerData();
-            SetupInCompleteSubmission();
+            SetupNoSubmissionForYear(2000);
 
             var result = (await controller.ContactDetails(2000)) as RedirectToRouteResult;
 
@@ -764,7 +798,7 @@
         public async Task OrganisationDetails_IfNoSubmittedSubmissions_RedirectToOrganisationHasNoSubmissions()
         {
             SetupDefaultControllerData();
-            SetupInCompleteSubmission();
+            SetupNoSubmissionForYear(2000);
 
             var result = (await controller.OrganisationDetails(2000)) as RedirectToRouteResult;
 
@@ -860,13 +894,14 @@
                 attr.VaryByParam == "None");
         }
 
-        private void SetupInCompleteSubmission()
+        private void SetupNoSubmissionForYear(int year)
         {
             controller.SmallProducerSubmissionData.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>();
-            controller.SmallProducerSubmissionData.SubmissionHistory.Add(2000, new SmallProducerSubmissionHistoryData()
+
+            if (controller.SmallProducerSubmissionData.SubmissionHistory.ContainsKey(year))
             {
-                Status = SubmissionStatus.InComplete
-            });
+                controller.SmallProducerSubmissionData.SubmissionHistory.Remove(year);
+            }
         }
     }
 }

@@ -173,6 +173,7 @@
             var newAddress = A.Fake<Address>();
             var directRegistrant = A.Fake<DirectRegistrant>();
             var newOrganisation = A.Fake<Organisation>();
+
             A.CallTo(() => newOrganisation.Id).Returns(organisationId);
             A.CallTo(() => directRegistrant.Organisation).Returns(newOrganisation);
 
@@ -387,6 +388,7 @@
                         .With(m => m.EEEBrandNames, brandNames)
                         .With(m => m.CompanyName, CompanyName)
                         .With(m => m.BusinessTradingName, TradingName)
+                        .With(m => m.CompaniesRegistrationNumber, Guid.NewGuid().ToString().Substring(0, 15))
                         .Create();
 
             var organisationContactAddress = TestFixture.Build<AddressPostcodeRequiredData>().With(o => o.CountryId, country.Id).Create();
