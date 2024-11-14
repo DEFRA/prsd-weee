@@ -28,8 +28,10 @@
         public bool IsRegistered => this.Status == SubmissionStatus.Submitted && this.HasPaid;
 
         public bool ShowReturnRegistrationToUser => this.IsInternalAdmin && (IsRegistered || this.Status == SubmissionStatus.Submitted);
-        public bool ShowContinueRegistrationToUser => !this.IsInternalAdmin && this.Status == SubmissionStatus.InComplete && this.ApiDateYear == this.Year;
-        public int ApiDateYear { get; set; }
+
+        public bool ShowContinueRegistrationToUser => !this.IsInternalAdmin && this.Status == SubmissionStatus.InComplete && this.CurrentYear == this.Year;
+        
+        public int? CurrentYear { get; set; }
 
         public bool ShowPaymentLink => this.IsInternalAdmin && this.Status == SubmissionStatus.Submitted && HasPaid == false;
 
