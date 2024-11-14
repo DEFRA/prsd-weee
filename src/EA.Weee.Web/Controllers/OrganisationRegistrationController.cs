@@ -347,7 +347,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> RepresentingCompanyDetails()
+        public async Task<ActionResult> RepresentingCompanyDetails(string returnUrl)
         {
             RepresentingCompanyDetailsViewModel model = null;
 
@@ -359,7 +359,31 @@
             var countries = await GetCountries();
             model.Address.Countries = countries;
 
+            ViewBag.ReturnUrl = returnUrl;
             return View(model);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> FindCompany(string companiesRegistrationNumber)
+        {
+            var result = await GetCompany(companiesRegistrationNumber);
+
+            var orgModel = new OrganisationViewModel()
+            {
+                CompanyName = result.Organisation?.Name,
+                CompaniesRegistrationNumber = result.Organisation?.RegistrationNumber,
+                LookupFound = !result.HasError,
+                Address = new ExternalAddressData
+                {
+                    Address1 = result.Organisation?.RegisteredOffice?.BuildingNumber,
+                    Address2 = result.Organisation?.RegisteredOffice?.Street,
+                    TownOrCity = result.Organisation?.RegisteredOffice?.Town,
+                    Postcode = result.Organisation?.RegisteredOffice?.Postcode,
+                    CountryId = UkCountry.GetIdByName(result.Organisation?.RegisteredOffice?.Country.Name)
+                },
+            };
+
+            return Json(orgModel, JsonRequestBehavior.AllowGet);
         }
 
         [HttpPost]
@@ -368,48 +392,45 @@
         {
             if (model.Action == "Find Company")
             {
-                using (var client = companiesHouseClient())
+                var result = await GetCompany(model.CompaniesRegistrationNumber);
+
+                var countries = await GetCountries();
+
+                model.Address.Countries = countries;
+
+                ModelState.Clear();
+
+                if (result.HasError)
                 {
-                    var result = await client.GetCompanyDetailsAsync(configurationService.CurrentConfiguration.CompaniesHouseReferencePath,
-                        model.CompaniesRegistrationNumber);
+                    model.LookupFound = false;
 
-                    var countries = await GetCountries();
-
-                    model.Address.Countries = countries;
-
-                    ModelState.Clear();
-
-                    if (result.HasError)
-                    {
-                        model.LookupFound = false;
-
-                        return View(model.CastToSpecificViewModel(model));
-                    }
-
-                    var orgModel = new OrganisationViewModel()
-                    {
-                        CompanyName = result.Organisation.Name,
-                        CompaniesRegistrationNumber = result.Organisation?.RegistrationNumber,
-                        LookupFound = true,
-                        Address = new ExternalAddressData
-                        {
-                            Address1 = result.Organisation?.RegisteredOffice?.BuildingNumber,
-                            Address2 = result.Organisation?.RegisteredOffice?.Street,
-                            TownOrCity = result.Organisation?.RegisteredOffice?.Town,
-                            Postcode = result.Organisation?.RegisteredOffice?.Postcode,
-                            Countries = countries,
-                            CountryId = UkCountry.GetIdByName(result.Organisation?.RegisteredOffice?.Country.Name)
-                        },
-                    };
-                    return View(model.CastToSpecificViewModel(orgModel));
+                    return View(model.CastToSpecificViewModel(model));
                 }
+
+                var orgModel = new OrganisationViewModel()
+                {
+                    CompanyName = result.Organisation.Name,
+                    CompaniesRegistrationNumber = result.Organisation?.RegistrationNumber,
+                    LookupFound = true,
+                    Address = new ExternalAddressData
+                    {
+                        Address1 = result.Organisation?.RegisteredOffice?.BuildingNumber,
+                        Address2 = result.Organisation?.RegisteredOffice?.Street,
+                        TownOrCity = result.Organisation?.RegisteredOffice?.Town,
+                        Postcode = result.Organisation?.RegisteredOffice?.Postcode,
+                        Countries = countries,
+                        CountryId = UkCountry.GetIdByName(result.Organisation?.RegisteredOffice?.Country.Name)
+                    },
+                };
+
+                return View(model.CastToSpecificViewModel(orgModel));
             }
 
             var castedModel = model.CastToSpecificViewModel(model);
             var isValid = ValidationModel.ValidateModel(castedModel, ModelState);
 
             await ValidateProducerRegistrationNumber(model);
-            
+
             if (!isValid || !ModelState.IsValid)
             {
                 var countries = await GetCountries();
@@ -432,7 +453,7 @@
                 return RedirectToAction("OrganisationFound");
             }
 
-            return await CheckAuthorisedRepresentitiveAndRedirect();
+            return await CheckAuthorisedRepresentitiveAndRedirect(null);
         }
 
         [HttpGet]
@@ -464,7 +485,7 @@
                 OrganisationType = existingTransaction.OrganisationType ?? ExternalOrganisationType.RegisteredCompany
             };
 
-            model.OrganisationType = existingTransaction.OrganisationType;
+            model.HasAuthorisedRepresentitive = existingTransaction?.AuthorisedRepresentative == YesNoType.Yes;
 
             if (existingTransaction.PreviousRegistration == PreviouslyRegisteredProducerType.YesPreviousSchemeMember)
             {
@@ -483,7 +504,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> RepresentingCompanyRedirect()
+        public async Task<ActionResult> RepresentingCompanyRedirect(string returnUrl)
         {
             var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
 
@@ -492,7 +513,12 @@
                 return RedirectToAction(nameof(Type), typeof(OrganisationRegistrationController).GetControllerName());
             }
 
-            return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName());
+            if (returnUrl is null)
+            {
+                return RedirectToAction(nameof(OrganisationDetails), typeof(OrganisationRegistrationController).GetControllerName());
+            }
+
+            return new RedirectResult(returnUrl);
         }
 
         private async Task<List<OrganisationData>> GetExistingByRegistrationNumber(OrganisationViewModel model)
@@ -586,12 +612,12 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> CheckAuthorisedRepresentitiveAndRedirect()
+        public async Task<ActionResult> CheckAuthorisedRepresentitiveAndRedirect(string returnUrl)
         {
             var organisationTransactionData = await transactionService
                                                     .GetOrganisationTransactionData(User.GetAccessToken());
 
-            if (organisationTransactionData != null 
+            if (organisationTransactionData != null
                 && organisationTransactionData.AuthorisedRepresentative == YesNoType.No)
             {
                 var organisationId = await transactionService.CompleteTransaction(User.GetAccessToken());
@@ -600,8 +626,9 @@
                 return RedirectToAction(nameof(RegistrationComplete), typeof(OrganisationRegistrationController).GetControllerName(), new { organisationId });
             }
 
+            ViewBag.ReturnUrl = returnUrl;
             return RedirectToAction(nameof(RepresentingCompanyDetails),
-                typeof(OrganisationRegistrationController).GetControllerName());
+                typeof(OrganisationRegistrationController).GetControllerName(), new { returnUrl });
         }
 
         private async Task<IList<CountryData>> GetCountries()
@@ -964,6 +991,16 @@
             }
 
             return results;
+        }
+
+        private async Task<Api.Client.Models.DefraCompaniesHouseApiModel> GetCompany(string companiesRegistrationNumber)
+        {
+            using (var client = companiesHouseClient())
+            {
+                return await client.GetCompanyDetailsAsync(
+                    configurationService.CurrentConfiguration.CompaniesHouseReferencePath,
+                    companiesRegistrationNumber);
+            }
         }
     }
 }

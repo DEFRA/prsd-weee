@@ -22,10 +22,13 @@
     */
     function getDomain() {
         var host = window.location.hostname;
-        if (host.split('.').length > 1 && host !== "weee.service.gov.uk")
-            return host.replace(host.split('.')[0], '');
-        else
+        if (typeof host !== "undefined" && host !== null && host.length > 0) {
             return host;
+        }
+        else {
+            console.log("The host name is undefined or null!");
+            return null;
+        }
     }
 
     GOVUK.cookie = function (name, value, options) {

@@ -658,20 +658,20 @@
                 }
 
                 var result1 = results.ElementAt(assertionSmallProducerStartIndex);
-                result1.CompanyName.Should().Be("My company 2");
+                result1.CompanyName.Should().Be("My company");
                 result1.SchemeName.Should().Be("Direct registrant");
                 result1.TradingName.Should().BeNullOrWhiteSpace();
                 result1.ProducerType.Should().Be("Registered company");
-                result1.ProducerName.Should().Be("authed rep name");
-                result1.PRN.Should().Be("WEE/AG48365JX");
+                result1.ProducerName.Should().Be("My company");
+                result1.PRN.Should().Be("WEE/AG48365JN");
                 result1.SICCodes.Should().BeNull();
                 result1.VATRegistered.Should().BeNull();
                 result1.AnnualTurnover.Should().BeNull();
                 result1.AnnualTurnoverBandType.Should().BeNull();
                 result1.EEEPlacedOnMarketBandType.Should().Be("Less than 5T EEE placed on market");
-                result1.ObligationType.Should().Be("B2B");
+                result1.ObligationType.Should().Be("B2C");
                 result1.ChargeBandType.Should().BeNull();
-                result1.SellingTechniqueType.Should().Be("Indirect Selling to End User");
+                result1.SellingTechniqueType.Should().Be("Both");
                 result1.CeaseToExist.Should().BeNull();
                 result1.CNTitle.Should().BeNull();
                 result1.CNForename.Should().BeNull();
@@ -720,41 +720,41 @@
                 result1.PPOBContactLocality.Should().BeNull();
                 result1.PPOBContactAdministrativeArea.Should().BeNull();
                 result1.PPOBContactPostcode.Should().BeNull();
-                result1.OverseasProducerName.Should().Be("authed rep name");
-                result1.OverseasContactForename.Should().Be("rep first name");
-                result1.OverseasContactSurname.Should().Be("rep surname");
-                result1.OverseasContactTelephone.Should().Be("rep tel");
-                result1.OverseasContactMobile.Should().Be("rep mob");
-                result1.OverseasContactFax.Should().Be("rep fax");
-                result1.OverseasContactEmail.Should().Be("rep email");
-                result1.OverseasContactPrimaryName.Should().Be("rep address1");
-                result1.OverseasContactSecondaryName.Should().Be("rep secondary");
-                result1.OverseasContactStreet.Should().Be("rep street");
-                result1.OverseasContactTown.Should().Be("rep town");
-                result1.OverseasContactLocality.Should().Be("rep locality");
-                result1.OverseasContactAdministrativeArea.Should().Be("rep admin area");
-                result1.OverseasContactPostcode.Should().Be("rep postcode");
-                result1.OverseasContactCountry.Should().Be("Azerbaijan");
-                result1.RemovedFromScheme.Should().Be("Yes");
+                result1.OverseasProducerName.Should().BeNull();
+                result1.OverseasContactForename.Should().BeNull();
+                result1.OverseasContactSurname.Should().BeNull();
+                result1.OverseasContactTelephone.Should().BeNull();
+                result1.OverseasContactMobile.Should().BeNull();
+                result1.OverseasContactFax.Should().BeNull();
+                result1.OverseasContactEmail.Should().BeNull();
+                result1.OverseasContactPrimaryName.Should().BeNull();
+                result1.OverseasContactSecondaryName.Should().BeNull();
+                result1.OverseasContactStreet.Should().BeNull();
+                result1.OverseasContactTown.Should().BeNull();
+                result1.OverseasContactLocality.Should().BeNull();
+                result1.OverseasContactAdministrativeArea.Should().BeNull();
+                result1.OverseasContactPostcode.Should().BeNull();
+                result1.OverseasContactCountry.Should().BeNull();
+                result1.RemovedFromScheme.Should().Be("No");
                 result1.DateAmended.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
                 result1.DateRegistered.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
-                result1.BrandNames.Should().Be("brand name");
+                result1.BrandNames.Should().BeNullOrWhiteSpace();
 
                 var result2 = results.ElementAt(assertionSmallProducerStartIndex + 1);
-                result2.CompanyName.Should().Be("My company");
+                result2.CompanyName.Should().Be("My company 2");
                 result2.SchemeName.Should().Be("Direct registrant");
                 result2.TradingName.Should().BeNullOrWhiteSpace();
                 result2.ProducerType.Should().Be("Registered company");
-                result2.ProducerName.Should().Be("My company");
-                result2.PRN.Should().Be("WEE/AG48365JN");
+                result2.ProducerName.Should().Be("My company 2");
+                result2.PRN.Should().Be("WEE/AG48365JX");
                 result2.SICCodes.Should().BeNull();
                 result2.VATRegistered.Should().BeNull();
                 result2.AnnualTurnover.Should().BeNull();
                 result2.AnnualTurnoverBandType.Should().BeNull();
                 result2.EEEPlacedOnMarketBandType.Should().Be("Less than 5T EEE placed on market");
-                result2.ObligationType.Should().Be("B2C");
+                result2.ObligationType.Should().Be("B2B");
                 result2.ChargeBandType.Should().BeNull();
-                result2.SellingTechniqueType.Should().Be("Both");
+                result2.SellingTechniqueType.Should().Be("Indirect Selling to End User");
                 result2.CeaseToExist.Should().BeNull();
                 result2.CNTitle.Should().BeNull();
                 result2.CNForename.Should().BeNull();
@@ -803,25 +803,25 @@
                 result2.PPOBContactLocality.Should().BeNull();
                 result2.PPOBContactAdministrativeArea.Should().BeNull();
                 result2.PPOBContactPostcode.Should().BeNull();
-                result2.OverseasProducerName.Should().BeNull();
-                result2.OverseasContactForename.Should().BeNull();
-                result2.OverseasContactSurname.Should().BeNull();
-                result2.OverseasContactTelephone.Should().BeNull();
-                result2.OverseasContactMobile.Should().BeNull();
-                result2.OverseasContactFax.Should().BeNull();
-                result2.OverseasContactEmail.Should().BeNull();
-                result2.OverseasContactPrimaryName.Should().BeNull();
-                result2.OverseasContactSecondaryName.Should().BeNull();
-                result2.OverseasContactStreet.Should().BeNull();
-                result2.OverseasContactTown.Should().BeNull();
-                result2.OverseasContactLocality.Should().BeNull();
-                result2.OverseasContactAdministrativeArea.Should().BeNull();
-                result2.OverseasContactPostcode.Should().BeNull();
-                result2.OverseasContactCountry.Should().BeNull();
-                result2.RemovedFromScheme.Should().Be("No");
+                result2.OverseasProducerName.Should().Be("authed rep name");
+                result2.OverseasContactForename.Should().Be("rep first name");
+                result2.OverseasContactSurname.Should().Be("rep surname");
+                result2.OverseasContactTelephone.Should().Be("rep tel");
+                result2.OverseasContactMobile.Should().Be("rep mob");
+                result2.OverseasContactFax.Should().Be("rep fax");
+                result2.OverseasContactEmail.Should().Be("rep email");
+                result2.OverseasContactPrimaryName.Should().Be("rep address1");
+                result2.OverseasContactSecondaryName.Should().Be("rep secondary");
+                result2.OverseasContactStreet.Should().Be("rep street");
+                result2.OverseasContactTown.Should().Be("rep town");
+                result2.OverseasContactLocality.Should().Be("rep locality");
+                result2.OverseasContactAdministrativeArea.Should().Be("rep admin area");
+                result2.OverseasContactPostcode.Should().Be("rep postcode");
+                result2.OverseasContactCountry.Should().Be("Azerbaijan");
+                result2.RemovedFromScheme.Should().Be("Yes");
                 result2.DateAmended.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
                 result2.DateRegistered.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
-                result2.BrandNames.Should().BeNullOrWhiteSpace();
+                result2.BrandNames.Should().Be("brand name");
             }
         }
 
@@ -991,7 +991,9 @@
                     new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C }
                 };
 
-                await DirectRegistrantHelper.ReturnSubmission(wrapper, submission1, amounts1);
+                await DirectRegistrantHelper.ReturnSubmission(wrapper, submission1);
+
+                await DirectRegistrantHelper.UpdateEeeeAmounts(wrapper, submission1, amounts1);
 
                 await wrapper.WeeeContext.SaveChangesAsync();
 
