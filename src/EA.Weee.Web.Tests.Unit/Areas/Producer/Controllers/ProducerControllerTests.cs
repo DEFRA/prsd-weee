@@ -476,8 +476,8 @@
             controller.SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData;
 
             var viewModel = TestFixture.Create<CheckAnswersViewModel>();
-            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, CheckAnswersViewModel>
-                (A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(submissionData.SmallProducerSubmissionData)))).Returns(viewModel);
+            A.CallTo(() => mapper.Map<SubmissionsYearDetails, CheckAnswersViewModel>
+                (A<SubmissionsYearDetails>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(submissionData.SmallProducerSubmissionData)))).Returns(viewModel);
 
             // Act
             var result = await controller.CheckAnswers() as ViewResult;
