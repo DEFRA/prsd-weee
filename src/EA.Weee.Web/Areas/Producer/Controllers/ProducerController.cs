@@ -164,14 +164,15 @@
                 return RedirectToOrganisationHasNoSubmissions();
             }
 
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
-
-            var model = await submissionService.Submissions(year);
+            int? currentYear = null;
             using (var client = this.apiClient())
             {
                 var currentDate = await client.SendAsync(this.User.GetAccessToken(), new GetApiUtcDate());
-                model.ApiDateYear = currentDate.Year;
+                currentYear = currentDate.Year;
             }
+
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false, currentYear);
+            var model = await submissionService.Submissions(year);
 
             return View("Producer/ViewOrganisation/OrganisationDetails", model);
         }
@@ -185,7 +186,14 @@
                 return RedirectToOrganisationHasNoSubmissions();
             }
 
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
+            int? currentYear = null;
+            using (var client = this.apiClient())
+            {
+                var currentDate = await client.SendAsync(this.User.GetAccessToken(), new GetApiUtcDate());
+                currentYear = currentDate.Year;
+            }
+
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false, currentYear);
 
             var model = await submissionService.OrganisationDetails(year);
 
@@ -201,7 +209,14 @@
                 return RedirectToOrganisationHasNoSubmissions();
             }
 
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
+            int? currentYear = null;
+            using (var client = this.apiClient())
+            {
+                var currentDate = await client.SendAsync(this.User.GetAccessToken(), new GetApiUtcDate());
+                currentYear = currentDate.Year;
+            }
+
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false, currentYear);
 
             var model = await submissionService.ContactDetails(year);
             
@@ -217,7 +232,14 @@
                 return RedirectToOrganisationHasNoSubmissions();
             }
 
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
+            int? currentYear = null;
+            using (var client = this.apiClient())
+            {
+                var currentDate = await client.SendAsync(this.User.GetAccessToken(), new GetApiUtcDate());
+                currentYear = currentDate.Year;
+            }
+
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false, currentYear);
 
             var model = await submissionService.ServiceOfNoticeDetails(year);
           
@@ -233,7 +255,14 @@
                 return RedirectToOrganisationHasNoSubmissions();
             }
 
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
+            int? currentYear = null;
+            using (var client = this.apiClient())
+            {
+                var currentDate = await client.SendAsync(this.User.GetAccessToken(), new GetApiUtcDate());
+                currentYear = currentDate.Year;
+            }
+
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false, currentYear);
 
             var model = await submissionService.RepresentedOrganisationDetails(year);
           
@@ -249,7 +278,14 @@
                 return RedirectToOrganisationHasNoSubmissions();
             }
 
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
+            int? currentYear = null;
+            using (var client = this.apiClient())
+            {
+                var currentDate = await client.SendAsync(this.User.GetAccessToken(), new GetApiUtcDate());
+                currentYear = currentDate.Year;
+            }
+
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false, currentYear);
 
             var model = await submissionService.TotalEEEDetails(year);
 

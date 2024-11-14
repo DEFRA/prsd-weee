@@ -36,11 +36,12 @@
             var templateExecutor = A.Fake<IMvcTemplateExecutor>();
             var pdfDocumentProvider = A.Fake<IPdfDocumentProvider>();
             submissionService = A.Fake<ISubmissionService>();
+            var apiClient = () => fakeClient;
 
             actionExecutingContextProducer = new ActionExecutingContext
             {
                 ActionParameters = new System.Web.Routing.RouteValueDictionary(),
-                Controller = new ProducerController(breadcrumbService, weeeCache, mapper, templateExecutor, pdfDocumentProvider, submissionService),
+                Controller = new ProducerController(breadcrumbService, weeeCache, mapper, templateExecutor, pdfDocumentProvider, submissionService, apiClient),
                 HttpContext = fakeHttpContext,
                 RouteData = new System.Web.Routing.RouteData()
             };
