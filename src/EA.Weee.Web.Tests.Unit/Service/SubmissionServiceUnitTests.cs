@@ -12,14 +12,13 @@
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using EA.Weee.Web.Services.SubmissionService;
+    using EA.Weee.Web.Services.SubmissionsService;
     using FakeItEasy;
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Web.Caching;
     using Xunit;
 
     public class SubmissionServiceUnitTests : SimpleUnitTestBase
@@ -399,6 +398,7 @@
         [Theory]
         [InlineData(SubmissionStatus.Submitted)]
         [InlineData(SubmissionStatus.Returned)]
+        [InlineData(SubmissionStatus.InComplete)]
         public async Task YearsDropdownData_IncludesCorrectStatuses(SubmissionStatus status)
         {
             // Arrange
@@ -415,25 +415,6 @@
 
             // Assert
             result.Years.Should().Contain(2025);
-        }
-
-        [Fact]
-        public async Task YearsDropdownData_ExcludesIncompleteStatus()
-        {
-            // Arrange
-            var data = GetDefaultSmallProducerData();
-            data.SubmissionHistory.Add(2025, new SmallProducerSubmissionHistoryData
-            {
-                Status = SubmissionStatus.InComplete
-            });
-
-            service.WithSubmissionData(data);
-
-            // Act
-            var result = await service.OrganisationDetails(null);
-
-            // Assert
-            result.Years.Should().NotContain(2025);
         }
 
         [Theory]
@@ -467,9 +448,156 @@
             result.HasPaid.Should().Be(expectedHasPaid);
         }
 
+        [Theory]
+        [InlineData(null)] 
+        [InlineData(2024)]
+        public async Task GetSubmissionTabModel_WhenSubmissionExists_SetsStatusAndPaymentCorrectly(int? year)
+        {
+            // Arrange
+            var data = GetDefaultSmallProducerData();
+            const SubmissionStatus expectedStatus = SubmissionStatus.Submitted;
+            const bool expectedHasPaid = true;
+
+            if (year.HasValue)
+            {
+                data.SubmissionHistory[year.Value].Status = expectedStatus;
+                data.SubmissionHistory[year.Value].HasPaid = expectedHasPaid;
+            }
+            else
+            {
+                data.CurrentSubmission.Status = expectedStatus;
+                data.CurrentSubmission.HasPaid = expectedHasPaid;
+            }
+
+            service.WithSubmissionData(data);
+
+            // Act
+            var result = await service.OrganisationDetails(year);
+
+            // Assert
+            result.Status.Should().Be(expectedStatus);
+            result.HasPaid.Should().Be(expectedHasPaid);
+        }
+
+        [Fact]
+        public async Task GetSubmissionTabModel_WhenSubmissionIsNull_SetsDefaultValues()
+        {
+            // Arrange
+            var data = GetDefaultSmallProducerData();
+            data.CurrentSubmission = null;
+            service.WithSubmissionData(data);
+
+            // Act
+            var result = await service.OrganisationDetails(null);
+
+            // Assert
+            result.Status.Should().Be(SubmissionStatus.InComplete);
+            result.HasPaid.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        [InlineData(null)]
+        public async Task GetSubmissionTabModel_HandlesVariousHasPaidValues(bool? submissionHasPaid)
+        {
+            // Arrange
+            var data = GetDefaultSmallProducerData();
+            const int year = 2024;
+            data.SubmissionHistory[year] = TestFixture.Build<SmallProducerSubmissionHistoryData>()
+                .With(s => s.HasPaid, submissionHasPaid)
+                .With(s => s.Status, SubmissionStatus.Submitted)
+                .Create();
+            service.WithSubmissionData(data);
+
+            // Act
+            var result = await service.OrganisationDetails(year);
+
+            // Assert
+            var expectedHasPaid = submissionHasPaid.HasValue && submissionHasPaid.Value;
+            result.HasPaid.Should().Be(expectedHasPaid);
+        }
+
+        [Fact]
+        public async Task GetSubmissionTabModel_WhenSubmissionIsNull_HasPaidIsFalse()
+        {
+            // Arrange
+            var data = GetDefaultSmallProducerData();
+            data.CurrentSubmission = null;
+            service.WithSubmissionData(data);
+
+            // Act
+            var result = await service.OrganisationDetails(null);
+
+            // Assert
+            result.HasPaid.Should().BeFalse();
+        }
+
+        [Fact]
+        public async Task GetSubmissionTabModel_WhenSubmissionHasNullHasPaid_HasPaidIsFalse()
+        {
+            // Arrange
+            var data = GetDefaultSmallProducerData();
+            const int year = 2024;
+            data.SubmissionHistory[year] = TestFixture.Build<SmallProducerSubmissionHistoryData>()
+                .With(s => s.HasPaid, (bool?)null)
+                .With(s => s.Status, SubmissionStatus.Submitted)
+                .Create();
+            service.WithSubmissionData(data);
+
+            // Act
+            var result = await service.OrganisationDetails(year);
+
+            // Assert
+            result.HasPaid.Should().BeFalse();
+        }
+
+        [Theory]
+        [InlineData(-1)]
+        [InlineData(null)]
+        [InlineData(2024)]
+        public async Task Submissions_HandlesYearParameterCorrectly(int? year)
+        {
+            // Arrange
+            var data = GetDefaultSmallProducerData();
+            service.WithSubmissionData(data);
+
+            // Act
+            var result = await service.Submissions(year);
+
+            // Assert
+            if (year == -1 || year == null)
+            {
+                // Should get highest available year
+                result.Year.Should().Be(2030);
+            }
+            else
+            {
+                result.Year.Should().Be(year);
+            }
+        }
+
+        [Fact]
+        public async Task YearsDropdownData_ExternalUser_IncludesReturnedStatus()
+        {
+            // Arrange
+            var data = GetDefaultSmallProducerData();
+            data.SubmissionHistory.Add(2025, new SmallProducerSubmissionHistoryData
+            {
+                Status = SubmissionStatus.Returned
+            });
+
+            service.WithSubmissionData(data);
+
+            // Act
+            var result = await service.OrganisationDetails(null);
+
+            // Assert
+            result.Years.Should().Contain(2025);
+        }
+
         private static IEnumerable<int> ExpectedYears(SmallProducerSubmissionData d) => 
              d.SubmissionHistory
-              .Where(x => x.Value.Status == SubmissionStatus.Submitted)
               .OrderByDescending(x => x.Key)
               .Select(x => x.Key);
 

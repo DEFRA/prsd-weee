@@ -20,7 +20,7 @@
     using System.Web.Mvc;
     using Xunit;
 
-    public class SmallProducerSubmissionContextAttributeTests
+    public class SmallProducerStartSubmissionContextAttributeTests
     {
         // Dummy controller for testing unsupported controller type
         public class HomeController : Controller
@@ -30,10 +30,10 @@
         private readonly IWeeeClient fakeClient;
         private readonly IWeeeCache weeeCache;
         private readonly ActionExecutingContext actionExecutingContext;
-        private readonly SmallProducerSubmissionContextAttribute filter;
+        private readonly SmallProducerStartSubmissionContextAttribute filter;
         private readonly ISubmissionService submissionService;
 
-        public SmallProducerSubmissionContextAttributeTests()
+        public SmallProducerStartSubmissionContextAttributeTests()
         {
             fakeClient = A.Fake<IWeeeClient>();
             this.weeeCache = A.Fake<IWeeeCache>();
@@ -55,7 +55,7 @@
                 RouteData = new System.Web.Routing.RouteData()
             };
 
-            filter = new SmallProducerSubmissionContextAttribute
+            filter = new SmallProducerStartSubmissionContextAttribute()
             {
                 Client = () => fakeClient,
                 Cache = weeeCache
@@ -64,25 +64,6 @@
             var fakePrincipal = A.Fake<ClaimsPrincipal>();
             A.CallTo(() => fakePrincipal.Identity.IsAuthenticated).Returns(true);
             A.CallTo(() => fakeHttpContext.User).Returns(fakePrincipal);
-        }
-
-        [Fact]
-        public void OnActionExecuting_WithValidDirectRegistrantId_SetsSmallProducerSubmissionData()
-        {
-            // Arrange
-            var directRegistrantId = Guid.NewGuid();
-            actionExecutingContext.RouteData.Values["directRegistrantId"] = directRegistrantId.ToString();
-
-            var expectedData = new SmallProducerSubmissionData();
-            A.CallTo(() => fakeClient.SendAsync(A<string>._, A<GetSmallProducerSubmission>.That.Matches(g => g.DirectRegistrantId == directRegistrantId)))
-                .Returns(Task.FromResult(expectedData));
-
-            // Act
-            filter.OnActionExecuting(actionExecutingContext);
-
-            // Assert
-            var controller = (ProducerController)actionExecutingContext.Controller;
-            controller.SmallProducerSubmissionData.Should().Be(expectedData);
         }
 
         [Fact]
@@ -106,23 +87,38 @@
                 .WithMessage("The specified direct registrant ID is not valid.");
         }
 
-        [Fact]
-        public void OnActionExecuting_WithUnsupportedController_ThrowsInvalidOperationException()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void OnActionExecuting_WhenDataIsNull_CreatesNewSubmission(bool invalidateCache)
         {
             // Arrange
             var directRegistrantId = Guid.NewGuid();
             actionExecutingContext.RouteData.Values["directRegistrantId"] = directRegistrantId.ToString();
 
-            // Create a concrete controller that's not supported by the filter
-            actionExecutingContext.Controller = new HomeController();
-
             A.CallTo(() => fakeClient.SendAsync(A<string>._, A<GetSmallProducerSubmission>._))
+                .Returns(Task.FromResult(new SmallProducerSubmissionData()))
+                .Once()
+                .Then
                 .Returns(Task.FromResult(new SmallProducerSubmissionData()));
 
-            // Act & Assert
-            filter.Invoking(f => f.OnActionExecuting(actionExecutingContext))
-                .Should().Throw<InvalidOperationException>()
-                .WithMessage("Unsupported controller type");
+            A.CallTo(() => fakeClient.SendAsync(A<string>._, A<AddSmallProducerSubmission>._))
+                .Returns(new AddSmallProducerSubmissionResult(invalidateCache, A.Dummy<Guid>()));
+
+            // Act
+            filter.OnActionExecuting(actionExecutingContext);
+
+            // Assert
+            A.CallTo(() => fakeClient.SendAsync(A<string>._, A<AddSmallProducerSubmission>.That.Matches(a => a.DirectRegistrantId == directRegistrantId)))
+                .MustHaveHappenedOnceExactly();
+            if (invalidateCache)
+            {
+                A.CallTo(() => weeeCache.InvalidateSmallProducerSearch()).MustHaveHappenedOnceExactly();
+            }
+            else
+            {
+                A.CallTo(() => weeeCache.InvalidateSmallProducerSearch()).MustNotHaveHappened();
+            }
         }
     }
 }

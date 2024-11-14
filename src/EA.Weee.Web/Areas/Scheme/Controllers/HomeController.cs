@@ -288,7 +288,7 @@
                 // 7. Manage Organisation Users
                 if (viewModel.SelectedValue == PcsAction.ManageOrganisationUsers)
                 {
-                    return RedirectToAction("ManageOrganisationUsers", new { pcsId = viewModel.OrganisationId });
+                    return RedirectToAction("ManageOrganisationUsers", new { pcsId = viewModel.OrganisationId, directRegistrantId = viewModel.DirectRegistrantId });
                 }
 
                 // 8. Manage PBS Evidence Notes
@@ -309,25 +309,16 @@
 
                 if (viewModel.SelectedValue == ProducerSubmissionConstant.HistoricProducerRegistrationSubmission)
                 {
-                    using (var client = apiClient())
-                    {
-                        var organisationDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(viewModel.OrganisationId));
-                        var systemTime = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
-
-                        var year = organisationDetails.DirectRegistrants.FirstOrDefault(d =>
-                            d.DirectRegistrantId == viewModel.DirectRegistrantId);
-
-                        return this.RedirectToAction(
-                            nameof(ProducerController.Submissions),
-                            typeof(ProducerController).GetControllerName(),
-                            new
-                            {
-                                area = "Producer",
-                                organisationId = viewModel.OrganisationId,
-                                directRegistrantId = viewModel.DirectRegistrantId,
-                                year = year?.MostRecentSubmittedYear > 0 ? (int?)year.MostRecentSubmittedYear : systemTime.Year
-                            });
-                    }
+                    return this.RedirectToAction(
+                        nameof(ProducerController.Submissions),
+                        typeof(ProducerController).GetControllerName(),
+                        new
+                        {
+                            area = "Producer",
+                            organisationId = viewModel.OrganisationId,
+                            directRegistrantId = viewModel.DirectRegistrantId,
+                            year = -1
+                        });
                 }
 
                 if (viewModel.SelectedValue == ProducerSubmissionConstant.ViewOrganisation)
@@ -432,7 +423,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ManageOrganisationUsers(Guid pcsId)
+        public async Task<ActionResult> ManageOrganisationUsers(Guid pcsId, Guid? directRegistrantId)
         {
             using (var client = apiClient())
             {
@@ -461,7 +452,8 @@
 
                 var model = new OrganisationUsersViewModel
                 {
-                    OrganisationUsers = orgUsersKeyValuePairs.ToList()
+                    OrganisationUsers = orgUsersKeyValuePairs.ToList(),
+                    DirectRegistrantId = directRegistrantId
                 };
 
                 return View("ManageOrganisationUsers", model);
@@ -491,11 +483,11 @@
             }
 
             return RedirectToAction("ManageOrganisationUser", "Home",
-                   new { area = "Scheme", pcsId, organisationUserId = model.SelectedOrganisationUser });
+                   new { area = "Scheme", pcsId, organisationUserId = model.SelectedOrganisationUser, directRegistrantId = model.DirectRegistrantId });
         }
 
         [HttpGet]
-        public async Task<ActionResult> ManageOrganisationUser(Guid pcsId, Guid? organisationUserId)
+        public async Task<ActionResult> ManageOrganisationUser(Guid pcsId, Guid? organisationUserId, Guid? directRegistrantId)
         {
             if (organisationUserId.HasValue)
             {

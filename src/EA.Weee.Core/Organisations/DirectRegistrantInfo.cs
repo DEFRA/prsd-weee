@@ -10,7 +10,5 @@
         public bool YearSubmissionStarted { get; set; }
 
         public string RepresentedCompanyName { get; set; }
-
-        public int MostRecentSubmittedYear { get; set; }
     }
 }

@@ -1,9 +1,10 @@
-﻿namespace EA.Weee.Web.Services.SubmissionService
+﻿namespace EA.Weee.Web.Services.SubmissionsService
 {
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview;
     using EA.Weee.Web.Areas.Producer.ViewModels;
@@ -23,6 +24,7 @@
         private readonly IWeeeCache cache;
         private readonly IMapper mapper;
         private bool isInternal;
+        private int currentYear;
 
         public SubmissionService(
             BreadcrumbService breadcrumb,
@@ -34,10 +36,14 @@
             this.mapper = mapper;
         }
 
-        public SubmissionService WithSubmissionData(SmallProducerSubmissionData data, bool isInternal = false)
+        public SubmissionService WithSubmissionData(SmallProducerSubmissionData data, bool isInternal = false, int? currentYear = null)
         {
             smallProducerSubmissionData = data;
             this.isInternal = isInternal;
+            if (currentYear.HasValue)
+            {
+                this.currentYear = currentYear.Value;
+            }
 
             return this;
         }
@@ -48,7 +54,21 @@
 
             var years = YearsDropdownData(smallProducerSubmissionData).ToList();
 
-            var yearParam = year ?? (years.FirstOrDefault() == 0 ? (int?)null : years.First());
+            // -1 value here will / should only be set for the external user when they are redirecting from the Choose Activity screen.
+            // It is to enable the latest available year to be set in the year dropdown.
+            int? yearParam;
+            switch (year)
+            {
+                case -1:
+                    yearParam = years.FirstOrDefault(); // Gets highest year since list is already ordered descending
+                    break;
+                case null:
+                    yearParam = years.FirstOrDefault() == 0 ? (int?)null : years.First();
+                    break;
+                default:
+                    yearParam = year;
+                    break;
+            }
 
             return await OrganisationDetails(yearParam);
         }
@@ -108,16 +128,19 @@
             ? this.smallProducerSubmissionData.SubmissionHistory[year.Value]
             : current;
 
-            return new OrganisationDetailsTabsViewModel
+            var model = new OrganisationDetailsTabsViewModel
             {
                 Years = YearsDropdownData(smallProducerSubmissionData),
                 Year = year,
                 ActiveOption = option,
                 SmallProducerSubmissionData = this.smallProducerSubmissionData,
                 IsInternal = this.isInternal,
-                Status = submission?.Status ?? current.Status,
-                HasPaid = submission?.HasPaid ?? current.HasPaid
+                Status = submission?.Status ?? SubmissionStatus.InComplete,
+                HasPaid = submission != null && (bool)submission?.HasPaid,
+                CurrentYear = this.currentYear
             };
+
+            return model;
         }
 
         private async Task SetBreadcrumb(Guid organisationId, string activity)
@@ -164,14 +187,6 @@
 
         private IEnumerable<int> YearsDropdownData(SmallProducerSubmissionData data)
         {
-            if (!isInternal)
-            {
-                return data.SubmissionHistory
-                           .Where(x => x.Value.Status == SubmissionStatus.Submitted || x.Value.Status == SubmissionStatus.Returned)
-                           .OrderByDescending(x => x.Key)
-                           .Select(x => x.Key);
-            }
-
             return data.SubmissionHistory
                     .OrderByDescending(x => x.Key)
                     .Select(x => x.Key);
