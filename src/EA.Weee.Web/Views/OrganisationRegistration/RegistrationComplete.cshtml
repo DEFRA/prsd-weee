@@ -3,7 +3,7 @@
 @using EA.Weee.Web.RazorHelpers
 @model Guid?
 @{
-    const string title = "Organisation created";
+    const string title = "Your organisation has been created";
     ViewBag.Title = title + " - GOV.UK";
 }
 @section full_main_content
@@ -12,13 +12,12 @@
     {
         @Html.AntiForgeryToken()
 
-        <div class="govuk-panel govuk-panel--confirmation govuk-!-width-two-thirds">
-            <h1 class="govuk-panel__title">
+        <header class="hgroup">
+            <h1 class="govuk-heading-l">
                 @title
             </h1>
-        </div>
+        </header>
 
-        <p>Your organisation has been created.</p>
         <h2 class="govuk-heading-m">What happens next</h2>
         <p>You will need to register as a small producer of EEE for this year.</p>
 
