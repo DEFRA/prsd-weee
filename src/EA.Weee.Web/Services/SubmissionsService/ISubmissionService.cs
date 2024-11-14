@@ -13,6 +13,6 @@
         Task<OrganisationDetailsTabsViewModel> ServiceOfNoticeDetails(int? year = null);
         Task<OrganisationDetailsTabsViewModel> Submissions(int? year = null);
         Task<OrganisationDetailsTabsViewModel> TotalEEEDetails(int? year = null);
-        SubmissionsService.SubmissionService WithSubmissionData(SmallProducerSubmissionData data, bool isInternal = false);
+        SubmissionsService.SubmissionService WithSubmissionData(SmallProducerSubmissionData data, bool isInternal = false, int? year = null);
     }
 }

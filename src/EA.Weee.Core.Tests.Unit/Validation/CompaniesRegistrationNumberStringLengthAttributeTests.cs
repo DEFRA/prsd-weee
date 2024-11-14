@@ -1,7 +1,5 @@
 ﻿namespace EA.Weee.Core.Tests.Unit.Validation
 {
-    using DataReturns;
-    using EA.Weee.Core.Constants;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Core.Validation;
     using FluentAssertions;
@@ -12,13 +10,8 @@
 
     public class CompaniesRegistrationNumberStringLengthAttributeTests
     {
-        private readonly List<ValidationResult> validationResults;
+        private readonly List<ValidationResult> validationResults = new List<ValidationResult>();
         private readonly CompaniesRegistrationNumberStringLengthAttribute attribute = new CompaniesRegistrationNumberStringLengthAttribute();
-
-        public CompaniesRegistrationNumberStringLengthAttributeTests()
-        {
-            validationResults = new List<ValidationResult>();
-        }
 
         [Theory]
         [InlineData(1, "456789", "184E1785-26B4-4AE4-80D3-AE319B103ACB", "The company registration number should be 7 to 8 characters long")]
@@ -29,7 +22,7 @@
         [InlineData(2, "456", "184E1785-26B4-4AE4-80D3-AE319B103ACB", "The company registration number should be 7 to 15 characters long")]
         [InlineData(3, "456", "184E1785-26B4-4AE4-80D3-AE319B103ACB", "The company registration number should be 7 to 15 characters long")]
         [InlineData(3, "456", "", "The company registration number should be 7 to 15 characters long")]
-        public void Validate_WhenUkCountry_ShouldValidateCompaniesReg(
+        public void Validate_InvalidLength_ShouldReturnError(
             int orgType,
             string companiesRegistrationNumber,
             string countryId,
@@ -47,9 +40,6 @@
             };
 
             // Act
-            var validationContext = new ValidationContext(viewModel);
-            var validationResults = new List<ValidationResult>();
-
             var result = attribute.GetValidationResult(viewModel.CompaniesRegistrationNumber, new ValidationContext(viewModel));
 
             // Assert
@@ -65,7 +55,7 @@
         [InlineData(2, "4567894", "184E1785-26B4-4AE4-80D3-AE319B103ACB")]
         [InlineData(3, "12345678", "184E1785-26B4-4AE4-80D3-AE319B103ACB")]
         [InlineData(3, "4567894", "")]
-        public void Validate_WhenUkCountry_ShouldValidateCompaniesRegAndPass(
+        public void Validate_ValidLength_ShouldPass(
            int orgType,
            string companiesRegistrationNumber,
            string countryId)
@@ -82,9 +72,33 @@
             };
 
             // Act
-            var validationContext = new ValidationContext(viewModel);
-            var validationResults = new List<ValidationResult>();
+            var result = attribute.GetValidationResult(viewModel.CompaniesRegistrationNumber, new ValidationContext(viewModel));
 
+            // Assert
+            result.Should().BeNull();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("")]
+        [InlineData(" ")]
+        [InlineData("   ")]
+        [InlineData("\t")]
+        [InlineData("\n")]
+        public void Validate_NullEmptyOrWhitespace_ShouldPass(string companiesRegistrationNumber)
+        {
+            // Arrange
+            var viewModel = new OrganisationViewModel
+            {
+                CompaniesRegistrationNumber = companiesRegistrationNumber,
+                OrganisationType = Core.Organisations.ExternalOrganisationType.RegisteredCompany,
+                Address = new Core.Organisations.ExternalAddressData
+                {
+                    CountryId = Guid.NewGuid()
+                }
+            };
+
+            // Act
             var result = attribute.GetValidationResult(viewModel.CompaniesRegistrationNumber, new ValidationContext(viewModel));
 
             // Assert

@@ -143,7 +143,8 @@
 
         public ObligationUpload GetObligationUploadById(Guid id)
         {
-            return dbContext.ObligationUploads.First(o => o.Id == id);
+            return dbContext.ObligationUploads.Include(o => o.ObligationSchemes)
+                .First(o => o.Id == id);
         }
 
         public bool CompetentAuthorityUserExists(string userId, Guid roleId)
