@@ -98,10 +98,20 @@
         [HttpGet]
         public async Task<ActionResult> SearchResults(string searchTerm)
         {
+            DateTime currentDate;
+
+            using (var client = this.apiClient())
+            {
+                currentDate = await client.SendAsync(this.User.GetAccessToken(), new GetApiUtcDate());
+            }
+
+            var results = await organisationSearcher.Search(searchTerm, maximumSearchResults, false);
+
             SearchResultsViewModel viewModel = new SearchResultsViewModel
             {
                 SearchTerm = searchTerm,
-                Results = await organisationSearcher.Search(searchTerm, maximumSearchResults, false)
+                Results = results,
+                ShowSmallProducerMessage = currentDate >= configurationService.CurrentConfiguration.SmallProducerFeatureEnabledFrom
             };
 
             return View(viewModel);

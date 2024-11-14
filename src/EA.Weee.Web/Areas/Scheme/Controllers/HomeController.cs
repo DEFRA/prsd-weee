@@ -63,8 +63,10 @@
                     throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
                 }
 
+                var systemTime = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
+
                 var organisationDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(pcsId));
-                var activities = await GetActivities(pcsId, organisationDetails, directRegistrantId);
+                var activities = await GetActivities(pcsId, organisationDetails, directRegistrantId, systemTime);
 
                 // Updated condition to check for specific activities
                 if (organisationDetails.IsRepresentingCompany && HasOnlySmallProducerActivities(activities) && !directRegistrantId.HasValue)
@@ -88,7 +90,7 @@
             }
         }
 
-        internal async Task<List<string>> GetActivities(Guid pcsId, OrganisationData organisationDetails, Guid? directRegistrantId)
+        internal async Task<List<string>> GetActivities(Guid pcsId, OrganisationData organisationDetails, Guid? directRegistrantId, DateTime systemTime)
         {
             var organisationOverview = await GetOrganisationOverview(pcsId);
 
@@ -146,7 +148,7 @@
                     activities.Add(PcsAction.ViewOrganisationDetails);
                 }
 
-                if (organisationDetails.HasDirectRegistrant)
+                if (organisationDetails.HasDirectRegistrant && systemTime.Date >= configurationService.CurrentConfiguration.SmallProducerFeatureEnabledFrom)
                 {
                     activities.Add(ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
 
@@ -331,8 +333,9 @@
             using (var client = apiClient())
             {
                 var organisationDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(viewModel.OrganisationId));
+                var systemTime = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
 
-                viewModel.PossibleValues = await GetActivities(viewModel.OrganisationId, organisationDetails, viewModel.DirectRegistrantId);
+                viewModel.PossibleValues = await GetActivities(viewModel.OrganisationId, organisationDetails, viewModel.DirectRegistrantId, systemTime);
                 await this.SetShowLinkToCreateOrJoinOrganisation(viewModel);
                 return this.View(viewModel);
             }
