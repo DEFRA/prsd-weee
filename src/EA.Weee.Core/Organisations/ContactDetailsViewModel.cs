@@ -1,11 +1,13 @@
 ﻿namespace EA.Weee.Core.Organisations
 {
+    using CsvHelper;
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.DataStandards;
     using EA.Weee.Core.Validation;
     using System;
     using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
+    using System.Linq;
 
     public class ContactDetailsViewModel : IValidatableObject
     {
@@ -29,7 +31,11 @@
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
-            return ExternalAddressValidator.Validate(AddressData.CountryId, AddressData.Postcode, "AddressData.CountryId", "AddressData.Postcode");
+            var results = new List<ValidationResult>();
+
+            results.AddRange(ExternalAddressValidator.Validate(AddressData.CountryId, AddressData.Postcode, "AddressData.CountryId", "AddressData.Postcode"));
+
+            return results;
         }
     }
 }

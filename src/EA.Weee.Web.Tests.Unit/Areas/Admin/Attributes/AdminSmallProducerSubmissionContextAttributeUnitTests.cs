@@ -3,7 +3,6 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.DirectRegistrant;
-    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Admin.DirectRegistrants;
@@ -13,7 +12,7 @@
     using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using EA.Weee.Web.Services.SubmissionService;
+    using EA.Weee.Web.Services.SubmissionsService;
     using FakeItEasy;
     using FluentAssertions;
     using System;

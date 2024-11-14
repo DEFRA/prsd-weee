@@ -3,14 +3,13 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
-    using EA.Weee.Web.Areas.Producer.Controllers;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services.Caching;
     using System;
     using System.Web.Mvc;
 
-    public class SmallProducerSubmissionContextAttribute : ActionFilterAttribute
+    public class SmallProducerStartSubmissionContextAttribute : ActionFilterAttribute
     {
         public Func<IWeeeClient> Client { get; set; }
 
@@ -30,30 +29,23 @@
 
             SmallProducerSubmissionData data = null;
 
-            data = AsyncHelpers.RunSync(async () =>
+            AsyncHelpers.RunSync(async () =>
             {
                 using (var client = Client())
                 {
-                    return await client.SendAsync(context.HttpContext.User.GetAccessToken(), new GetSmallProducerSubmission(guidDirectRegistrantId));
+                    data = await client.SendAsync(context.HttpContext.User.GetAccessToken(), new GetSmallProducerSubmission(guidDirectRegistrantId));
+
+                    if (data?.CurrentSubmission == null)
+                    {
+                        var addSubmissionResult = await client.SendAsync(context.HttpContext.User.GetAccessToken(), new AddSmallProducerSubmission(guidDirectRegistrantId));
+
+                        if (addSubmissionResult.InvalidCache)
+                        {
+                            await Cache.InvalidateSmallProducerSearch();
+                        }
+                    }
                 }
             });
-
-            if (data == null)
-            {
-                throw new InvalidOperationException("Producer submission data could not be found");
-            }
-
-            switch (context.Controller)
-            {
-                case ProducerController producerController:
-                    producerController.SmallProducerSubmissionData = data;
-                    break;
-                case ProducerSubmissionController producerSubmissionController:
-                    producerSubmissionController.SmallProducerSubmissionData = data;
-                    break;
-                default:
-                    throw new InvalidOperationException("Unsupported controller type");
-            }
 
             base.OnActionExecuting(context);
         }

@@ -61,7 +61,7 @@ namespace Resources.ProducerSubmission {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Enter EEE brand names that you place on the UK market (optional).
+        ///   Looks up a localized string similar to Enter EEE brand names that you place on the UK market.
         /// </summary>
         public static string BrandNamesDescription {
             get {

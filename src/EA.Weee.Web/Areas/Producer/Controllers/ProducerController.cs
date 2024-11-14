@@ -1,15 +1,12 @@
 ﻿namespace EA.Weee.Web.Areas.Producer.Controllers
 {
+    using Api.Client;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Api.Client;
     using EA.Weee.Core;
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.DirectRegistrant;
-    using EA.Weee.Core.Organisations;
-    using EA.Weee.Core.Organisations.Base;
-    using EA.Weee.Web.Areas.Admin.Controllers;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Producer.Filters;
     using EA.Weee.Web.Areas.Producer.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Producer.ViewModels;
@@ -19,11 +16,9 @@
     using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using EA.Weee.Web.Services.SubmissionService;
+    using EA.Weee.Web.Services.SubmissionsService;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
-    using System.Runtime;
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
@@ -38,6 +33,7 @@
         private readonly IMvcTemplateExecutor templateExecutor;
         private readonly IPdfDocumentProvider pdfDocumentProvider;
         private readonly ISubmissionService submissionService;
+        private readonly Func<IWeeeClient> apiClient;
 
         public ProducerController(
             BreadcrumbService breadcrumb,
@@ -45,7 +41,8 @@
             IMapper mapper,
             IMvcTemplateExecutor templateExecutor,
             IPdfDocumentProvider pdfDocumentProvider,
-            ISubmissionService submissionService)
+            ISubmissionService submissionService,
+            Func<IWeeeClient> apiClient)
         {
             this.breadcrumb = breadcrumb;
             this.cache = cache;
@@ -53,11 +50,7 @@
             this.templateExecutor = templateExecutor;
             this.pdfDocumentProvider = pdfDocumentProvider;
             this.submissionService = submissionService;
-        }
-
-        public ActionResult Index()
-        {
-            return View();
+            this.apiClient = apiClient;
         }
 
         [HttpGet]
@@ -77,19 +70,14 @@
         [SmallProducerSubmissionContext]
         public ActionResult OrganisationHasNoSubmissions()
         {
-            var model = new AlreadySubmittedAndPaidViewModel()
-            {
-                OrganisationId = SmallProducerSubmissionData.OrganisationData.Id,
-                ComplianceYear = SmallProducerSubmissionData.CurrentSubmission.ComplianceYear
-            };
-
             SetHistoricBreadcrumb();
 
-            return View(model);
+            return View(SmallProducerSubmissionData.OrganisationData.Id);
         }
 
-        [SmallProducerSubmissionContext(Order = 1)]
-        [SmallProducerSubmissionSubmitted(Order = 2)]
+        [SmallProducerStartSubmissionContext(Order = 1)]
+        [SmallProducerSubmissionContext(Order = 2)]
+        [SmallProducerSubmissionSubmitted(Order = 3)]
         [HttpGet]
         public async Task<ActionResult> TaskList()
         {
@@ -177,8 +165,14 @@
                 return RedirectToOrganisationHasNoSubmissions();
             }
 
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
+            int? currentYear = null;
+            using (var client = this.apiClient())
+            {
+                var currentDate = await client.SendAsync(this.User.GetAccessToken(), new GetApiUtcDate());
+                currentYear = currentDate.Year;
+            }
 
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false, currentYear);
             var model = await submissionService.Submissions(year);
 
             return View("Producer/ViewOrganisation/OrganisationDetails", model);
@@ -193,7 +187,14 @@
                 return RedirectToOrganisationHasNoSubmissions();
             }
 
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
+            int? currentYear = null;
+            using (var client = this.apiClient())
+            {
+                var currentDate = await client.SendAsync(this.User.GetAccessToken(), new GetApiUtcDate());
+                currentYear = currentDate.Year;
+            }
+
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false, currentYear);
 
             var model = await submissionService.OrganisationDetails(year);
 
@@ -209,7 +210,14 @@
                 return RedirectToOrganisationHasNoSubmissions();
             }
 
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
+            int? currentYear = null;
+            using (var client = this.apiClient())
+            {
+                var currentDate = await client.SendAsync(this.User.GetAccessToken(), new GetApiUtcDate());
+                currentYear = currentDate.Year;
+            }
+
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false, currentYear);
 
             var model = await submissionService.ContactDetails(year);
             
@@ -225,7 +233,14 @@
                 return RedirectToOrganisationHasNoSubmissions();
             }
 
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
+            int? currentYear = null;
+            using (var client = this.apiClient())
+            {
+                var currentDate = await client.SendAsync(this.User.GetAccessToken(), new GetApiUtcDate());
+                currentYear = currentDate.Year;
+            }
+
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false, currentYear);
 
             var model = await submissionService.ServiceOfNoticeDetails(year);
           
@@ -241,7 +256,14 @@
                 return RedirectToOrganisationHasNoSubmissions();
             }
 
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
+            int? currentYear = null;
+            using (var client = this.apiClient())
+            {
+                var currentDate = await client.SendAsync(this.User.GetAccessToken(), new GetApiUtcDate());
+                currentYear = currentDate.Year;
+            }
+
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false, currentYear);
 
             var model = await submissionService.RepresentedOrganisationDetails(year);
           
@@ -257,7 +279,14 @@
                 return RedirectToOrganisationHasNoSubmissions();
             }
 
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData);
+            int? currentYear = null;
+            using (var client = this.apiClient())
+            {
+                var currentDate = await client.SendAsync(this.User.GetAccessToken(), new GetApiUtcDate());
+                currentYear = currentDate.Year;
+            }
+
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false, currentYear);
 
             var model = await submissionService.TotalEEEDetails(year);
 
