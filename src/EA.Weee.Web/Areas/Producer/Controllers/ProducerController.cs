@@ -143,12 +143,13 @@
         [SmallProducerSubmissionContext(Order = 1)]
         public async Task<ActionResult> CheckAnswers()
         {
-            var source = new SmallProducerSubmissionMapperData()
+            var source = new SubmissionsYearDetails()
             {
-                SmallProducerSubmissionData = SmallProducerSubmissionData
+                SmallProducerSubmissionData = SmallProducerSubmissionData,
+                Year = SmallProducerSubmissionData.CurrentSubmission.ComplianceYear
             };
 
-            var model = mapper.Map<SmallProducerSubmissionMapperData, CheckAnswersViewModel>(source);
+            var model = mapper.Map<SubmissionsYearDetails, CheckAnswersViewModel>(source);
 
             await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
 
@@ -306,14 +307,15 @@
 
         [HttpGet]
         [SmallProducerSubmissionContext]
-        public ActionResult DownloadSubmission()
+        public ActionResult DownloadSubmission(int? complianceYear = null)
         {
-            var source = new SmallProducerSubmissionMapperData()
+            var source = new SubmissionsYearDetails()
             {
-                SmallProducerSubmissionData = SmallProducerSubmissionData
+                SmallProducerSubmissionData = SmallProducerSubmissionData,
+                Year = complianceYear
             };
 
-            var model = mapper.Map<SmallProducerSubmissionMapperData, CheckAnswersViewModel>(source);
+            var model = mapper.Map<SubmissionsYearDetails, CheckAnswersViewModel>(source);
 
             model.IsPdfDownload = true;
 

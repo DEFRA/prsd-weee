@@ -56,6 +56,7 @@
         [StringLength(CommonMaxFieldLengths.ProducerRegistrationNumber)]
         [DisplayName("Producer registration number (PRN)")]
         public virtual string ProducerRegistrationNumber { get; set; }
+        public List<AdditionalContactModel> AdditionalContactModels { get; set; } = new List<AdditionalContactModel>();
 
         public bool HasAuthorisedRepresentitive { get; set; }
 
@@ -68,7 +69,7 @@
             var isUkCountry = UkCountry.ValidIds.Contains(Address.CountryId);
             if (isUkCountry == false && HasAuthorisedRepresentitive)
             {
-                var validationsResult = new ValidationResult("Selected country must be a UK country.", new[] { "Address.CountryId" });
+                var validationsResult = new ValidationResult("Selected country must be a UK country", new[] { "Address.CountryId" });
 
                 results.Add(validationsResult);
             }

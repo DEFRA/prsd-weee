@@ -6,6 +6,8 @@
     using Core.Organisations;
     using Core.Organisations.Base;
     using Core.PaymentDetails;
+    using EA.Prsd.Core;
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Admin;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Admin.DirectRegistrants;
@@ -14,8 +16,11 @@
     using EA.Weee.Web.Areas.Admin.Filters;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
+    using EA.Weee.Web.Areas.Producer.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Filters;
+    using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.Services.SubmissionsService;
     using FakeItEasy;
     using FluentAssertions;
@@ -38,6 +43,9 @@
         private readonly Guid organisationId = Guid.NewGuid();
         private readonly ISubmissionService submissionService;
         private readonly BreadcrumbService breadcrumbService;
+        private readonly IMvcTemplateExecutor templateExecutor;
+        private readonly IMapper mapper;
+        private readonly IPdfDocumentProvider pdfDocumentProvider;
 
         public ProducerSubmissionControllerUnitTests()
         {
@@ -45,14 +53,19 @@
             weeeClient = A.Fake<IWeeeClient>();
             weeeCache = A.Fake<IWeeeCache>();
             breadcrumbService = A.Fake<BreadcrumbService>();
-
             submissionService = A.Fake<ISubmissionService>();
+            templateExecutor = A.Fake<IMvcTemplateExecutor>();
+            mapper = A.Fake<IMapper>();
+            pdfDocumentProvider = A.Fake<IPdfDocumentProvider>();
 
             controller = new ProducerSubmissionController(
                () => weeeClient,
                weeeCache,
                submissionService,
-               breadcrumbService);
+               breadcrumbService,
+               templateExecutor,
+               mapper,
+               pdfDocumentProvider);
         }
 
         [Fact]
@@ -1081,6 +1094,91 @@
             var model = viewResult.Model as OrganisationDetailsTabsViewModel;
 
             model.IsAdmin.Should().Be(isAdmin);
+        }
+
+        [Fact]
+        public void DownloadSubmission_Get_WithoutComplianceYear_ShouldUseDefaultYear()
+        {
+            // Arrange
+            var date = new DateTime(2024, 11, 10, 14, 45, 0);
+            SystemTime.Freeze(date);
+            var pdf = TestFixture.Create<byte[]>();
+
+            var submissionData = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            controller.SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData;
+
+            var source = new SmallProducerSubmissionMapperData()
+            {
+                SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData,
+                Year = null // No compliance year provided
+            };
+
+            var viewModel = TestFixture.Create<CheckAnswersViewModel>();
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, CheckAnswersViewModel>
+                (A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(submissionData.SmallProducerSubmissionData) && sd.Year == null)))
+                .Returns(viewModel);
+
+            A.CallTo(() => pdfDocumentProvider.GeneratePdfFromHtml(A<string>._, null)).Returns(pdf);
+
+            // Act
+            var result = controller.DownloadSubmission("WEE123456") as FileContentResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.FileContents.Should().BeSameAs(pdf);
+            result.FileDownloadName.Should().Be("producer_submission_101124_1445.pdf");
+            result.ContentType.Should().Be("application/pdf");
+
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public void DownloadSubmission_Get_WithComplianceYear_GivenPdf_FileShouldBeReturned()
+        {
+            // Arrange
+            var date = new DateTime(2024, 11, 10, 14, 45, 0);
+            SystemTime.Freeze(date);
+            var pdf = TestFixture.Create<byte[]>();
+            var complianceYear = 2025;
+            var registrationNumber = "WEE123456";
+
+            var submissionData = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            controller.SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData;
+
+            var source = new SmallProducerSubmissionMapperData()
+            {
+                SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData,
+                Year = complianceYear
+            };
+
+            var viewModel = TestFixture.Create<CheckAnswersViewModel>();
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, CheckAnswersViewModel>
+            (A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(submissionData.SmallProducerSubmissionData) && sd.Year == complianceYear)))
+                .Returns(viewModel);
+
+            A.CallTo(() => pdfDocumentProvider.GeneratePdfFromHtml(A<string>._, null)).Returns(pdf);
+
+            // Act
+            var result = controller.DownloadSubmission(registrationNumber, complianceYear) as FileContentResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.FileContents.Should().BeSameAs(pdf);
+            result.FileDownloadName.Should().Be("producer_submission_101124_1445.pdf");
+            result.ContentType.Should().Be("application/pdf");
+
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public void DownloadSubmission_Get_ShouldHaveAdminSmallProducerSubmissionContextAttributes()
+        {
+            // Arrange
+            var methodInfo = typeof(ProducerSubmissionController).GetMethod("DownloadSubmission");
+
+            // Act & Assert
+            methodInfo.Should().BeDecoratedWith<AdminSmallProducerSubmissionContextAttribute>();
+            methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
         }
 
         private void SetupDefaultControllerData()

@@ -10,25 +10,25 @@
 @{
     var organisationDetails = new Dictionary<string, object>
     {
-        { "Organisation type", Model.OrganisationDetails.Organisation.OrganisationType.GetDisplayName() },
-        { "Company registration number", Model.OrganisationDetails.Organisation.CompaniesRegistrationNumber },
+        { "Organisation type", Model.OrganisationDetails.OrganisationType.GetDisplayName() },
+        { "Company registration number", Model.OrganisationDetails.CompaniesRegistrationNumber },
     };
 
-    if (Model.OrganisationDetails.Organisation.ProducerRegistrationNumber != null)
+    if (Model.OrganisationDetails.ProducerRegistrationNumber != null)
     {
-        organisationDetails.Add("Producer registration number", Model.OrganisationDetails.Organisation.ProducerRegistrationNumber);
+        organisationDetails.Add("Producer registration number", Model.OrganisationDetails.ProducerRegistrationNumber);
     }
 
-    organisationDetails.Add("Company name", Model.OrganisationDetails.Organisation.CompanyName);
-    organisationDetails.Add("Trading name", Model.OrganisationDetails.Organisation.BusinessTradingName);
-    organisationDetails.Add("Website address", Model.OrganisationDetails.Organisation.Address.WebsiteAddress);
-    organisationDetails.Add("Address line 1", Model.OrganisationDetails.Organisation.Address.Address1);
-    organisationDetails.Add("Address line 2", Model.OrganisationDetails.Organisation.Address.Address2);
-    organisationDetails.Add("Town or city", Model.OrganisationDetails.Organisation.Address.TownOrCity);
-    organisationDetails.Add("County or region", Model.OrganisationDetails.Organisation.Address.CountyOrRegion);
-    organisationDetails.Add("Postcode", Model.OrganisationDetails.Organisation.Address.Postcode);
-    organisationDetails.Add("Country", Model.OrganisationDetails.Organisation.Address.CountryName);
-    organisationDetails.Add("EEE brand names", Model.OrganisationDetails.Organisation.EEEBrandNames);
+    organisationDetails.Add("Company name", Model.OrganisationDetails.CompanyName);
+    organisationDetails.Add("Trading name", Model.OrganisationDetails.BusinessTradingName);
+    organisationDetails.Add("Website address", Model.OrganisationDetails.Address.WebsiteAddress);
+    organisationDetails.Add("Address line 1", Model.OrganisationDetails.Address.Address1);
+    organisationDetails.Add("Address line 2", Model.OrganisationDetails.Address.Address2);
+    organisationDetails.Add("Town or city", Model.OrganisationDetails.Address.TownOrCity);
+    organisationDetails.Add("County or region", Model.OrganisationDetails.Address.CountyOrRegion);
+    organisationDetails.Add("Postcode", Model.OrganisationDetails.Address.Postcode);
+    organisationDetails.Add("Country", Model.OrganisationDetails.Address.CountryName);
+    organisationDetails.Add("EEE brand names", Model.OrganisationDetails.EEEBrandNames);
 
     var sortedContacts = Model.OrganisationDetails.AdditionalContactModels.OrderBy(c => c.Order).ToList();
 
@@ -48,17 +48,17 @@
 
     var contactDetails = new Dictionary<string, object>
 {
-            { "First name", Model.ContactDetails.ContactDetails.FirstName },
-            { "Last name", Model.ContactDetails.ContactDetails.LastName },
-            { "Position", Model.ContactDetails.ContactDetails.Position },
-            { "Email address", Model.ContactDetails.ContactDetails.AddressData.Email },
-            { "Phone number", Model.ContactDetails.ContactDetails.AddressData.Telephone },
-            { "Address line 1", Model.ContactDetails.ContactDetails.AddressData.Address1 },
-            { "Address line 2", Model.ContactDetails.ContactDetails.AddressData.Address2 },
-            { "Town or city", Model.ContactDetails.ContactDetails.AddressData.TownOrCity },
-            { "County or region", Model.ContactDetails.ContactDetails.AddressData.CountyOrRegion },
-            { "Postcode", Model.ContactDetails.ContactDetails.AddressData.Postcode },
-            { "Country", Model.ContactDetails.ContactDetails.AddressData.CountryName }
+            { "First name", Model.ContactDetails.FirstName },
+            { "Last name", Model.ContactDetails.LastName },
+            { "Position", Model.ContactDetails.Position },
+            { "Email address", Model.ContactDetails.AddressData.Email },
+            { "Phone number", Model.ContactDetails.AddressData.Telephone },
+            { "Address line 1", Model.ContactDetails.AddressData.Address1 },
+            { "Address line 2", Model.ContactDetails.AddressData.Address2 },
+            { "Town or city", Model.ContactDetails.AddressData.TownOrCity },
+            { "County or region", Model.ContactDetails.AddressData.CountyOrRegion },
+            { "Postcode", Model.ContactDetails.AddressData.Postcode },
+            { "Country", Model.ContactDetails.AddressData.CountryName }
     };
 
     var serviceOfNoticeData = new Dictionary<string, object>
@@ -166,7 +166,9 @@
         <tr class="govuk-table__row">
             <th scope="col" class="govuk-table__header govuk-!-text-align-left" style="width: 28%;">Selling technique(s) that you use</th>
             <td class="govuk-table__cell" colspan="2">
-                @Model.EeeData.SellingTechnique.ToSellingTechniqueType().GetDisplayName()
+                @(Model.EeeData.SellingTechnique.IsDirectSelling || Model.EeeData.SellingTechnique.IsIndirectSelling
+                ? Model.EeeData.SellingTechnique.ToSellingTechniqueType().GetDisplayName()
+                : string.Empty)
             </td>
         </tr>
     </tbody>

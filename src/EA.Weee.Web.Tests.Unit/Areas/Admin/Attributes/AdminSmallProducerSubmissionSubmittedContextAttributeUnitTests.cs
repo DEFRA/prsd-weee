@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Attributes
 {
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Helpers;
@@ -7,6 +8,8 @@
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.Filters;
+    using EA.Weee.Web.Infrastructure;
+    using EA.Weee.Web.Infrastructure.PDF;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.Services.SubmissionsService;
@@ -29,6 +32,9 @@
         private readonly ProducerSubmissionController controller;
         private readonly RequestContext requestContext;
         private readonly HttpRequestBase request;
+        private readonly IMvcTemplateExecutor templateExecutor;
+        private readonly IMapper mapper;
+        private readonly IPdfDocumentProvider pdfDocumentProvider;
 
         public AdminSmallProducerSubmissionSubmittedContextAttributeUnitTests()
         {
@@ -36,7 +42,17 @@
             httpContext = A.Fake<HttpContextBase>();
             principal = A.Fake<IPrincipal>();
             request = A.Fake<HttpRequestBase>();
-            controller = new ProducerSubmissionController(A.Fake<IWeeeClient>, A.Fake<IWeeeCache>(), A.Fake<ISubmissionService>(), A.Fake<BreadcrumbService>());
+            templateExecutor = A.Fake<IMvcTemplateExecutor>();
+            mapper = A.Fake<IMapper>();
+            pdfDocumentProvider = A.Fake<IPdfDocumentProvider>();
+            controller = new ProducerSubmissionController(
+                A.Fake<IWeeeClient>,
+                A.Fake<IWeeeCache>(),
+                A.Fake<ISubmissionService>(),
+                A.Fake<BreadcrumbService>(),
+                A.Fake<IMvcTemplateExecutor>(),
+                A.Fake<IMapper>(),
+                A.Fake<IPdfDocumentProvider>());
 
             requestContext = new RequestContext(httpContext, new RouteData());
             controller.ControllerContext = new ControllerContext(requestContext, controller);

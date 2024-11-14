@@ -476,8 +476,8 @@
             controller.SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData;
 
             var viewModel = TestFixture.Create<CheckAnswersViewModel>();
-            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, CheckAnswersViewModel>
-                (A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(submissionData.SmallProducerSubmissionData)))).Returns(viewModel);
+            A.CallTo(() => mapper.Map<SubmissionsYearDetails, CheckAnswersViewModel>
+                (A<SubmissionsYearDetails>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(submissionData.SmallProducerSubmissionData)))).Returns(viewModel);
 
             // Act
             var result = await controller.CheckAnswers() as ViewResult;
@@ -843,6 +843,43 @@
             result.FileContents.Should().BeSameAs(pdf);
             result.FileDownloadName.Should().Be("producer_submission_020922_1422.pdf");
             result.ContentType.Should().Be("application/pdf");
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public void DownloadSubmission_Get_WithComplianceYear_GivenPdf_FileShouldBeReturned()
+        {
+            // Arrange
+            var date = new DateTime(2023, 10, 15, 10, 30, 0);
+            SystemTime.Freeze(date);
+            var pdf = TestFixture.Create<byte[]>();
+            var complianceYear = 2024;
+
+            var submissionData = TestFixture.Create<SmallProducerSubmissionMapperData>();
+            controller.SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData;
+
+            var source = new SmallProducerSubmissionMapperData()
+            {
+                SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData,
+                Year = complianceYear
+            };
+
+            var viewModel = TestFixture.Create<CheckAnswersViewModel>();
+            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, CheckAnswersViewModel>
+                (A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(submissionData.SmallProducerSubmissionData) && sd.Year == complianceYear)))
+                .Returns(viewModel);
+
+            A.CallTo(() => pdfDocumentProvider.GeneratePdfFromHtml(A<string>._, null)).Returns(pdf);
+
+            // Act
+            var result = controller.DownloadSubmission(complianceYear) as FileContentResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.FileContents.Should().BeSameAs(pdf);
+            result.FileDownloadName.Should().Be("producer_submission_151023_1130.pdf");
+            result.ContentType.Should().Be("application/pdf");
+
             SystemTime.Unfreeze();
         }
 
