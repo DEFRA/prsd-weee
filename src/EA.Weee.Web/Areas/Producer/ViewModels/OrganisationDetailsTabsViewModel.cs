@@ -29,7 +29,7 @@
 
         public bool ShowReturnRegistrationToUser => this.IsInternalAdmin && (IsRegistered || this.Status == SubmissionStatus.Submitted);
 
-        public bool ShowContinueRegistrationToUser => !this.IsInternalAdmin && this.Status == SubmissionStatus.InComplete && this.CurrentYear == this.Year;
+        public bool ShowContinueRegistrationToUser => !this.IsInternalAdmin && this.Status != SubmissionStatus.Submitted && this.CurrentYear == this.Year;
         
         public int? CurrentYear { get; set; }
 
