@@ -3,6 +3,7 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.DataStandards;
+    using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Core.Shared;
@@ -200,6 +201,56 @@
 
             hasRequiredAttribute.Should().Be(true);
             hasCompaniesRegistrationNumberStringLengthAttribute.Should().Be(true);
+        }
+
+        [Fact]
+        public void HasPaid_DefaultValueShouldBeFalse()
+        {
+            var viewModel = new TestOrganisationViewModel();
+            viewModel.HasPaid.Should().BeFalse();
+        }
+
+        [Fact]
+        public void ProducerRegistrationNumber_ShouldHaveStringLengthAttribute()
+        {
+            var property = typeof(OrganisationViewModel).GetProperty("ProducerRegistrationNumber");
+            var attribute = property.GetCustomAttributes(typeof(StringLengthAttribute), true).FirstOrDefault() as StringLengthAttribute;
+
+            attribute.Should().NotBeNull();
+            attribute.MaximumLength.Should().Be(CommonMaxFieldLengths.ProducerRegistrationNumber);
+        }
+
+        [Fact]
+        public void Validate_WhenNonUKCountryAndHasAuthorisedRepresentitive_ShouldReturnValidationError()
+        {
+            var viewModel = new TestOrganisationViewModel
+            {
+                HasAuthorisedRepresentitive = true,
+                Address = new ExternalAddressData
+                {
+                    CountryId = Guid.NewGuid(), // Non-UK country
+                    Postcode = "12345"
+                }
+            };
+
+            var validationResults = viewModel.Validate(new ValidationContext(viewModel)).ToList();
+
+            validationResults.Should().HaveCount(1);
+            validationResults[0].ErrorMessage.Should().Be("Selected country must be a UK country");
+        }
+
+        [Theory]
+        [InlineData(ExternalOrganisationType.RegisteredCompany, typeof(RegisteredCompanyDetailsViewModel))]
+        [InlineData(ExternalOrganisationType.Partnership, typeof(PartnershipDetailsViewModel))]
+        [InlineData(ExternalOrganisationType.SoleTrader, typeof(SoleTraderDetailsViewModel))]
+        [InlineData(null, typeof(RegisteredCompanyDetailsViewModel))]
+        public void CastToSpecificViewModel_ShouldReturnCorrectType(ExternalOrganisationType? orgType, Type expectedType)
+        {
+            var viewModel = new TestOrganisationViewModel { OrganisationType = orgType };
+
+            var result = viewModel.CastToSpecificViewModel(viewModel);
+
+            result.Should().BeOfType(expectedType);
         }
     }
 }

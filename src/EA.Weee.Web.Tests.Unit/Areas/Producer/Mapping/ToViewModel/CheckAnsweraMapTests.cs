@@ -5,12 +5,11 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
-    using EA.Weee.Core.Shared;
+    using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Web.Areas.Producer.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using FakeItEasy;
     using FluentAssertions;
-    using System.Collections.Generic;
     using Xunit;
 
     public class CheckAnswersMapTests
@@ -30,7 +29,7 @@
         public void Map_ShouldMapHighLevelSourceFields()
         {
             // Arrange
-            var source = fixture.Create<SmallProducerSubmissionMapperData>();
+            var source = fixture.Create<SubmissionsYearDetails>();
             var submissionData = source.SmallProducerSubmissionData;
 
             // Act
@@ -40,17 +39,17 @@
             result.DirectRegistrantId.Should().Be(submissionData.DirectRegistrantId);
             result.OrganisationId.Should().Be(submissionData.OrganisationData.Id);
             result.HasAuthorisedRepresentitive.Should().Be(submissionData.HasAuthorisedRepresentitive);
-            result.ComplianceYear.Should().Be(submissionData.CurrentSubmission.ComplianceYear);
+            result.ComplianceYear.Should().Be(source.Year ?? submissionData.CurrentSubmission.ComplianceYear);
         }
 
         [Fact]
         public void Map_ShouldMapServiceOfNotice()
         {
             // Arrange
-            var source = fixture.Create<SmallProducerSubmissionMapperData>();
+            var source = fixture.Create<SubmissionsYearDetails>();
             var submissionData = source.SmallProducerSubmissionData;
             var expectedServiceOfNoticeModel = fixture.Create<ServiceOfNoticeViewModel>();
-            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, ServiceOfNoticeViewModel>(A<SmallProducerSubmissionMapperData>._))
+            A.CallTo(() => mapper.Map<SubmissionsYearDetails, ServiceOfNoticeViewModel>(A<SubmissionsYearDetails>._))
                 .Returns(expectedServiceOfNoticeModel);
 
             // Act
@@ -58,7 +57,7 @@
 
             // Assert
             result.ServiceOfNoticeData.Should().Be(expectedServiceOfNoticeModel);
-            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, ServiceOfNoticeViewModel>(source))
+            A.CallTo(() => mapper.Map<SubmissionsYearDetails, ServiceOfNoticeViewModel>(source))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -66,10 +65,10 @@
         public void Map_ShouldMapEditOrganisationDetails()
         {
             // Arrange
-            var source = fixture.Create<SmallProducerSubmissionMapperData>();
+            var source = fixture.Create<SubmissionsYearDetails>();
             var submissionData = source.SmallProducerSubmissionData;
-            var expectedEditOrganisationDetailsModel = fixture.Create<EditOrganisationDetailsViewModel>();
-            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, EditOrganisationDetailsViewModel>(A<SmallProducerSubmissionMapperData>._))
+            var expectedEditOrganisationDetailsModel = fixture.Create<OrganisationViewModel>();
+            A.CallTo(() => mapper.Map<SubmissionsYearDetails, OrganisationViewModel>(A<SubmissionsYearDetails>._))
                 .Returns(expectedEditOrganisationDetailsModel);
 
             // Act
@@ -77,7 +76,7 @@
 
             // Assert
             result.OrganisationDetails.Should().Be(expectedEditOrganisationDetailsModel);
-            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, EditOrganisationDetailsViewModel>(source))
+            A.CallTo(() => mapper.Map<SubmissionsYearDetails, OrganisationViewModel>(source))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -85,10 +84,10 @@
         public void Map_ShouldMapEditContactDetails()
         {
             // Arrange
-            var source = fixture.Create<SmallProducerSubmissionMapperData>();
+            var source = fixture.Create<SubmissionsYearDetails>();
             var submissionData = source.SmallProducerSubmissionData;
-            var expectedContactDetailsModel = fixture.Create<EditContactDetailsViewModel>();
-            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, EditContactDetailsViewModel>(A<SmallProducerSubmissionMapperData>._))
+            var expectedContactDetailsModel = fixture.Create<ContactDetailsViewModel>();
+            A.CallTo(() => mapper.Map<SubmissionsYearDetails, ContactDetailsViewModel>(A<SubmissionsYearDetails>._))
                 .Returns(expectedContactDetailsModel);
 
             // Act
@@ -96,7 +95,7 @@
 
             // Assert
             result.ContactDetails.Should().Be(expectedContactDetailsModel);
-            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, EditContactDetailsViewModel>(source))
+            A.CallTo(() => mapper.Map<SubmissionsYearDetails, ContactDetailsViewModel>(source))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -104,10 +103,10 @@
         public void Map_ShouldMapEditEeeDetails()
         {
             // Arrange
-            var source = fixture.Create<SmallProducerSubmissionMapperData>();
+            var source = fixture.Create<SubmissionsYearDetails>();
             var submissionData = source.SmallProducerSubmissionData;
             var expectedEeeDataModel = fixture.Create<EditEeeDataViewModel>();
-            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, EditEeeDataViewModel>(A<SmallProducerSubmissionMapperData>._))
+            A.CallTo(() => mapper.Map<SubmissionsYearDetails, EditEeeDataViewModel>(A<SubmissionsYearDetails>._))
                 .Returns(expectedEeeDataModel);
 
             // Act
@@ -115,7 +114,7 @@
 
             // Assert
             result.EeeData.Should().Be(expectedEeeDataModel);
-            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, EditEeeDataViewModel>(source))
+            A.CallTo(() => mapper.Map<SubmissionsYearDetails, EditEeeDataViewModel>(source))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -123,11 +122,11 @@
         public void Map_ShouldMapRepresentedCompanyDetails()
         {
             // Arrange
-            var source = fixture.Create<SmallProducerSubmissionMapperData>();
+            var source = fixture.Create<SubmissionsYearDetails>();
             var submissionData = source.SmallProducerSubmissionData;
             submissionData.HasAuthorisedRepresentitive = true;
             var expectedRepresentedCompanyDetailsModel = fixture.Create<RepresentingCompanyDetailsViewModel>();
-            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, RepresentingCompanyDetailsViewModel>(A<SmallProducerSubmissionMapperData>._))
+            A.CallTo(() => mapper.Map<SubmissionsYearDetails, RepresentingCompanyDetailsViewModel>(A<SubmissionsYearDetails>._))
                 .Returns(expectedRepresentedCompanyDetailsModel);
 
             // Act
@@ -135,7 +134,7 @@
 
             // Assert
             result.RepresentingCompanyDetails.Should().Be(expectedRepresentedCompanyDetailsModel);
-            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, RepresentingCompanyDetailsViewModel>(source))
+            A.CallTo(() => mapper.Map<SubmissionsYearDetails, RepresentingCompanyDetailsViewModel>(source))
                 .MustHaveHappenedOnceExactly();
         }
     }

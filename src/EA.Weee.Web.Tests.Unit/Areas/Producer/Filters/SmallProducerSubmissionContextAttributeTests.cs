@@ -4,6 +4,7 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Producer.Controllers;
     using EA.Weee.Web.Areas.Producer.Filters;
     using EA.Weee.Web.Infrastructure;
@@ -32,11 +33,16 @@
         private readonly ActionExecutingContext actionExecutingContext;
         private readonly SmallProducerSubmissionContextAttribute filter;
         private readonly ISubmissionService submissionService;
+        private readonly IAppConfiguration appConfiguration;
+        private readonly DateTime enabledFromDate;
 
         public SmallProducerSubmissionContextAttributeTests()
         {
             fakeClient = A.Fake<IWeeeClient>();
             this.weeeCache = A.Fake<IWeeeCache>();
+            appConfiguration = A.Fake<IAppConfiguration>();
+
+            enabledFromDate = new DateTime(2025, 1, 1);
 
             var fakeHttpContext = A.Fake<HttpContextBase>();
 
@@ -44,6 +50,7 @@
             var mapper = A.Fake<IMapper>();
             var templateExecutor = A.Fake<IMvcTemplateExecutor>();
             var pdfDocumentProvider = A.Fake<IPdfDocumentProvider>();
+           
             submissionService = A.Fake<ISubmissionService>();
             var apiClient = () => fakeClient;
 
@@ -58,12 +65,15 @@
             filter = new SmallProducerSubmissionContextAttribute
             {
                 Client = () => fakeClient,
-                Cache = weeeCache
+                Cache = weeeCache,
+                AppConfiguration = appConfiguration
             };
 
             var fakePrincipal = A.Fake<ClaimsPrincipal>();
             A.CallTo(() => fakePrincipal.Identity.IsAuthenticated).Returns(true);
             A.CallTo(() => fakeHttpContext.User).Returns(fakePrincipal);
+            A.CallTo(() => fakeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(enabledFromDate.AddDays(1));
+            A.CallTo(() => appConfiguration.SmallProducerFeatureEnabledFrom).Returns(enabledFromDate);
         }
 
         [Fact]
@@ -75,7 +85,7 @@
 
             var expectedData = new SmallProducerSubmissionData();
             A.CallTo(() => fakeClient.SendAsync(A<string>._, A<GetSmallProducerSubmission>.That.Matches(g => g.DirectRegistrantId == directRegistrantId)))
-                .Returns(Task.FromResult(expectedData));
+                .Returns(expectedData);
 
             // Act
             filter.OnActionExecuting(actionExecutingContext);
@@ -117,12 +127,75 @@
             actionExecutingContext.Controller = new HomeController();
 
             A.CallTo(() => fakeClient.SendAsync(A<string>._, A<GetSmallProducerSubmission>._))
-                .Returns(Task.FromResult(new SmallProducerSubmissionData()));
+                .Returns(new SmallProducerSubmissionData());
 
             // Act & Assert
             filter.Invoking(f => f.OnActionExecuting(actionExecutingContext))
                 .Should().Throw<InvalidOperationException>()
                 .WithMessage("Unsupported controller type");
+        }
+
+        [Fact]
+        public void OnActionExecuting_WhenFeatureNotEnabled_ThrowsInvalidOperationException()
+        {
+            // Arrange
+            var directRegistrantId = Guid.NewGuid();
+            actionExecutingContext.RouteData.Values["directRegistrantId"] = directRegistrantId.ToString();
+
+            A.CallTo(() => fakeClient.SendAsync(A<string>._, A<GetApiUtcDate>._))
+                .Returns(enabledFromDate.AddDays(-1));
+
+            // Act & Assert
+            filter.Invoking(f => f.OnActionExecuting(actionExecutingContext))
+                .Should().Throw<InvalidOperationException>()
+                .WithMessage("Small producer not enabled.");
+
+            A.CallTo(() => fakeClient.SendAsync(A<string>._, A<GetSmallProducerSubmission>._))
+                .MustNotHaveHappened();
+        }
+
+        [Fact]
+        public void OnActionExecuting_WhenFeatureEnabled_ProcessesRequest()
+        {
+            // Arrange
+            var directRegistrantId = Guid.NewGuid();
+            actionExecutingContext.RouteData.Values["directRegistrantId"] = directRegistrantId.ToString();
+
+            var expectedData = new SmallProducerSubmissionData();
+            A.CallTo(() => fakeClient.SendAsync(A<string>._, A<GetSmallProducerSubmission>._))
+                .Returns(expectedData);
+
+            // Act
+            filter.OnActionExecuting(actionExecutingContext);
+
+            // Assert
+            var controller = (ProducerController)actionExecutingContext.Controller;
+            controller.SmallProducerSubmissionData.Should().Be(expectedData);
+
+            A.CallTo(() => fakeClient.SendAsync(A<string>._, A<GetApiUtcDate>._))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void OnActionExecuting_WithExactlyEnabledDate_ProcessesRequest()
+        {
+            // Arrange
+            var directRegistrantId = Guid.NewGuid();
+            actionExecutingContext.RouteData.Values["directRegistrantId"] = directRegistrantId.ToString();
+
+            A.CallTo(() => fakeClient.SendAsync(A<string>._, A<GetApiUtcDate>._))
+                .Returns(enabledFromDate);
+
+            var expectedData = new SmallProducerSubmissionData();
+            A.CallTo(() => fakeClient.SendAsync(A<string>._, A<GetSmallProducerSubmission>._))
+                .Returns(expectedData);
+
+            // Act
+            filter.OnActionExecuting(actionExecutingContext);
+
+            // Assert
+            var controller = (ProducerController)actionExecutingContext.Controller;
+            controller.SmallProducerSubmissionData.Should().Be(expectedData);
         }
     }
 }
