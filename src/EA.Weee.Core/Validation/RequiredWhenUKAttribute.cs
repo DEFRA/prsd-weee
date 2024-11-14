@@ -21,7 +21,7 @@
             {
                 var val = value as string;
                 return string.IsNullOrWhiteSpace(val)
-                    ? new ValidationResult($"{fieldName} is required.")
+                    ? new ValidationResult($"{fieldName} is required")
                     : ValidationResult.Success;
             }
 

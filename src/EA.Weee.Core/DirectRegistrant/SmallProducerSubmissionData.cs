@@ -20,7 +20,7 @@
         {
             get
             {
-                return SubmissionHistory.Any(s => s.Value.Status == SubmissionStatus.Submitted || s.Value.Status == SubmissionStatus.Returned);
+                return SubmissionHistory.Any();
             }
         }
 

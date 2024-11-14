@@ -4,6 +4,7 @@
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview;
     using EA.Weee.Web.Areas.Producer.ViewModels;
@@ -23,6 +24,7 @@
         private readonly IWeeeCache cache;
         private readonly IMapper mapper;
         private bool isInternal;
+        private int currentYear;
 
         public SubmissionService(
             BreadcrumbService breadcrumb,
@@ -34,10 +36,14 @@
             this.mapper = mapper;
         }
 
-        public SubmissionService WithSubmissionData(SmallProducerSubmissionData data, bool isInternal = false)
+        public SubmissionService WithSubmissionData(SmallProducerSubmissionData data, bool isInternal = false, int? currentYear = null)
         {
             smallProducerSubmissionData = data;
             this.isInternal = isInternal;
+            if (currentYear.HasValue)
+            {
+                this.currentYear = currentYear.Value;
+            }
 
             return this;
         }
@@ -130,7 +136,8 @@
                 SmallProducerSubmissionData = this.smallProducerSubmissionData,
                 IsInternal = this.isInternal,
                 Status = submission?.Status ?? SubmissionStatus.InComplete,
-                HasPaid = submission != null && (bool)submission?.HasPaid
+                HasPaid = submission != null && (bool)submission?.HasPaid,
+                CurrentYear = this.currentYear
             };
 
             return model;
@@ -180,14 +187,6 @@
 
         private IEnumerable<int> YearsDropdownData(SmallProducerSubmissionData data)
         {
-            if (!isInternal)
-            {
-                return data.SubmissionHistory
-                           .Where(x => x.Value.Status == SubmissionStatus.Submitted || x.Value.Status == SubmissionStatus.Returned)
-                           .OrderByDescending(x => x.Key)
-                           .Select(x => x.Key);
-            }
-
             return data.SubmissionHistory
                     .OrderByDescending(x => x.Key)
                     .Select(x => x.Key);
