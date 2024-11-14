@@ -109,5 +109,7 @@
         string CompaniesHouseScope { get; set; }
 
         string AddressLookupScope { get; set; }
+
+        DateTime SmallProducerFeatureEnabledFrom { get; set; }
     }
 }
