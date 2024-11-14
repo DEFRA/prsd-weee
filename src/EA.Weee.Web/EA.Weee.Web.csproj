@@ -1161,8 +1161,8 @@
     <Content Include="Areas\Producer\Views\Producer\SubmitRegistration.cshtml" />
     <Content Include="Views\OrganisationRegistration\OrganisationFound.cshtml" />
     <Content Include="Areas\Admin\Views\ProducerSubmission\Submissions.cshtml" />
-    <Content Include="Areas\Producer\Views\Producer\DownloadSubmission.cshtml" />
-    <Content Include="Areas\Producer\Views\Shared\_CheckAnswersContentPartial.cshtml" />
+    <Content Include="Views\Shared\DownloadSubmission.cshtml" />
+    <Content Include="Views\Shared\_CheckAnswersContentPartial.cshtml" />
     <Content Include="Views\Shared\_PdfLayout.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\AlreadySubmittedAndPaid.cshtml" />
     <Content Include="Areas\Producer\Views\Producer\OrganisationHasNoSubmissions.cshtml" />
@@ -1185,6 +1185,7 @@
     <Content Include="Areas\Test\Views\ApiIntegration\Index.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\ProducersIncSmallProducersDataViewModel.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\ProducersDataViewModel.cshtml" />
+    <Content Include="Views\Shared\Producer\ViewOrganisation\_OrganisationDetailsTabsBottomButtons.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
@@ -2227,6 +2228,7 @@
     <Folder Include="Areas\Admin\Views\Shared\DisplayTemplates\" />
     <Folder Include="Areas\Admin\Views\SmokeTest\" />
     <Folder Include="Areas\AeReturn\Views\Shared\" />
+    <Folder Include="Areas\Producer\Views\Shared\" />
     <Folder Include="Areas\Scheme\Views\Shared\EditorTemplates\" />
     <Folder Include="Areas\Shared\ViewModels\" />
     <Folder Include="Areas\Test\Views\TestControllerBase\" />
