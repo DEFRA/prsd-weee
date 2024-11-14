@@ -68,7 +68,7 @@
             var isUkCountry = UkCountry.ValidIds.Contains(Address.CountryId);
             if (isUkCountry == false && HasAuthorisedRepresentitive)
             {
-                var validationsResult = new ValidationResult("Selected country must be a UK country.", new[] { "Address.CountryId" });
+                var validationsResult = new ValidationResult("Selected country must be a UK country", new[] { "Address.CountryId" });
 
                 results.Add(validationsResult);
             }
