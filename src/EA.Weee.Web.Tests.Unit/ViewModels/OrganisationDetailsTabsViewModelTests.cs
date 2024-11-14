@@ -125,6 +125,28 @@
             model.IsInternalAdmin.Should().Be(expected);
         }
 
+        [Theory]
+        [MemberData(nameof(ShowContinueRegistrationToUserTestData))]
+        public void ShowContinueRegistrationToUser_ReturnsExpectedValue(
+        bool isAdmin,
+        bool isInternal,
+        SubmissionStatus status,
+        int currentYear,
+        int year,
+        bool expectedResult)
+        {
+            // Arrange
+            var model = CreateViewModel();
+            model.IsAdmin = isAdmin;
+            model.IsInternal = isInternal;
+            model.Status = status;
+            model.CurrentYear = currentYear;
+            model.Year = year;
+
+            // Act & Assert
+            model.ShowContinueRegistrationToUser.Should().Be(expectedResult);
+        }
+
         public static IEnumerable<object[]> ShowPaymentLinkTestData()
         {
             yield return new object[] { true, true, SubmissionStatus.Submitted, false, true };  // Should show
@@ -134,6 +156,30 @@
             yield return new object[] { true, false, SubmissionStatus.Submitted, false, false }; // Not admin
             yield return new object[] { true, true, SubmissionStatus.InComplete, false, false }; // Not submitted
         }
+
+        public static IEnumerable<object[]> ShowContinueRegistrationToUserTestData =>
+        new List<object[]>
+        {
+            // isAdmin, isInternal, status, currentYear, year, expectedResult
+
+            // Case 1: External user (not admin, not internal), Incomplete status, matching year
+            new object[] { false, false, SubmissionStatus.InComplete, 2024, 2024, true },
+
+            // Case 2: External user, Incomplete status, year does not match
+            new object[] { false, false, SubmissionStatus.InComplete, 2024, 2023, false },
+
+            // Case 3: External user, status is not InComplete
+            new object[] { false, false, SubmissionStatus.Submitted, 2024, 2024, false },
+
+            // Case 4: Internal admin, Incomplete status, matching year
+            new object[] { true, true, SubmissionStatus.InComplete, 2024, 2024, false },
+
+            // Case 5: Internal admin, Incomplete status, year does not match
+            new object[] { true, true, SubmissionStatus.InComplete, 2024, 2023, false },
+
+            // Case 6: Admin but not internal, Incomplete status, matching year (treated as external)
+            new object[] { true, false, SubmissionStatus.InComplete, 2024, 2024, true },
+        };
 
         private OrganisationDetailsTabsViewModel CreateViewModel()
         {
