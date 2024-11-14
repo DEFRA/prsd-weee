@@ -106,7 +106,7 @@
             result.ViewName.Should().Be("Producer/ViewOrganisation/OrganisationDetails");
 
             A.CallTo(() => submissionService.OrganisationDetails(year)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, true)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, true, null)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -138,7 +138,7 @@
             result.ViewName.Should().Be("Producer/ViewOrganisation/OrganisationDetails");
 
             A.CallTo(() => submissionService.Submissions(year)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, true)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, true, null)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -214,7 +214,7 @@
             result.ViewName.Should().Be("Producer/ViewOrganisation/ContactDetails");
 
             A.CallTo(() => submissionService.ContactDetails(year)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, true)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, true, null)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -246,7 +246,7 @@
             result.ViewName.Should().Be("Producer/ViewOrganisation/ServiceOfNoticeDetails");
 
             A.CallTo(() => submissionService.ServiceOfNoticeDetails(year)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, true)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, true, null)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -278,7 +278,7 @@
             result.ViewName.Should().Be("Producer/ViewOrganisation/RepresentedOrganisationDetails");
 
             A.CallTo(() => submissionService.RepresentedOrganisationDetails(year)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, true)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, true, null)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -310,7 +310,7 @@
             result.ViewName.Should().Be("Producer/ViewOrganisation/TotalEEEDetails");
 
             A.CallTo(() => submissionService.TotalEEEDetails(year)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, true)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, true, null)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
