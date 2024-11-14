@@ -195,6 +195,9 @@
         {
             // Arrange
             var model = TestFixture.Create<EditOrganisationDetailsViewModel>();
+
+            model.Organisation.CompaniesRegistrationNumber = "4567894";
+
             model.RedirectToCheckAnswers = false;
             var request = TestFixture.Create<EditOrganisationDetailsRequest>();
             A.CallTo(() => editOrganisationDetailsRequestCreator.ViewModelToRequest(model)).Returns(request);
@@ -635,6 +638,9 @@
             // Arrange
             var model = TestFixture.Create<EditOrganisationDetailsViewModel>();
             model.RedirectToCheckAnswers = true;
+
+            model.Organisation.CompaniesRegistrationNumber = "4567894";
+
             var request = TestFixture.Create<EditOrganisationDetailsRequest>();
             A.CallTo(() => editOrganisationDetailsRequestCreator.ViewModelToRequest(model)).Returns(request);
 

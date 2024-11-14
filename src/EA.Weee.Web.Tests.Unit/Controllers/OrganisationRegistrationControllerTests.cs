@@ -737,6 +737,7 @@
             var model = TestFixture.Build<OrganisationViewModel>().Create();
             model.ProducerRegistrationNumber = null;
             model.IsPreviousSchemeMember = false;
+            model.CompaniesRegistrationNumber = "4567894";
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, authorisedRep).Create();
@@ -786,6 +787,7 @@
             var model = TestFixture.Build<OrganisationViewModel>().Create();
             model.ProducerRegistrationNumber = null;
             model.IsPreviousSchemeMember = false;
+            model.CompaniesRegistrationNumber = "4567894";
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, YesNoType.Yes).Create();
@@ -815,6 +817,7 @@
             var model = TestFixture.Build<OrganisationViewModel>().Create();
             model.ProducerRegistrationNumber = null;
             model.IsPreviousSchemeMember = false;
+            model.CompaniesRegistrationNumber = "4567894";
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, YesNoType.Yes).Create();
@@ -848,6 +851,7 @@
             var model = TestFixture.Build<OrganisationViewModel>().Create();
             model.ProducerRegistrationNumber = null;
             model.IsPreviousSchemeMember = false;
+            model.CompaniesRegistrationNumber = "4567894";
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, YesNoType.Yes).Create();
@@ -1114,16 +1118,19 @@
         {
             // Arrange
             var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
+            string returnUrl = "/organisation-found";
 
             A.CallTo(() =>
                     weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
                 .Returns(countries);
 
             // Act
-            var result = await controller.RepresentingCompanyDetails() as ViewResult;
+            var result = await controller.RepresentingCompanyDetails(returnUrl) as ViewResult;
 
             // Assert
             var resultViewModel = result.Model as RepresentingCompanyDetailsViewModel;
+
+            Assert.Equal(result.ViewBag.ReturnUrl, returnUrl);
 
             resultViewModel.Should().NotBeNull();
             resultViewModel.CompanyName.Should().BeNullOrWhiteSpace();
@@ -1279,9 +1286,10 @@
             var transactionData = new OrganisationTransactionData { OrganisationType = organisationType };
             A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>.Ignored))
                 .Returns(Task.FromResult(transactionData));
+            string returnUrl = null;
 
             // Act
-            var result = await controller.RepresentingCompanyRedirect() as RedirectToRouteResult;
+            var result = await controller.RepresentingCompanyRedirect(returnUrl) as RedirectToRouteResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -1296,9 +1304,10 @@
             var transactionData = new OrganisationTransactionData { OrganisationType = null };
             A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>.Ignored))
                 .Returns(Task.FromResult(transactionData));
+            string returnUrl = null;
 
             // Act
-            var result = await controller.RepresentingCompanyRedirect() as RedirectToRouteResult;
+            var result = await controller.RepresentingCompanyRedirect(returnUrl) as RedirectToRouteResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -1312,14 +1321,32 @@
             // Arrange
             A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>.Ignored))
                 .Returns(Task.FromResult<OrganisationTransactionData>(null));
+            string returnUrl = null;
 
             // Act
-            var result = await controller.RepresentingCompanyRedirect() as RedirectToRouteResult;
+            var result = await controller.RepresentingCompanyRedirect(returnUrl) as RedirectToRouteResult;
 
             // Assert
             result.Should().NotBeNull();
             result.RouteValues["action"].Should().Be("Type");
             result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+        }
+
+        [Fact]
+        public async Task RepresentingCompanyRedirect_ShouldRedirectToReturnUrl_WhenReturnUrlIsNotNull()
+        {
+            // Arrange
+            var transactionData = new OrganisationTransactionData { OrganisationType = ExternalOrganisationType.RegisteredCompany };
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>.Ignored))
+                .Returns(Task.FromResult(transactionData));
+            string returnUrl = "/organisation-found";
+
+            // Act
+            var result = await controller.RepresentingCompanyRedirect(returnUrl) as RedirectResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Url.Should().Be(returnUrl);
         }
 
         [Fact]
@@ -1527,6 +1554,27 @@
               addressLookupClient.GetAddressesAsync(
                   configurationService.CurrentConfiguration.AddressLookupReferencePath,
                   postcode))
+                .MustHaveHappenedOnceExactly();
+
+            // Assert
+            result.Should().NotBeNull();
+        }
+
+        [Fact]
+        public async Task FindCompany_Get_GetsCompany()
+        {
+            // Act
+            var input = "456";
+
+            var result = await controller.FindCompany(input) as JsonResult;
+
+            result.Should().BeOfType<JsonResult>();
+            result.JsonRequestBehavior.Should().Be(JsonRequestBehavior.AllowGet);
+
+            A.CallTo(() =>
+              companiesHouseClient.GetCompanyDetailsAsync(
+                  configurationService.CurrentConfiguration.CompaniesHouseReferencePath,
+                  input))
                 .MustHaveHappenedOnceExactly();
 
             // Assert
@@ -1760,9 +1808,12 @@
         {
             // Arrange
             var model = new OrganisationViewModel
-                { CompaniesRegistrationNumber = "12345678", CompanyName = "Test Company" };
+            { CompaniesRegistrationNumber = "12345678", CompanyName = "Test Company", Address = new ExternalAddressData { CountryId = Guid.NewGuid() } };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
                 .Returns(Task.FromResult(new List<Core.Organisations.OrganisationData>()));
+
+            model.CompaniesRegistrationNumber = "4567894";
+            model.EEEBrandNames = "s";
 
             // Act
             await controller.OrganisationDetails(model);
@@ -1777,9 +1828,12 @@
         {
             // Arrange
             var model = new OrganisationViewModel
-                { CompaniesRegistrationNumber = "12345678", CompanyName = "Test Company" };
+            { CompaniesRegistrationNumber = "12345678", CompanyName = "Test Company", Address = new ExternalAddressData { CountryId = Guid.NewGuid() } };
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
                 .Returns(Task.FromResult(new List<Core.Organisations.OrganisationData>()));
+
+            model.CompaniesRegistrationNumber = "4567894";
+            model.EEEBrandNames = "s";
 
             // Act
             await controller.OrganisationDetails(model);
@@ -1906,6 +1960,7 @@
             model.ProducerRegistrationNumber = "ValidRegistrationNumber";
             model.IsPreviousSchemeMember = true;
             model.OrganisationType = ExternalOrganisationType.RegisteredCompany;
+            model.CompaniesRegistrationNumber = "4567894";
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, YesNoType.No)
@@ -1965,6 +2020,7 @@
             model.ProducerRegistrationNumber = "ValidRegistrationNumber";
             model.IsPreviousSchemeMember = false;
             model.OrganisationType = ExternalOrganisationType.RegisteredCompany;
+            model.CompaniesRegistrationNumber = "4567894";
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, YesNoType.No)
@@ -2018,8 +2074,9 @@
                 PreviousRegistration = PreviouslyRegisteredProducerType.YesPreviousSchemeMember,
                 OrganisationViewModel = new OrganisationViewModel()
                 {
-                    OrganisationType = ExternalOrganisationType.Partnership,
-                    CompanyName = "Test Company"
+                    OrganisationType = ExternalOrganisationType.RegisteredCompany,
+                    CompanyName = "Test Company",
+                    CompaniesRegistrationNumber = "4567894"
                 }
             };
 
@@ -2044,6 +2101,176 @@
             model.Address.Countries.Should().BeEquivalentTo(countries);
         }
 
+        [Fact]
+        public async Task CheckAuthorisedRepresentitiveAndRedirect_NoTransactionData_RedirectsToRepresentingCompanyDetails()
+        {
+            // Arrange
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(Task.FromResult<OrganisationTransactionData>(null));
+
+            const string returnUrl = "/test-return-url";
+
+            // Act
+            var result = await controller.CheckAuthorisedRepresentitiveAndRedirect(returnUrl) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("RepresentingCompanyDetails");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+            result.RouteValues["returnUrl"].Should().Be(returnUrl);
+
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task CheckAuthorisedRepresentitiveAndRedirect_WithNoAuthorisedRepresentative_CompletesRegistrationAndRedirects()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var transactionData = new OrganisationTransactionData
+            {
+                AuthorisedRepresentative = YesNoType.No
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(transactionData);
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._))
+                .Returns(organisationId);
+
+            // Act
+            var result = await controller.CheckAuthorisedRepresentitiveAndRedirect(null) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("RegistrationComplete");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+            result.RouteValues["organisationId"].Should().Be(organisationId);
+
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task CheckAuthorisedRepresentitiveAndRedirect_WithAuthorisedRepresentative_RedirectsToRepresentingCompanyDetails()
+        {
+            // Arrange
+            var transactionData = new OrganisationTransactionData
+            {
+                AuthorisedRepresentative = YesNoType.Yes
+            };
+
+            const string returnUrl = "/test-return-url";
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(transactionData);
+
+            // Act
+            var result = await controller.CheckAuthorisedRepresentitiveAndRedirect(returnUrl) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("RepresentingCompanyDetails");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+            result.RouteValues["returnUrl"].Should().Be(returnUrl);
+
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustNotHaveHappened();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData("/some-return-url")]
+        public async Task CheckAuthorisedRepresentitiveAndRedirect_ReturnUrlHandledCorrectly(string returnUrl)
+        {
+            // Arrange
+            var transactionData = new OrganisationTransactionData
+            {
+                AuthorisedRepresentative = YesNoType.Yes
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(transactionData);
+
+            // Act
+            var result = await controller.CheckAuthorisedRepresentitiveAndRedirect(returnUrl) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("RepresentingCompanyDetails");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+            result.RouteValues["returnUrl"].Should().Be(returnUrl);
+        }
+
+        [Fact]
+        public async Task CheckAuthorisedRepresentitiveAndRedirect_CompletesTransaction_SetsCorrectOrganisationId()
+        {
+            // Arrange
+            var expectedOrganisationId = Guid.NewGuid();
+            var transactionData = new OrganisationTransactionData
+            {
+                AuthorisedRepresentative = YesNoType.No
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(transactionData);
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._))
+                .Returns(expectedOrganisationId);
+
+            // Act
+            var result = await controller.CheckAuthorisedRepresentitiveAndRedirect(null) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["organisationId"].Should().Be(expectedOrganisationId);
+        }
+
+        [Fact]
+        public async Task CheckAuthorisedRepresentitiveAndRedirect_WithNoAuthRep_InvalidatesCacheAfterCompletingTransaction()
+        {
+            // Arrange
+            var transactionData = new OrganisationTransactionData
+            {
+                AuthorisedRepresentative = YesNoType.No
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(transactionData);
+
+            // Act
+            await controller.CheckAuthorisedRepresentitiveAndRedirect(null);
+
+            // Assert
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._))
+                .MustHaveHappenedOnceExactly()
+                .Then(A.CallTo(() => weeeCache.InvalidateOrganisationSearch())
+                    .MustHaveHappenedOnceExactly());
+        }
+
+        [Theory]
+        [InlineData(YesNoType.Yes)]
+        [InlineData(null)]
+        public async Task CheckAuthorisedRepresentitiveAndRedirect_WhenNotNo_DoesNotCompleteTransaction(YesNoType? authRepType)
+        {
+            // Arrange
+            var transactionData = new OrganisationTransactionData
+            {
+                AuthorisedRepresentative = authRepType
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(transactionData);
+
+            // Act
+            await controller.CheckAuthorisedRepresentitiveAndRedirect(null);
+
+            // Assert
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._))
+                .MustNotHaveHappened();
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch())
+                .MustNotHaveHappened();
+        }
+
         [Theory]
         [InlineData("2024-11-06", true)]  // currentDate >= featureEnabledDate (Should show the message)
         [InlineData("2024-11-08", false)] // currentDate < featureEnabledDate (Should not show the message)
@@ -2066,9 +2293,15 @@
             A.CallTo(() => configurationService.CurrentConfiguration.SmallProducerFeatureEnabledFrom)
                 .Returns(featureEnabledDate);
 
+            var apiDate = featureEnabledDate;
+            if (!expectedMessageFlag)
+            {
+                apiDate = featureEnabledDate.AddDays(-1);
+            }
+
             var weeeClient = A.Fake<IWeeeClient>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._))
-                .Returns(DateTime.Now);
+                .Returns(apiDate);
 
             var controller = new OrganisationRegistrationController(
                 () => weeeClient,

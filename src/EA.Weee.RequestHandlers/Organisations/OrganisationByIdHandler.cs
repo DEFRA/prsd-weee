@@ -101,12 +101,6 @@
             var systemTime = await systemDataDataAccess.GetSystemDateTime();
             var currentYear = systemTime.Year;
 
-            var validStatuses = new[]
-            {
-                DirectProducerSubmissionStatus.Complete.Value,
-                DirectProducerSubmissionStatus.Returned.Value
-            };
-
             // Ensure proper materialization of the query with explicit ordering
             var directRegistrants = await context.DirectRegistrants
                 .Where(o => o.OrganisationId == organisationId)
@@ -116,12 +110,7 @@
                     dr.AuthorisedRepresentativeId,
                     OverseasProducerName = dr.AuthorisedRepresentative.OverseasProducerName,
                     HasCurrentYearSubmission = dr.DirectProducerSubmissions
-                        .Any(submission => submission.ComplianceYear == currentYear),
-                    MostRecentSubmittedYear = dr.DirectProducerSubmissions
-                        .Where(submission => validStatuses.Contains(submission.DirectProducerSubmissionStatus.Value))
-                        .Select(submission => submission.ComplianceYear)
-                        .OrderByDescending(x => x)
-                        .FirstOrDefault()
+                        .Any(submission => submission.ComplianceYear == currentYear)
                 })
                 .ToListAsync();
 
@@ -133,8 +122,7 @@
                     YearSubmissionStarted = directRegistrant.HasCurrentYearSubmission,
                     RepresentedCompanyName = directRegistrant.AuthorisedRepresentativeId.HasValue
                         ? directRegistrant.OverseasProducerName
-                        : null,
-                    MostRecentSubmittedYear = directRegistrant.MostRecentSubmittedYear
+                        : null
                 });
             }
         }

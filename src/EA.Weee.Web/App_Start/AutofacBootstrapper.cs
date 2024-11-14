@@ -18,7 +18,7 @@
     using EA.Weee.Web.Areas.Producer.Filters;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using EA.Weee.Web.Services.SubmissionService;
+    using EA.Weee.Web.Services.SubmissionsService;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using FluentValidation;
     using Infrastructure;

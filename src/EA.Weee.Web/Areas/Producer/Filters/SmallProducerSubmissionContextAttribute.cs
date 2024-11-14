@@ -51,21 +51,7 @@
             {
                 using (var client = Client())
                 {
-                    data = await client.SendAsync(context.HttpContext.User.GetAccessToken(), new GetSmallProducerSubmission(guidDirectRegistrantId));
-
-                    if (data?.CurrentSubmission == null)
-                    {
-                        var addSubmissionResult = await client.SendAsync(context.HttpContext.User.GetAccessToken(), new AddSmallProducerSubmission(guidDirectRegistrantId));
-
-                        if (addSubmissionResult.InvalidCache)
-                        {
-                            await Cache.InvalidateSmallProducerSearch();
-                        }
-                        
-                        data = await client.SendAsync(context.HttpContext.User.GetAccessToken(), new GetSmallProducerSubmission(guidDirectRegistrantId));
-                    }
-
-                    return data;
+                    return await client.SendAsync(context.HttpContext.User.GetAccessToken(), new GetSmallProducerSubmission(guidDirectRegistrantId));
                 }
             });
 

@@ -9,6 +9,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Net;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
@@ -49,6 +50,7 @@
         [Theory]
         [InlineData("SW1A 1AA")]
         [InlineData("SW1A1AA")]
+        [InlineData("SW1")] 
         public async Task GetAddressesAsync_WithValidPostcode_ShouldReturnAddresses(string postcode)
         {
             // Arrange
@@ -108,6 +110,39 @@
             result.Error.Should().BeFalse();
             A.CallTo(() => httpClient.SendAsync(A<HttpRequestMessage>._, A<CancellationToken>._))
                 .MustNotHaveHappened();
+            A.CallTo(() => logger.Warning(
+                    A<string>.That.IsEqualTo("Invalid postcode format provided: {Postcode}"),
+                    A<string>.That.IsEqualTo(postcode)))
+                .MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task GetAddressesAsync_WhenApiReturnsNoContent_ShouldReturnEmptyResponse()
+        {
+            // Arrange
+            const string endpoint = "api/addresses";
+            const string postcode = "SW1A 1AA";
+            var response = new HttpResponseMessage(HttpStatusCode.NoContent);
+
+            A.CallTo(() => httpClient.SendAsync(A<HttpRequestMessage>._, A<CancellationToken>._))
+                .Returns(response);
+
+            A.CallTo(() => retryPolicy.ExecuteAsync(A<Func<Task<HttpResponseMessage>>>._))
+                .ReturnsLazily(call =>
+                {
+                    var func = call.GetArgument<Func<Task<HttpResponseMessage>>>(0);
+                    return func();
+                });
+
+            // Act
+            var result = await addressLookupClient.GetAddressesAsync(endpoint, postcode);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Results.Should().BeEmpty();
+            result.Error.Should().BeFalse();
+            result.Header.Should().NotBeNull();
+            result.Header.TotalResults.Should().Be("0");
         }
 
         [Fact]
