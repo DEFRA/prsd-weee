@@ -39,15 +39,22 @@
             }
 
             var filterByDirectRegistrant = false;
+            var filterBySchemes = false;
+
             var schemeId = request.SchemeId;
-            if (request.SchemeId == DirectRegistrantFixedIdConstant.DirectRegistrantFixedId)
+            if (request.SchemeId == ReportsFixedIdConstant.AllDirectRegistrantFixedId)
             {
                 schemeId = null;
                 filterByDirectRegistrant = true;
             }
+            else if (request.SchemeId == ReportsFixedIdConstant.AllSchemeFixedId)
+            {
+                schemeId = null;
+                filterBySchemes = true;
+            }
 
             var result = await context.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(
-                       request.ComplianceYear, request.IncludeRemovedProducer, request.IncludeBrandNames, schemeId, request.CompetentAuthorityId, filterByDirectRegistrant);
+                       request.ComplianceYear, request.IncludeRemovedProducer, request.IncludeBrandNames, schemeId, request.CompetentAuthorityId, filterByDirectRegistrant, filterBySchemes);
 
             csvWriter.DefineColumn(@"PCS name or direct registrant", i => i.SchemeName);
             csvWriter.DefineColumn(@"PCS approval number", i => i.ApprovalNumber);

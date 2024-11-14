@@ -68,9 +68,10 @@
         /// <param name="schemeId"></param>
         /// <param name="competentAuthorityId"></param>
         /// <param name="directRegistrantFilter"></param>
+        /// <param name="schemesFilter"></param>
         /// <returns></returns>
         public async Task<List<MembersDetailsCsvData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(int complianceYear, bool includeRemovedProducer,
-            bool includeBrandNames, Guid? schemeId, Guid? competentAuthorityId, bool directRegistrantFilter)
+            bool includeBrandNames, Guid? schemeId, Guid? competentAuthorityId, bool directRegistrantFilter, bool schemesFilter)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
 
@@ -79,16 +80,19 @@
             var includeRemovedProducerParameter = new SqlParameter("@IncludeRemovedProducer", includeRemovedProducer);
             var includeBrandNamesParameter = new SqlParameter("@IncludeBrandNames", includeBrandNames);
             var filterByDirectRegistrant = new SqlParameter("@FilterByDirectRegistrant", directRegistrantFilter);
+            var filterBySchemes = new SqlParameter("@FilterBySchemes", schemesFilter);
 
             return await context.Database
                 .SqlQuery<MembersDetailsCsvData>(
-                    "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @IncludeRemovedProducer, @IncludeBrandNames, @SchemeId, @CompetentAuthorityId, @FilterByDirectRegistrant",
+                    "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @IncludeRemovedProducer, @IncludeBrandNames, @SchemeId, @CompetentAuthorityId, " +
+                    "@FilterByDirectRegistrant, @FilterBySchemes",
                     complianceYearParameter,
                     includeRemovedProducerParameter,
                     includeBrandNamesParameter,
                     schemeIdParameter,
                     competentAuthorityIdParameter,
-                    filterByDirectRegistrant)
+                    filterByDirectRegistrant,
+                    filterBySchemes)
                 .ToListAsync();
         }
 
