@@ -168,17 +168,23 @@
             // Case 2: External user, Incomplete status, year does not match
             new object[] { false, false, SubmissionStatus.InComplete, 2024, 2023, false },
 
-            // Case 3: External user, status is not InComplete
+            // Case 3: External user, Submitted status (should not show continue registration)
             new object[] { false, false, SubmissionStatus.Submitted, 2024, 2024, false },
 
-            // Case 4: Internal admin, Incomplete status, matching year
+            // Case 4: External user, Returned status, matching year (should show continue registration)
+            new object[] { false, false, SubmissionStatus.Returned, 2024, 2024, true },
+
+            // Case 5: External user, Returned status, year does not match
+            new object[] { false, false, SubmissionStatus.Returned, 2024, 2023, false },
+
+            // Case 6: Internal admin, Incomplete status, matching year (should not show continue registration)
             new object[] { true, true, SubmissionStatus.InComplete, 2024, 2024, false },
 
-            // Case 5: Internal admin, Incomplete status, year does not match
-            new object[] { true, true, SubmissionStatus.InComplete, 2024, 2023, false },
+            // Case 7: Internal admin, Returned status, matching year (should not show continue registration)
+            new object[] { true, true, SubmissionStatus.Returned, 2024, 2024, false },
 
-            // Case 6: Admin but not internal, Incomplete status, matching year (treated as external)
-            new object[] { true, false, SubmissionStatus.InComplete, 2024, 2024, true },
+            // Case 8: Internal admin, Submitted status (should not show continue registration)
+            new object[] { true, true, SubmissionStatus.Submitted, 2024, 2024, false },
         };
 
         private OrganisationDetailsTabsViewModel CreateViewModel()
