@@ -4,33 +4,50 @@
     using EA.Weee.Core.DataStandards;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
+    using System;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
 
     public class CompaniesRegistrationNumberStringLengthAttribute : ValidationAttribute
     {
+        private const int MinLength = 7;
+        private const int UkMaxLength = 8;
+
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
-            var model = (OrganisationViewModel)validationContext.ObjectInstance;
-
-            var min = 7;
-            var max = EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber;
-
-            if (model.OrganisationType == ExternalOrganisationType.RegisteredCompany && UkCountry.ValidIds.Contains(model.Address.CountryId))
+            if (!(validationContext.ObjectInstance is OrganisationViewModel model))
             {
-                max = 8;
+                throw new ArgumentException("Expected OrganisationViewModel", nameof(validationContext));
             }
 
-            var val = value as string;
+            var registrationNumber = value as string;
 
-            var count = val?.Count() ?? 0;
-
-            if (count < min || count > max)
+            // Skip validation if the value is null, empty or whitespace
+            if (string.IsNullOrWhiteSpace(registrationNumber))
             {
-                return new ValidationResult($"The company registration number should be {min} to {max} characters long");
+                return ValidationResult.Success;
+            }
+
+            var maxLength = DetermineMaxLength(model);
+            var length = registrationNumber.Length;
+
+            if (length < MinLength || length > maxLength)
+            {
+                return new ValidationResult(
+                    $"The company registration number should be {MinLength} to {maxLength} characters long");
             }
 
             return ValidationResult.Success;
+        }
+
+        private static int DetermineMaxLength(OrganisationViewModel model)
+        {
+            var isUkRegisteredCompany = model.OrganisationType == ExternalOrganisationType.RegisteredCompany &&
+                                        UkCountry.ValidIds.Contains(model.Address.CountryId);
+
+            return isUkRegisteredCompany
+                ? UkMaxLength
+                : EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber;
         }
     }
 }

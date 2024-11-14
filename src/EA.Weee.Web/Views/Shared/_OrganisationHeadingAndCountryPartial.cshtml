@@ -1,6 +1,7 @@
 ﻿@using EA.Weee.Core.DataStandards
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Core.DataStandards
+@using EA.Weee.Core.Organisations
 @using EA.Weee.Web.RazorHelpers
 @using EA.Weee.Web.Controllers
 @using MvcNavigationHelpers
@@ -17,7 +18,11 @@
 @Html.Gds().HintParagraph("If you don't have a company registration number, leave this field blank")
 
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesRegistrationNumber) @(!Model.LookupFound && Model.Action == "Find Company" ? "govuk-form-group--error" : "")">
-    @Html.Gds().LabelFor(m => m.CompaniesRegistrationNumber)
+    @{
+        var showOptional = Model.OrganisationType != ExternalOrganisationType.RegisteredCompany;
+    }
+
+    @Html.Gds().LabelFor(m => m.CompaniesRegistrationNumber, showOptionalLabel: showOptional)
     @Html.Gds().ValidationMessageFor(m => m.CompaniesRegistrationNumber)
     @if (Model.LookupFound == false && Model.Action == "Find Company")
     {
@@ -40,7 +45,7 @@
                    value="Find Company"
                    name="action"
                    class="govuk-button govuk-button--secondary"
-                   data-prevent-double-click="true" />
+                   data-prevent-double-click="true"/>
         </noscript>
 
         <button type="button"
