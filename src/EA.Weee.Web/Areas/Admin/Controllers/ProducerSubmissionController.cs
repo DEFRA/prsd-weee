@@ -4,9 +4,11 @@
     using Base;
     using Core.DirectRegistrant;
     using Core.PaymentDetails;
+    using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Admin;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Requests.Admin.DirectRegistrants;
+    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Admin.ViewModels.Home;
     using EA.Weee.Web.Filters;
     using EA.Weee.Web.Services;
