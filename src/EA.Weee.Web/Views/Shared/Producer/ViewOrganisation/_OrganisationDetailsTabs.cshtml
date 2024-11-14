@@ -1,6 +1,6 @@
 ﻿@using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
-
+@using EA.Weee.Core.DirectRegistrant;
 @using EA.Weee.Web.Areas.Admin.ViewModels.Scheme.Overview
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
@@ -62,6 +62,14 @@ else
     <p>
         @Html.ActionLink("Remove " + Model.Year + " producer registration", "RemoveSubmission", "ProducerSubmission", new { registrationNumber = Model.RegistrationNumber, year = Model.Year }, new { @class = "govuk-link" })
     </p>
+}
+@if (Model.ShowContinueRegistrationToUser)
+{
+    <div class="govuk-button-group govuk-!-padding-top-3">
+        <a href="@Url.Action("TaskList", "Producer")" class="govuk-button">
+            Continue producer registration
+        </a>
+    </div>
 }
 
 <ul class="govuk-tabs__list" role="tablist">
