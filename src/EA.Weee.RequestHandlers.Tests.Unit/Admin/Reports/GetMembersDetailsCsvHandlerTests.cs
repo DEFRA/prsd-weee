@@ -223,6 +223,34 @@
                 false, false)).MustHaveHappenedOnceExactly();
         }
 
+        [Fact]
+        public async Task HandleAsync_WhenSchemeIdIsAllScheme_ShouldCallStoredProcWithNullSchemeIdAndSchemeFilterFlag()
+        {
+            // Arrange
+            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
+            var context = A.Fake<WeeeContext>();
+            var storedProcedures = A.Fake<IStoredProcedures>();
+            var csvWriter = A.Fake<ICsvWriter<MembersDetailsCsvData>>();
+
+            A.CallTo(() => context.StoredProcedures).Returns(storedProcedures);
+
+            var handler = new GetMembersDetailsCsvHandler(authorization, context, csvWriter);
+            var request = new GetMemberDetailsCsv(2016, false, ReportsFixedIdConstant.AllSchemeFixedId, Guid.NewGuid(), false);
+
+            // Act
+            await handler.HandleAsync(request);
+
+            // Assert
+            A.CallTo(() => storedProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(
+                2016,
+                false,
+                false,
+                null,
+                request.CompetentAuthorityId,
+                false,
+                true)).MustHaveHappenedOnceExactly();
+        }
+
         private static GetMembersDetailsCsvHandler CreateHandler(
             out IStoredProcedures storedProcedures,
             out ICsvWriter<MembersDetailsCsvData> csvWriter)
