@@ -179,6 +179,7 @@
             validationResults.Should().BeEmpty();
         }
 
+        [Fact]
         public void EEEBrandNames_HasRequiredAttribute()
         {
             var t = typeof(OrganisationViewModel);
