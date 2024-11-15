@@ -840,7 +840,7 @@
         {
             // Arrange
             var complianceYear = 2024;
-            var date = new DateTime(2022, 09, 2, 13, 22, 0);
+            var date = new DateTime(2023, 10, 15, 10, 30, 0);
             SystemTime.Freeze(date);
             var pdf = TestFixture.Create<byte[]>();
             var content = TestFixture.Create<string>();
