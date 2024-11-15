@@ -16,16 +16,18 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly ISmallProducerDataAccess smallProducerDataAccess;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly WeeeContext weeeContext;
 
         public ReturnSmallProducerSubmissionHandler(
             IWeeeAuthorization authorization,
             ISmallProducerDataAccess smallProducerDataAccess,
-            WeeeContext weeeContext)
+            WeeeContext weeeContext, ISystemDataDataAccess systemDataDataAccess)
         {
             this.authorization = authorization;
             this.smallProducerDataAccess = smallProducerDataAccess;
             this.weeeContext = weeeContext;
+            this.systemDataDataAccess = systemDataDataAccess;
         }
 
         public async Task<Guid> HandleAsync(ReturnSmallProducerSubmission request)
@@ -58,8 +60,9 @@
         private async Task<DirectProducerSubmission> GetAndValidateSubmission(Guid submissionId)
         {
             var submission = await smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionById(submissionId);
+            var systemTime = await systemDataDataAccess.GetSystemDateTime();
 
-            if (submission == null || submission.DirectProducerSubmissionStatus != DirectProducerSubmissionStatus.Complete)
+            if (submission == null || submission.DirectProducerSubmissionStatus != DirectProducerSubmissionStatus.Complete || submission.ComplianceYear != systemTime.Year)
             {
                 throw new InvalidOperationException("Submission status invalid");
             }
