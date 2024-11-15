@@ -41,7 +41,10 @@
         @Html.HiddenFor(m => m.HasAuthorisedRepresentitive)
         @Html.HiddenFor(m => m.Organisation.OrganisationType)
         @Html.HiddenFor(m => m.Organisation.CompaniesRegistrationNumber)
+        @Html.HiddenFor(m => m.Organisation.Action, new { Value = "Edit" })
         @Html.HiddenFor(m => m.RedirectToCheckAnswers)
+
+
 
         <div class="govuk-grid-row govuk-!-padding-bottom-2">
             <div class="flex-container">
