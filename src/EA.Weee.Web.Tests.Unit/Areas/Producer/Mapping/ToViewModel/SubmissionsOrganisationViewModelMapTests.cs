@@ -139,5 +139,36 @@
                            .MustHaveHappenedOnceExactly();
             }
         }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(2024)]
+        public void Map_ShouldMapEEEBrandNames(int? year)
+        {
+            // Arrange
+            var producerSubmission = fixture.Create<SmallProducerSubmissionData>();
+            var expectedBrandNames = fixture.Create<string>();
+
+            producerSubmission.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>()
+            {
+                { 2024, fixture.Build<SmallProducerSubmissionHistoryData>()
+                    .With(x => x.EEEBrandNames, expectedBrandNames)
+                    .Create() }
+            };
+            producerSubmission.EeeBrandNames = expectedBrandNames;
+
+            var source = fixture.Build<SubmissionsYearDetails>()
+                .With(x => x.SmallProducerSubmissionData, producerSubmission)
+                .With(x => x.Year, year)
+                .Create();
+
+            // Act
+            var result = map.Map(source);
+
+            // Assert
+            result.EEEBrandNames.Should().BeEquivalentTo(year.HasValue
+                ? source.SmallProducerSubmissionData.SubmissionHistory[year.Value].EEEBrandNames
+                : source.SmallProducerSubmissionData.EeeBrandNames);
+        }
     }
 }
