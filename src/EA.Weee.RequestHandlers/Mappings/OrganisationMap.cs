@@ -43,7 +43,8 @@
                 HasBusinessAddress = source.HasBusinessAddress,
                 HasNotificationAddress = source.HasNotificationAddress,
                 OrganisationName = source.OrganisationName,
-                IsBalancingScheme = source.ProducerBalancingScheme != null
+                IsBalancingScheme = source.ProducerBalancingScheme != null,
+                IsRepresentingCompany = source.IsRepresentingCompany
             };
         }
 
