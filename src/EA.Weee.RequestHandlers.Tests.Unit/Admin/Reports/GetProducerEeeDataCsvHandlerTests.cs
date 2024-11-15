@@ -91,7 +91,7 @@
             SystemTime.Freeze(time);
             var request = new GetProducerEeeDataCsv(
                 2016,
-                DirectRegistrantFixedIdConstant.DirectRegistrantFixedId,
+                ReportsFixedIdConstant.AllDirectRegistrantFixedId,
                 ObligationType.B2B);
 
             var handler = new GetProducerEeeDataCsvHandler(

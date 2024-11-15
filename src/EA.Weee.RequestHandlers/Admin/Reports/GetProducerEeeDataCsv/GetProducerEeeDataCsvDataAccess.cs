@@ -25,17 +25,25 @@
         public async Task<List<ProducerEeeCsvData>> GetItemsAsync(int complianceYear, Guid? schemeId, string obligationType)
         {
             var filterByDirectRegistrant = false;
-            if (schemeId == DirectRegistrantFixedIdConstant.DirectRegistrantFixedId)
+            var filterByAllSchemes = false;
+
+            if (schemeId == ReportsFixedIdConstant.AllDirectRegistrantFixedId)
             {
                 schemeId = null;
                 filterByDirectRegistrant = true;
+            }
+            else if (schemeId == ReportsFixedIdConstant.AllSchemeFixedId)
+            {
+                schemeId = null;
+                filterByAllSchemes = true;
             }
 
             return await context.StoredProcedures.SpgProducerEeeCsvData(
                 complianceYear,
                 schemeId,
                 obligationType,
-                filterByDirectRegistrant);
+                filterByDirectRegistrant,
+                filterByAllSchemes);
         }
     }
 }
