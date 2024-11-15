@@ -253,7 +253,8 @@ BEGIN
         AND (@SchemeId IS NULL OR RP.SchemeId = @SchemeId)
         AND (@CompetentAuthorityId IS NULL OR S.CompetentAuthorityId = @CompetentAuthorityId)
         AND (@IncludeRemovedProducer = 1 OR RP.Removed = 0)
-        AND (@FilterByDirectRegistrant = 0)
+        AND @FilterByDirectRegistrant = 0
+		AND (@SchemeId IS NOT NULL OR @FilterBySchemes = 1 OR (@FilterBySchemes = 0 AND @FilterByDirectRegistrant = 0))
 
 	UNION ALL
 
@@ -447,7 +448,8 @@ BEGIN
     WHERE
         (@IncludeRemovedProducer = 1 OR rp.Removed = 0) AND
         dps.ComplianceYear = @ComplianceYear AND
-		@FilterBySchemes = 0
+		 @SchemeId IS NULL AND
+		(@FilterByDirectRegistrant = 1 OR (@FilterBySchemes = 0 AND @FilterByDirectRegistrant = 0))
 		
     ORDER BY
 		IsDirectProducer,

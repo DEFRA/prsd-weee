@@ -935,6 +935,115 @@
         }
 
         [Fact]
+        public async Task Execute_WithDirectRegistrantAndSchemeSubmissions_GivenOnlySchemeId_ShouldOnlyReturnSchemeResults()
+        {
+            using (var wrapper = new DatabaseWrapper())
+            {
+                DirectRegistrantHelper.SetupCommonTestData(wrapper);
+
+                var complianceYear = 2053;
+                var (_, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JX", complianceYear);
+
+                var amounts1 = new List<DirectRegistrantHelper.EeeOutputAmountData>
+                {
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 123.456m, ObligationType = Domain.Obligation.ObligationType.B2C },
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C }
+                };
+
+                // create the submission that should not be returned
+                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear, amounts1, DirectProducerSubmissionStatus.Complete, SellingTechniqueType.Both.Value);
+
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                // Create a scheme that should be returned
+                var organisation =
+                    Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
+                var authority =
+                    wrapper.WeeeContext.UKCompetentAuthorities.Single(c =>
+                        c.Abbreviation == UKCompetentAuthorityAbbreviationType.EA);
+                var chargeBandAmount = wrapper.WeeeContext.ChargeBandAmounts.First();
+                var quarter = new Quarter(complianceYear, QuarterType.Q1);
+
+                wrapper.WeeeContext.Organisations.Add(organisation);
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                var scheme1 = new Domain.Scheme.Scheme(organisation);
+                scheme1.UpdateScheme("Test Scheme 1", "WEE/AH7453ZF/SCH", "WEE9462846",
+                    Domain.Obligation.ObligationType.B2C, authority);
+                scheme1.SetStatus(Domain.Scheme.SchemeStatus.Approved);
+
+                var schemeRegisteredProducer1 =
+                    new Domain.Producer.RegisteredProducer("WEE/AG48165JE", complianceYear, scheme1);
+
+                var memberUpload1 = new Domain.Scheme.MemberUpload(
+                    organisation.Id,
+                    "data",
+                    new List<Domain.Scheme.MemberUploadError>(),
+                    0,
+                    complianceYear,
+                    scheme1,
+                    "file name",
+                    null,
+                    false);
+
+                memberUpload1.SetSubmittedDate(SystemTime.UtcNow);
+                memberUpload1.Submit(wrapper.WeeeContext.Users.First());
+
+                var schemeSubmission1 = new Domain.Producer.ProducerSubmission(
+                    schemeRegisteredProducer1, memberUpload1,
+                    new Domain.Producer.ProducerBusiness(),
+                    new Domain.Producer.AuthorisedRepresentative("Foo"),
+                    new DateTime(complianceYear, 1, 1),
+                    0,
+                    true,
+                    null,
+                    "Trading Name 1",
+                    Domain.Producer.Classfication.EEEPlacedOnMarketBandType.Both,
+                    Domain.Producer.Classfication.SellingTechniqueType.Both,
+                    Domain.Obligation.ObligationType.B2C,
+                    Domain.Producer.Classfication.AnnualTurnOverBandType.Lessthanorequaltoonemillionpounds,
+                    new List<Domain.Producer.BrandName>(),
+                    new List<Domain.Producer.SICCode>(),
+                    chargeBandAmount,
+                    0,
+                    A.Dummy<StatusType>());
+
+                memberUpload1.ProducerSubmissions.Add(schemeSubmission1);
+
+                wrapper.WeeeContext.MemberUploads.Add(memberUpload1);
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                schemeRegisteredProducer1.SetCurrentSubmission(schemeSubmission1);
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                var dataReturn1 = new Domain.DataReturns.DataReturn(scheme1, quarter);
+
+                var version1 = new Domain.DataReturns.DataReturnVersion(dataReturn1);
+
+                var amount1 = new Domain.DataReturns.EeeOutputAmount(
+                    Domain.Obligation.ObligationType.B2C,
+                    WeeeCategory.LargeHouseholdAppliances,
+                    123.457m,
+                    schemeRegisteredProducer1);
+
+                version1.EeeOutputReturnVersion.AddEeeOutputAmount(amount1);
+
+                wrapper.WeeeContext.DataReturnVersions.Add(version1);
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                dataReturn1.SetCurrentVersion(version1);
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                var results = await wrapper.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(complianceYear, true, true, scheme1.Id, null, false, false);
+
+                results.Count.Should().Be(1);
+
+                var schemeResult = results.ElementAt(0);
+                schemeResult.ApprovalNumber.Should().Be("WEE/AH7453ZF/SCH");
+            }
+        }
+
+        [Fact]
         public async Task Execute_WithDirectRegistrantSubmissions_WithExcludeRemovedProducer_ShouldReturnNoResults()
         {
             using (var wrapper = new DatabaseWrapper())
