@@ -431,8 +431,8 @@
     <Content Include="scripts\Update\Release 7\Sprint5\20241017-1140-producer-ukeee-sp-update.sql" />
     <Content Include="scripts\Update\Release 7\Sprint6\20241017-1103-producer-details-sp-update.sql" />
     <Content Include="scripts\Update\Release 7\Sprint6\20241022-1113-producer-eee-sp-update-direct-registrant.sql" />
-    <Content Include="scripts\Update\Release 7\Sprint7\20241114-1445-producer-details-sp-update-all-schemes.sql" />
-    <Content Include="scripts\Update\Release 7\Sprint7\20241114-1200-producer-eee-sp-update-all-schemes.sql" />
+    <Content Include="scripts\Update\Release 7\Sprint7\20241115-1554-producer-details-sp-update-all-schemes.sql" />
+    <Content Include="scripts\Update\Release 7\Sprint7\20241115-1620-producer-eee-sp-update-all-schemes.sql" />
     <Content Include="scripts\Update\Release 7\Sprint7\20241112-1049-producer-register-report-rep-name.sql" />
     <Content Include="scripts\Update\Release 7\Sprint7\20241111-1345-producer-details-sp-update-rep-name.sql" />
     <Content Include="scripts\Update\Release 7\Sprint7\20241107-1132-producer-ukeee-sp-update.sql" />
