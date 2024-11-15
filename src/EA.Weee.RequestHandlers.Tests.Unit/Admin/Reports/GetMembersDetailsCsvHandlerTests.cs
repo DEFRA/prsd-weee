@@ -152,7 +152,7 @@
             };
 
             A.CallTo(() => storedProcedures
-            .SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(A<int>._, A<bool>._, A<bool>._, A<Guid>._, A<Guid>._, A<bool>._))
+            .SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(A<int>._, A<bool>._, A<bool>._, A<Guid>._, A<Guid>._, A<bool>._, A<bool>._))
             .Returns(new List<MembersDetailsCsvData> { csvData1, csvData2, csvData3 });
 
             var handler = new GetMembersDetailsCsvHandler(authorization, context, csvWriter);
@@ -180,7 +180,7 @@
             A.CallTo(() => context.StoredProcedures).Returns(storedProcedures);
 
             var handler = new GetMembersDetailsCsvHandler(authorization, context, csvWriter);
-            var request = new GetMemberDetailsCsv(2016, false, DirectRegistrantFixedIdConstant.DirectRegistrantFixedId, Guid.NewGuid(), false);
+            var request = new GetMemberDetailsCsv(2016, false, ReportsFixedIdConstant.AllDirectRegistrantFixedId, Guid.NewGuid(), false);
 
             // Act
             await handler.HandleAsync(request);
@@ -192,7 +192,7 @@
                 false,
                 null,
                 request.CompetentAuthorityId,
-                true)).MustHaveHappenedOnceExactly();
+                true, false)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -220,7 +220,35 @@
                 false,
                 normalSchemeId,
                 request.CompetentAuthorityId,
-                false)).MustHaveHappenedOnceExactly();
+                false, false)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_WhenSchemeIdIsAllScheme_ShouldCallStoredProcWithNullSchemeIdAndSchemeFilterFlag()
+        {
+            // Arrange
+            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
+            var context = A.Fake<WeeeContext>();
+            var storedProcedures = A.Fake<IStoredProcedures>();
+            var csvWriter = A.Fake<ICsvWriter<MembersDetailsCsvData>>();
+
+            A.CallTo(() => context.StoredProcedures).Returns(storedProcedures);
+
+            var handler = new GetMembersDetailsCsvHandler(authorization, context, csvWriter);
+            var request = new GetMemberDetailsCsv(2016, false, ReportsFixedIdConstant.AllSchemeFixedId, Guid.NewGuid(), false);
+
+            // Act
+            await handler.HandleAsync(request);
+
+            // Assert
+            A.CallTo(() => storedProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(
+                2016,
+                false,
+                false,
+                null,
+                request.CompetentAuthorityId,
+                false,
+                true)).MustHaveHappenedOnceExactly();
         }
 
         private static GetMembersDetailsCsvHandler CreateHandler(

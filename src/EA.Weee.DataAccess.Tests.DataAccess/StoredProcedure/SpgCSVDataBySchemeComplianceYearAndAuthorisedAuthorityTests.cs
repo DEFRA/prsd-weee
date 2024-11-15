@@ -21,28 +21,28 @@
     public class SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthorityTests
     {
         [Fact]
-        public async Task Execute_HappyPath_ReturnsProducerWithSelectedSchemeandAA()
+        public async Task Execute_HappyPath_ReturnsProducerWithSelectedSchemeAndAA()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             { 
                 // Arrange
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
-                Scheme scheme1 = helper.CreateScheme();
+                var scheme1 = helper.CreateScheme();
 
                 scheme1.CompetentAuthorityId = new Guid("4EEE5942-01B2-4A4D-855A-34DEE1BBBF26");
 
-                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                var memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
                 memberUpload1.SubmittedDate = new DateTime(2015, 1, 1);
 
-                Weee.Tests.Core.Model.ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/11AAAA11");
+                var producer1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/11AAAA11");
 
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results =
+                var results =
                     await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false,
                         false, scheme1.Id, scheme1.CompetentAuthorityId, false);
 
@@ -50,7 +50,7 @@
                 Assert.NotNull(results);
                 Assert.Single(results);
 
-                MembersDetailsCsvData result = results[0];
+                var result = results[0];
 
                 Assert.Equal("WEE/11AAAA11", result.PRN);
             }
@@ -64,14 +64,14 @@
         [Fact]
         public async Task Execute_WithNonSubmittedMemberUpload_IgnoresProducer()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
                 // Arrange
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
-                Scheme scheme1 = helper.CreateScheme();
+                var scheme1 = helper.CreateScheme();
 
-                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                var memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = false;
 
@@ -80,7 +80,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null, false);
+                var results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null, false);
 
                 // Assert
                 Assert.NotNull(results);
@@ -96,30 +96,30 @@
         [Fact]
         public async Task Execute_WithOneCurrentProducerAsCompany_ReturnsCompanyName()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
                 // Arrange
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
-                Scheme scheme1 = helper.CreateScheme();
+                var scheme1 = helper.CreateScheme();
 
-                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                var memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
                 memberUpload1.SubmittedDate = new DateTime(2015, 1, 1);
 
-                Weee.Tests.Core.Model.ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/11AAAA11");
+                var producer1 = helper.CreateProducerAsCompany(memberUpload1, "WEE/11AAAA11");
 
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null, false);
+                var results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null, false);
 
                 // Assert
                 Assert.NotNull(results);
                 Assert.Single(results);
 
-                MembersDetailsCsvData result = results[0];
+                var result = results[0];
 
                 Assert.Equal(producer1.Business.Company.Name, result.ProducerName);
             }
@@ -133,30 +133,30 @@
         [Fact]
         public async Task Execute_WithOneCurrentProducerAsPartnership_ReturnsPartnershipName()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
                 // Arrange
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
-                Scheme scheme1 = helper.CreateScheme();
+                var scheme1 = helper.CreateScheme();
 
-                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                var memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
                 memberUpload1.SubmittedDate = new DateTime(2015, 1, 1);
 
-                Weee.Tests.Core.Model.ProducerSubmission producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
+                var producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
 
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null, false);
+                var results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null, false);
 
                 // Assert
                 Assert.NotNull(results);
                 Assert.Single(results);
 
-                MembersDetailsCsvData result = results[0];
+                var result = results[0];
 
                 Assert.Equal(producer1.Business.Partnership.Name, result.ProducerName);
             }
@@ -170,30 +170,30 @@
         [Fact]
         public async Task Execute_WithOneCurrentProducerAsSoleTrader_ReturnsNoName()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
                 // Arrange
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
-                Scheme scheme1 = helper.CreateScheme();
+                var scheme1 = helper.CreateScheme();
 
-                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                var memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
                 memberUpload1.SubmittedDate = new DateTime(2015, 1, 1);
 
-                Weee.Tests.Core.Model.ProducerSubmission producer1 = helper.CreateProducerAsSoleTrader(memberUpload1, "WEE/11AAAA11");
+                var producer1 = helper.CreateProducerAsSoleTrader(memberUpload1, "WEE/11AAAA11");
 
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null, false);
+                var results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null, false);
 
                 // Assert
                 Assert.NotNull(results);
                 Assert.Single(results);
 
-                MembersDetailsCsvData result = results[0];
+                var result = results[0];
 
                 Assert.Null(result.ProducerName);
             }
@@ -207,36 +207,36 @@
         [Fact]
         public async Task Execute_WithOneCurrentInSeveralYearsProducer_ReturnsTheCorrectYearsData()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
                 // Arrange
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
-                Scheme scheme1 = helper.CreateScheme();
+                var scheme1 = helper.CreateScheme();
 
-                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                var memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
                 memberUpload1.SubmittedDate = new DateTime(2015, 1, 1);
 
-                Weee.Tests.Core.Model.ProducerSubmission producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
+                var producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
 
-                MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme1);
+                var memberUpload2 = helper.CreateMemberUpload(scheme1);
                 memberUpload2.ComplianceYear = 2017;
                 memberUpload2.IsSubmitted = true;
                 memberUpload2.SubmittedDate = new DateTime(2015, 1, 1);
 
-                Weee.Tests.Core.Model.ProducerSubmission producer2 = helper.CreateProducerAsPartnership(memberUpload2, "WEE/11AAAA11");
+                var producer2 = helper.CreateProducerAsPartnership(memberUpload2, "WEE/11AAAA11");
 
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null, false);
+                var results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null, false);
                 // Assert
                 Assert.NotNull(results);
                 Assert.Single(results);
 
-                MembersDetailsCsvData result = results[0];
+                var result = results[0];
 
                 Assert.Equal(producer1.Business.Partnership.Name, result.ProducerName);
             }
@@ -249,33 +249,33 @@
         [Fact]
         public async Task Execute_WithProducersInOtherSchemes_ReturnsOtherSchemesProducers()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
                 // Arrange
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
-                Scheme scheme1 = helper.CreateScheme();
+                var scheme1 = helper.CreateScheme();
 
-                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                var memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
                 memberUpload1.SubmittedDate = new DateTime(2015, 1, 1);
 
-                Weee.Tests.Core.Model.ProducerSubmission producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
+                var producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11AAAA11");
 
-                Scheme scheme2 = helper.CreateScheme();
+                var scheme2 = helper.CreateScheme();
 
-                MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme2);
+                var memberUpload2 = helper.CreateMemberUpload(scheme2);
                 memberUpload2.ComplianceYear = 2016;
                 memberUpload2.IsSubmitted = true;
                 memberUpload2.SubmittedDate = new DateTime(2015, 1, 1);
 
-                Weee.Tests.Core.Model.ProducerSubmission producer2 = helper.CreateProducerAsPartnership(memberUpload2, "WEE/22BBBB22");
+                var producer2 = helper.CreateProducerAsPartnership(memberUpload2, "WEE/22BBBB22");
 
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, null, null, false);
+                var results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, null, null, false);
 
                 // Assert
                 Assert.NotNull(results);
@@ -291,31 +291,31 @@
         [Fact]
         public async Task Execute_WithSeveralProducers_ReturnsResultsOrderedByOrganisationName()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
                 // Arrange
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
-                Scheme scheme1 = helper.CreateScheme();
+                var scheme1 = helper.CreateScheme();
 
-                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                var memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
                 memberUpload1.SubmittedDate = new DateTime(2015, 1, 1);
 
-                Weee.Tests.Core.Model.ProducerSubmission producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11BBBB11");
+                var producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11BBBB11");
                 producer1.Business.Partnership.Name = "ABCH";
 
-                Weee.Tests.Core.Model.ProducerSubmission producer2 = helper.CreateProducerAsCompany(memberUpload1, "WEE/22AAAA22");
+                var producer2 = helper.CreateProducerAsCompany(memberUpload1, "WEE/22AAAA22");
                 producer2.Business.Company.Name = "AAAA";
 
-                Weee.Tests.Core.Model.ProducerSubmission producer3 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/33CCCC33");
+                var producer3 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/33CCCC33");
                 producer3.Business.Partnership.Name = "ABCD";
 
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null, false);
+                var results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null, false);
 
                 // Assert
                 Assert.NotNull(results);
@@ -334,33 +334,33 @@
         [Fact]
         public async Task Execute_WithSeveralProducersAndIncludeRemovedProducersIsYes_ReturnsAllProducersWithRemovedProducers()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
                 // Arrange
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
-                Scheme scheme1 = helper.CreateScheme();
+                var scheme1 = helper.CreateScheme();
 
-                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                var memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
                 memberUpload1.SubmittedDate = new DateTime(2015, 1, 1);
 
-                Weee.Tests.Core.Model.ProducerSubmission producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11BBBB11");
+                var producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11BBBB11");
                 producer1.Business.Partnership.Name = "ABCH";
                 producer1.RegisteredProducer.Removed = true;
 
-                Weee.Tests.Core.Model.ProducerSubmission producer2 = helper.CreateProducerAsCompany(memberUpload1, "WEE/22AAAA22");
+                var producer2 = helper.CreateProducerAsCompany(memberUpload1, "WEE/22AAAA22");
                 producer2.Business.Company.Name = "AAAA";
                 producer2.RegisteredProducer.Removed = true;
 
-                Weee.Tests.Core.Model.ProducerSubmission producer3 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/33CCCC33");
+                var producer3 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/33CCCC33");
                 producer3.Business.Partnership.Name = "ABCD";
 
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, true, false, scheme1.Id, null, false);
+                var results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, true, false, scheme1.Id, null, false);
 
                 // Assert
                 Assert.NotNull(results);
@@ -380,34 +380,34 @@
         [Fact]
         public async Task Execute_WithSeveralProducersAndIncludeRemovedProducersIsNo_ReturnsAllProducersWithoutRemovedProducers()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
                 // Arrange
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
-                Scheme scheme1 = helper.CreateScheme();
+                var scheme1 = helper.CreateScheme();
 
-                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme1);
+                var memberUpload1 = helper.CreateMemberUpload(scheme1);
                 memberUpload1.ComplianceYear = 2016;
                 memberUpload1.IsSubmitted = true;
                 memberUpload1.SubmittedDate = new DateTime(2015, 1, 1);
 
-                Weee.Tests.Core.Model.ProducerSubmission producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11BBBB11");
+                var producer1 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/11BBBB11");
                 producer1.Business.Partnership.Name = "ABCH";
                 producer1.RegisteredProducer.Removed = true;
 
-                Weee.Tests.Core.Model.ProducerSubmission producer2 = helper.CreateProducerAsCompany(memberUpload1, "WEE/22AAAA22");
+                var producer2 = helper.CreateProducerAsCompany(memberUpload1, "WEE/22AAAA22");
                 producer2.Business.Company.Name = "AAAA";
                 producer2.RegisteredProducer.Removed = true;
 
-                Weee.Tests.Core.Model.ProducerSubmission producer3 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/33CCCC33");
+                var producer3 = helper.CreateProducerAsPartnership(memberUpload1, "WEE/33CCCC33");
                 producer3.Business.Partnership.Name = "ABCD";
                 producer3.RegisteredProducer.Removed = false;
 
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null, false);
+                var results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme1.Id, null, false);
 
                 // Assert
                 Assert.NotNull(results);
@@ -421,19 +421,19 @@
         [Fact]
         public async Task Execute_WithoutProducerBrandNames_ReturnsBrandNamesAsNull()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
                 // Arrange
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
-                Scheme scheme = helper.CreateScheme();
+                var scheme = helper.CreateScheme();
 
-                MemberUpload memberUpload = helper.CreateMemberUpload(scheme);
+                var memberUpload = helper.CreateMemberUpload(scheme);
                 memberUpload.ComplianceYear = 2016;
                 memberUpload.IsSubmitted = true;
                 memberUpload.SubmittedDate = new DateTime(2015, 1, 1);
 
-                Weee.Tests.Core.Model.ProducerSubmission producer = helper.CreateProducerAsPartnership(memberUpload, "WEE/11BBBB11");
+                var producer = helper.CreateProducerAsPartnership(memberUpload, "WEE/11BBBB11");
                 producer.Business.Partnership.Name = "ABCH";
                 producer.RegisteredProducer.Removed = false;
 
@@ -442,7 +442,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme.Id, null, false);
+                var results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, false, scheme.Id, null, false);
 
                 // Assert
                 Assert.NotNull(results);
@@ -455,19 +455,19 @@
         [Fact]
         public async Task Execute_WithProducerBrandNames_ReturnsBrandNames()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
                 // Arrange
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
-                Scheme scheme = helper.CreateScheme();
+                var scheme = helper.CreateScheme();
 
-                MemberUpload memberUpload = helper.CreateMemberUpload(scheme);
+                var memberUpload = helper.CreateMemberUpload(scheme);
                 memberUpload.ComplianceYear = 2016;
                 memberUpload.IsSubmitted = true;
                 memberUpload.SubmittedDate = new DateTime(2015, 1, 1);
 
-                Weee.Tests.Core.Model.ProducerSubmission producer = helper.CreateProducerAsPartnership(memberUpload, "WEE/11BBBB11");
+                var producer = helper.CreateProducerAsPartnership(memberUpload, "WEE/11BBBB11");
                 producer.Business.Partnership.Name = "ABCH";
                 producer.RegisteredProducer.Removed = false;
 
@@ -477,7 +477,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, true, scheme.Id, null, false);
+                var results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, false, true, scheme.Id, null, false);
 
                 // Assert
                 Assert.NotNull(results);
@@ -491,19 +491,19 @@
         [Fact]
         public async Task Execute_WithProducerBrandNames_ReturnsBrandNamesForRemovedProducer()
         {
-            using (DatabaseWrapper db = new DatabaseWrapper())
+            using (var db = new DatabaseWrapper())
             {
                 // Arrange
-                ModelHelper helper = new ModelHelper(db.Model);
+                var helper = new ModelHelper(db.Model);
 
-                Scheme scheme = helper.CreateScheme();
+                var scheme = helper.CreateScheme();
 
-                MemberUpload memberUpload = helper.CreateMemberUpload(scheme);
+                var memberUpload = helper.CreateMemberUpload(scheme);
                 memberUpload.ComplianceYear = 2016;
                 memberUpload.IsSubmitted = true;
                 memberUpload.SubmittedDate = new DateTime(2015, 1, 1);
 
-                Weee.Tests.Core.Model.ProducerSubmission producer = helper.CreateProducerAsPartnership(memberUpload, "WEE/11BBBB11");
+                var producer = helper.CreateProducerAsPartnership(memberUpload, "WEE/11BBBB11");
                 producer.Business.Partnership.Name = "ABCH";
                 producer.RegisteredProducer.Removed = true;
 
@@ -513,7 +513,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                List<MembersDetailsCsvData> results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, true, true, scheme.Id, null, false);
+                var results = await db.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(2016, true, true, scheme.Id, null, false);
 
                 // Assert
                 Assert.NotNull(results);
@@ -644,7 +644,7 @@
                 dataReturn1.SetCurrentVersion(version1);
                 await wrapper.WeeeContext.SaveChangesAsync();
 
-                List<MembersDetailsCsvData> results = await wrapper.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(complianceYear, true, true, null, null, filterDirectRegistrant);
+                var results = await wrapper.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(complianceYear, true, true, null, null, filterDirectRegistrant);
 
                 var assertionSmallProducerStartIndex = 1;
                 if (filterDirectRegistrant)
@@ -822,6 +822,115 @@
                 result2.DateAmended.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
                 result2.DateRegistered.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
                 result2.BrandNames.Should().Be("brand name");
+            }
+        }
+
+        [Fact]
+        public async Task Execute_WithDirectRegistrantAndSchemeSubmissions_GivenOnlySchemeFilter_ShouldOnlyReturnSchemeResults()
+        {
+            using (var wrapper = new DatabaseWrapper())
+            {
+                DirectRegistrantHelper.SetupCommonTestData(wrapper);
+
+                var complianceYear = 2056;
+                var (_, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear);
+
+                var amounts1 = new List<DirectRegistrantHelper.EeeOutputAmountData>
+                {
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 123.456m, ObligationType = Domain.Obligation.ObligationType.B2C },
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C }
+                };
+
+                // create the submission that should not be returned
+                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear, amounts1, DirectProducerSubmissionStatus.Complete, SellingTechniqueType.Both.Value);
+
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                // Create a scheme that should be returned
+                var organisation =
+                    Domain.Organisation.Organisation.CreateSoleTrader("Test Organisation");
+                var authority =
+                    wrapper.WeeeContext.UKCompetentAuthorities.Single(c =>
+                        c.Abbreviation == UKCompetentAuthorityAbbreviationType.EA);
+                var chargeBandAmount = wrapper.WeeeContext.ChargeBandAmounts.First();
+                var quarter = new Quarter(complianceYear, QuarterType.Q1);
+
+                wrapper.WeeeContext.Organisations.Add(organisation);
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                var scheme1 = new Domain.Scheme.Scheme(organisation);
+                scheme1.UpdateScheme("Test Scheme 1", "WEE/AH7453NF/SCH", "WEE9462846",
+                    Domain.Obligation.ObligationType.B2C, authority);
+                scheme1.SetStatus(Domain.Scheme.SchemeStatus.Approved);
+
+                var schemeRegisteredProducer1 =
+                    new Domain.Producer.RegisteredProducer("WEE/AG48365JE", complianceYear, scheme1);
+
+                var memberUpload1 = new Domain.Scheme.MemberUpload(
+                    organisation.Id,
+                    "data",
+                    new List<Domain.Scheme.MemberUploadError>(),
+                    0,
+                    complianceYear,
+                    scheme1,
+                    "file name",
+                    null,
+                    false);
+
+                memberUpload1.SetSubmittedDate(SystemTime.UtcNow);
+                memberUpload1.Submit(wrapper.WeeeContext.Users.First());
+
+                var schemeSubmission1 = new Domain.Producer.ProducerSubmission(
+                    schemeRegisteredProducer1, memberUpload1,
+                    new Domain.Producer.ProducerBusiness(),
+                    new Domain.Producer.AuthorisedRepresentative("Foo"),
+                    new DateTime(complianceYear, 1, 1),
+                    0,
+                    true,
+                    null,
+                    "Trading Name 1",
+                    Domain.Producer.Classfication.EEEPlacedOnMarketBandType.Both,
+                    Domain.Producer.Classfication.SellingTechniqueType.Both,
+                    Domain.Obligation.ObligationType.B2C,
+                    Domain.Producer.Classfication.AnnualTurnOverBandType.Lessthanorequaltoonemillionpounds,
+                    new List<Domain.Producer.BrandName>(),
+                    new List<Domain.Producer.SICCode>(),
+                    chargeBandAmount,
+                    0,
+                    A.Dummy<StatusType>());
+
+                memberUpload1.ProducerSubmissions.Add(schemeSubmission1);
+
+                wrapper.WeeeContext.MemberUploads.Add(memberUpload1);
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                schemeRegisteredProducer1.SetCurrentSubmission(schemeSubmission1);
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                var dataReturn1 = new Domain.DataReturns.DataReturn(scheme1, quarter);
+
+                var version1 = new Domain.DataReturns.DataReturnVersion(dataReturn1);
+
+                var amount1 = new Domain.DataReturns.EeeOutputAmount(
+                    Domain.Obligation.ObligationType.B2C,
+                    WeeeCategory.LargeHouseholdAppliances,
+                    123.457m,
+                    schemeRegisteredProducer1);
+
+                version1.EeeOutputReturnVersion.AddEeeOutputAmount(amount1);
+
+                wrapper.WeeeContext.DataReturnVersions.Add(version1);
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                dataReturn1.SetCurrentVersion(version1);
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                var results = await wrapper.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(complianceYear, true, true, null, null, false, true);
+
+                results.Count.Should().Be(1);
+
+                var schemeResult = results.ElementAt(0);
+                schemeResult.ApprovalNumber.Should().Be("WEE/AH7453NF/SCH");
             }
         }
 

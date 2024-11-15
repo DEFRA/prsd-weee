@@ -34,20 +34,27 @@
             authorization.EnsureCanAccessInternalArea();
             if (request.ComplianceYear == 0)
             {
-                string message = string.Format("Compliance year cannot be \"{0}\".", request.ComplianceYear);
+                var message = $"Compliance year cannot be \"{request.ComplianceYear}\".";
                 throw new ArgumentException(message);
             }
 
             var filterByDirectRegistrant = false;
+            var filterBySchemes = false;
+
             var schemeId = request.SchemeId;
-            if (request.SchemeId == DirectRegistrantFixedIdConstant.DirectRegistrantFixedId)
+            if (request.SchemeId == ReportsFixedIdConstant.AllDirectRegistrantFixedId)
             {
                 schemeId = null;
                 filterByDirectRegistrant = true;
             }
+            else if (request.SchemeId == ReportsFixedIdConstant.AllSchemeFixedId)
+            {
+                schemeId = null;
+                filterBySchemes = true;
+            }
 
             var result = await context.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(
-                       request.ComplianceYear, request.IncludeRemovedProducer, request.IncludeBrandNames, schemeId, request.CompetentAuthorityId, filterByDirectRegistrant);
+                       request.ComplianceYear, request.IncludeRemovedProducer, request.IncludeBrandNames, schemeId, request.CompetentAuthorityId, filterByDirectRegistrant, filterBySchemes);
 
             csvWriter.DefineColumn(@"PCS name or direct registrant", i => i.SchemeName);
             csvWriter.DefineColumn(@"PCS approval number", i => i.ApprovalNumber);
@@ -140,22 +147,20 @@
             {
                 var outOfRangeProducerBrandNames = result
                     .Where(r => r.BrandNames.Length > MaxBrandNamesLength)
-                    .Select(r => r.ProducerName);
+                    .Select(r => r.ProducerName).ToList();
 
                 if (outOfRangeProducerBrandNames.Any())
                 {
                     throw new Exception(
-                       string.Format("The following producers have brand names exceeding the maximum allowed length: {0}.", string.Join(", ", outOfRangeProducerBrandNames)));
+                        $"The following producers have brand names exceeding the maximum allowed length: {string.Join(", ", outOfRangeProducerBrandNames)}.");
                 }
 
                 csvWriter.DefineColumn("Brand names", i => i.BrandNames);
             }
 
-            string fileContent = csvWriter.Write(result);
+            var fileContent = csvWriter.Write(result);
 
-            var fileName = string.Format("{0} - producerdetails_{1:ddMMyyyy_HHmm}.csv",
-                request.ComplianceYear,
-                SystemTime.UtcNow);
+            var fileName = $"{request.ComplianceYear} - producerdetails_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
 
             return new CSVFileData
             {
