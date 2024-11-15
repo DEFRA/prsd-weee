@@ -146,7 +146,8 @@
             var source = new SubmissionsYearDetails()
             {
                 SmallProducerSubmissionData = SmallProducerSubmissionData,
-                Year = SmallProducerSubmissionData.CurrentSubmission.ComplianceYear
+                Year = SmallProducerSubmissionData.CurrentSubmission.ComplianceYear,
+                DisplayRegistrationDetails = false
             };
 
             var model = mapper.Map<SubmissionsYearDetails, CheckAnswersViewModel>(source);
@@ -284,7 +285,8 @@
             var source = new SubmissionsYearDetails()
             {
                 SmallProducerSubmissionData = SmallProducerSubmissionData,
-                Year = complianceYear
+                Year = complianceYear,
+                DisplayRegistrationDetails = true
             };
 
             var model = mapper.Map<SubmissionsYearDetails, CheckAnswersViewModel>(source);
