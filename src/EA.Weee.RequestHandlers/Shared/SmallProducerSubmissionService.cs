@@ -38,6 +38,7 @@
             var submissionData = new SmallProducerSubmissionData
             {
                 DirectRegistrantId = directRegistrant.Id,
+                
                 OrganisationData = organisation,
                 ContactData = directRegistrant.Contact != null
                     ? mapper.Map<Contact, ContactData>(directRegistrant.Contact)
@@ -55,14 +56,14 @@
                     : null,
                 SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>(),
                 ProducerRegistrationNumber = submissionHistory.Any() ? submissionHistory.First().RegisteredProducer.ProducerRegistrationNumber : string.Empty,
-                CurrentSystemYear = systemTime.Year
+                CurrentSystemYear = systemTime.Year,
+                EeeBrandNames = directRegistrant.BrandNameId.HasValue ? directRegistrant.BrandName.Name : string.Empty,
             };
 
             foreach (var directProducerSubmission in submissionHistory)
             {
-                    var history = mapper.Map<SmallProducerSubmissionHistoryData>(
-                    new DirectProducerSubmissionSource(directRegistrant, directProducerSubmission));
-                    submissionData.SubmissionHistory.Add(directProducerSubmission.ComplianceYear, history);
+                var history = mapper.Map<SmallProducerSubmissionHistoryData>(new DirectProducerSubmissionSource(directRegistrant, directProducerSubmission));
+                submissionData.SubmissionHistory.Add(directProducerSubmission.ComplianceYear, history);
             }
 
             return submissionData;

@@ -16,13 +16,7 @@
 
         public IDictionary<int, SmallProducerSubmissionHistoryData> SubmissionHistory {get; set; }
 
-        public bool AnySubmissionsToDisplay
-        {
-            get
-            {
-                return SubmissionHistory.Any();
-            }
-        }
+        public bool AnySubmissionsToDisplay => SubmissionHistory.Any();
 
         public bool AnySubmissions => SubmissionHistory.Any();
 
@@ -39,5 +33,7 @@
         public string ProducerRegistrationNumber { get; set; }
 
         public int CurrentSystemYear { get; set; }
+
+        public string EeeBrandNames { get; set; }
     }
 }

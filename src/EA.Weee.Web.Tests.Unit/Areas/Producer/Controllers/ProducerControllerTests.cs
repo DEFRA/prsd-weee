@@ -852,7 +852,7 @@
             A.CallTo(() => mapper.Map<SubmissionsYearDetails, CheckAnswersViewModel>(
                 A<SubmissionsYearDetails>.That.Matches(s =>
                     s.DisplayRegistrationDetails == true &&
-                    s.Year == null &&
+                    s.Year == complianceYear &&
                     s.SmallProducerSubmissionData == submissionData))).Returns(model);
             A.CallTo(() => templateExecutor.RenderRazorView(A<ControllerContext>._, "DownloadSubmission", model)).Returns(content);
             A.CallTo(() => pdfDocumentProvider.GeneratePdfFromHtml(content, null)).Returns(pdf);
