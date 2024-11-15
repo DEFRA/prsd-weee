@@ -165,14 +165,7 @@
                 return RedirectToOrganisationHasNoSubmissions();
             }
 
-            int? currentYear = null;
-            using (var client = this.apiClient())
-            {
-                var currentDate = await client.SendAsync(this.User.GetAccessToken(), new GetApiUtcDate());
-                currentYear = currentDate.Year;
-            }
-
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false, currentYear);
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false);
             var model = await submissionService.Submissions(year);
 
             return View("Producer/ViewOrganisation/OrganisationDetails", model);
@@ -194,7 +187,7 @@
                 currentYear = currentDate.Year;
             }
 
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false, currentYear);
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false);
 
             var model = await submissionService.OrganisationDetails(year);
 
@@ -210,14 +203,7 @@
                 return RedirectToOrganisationHasNoSubmissions();
             }
 
-            int? currentYear = null;
-            using (var client = this.apiClient())
-            {
-                var currentDate = await client.SendAsync(this.User.GetAccessToken(), new GetApiUtcDate());
-                currentYear = currentDate.Year;
-            }
-
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false, currentYear);
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false);
 
             var model = await submissionService.ContactDetails(year);
             
@@ -233,14 +219,7 @@
                 return RedirectToOrganisationHasNoSubmissions();
             }
 
-            int? currentYear = null;
-            using (var client = this.apiClient())
-            {
-                var currentDate = await client.SendAsync(this.User.GetAccessToken(), new GetApiUtcDate());
-                currentYear = currentDate.Year;
-            }
-
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false, currentYear);
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false);
 
             var model = await submissionService.ServiceOfNoticeDetails(year);
           
@@ -263,7 +242,7 @@
                 currentYear = currentDate.Year;
             }
 
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false, currentYear);
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false);
 
             var model = await submissionService.RepresentedOrganisationDetails(year);
           
@@ -279,14 +258,7 @@
                 return RedirectToOrganisationHasNoSubmissions();
             }
 
-            int? currentYear = null;
-            using (var client = this.apiClient())
-            {
-                var currentDate = await client.SendAsync(this.User.GetAccessToken(), new GetApiUtcDate());
-                currentYear = currentDate.Year;
-            }
-
-            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false, currentYear);
+            submissionService.WithSubmissionData(this.SmallProducerSubmissionData, isInternal: false);
 
             var model = await submissionService.TotalEEEDetails(year);
 

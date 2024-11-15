@@ -54,7 +54,8 @@
                         new DirectProducerSubmissionSource(directRegistrant, currentYearSubmission))
                     : null,
                 SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>(),
-                ProducerRegistrationNumber = submissionHistory.Any() ? submissionHistory.First().RegisteredProducer.ProducerRegistrationNumber : string.Empty
+                ProducerRegistrationNumber = submissionHistory.Any() ? submissionHistory.First().RegisteredProducer.ProducerRegistrationNumber : string.Empty,
+                CurrentSystemYear = systemTime.Year
             };
 
             foreach (var directProducerSubmission in submissionHistory)

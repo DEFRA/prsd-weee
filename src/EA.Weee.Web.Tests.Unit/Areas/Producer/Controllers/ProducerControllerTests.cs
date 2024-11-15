@@ -586,9 +586,7 @@
             var expcted = new OrganisationDetailsTabsViewModel();
             expcted.OrganisationViewModel = new OrganisationViewModel();
 
-            int apiYear = 2024;
             A.CallTo(() => this.submissionService.OrganisationDetails(year)).Returns(expcted);
-            A.CallTo(() => this.apiClient().SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(apiYear, 1, 1));
 
             var result = (await controller.OrganisationDetails(year)) as ViewResult;
 
@@ -599,7 +597,7 @@
             model.Should().NotBeNull();
             model.OrganisationViewModel.Should().NotBeNull();
             A.CallTo(() => this.submissionService.OrganisationDetails(year)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false, apiYear)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -612,9 +610,7 @@
             var expcted = new OrganisationDetailsTabsViewModel();
             expcted.ContactDetailsViewModel = new ContactDetailsViewModel();
 
-            int apiYear = 2024;
             A.CallTo(() => this.submissionService.ContactDetails(year)).Returns(expcted);
-            A.CallTo(() => this.apiClient().SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(apiYear, 1, 1));
 
             var result = (await controller.ContactDetails(year)) as ViewResult;
 
@@ -625,7 +621,7 @@
             model.Should().NotBeNull();
             model.ContactDetailsViewModel.Should().NotBeNull();
             A.CallTo(() => this.submissionService.ContactDetails(year)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false, apiYear)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -638,9 +634,7 @@
             var expcted = new OrganisationDetailsTabsViewModel();
             expcted.ServiceOfNoticeViewModel = new ServiceOfNoticeViewModel();
 
-            int apiYear = 2024;
             A.CallTo(() => this.submissionService.ServiceOfNoticeDetails(year)).Returns(expcted);
-            A.CallTo(() => this.apiClient().SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(apiYear, 1, 1));
 
             var result = (await controller.ServiceOfNoticeDetails(year)) as ViewResult;
 
@@ -651,7 +645,7 @@
             model.Should().NotBeNull();
             model.ServiceOfNoticeViewModel.Should().NotBeNull();
             A.CallTo(() => this.submissionService.ServiceOfNoticeDetails(year)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false, apiYear)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -664,9 +658,7 @@
             var expcted = new OrganisationDetailsTabsViewModel();
             expcted.RepresentingCompanyDetailsViewModel = new RepresentingCompanyDetailsViewModel();
 
-            int apiYear = 2024;
             A.CallTo(() => this.submissionService.RepresentedOrganisationDetails(year)).Returns(expcted);
-            A.CallTo(() => this.apiClient().SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(apiYear, 1, 1));
 
             var result = (await controller.RepresentedOrganisationDetails(year)) as ViewResult;
 
@@ -678,7 +670,7 @@
             model.RepresentingCompanyDetailsViewModel.Should().NotBeNull();
 
             A.CallTo(() => this.submissionService.RepresentedOrganisationDetails(year)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false, apiYear)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false)).MustHaveHappenedOnceExactly();
         }
 
         [Theory]
@@ -691,9 +683,7 @@
             var expcted = new OrganisationDetailsTabsViewModel();
             expcted.EditEeeDataViewModel = new EditEeeDataViewModel();
 
-            int apiYear = 2024;
             A.CallTo(() => this.submissionService.TotalEEEDetails(year)).Returns(expcted);
-            A.CallTo(() => this.apiClient().SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(new DateTime(apiYear, 1, 1));
 
             var result = (await controller.TotalEEEDetails(year)) as ViewResult;
 
@@ -705,7 +695,7 @@
             model.EditEeeDataViewModel.Should().NotBeNull();
 
             A.CallTo(() => this.submissionService.TotalEEEDetails(year)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false, apiYear)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => this.submissionService.WithSubmissionData(controller.SmallProducerSubmissionData, false)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
