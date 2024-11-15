@@ -36,15 +36,11 @@
             this.mapper = mapper;
         }
 
-        public SubmissionService WithSubmissionData(SmallProducerSubmissionData data, bool isInternal = false, int? currentYear = null)
+        public SubmissionService WithSubmissionData(SmallProducerSubmissionData data, bool isInternal = false)
         {
             smallProducerSubmissionData = data;
             this.isInternal = isInternal;
-            if (currentYear.HasValue)
-            {
-                this.currentYear = currentYear.Value;
-            }
-
+            this.currentYear = data.CurrentSystemYear;
             return this;
         }
 

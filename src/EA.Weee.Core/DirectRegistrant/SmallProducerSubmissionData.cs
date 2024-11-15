@@ -37,5 +37,7 @@
         public AddressData ServiceOfNoticeData { get; set; }
 
         public string ProducerRegistrationNumber { get; set; }
+
+        public int CurrentSystemYear { get; set; }
     }
 }
