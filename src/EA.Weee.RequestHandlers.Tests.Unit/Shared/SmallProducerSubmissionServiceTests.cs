@@ -310,6 +310,7 @@
             if (hasBrandName)
             {
                 A.CallTo(() => directRegistrant.BrandName).Returns(new BrandName(TestFixture.Create<string>()));
+                A.CallTo(() => directRegistrant.BrandNameId).Returns(Guid.NewGuid());
             }
 
             A.CallTo(() => directRegistrant.DirectProducerSubmissions).Returns(submissions);
