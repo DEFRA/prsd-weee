@@ -45,6 +45,14 @@
 
             var representingCompany = await CreateRepresentingCompany(request.RepresentingCompanyDetailsViewModel);
 
+            // here if the current one is null set it
+            if (existingDirectRegistrant.AuthorisedRepresentative == null)
+            {
+                existingDirectRegistrant.AddOrUpdateAuthorisedRepresentitive(representingCompany);
+
+                return existingDirectRegistrant.Id;
+            }
+
             var directRegistrant = DirectRegistrant.CreateDirectRegistrant(existingDirectRegistrant.Organisation, existingDirectRegistrant.BrandName, existingDirectRegistrant.Contact, existingDirectRegistrant.Address, representingCompany, existingDirectRegistrant.AdditionalCompanyDetails.ToList(), null);
 
             var newRegistrant = await genericDataAccess.Add(directRegistrant);

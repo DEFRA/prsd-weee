@@ -227,6 +227,7 @@
                         d.Organisation.TradingName == TradingName &&
                         d.Organisation.Name == CompanyName &&
                         d.Organisation.BusinessAddress == newAddress &&
+                        d.Organisation.IsRepresentingCompany == true &&
                         d.BrandName == brandName &&
                         d.AuthorisedRepresentative.OverseasProducerTradingName == transactionData.RepresentingCompanyDetailsViewModel.BusinessTradingName &&
                         d.AuthorisedRepresentative.OverseasProducerName == transactionData.RepresentingCompanyDetailsViewModel.CompanyName &&
@@ -246,6 +247,7 @@
                         d.Organisation.TradingName == TradingName &&
                         d.Organisation.Name == CompanyName &&
                         d.Organisation.BusinessAddress == newAddress &&
+                        d.Organisation.IsRepresentingCompany == false &&
                         d.BrandName == brandName &&
                         d.Contact.FirstName == transactionData.ContactDetailsViewModel.FirstName &&
                         d.Contact.LastName == transactionData.ContactDetailsViewModel.LastName &&
@@ -293,11 +295,11 @@
             var organisationId = Guid.NewGuid();
             var externalOrganisationType = ExternalOrganisationType.Partnership;
             var partnerModels = new List<AdditionalContactModel>
-    {
-        new AdditionalContactModel { FirstName = "John", LastName = "Doe", Order = 2 },
-        new AdditionalContactModel { FirstName = "Jane", LastName = "Smith", Order = 1 },
-        new AdditionalContactModel { FirstName = "Bob", LastName = "Johnson", Order = 3 }
-    };
+            {
+                new AdditionalContactModel { FirstName = "John", LastName = "Doe", Order = 2 },
+                new AdditionalContactModel { FirstName = "Jane", LastName = "Smith", Order = 1 },
+                new AdditionalContactModel { FirstName = "Bob", LastName = "Johnson", Order = 3 }
+            };
 
             var transactionData = SetupValidOrganisationTransaction(externalOrganisationType);
             transactionData.PartnerModels = partnerModels;
