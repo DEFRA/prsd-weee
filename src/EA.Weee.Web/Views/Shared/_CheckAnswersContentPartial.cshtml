@@ -1,4 +1,5 @@
 ﻿@using EA.Prsd.Core.Helpers
+@using EA.Weee.Core.DirectRegistrant
 @using MvcNavigationHelpers
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Producer.ViewModels.CheckAnswersViewModel
@@ -8,17 +9,15 @@
 }
 
 @{
-    var organisationDetails = new Dictionary<string, object>
-    {
-        { "Organisation type", Model.OrganisationDetails.OrganisationType.GetDisplayName() },
-        { "Company registration number", Model.OrganisationDetails.CompaniesRegistrationNumber },
-    };
+    var organisationDetails = new Dictionary<string, object>();
 
     if (Model.OrganisationDetails.ProducerRegistrationNumber != null)
     {
         organisationDetails.Add("Producer registration number", Model.OrganisationDetails.ProducerRegistrationNumber);
     }
 
+    organisationDetails.Add("Organisation type", Model.OrganisationDetails.OrganisationType.GetDisplayName());
+    organisationDetails.Add("Company registration number", Model.OrganisationDetails.CompaniesRegistrationNumber);
     organisationDetails.Add("Company name", Model.OrganisationDetails.CompanyName);
     organisationDetails.Add("Trading name", Model.OrganisationDetails.BusinessTradingName);
     organisationDetails.Add("Website address", Model.OrganisationDetails.Address.WebsiteAddress);
@@ -30,6 +29,43 @@
     organisationDetails.Add("Country", Model.OrganisationDetails.Address.CountryName);
     organisationDetails.Add("EEE brand names", Model.OrganisationDetails.EEEBrandNames);
 
+    if (Model.DisplayRegistrationDetails)
+    {
+        string registrationStatus;
+        if ((Model.OrganisationDetails.Status == SubmissionStatus.Submitted || Model.OrganisationDetails.Status == SubmissionStatus.Returned) && Model.OrganisationDetails.HasPaid)
+        {
+            registrationStatus = "Registered";
+        }
+        else
+        {
+            registrationStatus = @Model.OrganisationDetails.Status.GetDisplayName();
+        }
+
+        organisationDetails.Add("Registration status", registrationStatus);
+
+        var registrationDate = string.Empty;
+        if (Model.OrganisationDetails.RegistrationDate.HasValue)
+        {
+            registrationDate = Model.OrganisationDetails.RegistrationDate.Value.ToString("dd MMMM yyyy");
+        }
+
+        organisationDetails.Add("Registration date", registrationDate);
+
+        var paymentStatus = Model.OrganisationDetails.HasPaid ? "Paid" : "Not paid";
+        organisationDetails.Add("Payment status", paymentStatus);
+
+        organisationDetails.Add("Payment reference", Model.OrganisationDetails.PaymentReference);
+
+        var submittedDate = string.Empty;
+        if (Model.OrganisationDetails.SubmittedDate.HasValue)
+        {
+            submittedDate = Model.OrganisationDetails.SubmittedDate.Value.ToString("dd MMMM yyyy");
+        }
+
+        organisationDetails.Add("Submission date", submittedDate);
+    }
+
+
     var sortedContacts = Model.OrganisationDetails.AdditionalContactModels.OrderBy(c => c.Order).ToList();
 
     for (var i = 0; i < sortedContacts.Count; i++)
@@ -37,16 +73,16 @@
         var contact = sortedContacts[i];
         var index = Model.OrganisationDetails.AdditionalContactModels.IndexOf(contact);
 
-        @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].FirstName)
-        @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].LastName)
-        @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].Order)
+    @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].FirstName)
+    @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].LastName)
+    @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].Order)
 
-        var partnerIndex = (i + 1).ToString();
-        organisationDetails.Add("Partner " + partnerIndex + " First name", contact.FirstName);
-        organisationDetails.Add("Partner " + partnerIndex + " Last name", contact.LastName);
-    }
+    var partnerIndex = (i + 1).ToString();
+    organisationDetails.Add("Partner " + partnerIndex + " First name", contact.FirstName);
+    organisationDetails.Add("Partner " + partnerIndex + " Last name", contact.LastName);
+}
 
-    var contactDetails = new Dictionary<string, object>
+var contactDetails = new Dictionary<string, object>
 {
             { "First name", Model.ContactDetails.FirstName },
             { "Last name", Model.ContactDetails.LastName },
@@ -61,7 +97,7 @@
             { "Country", Model.ContactDetails.AddressData.CountryName }
     };
 
-    var serviceOfNoticeData = new Dictionary<string, object>
+var serviceOfNoticeData = new Dictionary<string, object>
 {
             { "Address line 1", Model.ServiceOfNoticeData.Address.Address1 },
             { "Address line 2", Model.ServiceOfNoticeData.Address.Address2 },
@@ -72,10 +108,10 @@
             { "Phone number", Model.ServiceOfNoticeData.Address.Telephone },
     };
 
-    var representingCompanyDetails = new Dictionary<string, object>();
-    if (representingOrg)
-    {
-        representingCompanyDetails = new Dictionary<string, object>
+var representingCompanyDetails = new Dictionary<string, object>();
+if (representingOrg)
+{
+    representingCompanyDetails = new Dictionary<string, object>
 {
                 { "Producer name", Model.RepresentingCompanyDetails.CompanyName },
                 { "Trading name", Model.RepresentingCompanyDetails.BusinessTradingName },
@@ -88,7 +124,7 @@
                 { "Phone number", Model.RepresentingCompanyDetails.Address.Telephone },
                 { "Email address", Model.RepresentingCompanyDetails.Address.Email },
         };
-    }
+}
 }
 
 <div>
