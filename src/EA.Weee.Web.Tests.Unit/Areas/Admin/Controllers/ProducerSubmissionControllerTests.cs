@@ -1103,22 +1103,19 @@
             var date = new DateTime(2024, 11, 10, 14, 45, 0);
             SystemTime.Freeze(date);
             var pdf = TestFixture.Create<byte[]>();
+            var content = TestFixture.Create<string>();
 
-            var submissionData = TestFixture.Create<SmallProducerSubmissionMapperData>();
-            controller.SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData;
+            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            controller.SmallProducerSubmissionData = submissionData;
+            var model = TestFixture.Create<CheckAnswersViewModel>();
 
-            var source = new SmallProducerSubmissionMapperData()
-            {
-                SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData,
-                Year = null // No compliance year provided
-            };
-
-            var viewModel = TestFixture.Create<CheckAnswersViewModel>();
-            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, CheckAnswersViewModel>
-                (A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(submissionData.SmallProducerSubmissionData) && sd.Year == null)))
-                .Returns(viewModel);
-
-            A.CallTo(() => pdfDocumentProvider.GeneratePdfFromHtml(A<string>._, null)).Returns(pdf);
+            A.CallTo(() => mapper.Map<SubmissionsYearDetails, CheckAnswersViewModel>(
+                A<SubmissionsYearDetails>.That.Matches(s =>
+                    s.DisplayRegistrationDetails == true &&
+                    s.Year == null &&
+                    s.SmallProducerSubmissionData == submissionData))).Returns(model);
+            A.CallTo(() => templateExecutor.RenderRazorView(A<ControllerContext>._, "DownloadSubmission", model)).Returns(content);
+            A.CallTo(() => pdfDocumentProvider.GeneratePdfFromHtml(content, null)).Returns(pdf);
 
             // Act
             var result = controller.DownloadSubmission("WEE123456") as FileContentResult;
@@ -1137,26 +1134,23 @@
         {
             // Arrange
             var date = new DateTime(2024, 11, 10, 14, 45, 0);
-            SystemTime.Freeze(date);
-            var pdf = TestFixture.Create<byte[]>();
             var complianceYear = 2025;
             var registrationNumber = "WEE123456";
+            SystemTime.Freeze(date);
+            var pdf = TestFixture.Create<byte[]>();
+            var content = TestFixture.Create<string>();
 
-            var submissionData = TestFixture.Create<SmallProducerSubmissionMapperData>();
-            controller.SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData;
+            var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            controller.SmallProducerSubmissionData = submissionData;
+            var model = TestFixture.Create<CheckAnswersViewModel>();
 
-            var source = new SmallProducerSubmissionMapperData()
-            {
-                SmallProducerSubmissionData = submissionData.SmallProducerSubmissionData,
-                Year = complianceYear
-            };
-
-            var viewModel = TestFixture.Create<CheckAnswersViewModel>();
-            A.CallTo(() => mapper.Map<SmallProducerSubmissionMapperData, CheckAnswersViewModel>
-            (A<SmallProducerSubmissionMapperData>.That.Matches(sd => sd.SmallProducerSubmissionData.Equals(submissionData.SmallProducerSubmissionData) && sd.Year == complianceYear)))
-                .Returns(viewModel);
-
-            A.CallTo(() => pdfDocumentProvider.GeneratePdfFromHtml(A<string>._, null)).Returns(pdf);
+            A.CallTo(() => mapper.Map<SubmissionsYearDetails, CheckAnswersViewModel>(
+                A<SubmissionsYearDetails>.That.Matches(s =>
+                    s.DisplayRegistrationDetails == true &&
+                    s.Year == complianceYear &&
+                    s.SmallProducerSubmissionData == submissionData))).Returns(model);
+            A.CallTo(() => templateExecutor.RenderRazorView(A<ControllerContext>._, "DownloadSubmission", model)).Returns(content);
+            A.CallTo(() => pdfDocumentProvider.GeneratePdfFromHtml(content, null)).Returns(pdf);
 
             // Act
             var result = controller.DownloadSubmission(registrationNumber, complianceYear) as FileContentResult;

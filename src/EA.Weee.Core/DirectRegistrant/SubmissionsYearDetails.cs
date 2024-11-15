@@ -5,5 +5,7 @@
        public SmallProducerSubmissionData SmallProducerSubmissionData { get; set; }
 
        public int? Year { get; set; }
+
+       public bool DisplayRegistrationDetails { get; set; } = false;
     }
 }
