@@ -3,6 +3,7 @@
     using Autofac;
     using AutoFixture;
     using Base;
+    using EA.Prsd.Core;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain;
     using EA.Weee.Domain.DataReturns;
@@ -32,6 +33,7 @@
 
                 directProducerSubmission = DirectRegistrantSubmissionDbSetup.Init()
                     .WithDirectRegistrant(directRegistrant)
+                    .WithComplianceYear(SystemTime.Now.Year)
                     .WithDefaultRegisteredProducer()
                     .WithStatus(DirectProducerSubmissionStatus.Complete)
                     .Create();
@@ -89,6 +91,7 @@
                 directProducerSubmission = DirectRegistrantSubmissionDbSetup.Init()
                     .WithDirectRegistrant(directRegistrant)
                     .WithDefaultRegisteredProducer()
+                    .WithComplianceYear(SystemTime.Now.Year)
                     .WithStatus(DirectProducerSubmissionStatus.Complete)
                     .Create();
 
