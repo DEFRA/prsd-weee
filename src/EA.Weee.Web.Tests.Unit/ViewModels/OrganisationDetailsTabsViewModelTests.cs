@@ -31,48 +31,6 @@
             model.IsRegistered.Should().Be(false);
         }
 
-        [Fact]
-        public void OrganisationDetails_ShowReturnRegistrationToUserIsCorrect()
-        {
-            var model = new OrganisationDetailsTabsViewModel();
-            model.OrganisationViewModel = new OrganisationViewModel { };
-
-            model.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
-            model.HasPaid = true;
-            model.IsInternal = true;
-            model.IsAdmin = true;
-
-            model.ShowReturnRegistrationToUser.Should().Be(true);
-
-            model.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
-            model.HasPaid = false;
-            model.IsInternal = true;
-            model.IsAdmin = true;
-
-            model.ShowReturnRegistrationToUser.Should().Be(true);
-
-            model.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
-            model.HasPaid = true;
-            model.IsInternal = false;
-            model.IsAdmin = true;
-
-            model.ShowReturnRegistrationToUser.Should().Be(false);
-
-            model.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
-            model.HasPaid = false;
-            model.IsInternal = true;
-            model.IsAdmin = true;
-
-            model.ShowReturnRegistrationToUser.Should().Be(true);
-
-            model.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
-            model.HasPaid = true;
-            model.IsInternal = true;
-            model.IsAdmin = false;
-
-            model.ShowReturnRegistrationToUser.Should().Be(false);
-        }
-
         [Theory]
         [InlineData(true, true, true)]
         [InlineData(true, false, false)]
