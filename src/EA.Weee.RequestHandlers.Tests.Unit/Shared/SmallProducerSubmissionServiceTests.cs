@@ -61,6 +61,7 @@
             result.HasAuthorisedRepresentitive.Should().Be(hasAuthorisedRep);
             result.OrganisationData.Should().Be(organisationData);
             result.CurrentSubmission.Should().Be(submissionHistoryData);
+            result.CurrentSystemYear.Should().Be(ComplianceYear);
         }
 
         [Fact]
