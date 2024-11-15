@@ -23,7 +23,7 @@
         {
             @Html.AntiForgeryToken()
             @Html.Gds().ValidationSummary()
-
+            @Html.HiddenFor(m => m.ShowSmallProducerMessage)
             <p class="govuk-body">If your organisation is not listed, this may be because:</p>
             <ul class="govuk-list govuk-list--bullet">
                 <li>you mistyped the organisation’s name</li>
