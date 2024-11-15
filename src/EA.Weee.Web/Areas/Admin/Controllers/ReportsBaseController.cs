@@ -69,10 +69,10 @@
             }
         }
 
-        protected async Task<List<SchemeData>> FetchSchemes(bool includeDirectRegistrant = false)
+        protected async Task<List<SchemeData>> FetchSchemes(bool includeDirectRegistrant = false, bool includeAllSchemes = false)
         {
             var request = new GetSchemes(GetSchemes.FilterType.ApprovedOrWithdrawn);
-            var schemesList = new List<SchemeData>();
+            List<SchemeData> schemesList;
 
             using (var client = ApiClient())
             {
@@ -81,7 +81,12 @@
 
             if (includeDirectRegistrant)
             {
-                schemesList.Add(new SchemeData() { SchemeName = DirectRegistrantFixedIdConstant.DirectRegistrant, Id = DirectRegistrantFixedIdConstant.DirectRegistrantFixedId });
+                schemesList.Insert(0, new SchemeData() { SchemeName = ReportsFixedIdConstant.AllDirectRegistrants, Id = ReportsFixedIdConstant.AllDirectRegistrantFixedId });
+            }
+
+            if (includeAllSchemes)
+            {
+                schemesList.Insert(0, new SchemeData() { SchemeName = ReportsFixedIdConstant.AllSchemes, Id = ReportsFixedIdConstant.AllSchemeFixedId });
             }
 
             return schemesList;
