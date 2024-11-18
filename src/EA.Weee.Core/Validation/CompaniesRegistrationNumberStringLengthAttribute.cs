@@ -23,7 +23,7 @@
             var registrationNumber = value as string;
 
             // Skip validation if the value is null, empty or whitespace
-            if (string.IsNullOrWhiteSpace(registrationNumber))
+            if (string.IsNullOrWhiteSpace(registrationNumber) || model.Action == "Edit")
             {
                 return ValidationResult.Success;
             }
