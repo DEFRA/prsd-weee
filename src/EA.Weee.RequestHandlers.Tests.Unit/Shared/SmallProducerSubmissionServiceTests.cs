@@ -41,12 +41,14 @@
         }
 
         [Theory]
-        [InlineData(true)]
-        [InlineData(false)]
-        public async Task GetSmallProducerSubmissionData_WhenCurrentYearSubmissionExists_ReturnsSmallProducerSubmissionData(bool hasAuthorisedRep)
+        [InlineData(true, false)]
+        [InlineData(false, false)]
+        [InlineData(true, true)]
+        [InlineData(false, true)]
+        public async Task GetSmallProducerSubmissionData_WhenCurrentYearSubmissionExists_ReturnsSmallProducerSubmissionData(bool hasAuthorisedRep, bool brandName)
         {
             var authorisedRepId = hasAuthorisedRep ? Guid.NewGuid() : (Guid?)null;
-            var directRegistrant = SetupValidDirectRegistrant(true, authorisedRepId);
+            var directRegistrant = SetupValidDirectRegistrant(true, authorisedRepId, brandName);
 
             var organisationData = A.Fake<OrganisationData>();
             A.CallTo(() => mapper.Map<Organisation, OrganisationData>(directRegistrant.Organisation)).Returns(organisationData);
@@ -61,6 +63,16 @@
             result.HasAuthorisedRepresentitive.Should().Be(hasAuthorisedRep);
             result.OrganisationData.Should().Be(organisationData);
             result.CurrentSubmission.Should().Be(submissionHistoryData);
+            result.CurrentSystemYear.Should().Be(ComplianceYear);
+
+            if (brandName)
+            {
+                result.EeeBrandNames.Should().Be(directRegistrant.BrandName.Name);
+            }
+            else
+            {
+                result.EeeBrandNames.Should().BeEmpty();
+            }
         }
 
         [Fact]
@@ -270,7 +282,7 @@
             result.AuthorisedRepresentitiveData.Should().BeNull();
         }
 
-        private DirectRegistrant SetupValidDirectRegistrant(bool hasCurrentYearSubmission = false, Guid? hasAuthorisedRep = null)
+        private DirectRegistrant SetupValidDirectRegistrant(bool hasCurrentYearSubmission = false, Guid? hasAuthorisedRep = null, bool hasBrandName = false)
         {
             var directRegistrant = A.Fake<DirectRegistrant>();
             A.CallTo(() => directRegistrant.OrganisationId).Returns(Guid.NewGuid());
@@ -293,6 +305,12 @@
                 A.CallTo(() =>
                     smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(directRegistrantId,
                         ComplianceYear)).Returns<DirectProducerSubmission>(null);
+            }
+
+            if (hasBrandName)
+            {
+                A.CallTo(() => directRegistrant.BrandName).Returns(new BrandName(TestFixture.Create<string>()));
+                A.CallTo(() => directRegistrant.BrandNameId).Returns(Guid.NewGuid());
             }
 
             A.CallTo(() => directRegistrant.DirectProducerSubmissions).Returns(submissions);
