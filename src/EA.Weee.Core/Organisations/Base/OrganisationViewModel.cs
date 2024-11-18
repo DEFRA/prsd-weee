@@ -32,7 +32,7 @@
         [RequiredWhenUK("Company registration number")]
         public string CompaniesRegistrationNumber { get; set; }
 
-        [Required(ErrorMessage = "EEE Brand names is required")]
+        [Required(ErrorMessage = "Enter EEE brand names")]
         [StringLength(CommonMaxFieldLengths.DefaultString)]
         [DisplayName("If you are registering as an authorised representative of a non-UK established organisation, enter the brands they place on the market.")]
         public string EEEBrandNames { get; set; }
