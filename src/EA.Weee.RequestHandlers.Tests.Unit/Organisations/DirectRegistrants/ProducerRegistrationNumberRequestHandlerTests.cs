@@ -1,83 +1,86 @@
-﻿using EA.Prsd.Core.Mediator;
-using EA.Weee.RequestHandlers.Organisations.DirectRegistrants;
-using EA.Weee.RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess;
-using EA.Weee.RequestHandlers.Security;
-using EA.Weee.Requests.Organisations.DirectRegistrant;
-using EA.Weee.Tests.Core;
-using FakeItEasy;
-using FluentAssertions;
-using System;
-using System.Security;
-using System.Threading.Tasks;
-using Xunit;
-
-public class ProducerRegistrationNumberRequestHandlerTests : SimpleUnitTestBase
+﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Organisations.DirectRegistrants
 {
-    private readonly IGenerateFromXmlDataAccess dataAccess;
-    private readonly IWeeeAuthorization authorization;
-    private readonly IRequestHandler<ProducerRegistrationNumberRequest, bool> handler;
+    using System;
+    using System.Security;
+    using System.Threading.Tasks;
+    using EA.Prsd.Core.Mediator;
+    using EA.Weee.RequestHandlers.Organisations.DirectRegistrants;
+    using EA.Weee.RequestHandlers.Scheme.MemberRegistration.GenerateDomainObjects.DataAccess;
+    using EA.Weee.RequestHandlers.Security;
+    using EA.Weee.Requests.Organisations.DirectRegistrant;
+    using EA.Weee.Tests.Core;
+    using FakeItEasy;
+    using FluentAssertions;
+    using Xunit;
 
-    public ProducerRegistrationNumberRequestHandlerTests()
+    public class ProducerRegistrationNumberRequestHandlerTests : SimpleUnitTestBase
     {
-        dataAccess = A.Fake<IGenerateFromXmlDataAccess>();
-        authorization = A.Fake<IWeeeAuthorization>();
+        private readonly IGenerateFromXmlDataAccess dataAccess;
+        private readonly IWeeeAuthorization authorization;
+        private readonly IRequestHandler<ProducerRegistrationNumberRequest, bool> handler;
 
-        handler = new ProducerRegistrationNumberRequestHandler(dataAccess, authorization);
-    }
+        public ProducerRegistrationNumberRequestHandlerTests()
+        {
+            dataAccess = A.Fake<IGenerateFromXmlDataAccess>();
+            authorization = A.Fake<IWeeeAuthorization>();
 
-    [Fact]
-    public async Task WhenProducerRegistrationNumberExists_ReturnsTrue()
-    {
-        // Arrange
-        var producerRegistrationNumber = "12345";
-        var request = new ProducerRegistrationNumberRequest(producerRegistrationNumber);
+            handler = new ProducerRegistrationNumberRequestHandler(dataAccess, authorization);
+        }
 
-        A.CallTo(() => authorization.EnsureCanAccessExternalArea());
+        [Fact]
+        public async Task WhenProducerRegistrationNumberExists_ReturnsTrue()
+        {
+            // Arrange
+            var producerRegistrationNumber = "12345";
+            var request = new ProducerRegistrationNumberRequest(producerRegistrationNumber);
 
-        A.CallTo(() => dataAccess.SchemeProducerRegistrationExists(producerRegistrationNumber))
-            .Returns(Task.FromResult(true));
+            A.CallTo(() => authorization.EnsureCanAccessExternalArea());
 
-        // Act
-        var result = await handler.HandleAsync(request);
+            A.CallTo(() => dataAccess.SchemeProducerRegistrationExists(producerRegistrationNumber))
+                .Returns(Task.FromResult(true));
 
-        // Assert
-        result.Should().BeTrue();
-    }
+            // Act
+            var result = await handler.HandleAsync(request);
 
-    [Fact]
-    public async Task WhenProducerRegistrationNumberDoesNotExist_ReturnsFalse()
-    {
-        // Arrange
-        var producerRegistrationNumber = "NONEXISTENTPRN";
-        var request = new ProducerRegistrationNumberRequest(producerRegistrationNumber);
+            // Assert
+            result.Should().BeTrue();
+        }
 
-        A.CallTo(() => authorization.EnsureCanAccessExternalArea());
+        [Fact]
+        public async Task WhenProducerRegistrationNumberDoesNotExist_ReturnsFalse()
+        {
+            // Arrange
+            var producerRegistrationNumber = "NONEXISTENTPRN";
+            var request = new ProducerRegistrationNumberRequest(producerRegistrationNumber);
 
-        A.CallTo(() => dataAccess.SchemeProducerRegistrationExists(producerRegistrationNumber))
-            .Returns(Task.FromResult(false));
+            A.CallTo(() => authorization.EnsureCanAccessExternalArea());
 
-        // Act
-        var result = await handler.HandleAsync(request);
+            A.CallTo(() => dataAccess.SchemeProducerRegistrationExists(producerRegistrationNumber))
+                .Returns(Task.FromResult(false));
 
-        // Assert
-        result.Should().BeFalse();
-    }
+            // Act
+            var result = await handler.HandleAsync(request);
 
-    [Fact]
-    public async Task WhenUserIsNotAuthorized_ThrowsSecurityException()
-    {
-        // Arrange
-        var producerRegistrationNumber = "12345";
-        var request = new ProducerRegistrationNumberRequest(producerRegistrationNumber);
+            // Assert
+            result.Should().BeFalse();
+        }
 
-        A.CallTo(() => authorization.EnsureCanAccessExternalArea())
-            .Throws(new SecurityException("User is not authorized."));
+        [Fact]
+        public async Task WhenUserIsNotAuthorized_ThrowsSecurityException()
+        {
+            // Arrange
+            var producerRegistrationNumber = "12345";
+            var request = new ProducerRegistrationNumberRequest(producerRegistrationNumber);
 
-        // Act
-        Func<Task> act = async () => await handler.HandleAsync(request);
+            A.CallTo(() => authorization.EnsureCanAccessExternalArea())
+                .Throws(new SecurityException("User is not authorized."));
 
-        // Assert
-        await act.Should().ThrowAsync<SecurityException>()
-            .WithMessage("User is not authorized.");
+            // Act
+            Func<Task> act = async () => await handler.HandleAsync(request);
+
+            // Assert
+            await act.Should().ThrowAsync<SecurityException>()
+                .WithMessage("User is not authorized.");
+        }
     }
 }
