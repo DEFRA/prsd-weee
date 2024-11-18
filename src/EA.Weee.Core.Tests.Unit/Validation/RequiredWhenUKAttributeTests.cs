@@ -2,13 +2,11 @@
 
 namespace EA.Weee.Core.Tests.Unit.Validation
 {
-    using DataReturns;
-    using EA.Weee.Core.Constants;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Core.Validation;
     using FluentAssertions;
     using System;
-    using System.Collections.Generic;
     using System.ComponentModel.DataAnnotations;
     using Xunit;
 
@@ -59,6 +57,46 @@ namespace EA.Weee.Core.Tests.Unit.Validation
             else
             {
                 result.Should().BeNull();
+            }
+        }
+
+        [Theory]
+        [InlineData("Create", 1, null, "184E1785-26B4-4AE4-80D3-AE319B103ACB", "Company registration number is required")]
+        [InlineData("Create", 1, "", "184E1785-26B4-4AE4-80D3-AE319B103ACB", "Company registration number is required")]
+        [InlineData("Edit", 1, null, "184E1785-26B4-4AE4-80D3-AE319B103ACB", "")]
+        [InlineData("Edit", 1, "", "184E1785-26B4-4AE4-80D3-AE319B103ACB", "")]
+        [InlineData("Create", 2, null, "184E1785-26B4-4AE4-80D3-AE319B103ACB", "")]
+        [InlineData("Create", 3, null, "184E1785-26B4-4AE4-80D3-AE319B103ACB", "")]
+        public void Validate_ShouldOnlyRequireCompanyNumberOnCreateForUKRegisteredCompanies(
+            string action,
+            int orgType,
+            string companiesRegistrationNumber,
+            string countryId,
+            string expectedError)
+        {
+            // Arrange
+            var viewModel = new OrganisationViewModel
+            {
+                Action = action,
+                CompaniesRegistrationNumber = companiesRegistrationNumber,
+                OrganisationType = (ExternalOrganisationType)orgType,
+                Address = new ExternalAddressData
+                {
+                    CountryId = Guid.Parse(countryId)
+                }
+            };
+
+            // Act
+            var result = attribute.GetValidationResult(viewModel.CompaniesRegistrationNumber, new ValidationContext(viewModel));
+
+            // Assert
+            if (string.IsNullOrEmpty(expectedError))
+            {
+                result.Should().BeNull();
+            }
+            else
+            {
+                result.ErrorMessage.Should().Be(expectedError);
             }
         }
     }

@@ -64,6 +64,7 @@ BEGIN
         AND EEOA.ObligationType = @ObligationType
         AND (@SchemeId IS NULL OR S.[Id] = @SchemeId)
         AND (@FilterByDirectRegistrant = 0)
+		AND (@SchemeId IS NOT NULL OR @FilterBySchemes = 1 OR (@FilterBySchemes = 0 AND @FilterByDirectRegistrant = 0))
 
     UNION ALL
 
@@ -106,7 +107,8 @@ BEGIN
         eoa.ObligationType = @ObligationType AND
         dps.ComplianceYear = (@ComplianceYear + 1) AND
         dps.PaymentFinished = 1 AND
-        @FilterBySchemes = 0
+        @SchemeId IS NULL AND
+		(@FilterByDirectRegistrant = 1 OR (@FilterBySchemes = 0 AND @FilterByDirectRegistrant = 0))
 
     -- Create pivot table
     SELECT EeeData.PRN, EeeData.ProducerName, EeeData.ProducerCountry, EeeData.SchemeId, 
