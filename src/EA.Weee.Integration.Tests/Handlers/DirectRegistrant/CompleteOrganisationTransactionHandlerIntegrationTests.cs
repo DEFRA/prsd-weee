@@ -104,6 +104,7 @@
                 result.Should().NotBeEmpty();
 
                 organisation.Should().NotBeNull();
+                organisation.IsRepresentingCompany.Should().BeFalse();
                 organisation.OrganisationType.Should().Be(Domain.Organisation.OrganisationType.RegisteredCompany);
                 organisation.OrganisationName.Should()
                     .Be(organisationTransactionData.OrganisationViewModel.CompanyName);
@@ -218,6 +219,7 @@
 
                 var entity = Query.GetOrganisationTransactionForUser(UserId.ToString());
                 organisation.Should().NotBeNull();
+                organisation.IsRepresentingCompany.Should().BeFalse();
                 organisation.OrganisationType.Should().Be(Domain.Organisation.OrganisationType.SoleTraderOrIndividual);
                 organisation.OrganisationName.Should()
                     .Be(organisationTransactionData.OrganisationViewModel.CompanyName);
@@ -360,6 +362,7 @@
                 var entity = Query.GetOrganisationTransactionForUser(UserId.ToString());
 
                 organisation.Should().NotBeNull();
+                organisation.IsRepresentingCompany.Should().BeFalse();
                 organisation.OrganisationType.Should().Be(Domain.Organisation.OrganisationType.DirectRegistrantPartnership);
                 organisation.OrganisationName.Should()
                     .Be(organisationTransactionData.OrganisationViewModel.CompanyName);
@@ -437,6 +440,7 @@
                 result.Should().NotBeEmpty();
 
                 organisation.Should().NotBeNull();
+                
                 organisation.BusinessAddress.Address1.Should().Be(addressData.Address1);
                 organisation.BusinessAddress.Address2.Should().Be(addressData.Address2);
                 organisation.BusinessAddress.CountryId.Should().Be(addressData.CountryId);
@@ -450,6 +454,7 @@
 
                 var entity = Query.GetOrganisationTransactionForUser(UserId.ToString());
                 organisation.Should().NotBeNull();
+                organisation.IsRepresentingCompany.Should().BeTrue();
                 organisation.OrganisationType.Should().Be(Domain.Organisation.OrganisationType.RegisteredCompany);
                 organisation.OrganisationName.Should()
                     .Be(organisationTransactionData.OrganisationViewModel.CompanyName);
@@ -589,6 +594,7 @@
                 var entity = Query.GetOrganisationTransactionForUser(UserId.ToString());
                 var organisation = Query.GetOrganisationById(result);
                 organisation.Should().NotBeNull();
+                organisation.IsRepresentingCompany.Should().BeTrue();
                 organisation.OrganisationType.Should().Be(Domain.Organisation.OrganisationType.RegisteredCompany);
                 organisation.OrganisationName.Should()
                     .Be(organisationTransactionData.OrganisationViewModel.CompanyName);
