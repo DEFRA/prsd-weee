@@ -48,7 +48,8 @@
                 ServiceOfNoticeData = serviceOfNoticemodel,
                 RepresentingCompanyDetails = representingCompanyDetailsmodel,
                 EeeData = editEeeDatamodel,
-                ComplianceYear = year
+                ComplianceYear = year,
+                DisplayRegistrationDetails = source.DisplayRegistrationDetails
             };
 
             return viewModel;

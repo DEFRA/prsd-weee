@@ -24,6 +24,7 @@
     {
         private readonly IWeeeAuthorization authorization;
         private readonly ISmallProducerDataAccess smallProducerDataAccess;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
         private readonly WeeeContext context;
         private readonly ReturnSmallProducerSubmissionHandler handler;
         private readonly Guid submissionId;
@@ -35,6 +36,7 @@
         {
             authorization = A.Fake<IWeeeAuthorization>();
             smallProducerDataAccess = A.Fake<ISmallProducerDataAccess>();
+            systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
             context = A.Fake<WeeeContext>();
             submissionId = Guid.NewGuid();
 
@@ -59,10 +61,13 @@
             handler = new ReturnSmallProducerSubmissionHandler(
                 authorization,
                 smallProducerDataAccess,
-                context);
+                context,
+                systemDataDataAccess);
 
             A.CallTo(() => smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionById(submissionId))
                 .Returns(submission);
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime())
+                .Returns(new DateTime(DateTime.Now.Year, 1, 1));
         }
 
         [Fact]
@@ -265,6 +270,43 @@
 
             // Assert
             result.Should().Be(submission.Id);
+        }
+
+        [Fact]
+        public async Task HandleAsync_WhenSubmissionYearDoesNotMatchSystemYear_ThrowsInvalidOperationException()
+        {
+            // Arrange
+            var request = new ReturnSmallProducerSubmission(submissionId);
+
+            var nextYear = DateTime.Now.Year + 1;
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime())
+                .Returns(new DateTime(nextYear, 1, 1));
+
+            // Act
+            Func<Task> act = async () => await handler.HandleAsync(request);
+
+            // Assert
+            (await act.Should().ThrowAsync<InvalidOperationException>())
+                .WithMessage("Submission status invalid");
+        }
+
+        [Fact]
+        public async Task HandleAsync_WhenSubmissionYearMatchesSystemYear_Succeeds()
+        {
+            // Arrange
+            var request = new ReturnSmallProducerSubmission(submissionId);
+            var currentYear = DateTime.Now.Year;
+
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime())
+                .Returns(new DateTime(currentYear, 1, 1));
+
+            // Act
+            var result = await handler.HandleAsync(request);
+
+            // Assert
+            result.Should().Be(submission.Id);
+            A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened();
+            submission.DirectProducerSubmissionStatus.Should().Be(DirectProducerSubmissionStatus.Returned);
         }
     }
 }

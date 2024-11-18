@@ -34,7 +34,8 @@
                     CompanyName = sub.CompanyName,
                     BusinessTradingName = sub.TradingName,
                     CompaniesRegistrationNumber = source.SmallProducerSubmissionData.OrganisationData.CompanyRegistrationNumber,
-                    OrganisationType = MapOrganisationType(source.SmallProducerSubmissionData.OrganisationData.OrganisationType)
+                    OrganisationType = MapOrganisationType(source.SmallProducerSubmissionData.OrganisationData.OrganisationType),
+                    EEEBrandNames = sub.EEEBrandNames
                 };
             }
 
@@ -45,7 +46,8 @@
                 CompanyName = source.SmallProducerSubmissionData.OrganisationData.Name,
                 BusinessTradingName = source.SmallProducerSubmissionData.OrganisationData.TradingName,
                 CompaniesRegistrationNumber = source.SmallProducerSubmissionData.OrganisationData.CompanyRegistrationNumber,
-                OrganisationType = MapOrganisationType(source.SmallProducerSubmissionData.OrganisationData.OrganisationType)
+                OrganisationType = MapOrganisationType(source.SmallProducerSubmissionData.OrganisationData.OrganisationType),
+                EEEBrandNames = source.SmallProducerSubmissionData.EeeBrandNames
             };
         }
 

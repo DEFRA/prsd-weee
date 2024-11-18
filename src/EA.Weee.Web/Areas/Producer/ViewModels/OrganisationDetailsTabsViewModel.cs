@@ -25,13 +25,13 @@
 
         public bool IsInternalAdmin => this.IsAdmin && this.IsInternal;
 
-        public bool IsRegistered => this.Status == SubmissionStatus.Submitted && this.HasPaid;
+        public bool IsRegistered => (this.Status == SubmissionStatus.Submitted || this.Status == SubmissionStatus.Returned) && this.HasPaid;
 
-        public bool ShowReturnRegistrationToUser => this.IsInternalAdmin && (IsRegistered || this.Status == SubmissionStatus.Submitted);
+        public bool ShowReturnRegistrationToUser => this.IsInternalAdmin && this.CurrentYear == this.Year && (IsRegistered || this.Status == SubmissionStatus.Submitted);
 
         public bool ShowContinueRegistrationToUser => !this.IsInternalAdmin && this.Status != SubmissionStatus.Submitted && this.CurrentYear == this.Year;
         
-        public int? CurrentYear { get; set; }
+        public int CurrentYear { get; set; }
 
         public bool ShowPaymentLink => this.IsInternalAdmin && this.Status == SubmissionStatus.Submitted && HasPaid == false;
 
