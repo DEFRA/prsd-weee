@@ -50,6 +50,8 @@
             {
                 existingDirectRegistrant.AddOrUpdateAuthorisedRepresentitive(representingCompany);
 
+                await weeeContext.SaveChangesAsync();
+
                 return existingDirectRegistrant.Id;
             }
 

@@ -7,6 +7,7 @@
     using EA.Weee.Core.Organisations;
     using EA.Weee.Domain;
     using EA.Weee.Domain.Organisation;
+    using EA.Weee.Domain.Producer;
     using EA.Weee.Integration.Tests.Base;
     using EA.Weee.Integration.Tests.Builders;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
@@ -19,6 +20,60 @@
     {
         [Component]
         public class WhenIAddARepresentingCompanyWithNoBrandNames : AddRepresentingCompanyHandlerIntegrationTestBase
+        {
+            private readonly Establish context = () =>
+            {
+                LocalSetup();
+
+                var representingCompanyAddressDetails = fixture.Build<RepresentingCompanyAddressData>()
+                    .With(r => r.CountryId, country.Id)
+                    .Create();
+
+                representingCompanyDetails = fixture.Build<RepresentingCompanyDetailsViewModel>()
+                    .With(r => r.Address, representingCompanyAddressDetails)
+                    .Create();
+
+                originalDirectRegistrant = DirectRegistrantDbSetup.Init()
+                    .WithAuthorisedRep(existingAuthorisedRepresentative)
+                    .WithOrganisation(organisation.Id)
+                    .WithAddress(originalAddress.Id)
+                    .WithContact(originalContact.Id)
+                    .Create();
+
+                request = new AddRepresentingCompany(organisation.Id, representingCompanyDetails);
+            };
+
+            private readonly Because of = () =>
+            {
+                result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
+            };
+
+            private readonly It shouldHaveRepresentingCompanyRegistrant = () =>
+            {
+                var newDirectRegistrant = Query.GetDirectRegistrantById(result);
+
+                originalDirectRegistrant.AuthorisedRepresentativeId.Should().Be(existingAuthorisedRepresentative.Id);
+
+                newDirectRegistrant.Should().NotBeNull();
+                newDirectRegistrant.Address.Id.Should().Be(originalDirectRegistrant.AddressId.Value);
+                newDirectRegistrant.Contact.Id.Should().Be(originalDirectRegistrant.ContactId.Value);
+
+                var overseasAddress = newDirectRegistrant.AuthorisedRepresentative.OverseasContact.Address;
+                overseasAddress.PrimaryName.Should().Be(representingCompanyDetails.Address.Address1);
+                overseasAddress.SecondaryName.Should().BeNullOrWhiteSpace();
+                overseasAddress.Street.Should().Be(representingCompanyDetails.Address.Address2);
+                overseasAddress.Town.Should().Be(representingCompanyDetails.Address.TownOrCity);
+                overseasAddress.Locality.Should().BeNullOrWhiteSpace();
+                overseasAddress.PostCode.Should().Be(representingCompanyDetails.Address.Postcode);
+                overseasAddress.AdministrativeArea.Should().Be(representingCompanyDetails.Address.CountyOrRegion);
+                overseasAddress.CountryId.Should().Be(representingCompanyDetails.Address.CountryId);
+
+                newDirectRegistrant.BrandName.Should().BeNull();
+            };
+        }
+
+        [Component]
+        public class WhenIAddARepresentingCompanyWithNoExistingAuthorisedRep : AddRepresentingCompanyHandlerIntegrationTestBase
         {
             private readonly Establish context = () =>
             {
@@ -85,6 +140,7 @@
 
                 originalDirectRegistrant = DirectRegistrantDbSetup.Init()
                     .WithOrganisation(organisation.Id)
+                    .WithAuthorisedRep(existingAuthorisedRepresentative)
                     .WithAddress(originalAddress.Id)
                     .WithContact(originalContact.Id)
                     .WithBrandName("new brand name")
@@ -101,6 +157,8 @@
             private readonly It shouldHaveRepresentingCompanyRegistrant = () =>
             {
                 var newDirectRegistrant = Query.GetDirectRegistrantById(result);
+
+                originalDirectRegistrant.AuthorisedRepresentativeId.Should().Be(existingAuthorisedRepresentative.Id);
 
                 newDirectRegistrant.Should().NotBeNull();
                 newDirectRegistrant.Address.Id.Should().Be(originalDirectRegistrant.AddressId.Value);
@@ -154,6 +212,7 @@
             protected static Domain.Producer.DirectRegistrant originalDirectRegistrant;
             protected static Address originalAddress;
             protected static Contact originalContact;
+            protected static AuthorisedRepresentative existingAuthorisedRepresentative;
 
             public static IntegrationTestSetupBuilder LocalSetup()
             {
@@ -169,6 +228,7 @@
 
                 originalAddress = AddressDbSetup.Init().Create();
                 originalContact = ContactDbSetup.Init().Create();
+                existingAuthorisedRepresentative = AuthorisedRepDbSetup.Init().Create();
 
                 OrganisationUserDbSetup.Init().WithUserIdAndOrganisationId(UserId, organisation.Id).Create();
 
