@@ -16,15 +16,15 @@
         protected override ValidationResult IsValid(object value, ValidationContext validationContext)
         {
             var model = (OrganisationViewModel)validationContext.ObjectInstance;
-
-            if (model.OrganisationType == ExternalOrganisationType.RegisteredCompany && UkCountry.ValidIds.Contains(model.Address.CountryId))
+            if (model.Action != "Edit" &&
+                model.OrganisationType == ExternalOrganisationType.RegisteredCompany &&
+                UkCountry.ValidIds.Contains(model.Address.CountryId))
             {
                 var val = value as string;
                 return string.IsNullOrWhiteSpace(val)
                     ? new ValidationResult($"{fieldName} is required")
                     : ValidationResult.Success;
             }
-
             return ValidationResult.Success;
         }
     }

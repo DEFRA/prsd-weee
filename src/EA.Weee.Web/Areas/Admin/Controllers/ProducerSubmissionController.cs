@@ -376,7 +376,8 @@
             var source = new SubmissionsYearDetails()
             {
                 SmallProducerSubmissionData = SmallProducerSubmissionData,
-                Year = complianceYear
+                Year = complianceYear,
+                DisplayRegistrationDetails = true
             };
 
             var model = mapper.Map<SubmissionsYearDetails, CheckAnswersViewModel>(source);

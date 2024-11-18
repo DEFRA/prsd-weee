@@ -25,11 +25,15 @@
             map = new CheckAnswersMap(mapper);
         }
 
-        [Fact]
-        public void Map_ShouldMapHighLevelSourceFields()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Map_ShouldMapHighLevelSourceFields(bool displayRegistrationDetails)
         {
             // Arrange
-            var source = fixture.Create<SubmissionsYearDetails>();
+            var source = fixture.Build<SubmissionsYearDetails>()
+                .With(a => a.DisplayRegistrationDetails, displayRegistrationDetails).Create();
+
             var submissionData = source.SmallProducerSubmissionData;
 
             // Act
@@ -40,6 +44,7 @@
             result.OrganisationId.Should().Be(submissionData.OrganisationData.Id);
             result.HasAuthorisedRepresentitive.Should().Be(submissionData.HasAuthorisedRepresentitive);
             result.ComplianceYear.Should().Be(source.Year ?? submissionData.CurrentSubmission.ComplianceYear);
+            result.DisplayRegistrationDetails.Should().Be(displayRegistrationDetails);
         }
 
         [Fact]

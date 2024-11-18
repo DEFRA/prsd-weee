@@ -31,48 +31,6 @@
             model.IsRegistered.Should().Be(false);
         }
 
-        [Fact]
-        public void OrganisationDetails_ShowReturnRegistrationToUserIsCorrect()
-        {
-            var model = new OrganisationDetailsTabsViewModel();
-            model.OrganisationViewModel = new OrganisationViewModel { };
-
-            model.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
-            model.HasPaid = true;
-            model.IsInternal = true;
-            model.IsAdmin = true;
-
-            model.ShowReturnRegistrationToUser.Should().Be(true);
-
-            model.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
-            model.HasPaid = false;
-            model.IsInternal = true;
-            model.IsAdmin = true;
-
-            model.ShowReturnRegistrationToUser.Should().Be(true);
-
-            model.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
-            model.HasPaid = true;
-            model.IsInternal = false;
-            model.IsAdmin = true;
-
-            model.ShowReturnRegistrationToUser.Should().Be(false);
-
-            model.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
-            model.HasPaid = false;
-            model.IsInternal = true;
-            model.IsAdmin = true;
-
-            model.ShowReturnRegistrationToUser.Should().Be(true);
-
-            model.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
-            model.HasPaid = true;
-            model.IsInternal = true;
-            model.IsAdmin = false;
-
-            model.ShowReturnRegistrationToUser.Should().Be(false);
-        }
-
         [Theory]
         [InlineData(true, true, true)]
         [InlineData(true, false, false)]
@@ -186,6 +144,57 @@
             // Case 8: Internal admin, Submitted status (should not show continue registration)
             new object[] { true, true, SubmissionStatus.Submitted, 2024, 2024, false },
         };
+
+        [Theory]
+        [MemberData(nameof(ShowReturnRegistrationToUserTestData))]
+        public void ShowReturnRegistrationToUser_ReturnsExpectedValue(
+                    bool isInternal,
+                    bool isAdmin,
+                    SubmissionStatus status,
+                    bool hasPaid,
+                    int currentYear,
+                    int? year,
+                    bool expectedResult)
+        {
+            // Arrange
+            var model = CreateViewModel();
+            model.IsInternal = isInternal;
+            model.IsAdmin = isAdmin;
+            model.Status = status;
+            model.HasPaid = hasPaid;
+            model.CurrentYear = currentYear;
+            model.Year = year;
+
+            // Act & Assert
+            model.ShowReturnRegistrationToUser.Should().Be(expectedResult);
+        }
+
+        public static IEnumerable<object[]> ShowReturnRegistrationToUserTestData()
+        {
+            // Case 1: Internal admin, Registered (Submitted + Paid), matching year - should show
+            yield return new object[] { true, true, SubmissionStatus.Submitted, true, 2024, 2024, true };
+
+            // Case 2: Internal admin, Registered (Submitted + Paid), different year - should NOT show
+            yield return new object[] { true, true, SubmissionStatus.Submitted, true, 2024, 2023, false };
+
+            // Case 3: Internal admin, Submitted but not paid, matching year - should show
+            yield return new object[] { true, true, SubmissionStatus.Submitted, false, 2024, 2024, true };
+
+            // Case 4: Internal admin, Submitted but not paid, different year - should NOT show
+            yield return new object[] { true, true, SubmissionStatus.Submitted, false, 2024, 2023, false };
+
+            // Case 5: Not internal admin cases - should never show
+            yield return new object[] { false, true, SubmissionStatus.Submitted, true, 2024, 2024, false };
+            yield return new object[] { true, false, SubmissionStatus.Submitted, true, 2024, 2024, false };
+            yield return new object[] { false, false, SubmissionStatus.Submitted, true, 2024, 2024, false };
+
+            // Case 6: Internal admin, not submitted status - should not show
+            yield return new object[] { true, true, SubmissionStatus.InComplete, false, 2024, 2024, false };
+            yield return new object[] { true, true, SubmissionStatus.Returned, false, 2024, 2024, false };
+
+            // Case 7: Internal admin, Year is null - should not show
+            yield return new object[] { true, true, SubmissionStatus.Submitted, true, 2024, null, false };
+        }
 
         private OrganisationDetailsTabsViewModel CreateViewModel()
         {

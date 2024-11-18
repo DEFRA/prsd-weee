@@ -54,6 +54,7 @@
 
             var expectedyears = ExpectedYears(data);
 
+            model.CurrentYear.Should().Be(data.CurrentSystemYear);
             model.Years.Should().BeEquivalentTo(expectedyears);
             model.Year.Should().Be(year);
             model.ActiveOption.Should().Be(OrganisationDetailsDisplayOption.OrganisationDetails);
@@ -83,6 +84,7 @@
 
             var expectedyears = ExpectedYears(data);
 
+            model.CurrentYear.Should().Be(data.CurrentSystemYear);
             model.Years.Should().BeEquivalentTo(expectedyears);
             model.Year.Should().Be(year);
             model.ActiveOption.Should().Be(OrganisationDetailsDisplayOption.ContactDetails);
@@ -112,6 +114,7 @@
 
             var expectedyears = ExpectedYears(data);
 
+            model.CurrentYear.Should().Be(data.CurrentSystemYear);
             model.Years.Should().BeEquivalentTo(expectedyears);
             model.Year.Should().Be(year);
             model.ActiveOption.Should().Be(OrganisationDetailsDisplayOption.ServiceOfNoticeDetails);
@@ -141,6 +144,7 @@
 
             var expectedyears = ExpectedYears(data);
 
+            model.CurrentYear.Should().Be(data.CurrentSystemYear);
             model.Years.Should().BeEquivalentTo(expectedyears);
             model.Year.Should().Be(year);
             model.ActiveOption.Should().Be(OrganisationDetailsDisplayOption.RepresentedOrganisationDetails);
@@ -170,6 +174,7 @@
 
             var expectedyears = ExpectedYears(data);
 
+            model.CurrentYear.Should().Be(data.CurrentSystemYear);
             model.Years.Should().BeEquivalentTo(expectedyears);
             model.Year.Should().Be(year);
             model.ActiveOption.Should().Be(OrganisationDetailsDisplayOption.TotalEEEDetails);
@@ -199,6 +204,7 @@
 
             var model = await task;
 
+            model.CurrentYear.Should().Be(data.CurrentSystemYear);
             model.IsInternal.Should().Be(true);
         }
 
@@ -290,6 +296,7 @@
             // Assert
             var model = result.Should().BeOfType<OrganisationDetailsTabsViewModel>().Subject;
 
+            model.CurrentYear.Should().Be(data.CurrentSystemYear);
             model.Year.Should().Be(year);
             model.Status.Should().Be(expectedStatus);
             model.HasPaid.Should().Be(expectedHasPaid);
@@ -312,6 +319,7 @@
             // Assert
             var model = result.Should().BeOfType<OrganisationDetailsTabsViewModel>().Subject;
 
+            model.CurrentYear.Should().Be(data.CurrentSystemYear);
             model.Year.Should().Be(year);
             model.Status.Should().Be(expectedStatus);
             model.HasPaid.Should().Be(expectedHasPaid);
@@ -334,6 +342,7 @@
             // Assert
             var model = result.Should().BeOfType<OrganisationDetailsTabsViewModel>().Subject;
 
+            model.CurrentYear.Should().Be(data.CurrentSystemYear);
             model.Year.Should().Be(year);
             model.Status.Should().Be(expectedStatus);
             model.HasPaid.Should().Be(expectedHasPaid);
@@ -356,6 +365,7 @@
             // Assert
             var model = result.Should().BeOfType<OrganisationDetailsTabsViewModel>().Subject;
 
+            model.CurrentYear.Should().Be(data.CurrentSystemYear);
             model.EditEeeDataViewModel.Should().NotBeNull();
             model.Year.Should().Be(year);
             model.Status.Should().Be(expectedStatus);
@@ -389,6 +399,7 @@
             // Assert
             var model = result.Should().BeOfType<OrganisationDetailsTabsViewModel>().Subject;
 
+            model.CurrentYear.Should().Be(data.CurrentSystemYear);
             model.RepresentingCompanyDetailsViewModel.Should().NotBeNull();
             model.Year.Should().Be(year);
             model.Status.Should().Be(expectedStatus);
@@ -605,6 +616,7 @@
         {
             var result = new Core.DirectRegistrant.SmallProducerSubmissionData
             {
+                CurrentSystemYear = 2010,
                 SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>()
                 {
                     { 2004, TestFixture.Build<SmallProducerSubmissionHistoryData>()
