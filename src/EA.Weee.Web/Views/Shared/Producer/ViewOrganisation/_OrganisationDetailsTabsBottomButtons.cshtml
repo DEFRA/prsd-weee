@@ -15,7 +15,7 @@
 {
     <div>
         <p class="govuk-body">
-            @Html.ActionLink("Download as PDF", "DownloadSubmission", "Producer", new { registrationNumber = Model.RegistrationNumber, complianceYear = Model.Year }, new { @class = "govuk-link" })
+            @Html.ActionLink("Download as PDF", "DownloadSubmission", "Producer", new { registrationNumber = Model.RegistrationNumber, complianceYear = Model.Year, displayRegistrationDetails = true }, new { @class = "govuk-link" })
         </p>
     </div>
 }
