@@ -34,7 +34,7 @@
     </div>
 
     <p class="govuk-body">
-        @Html.ActionLink("Download as PDF", "DownloadSubmission", "ProducerSubmission", new { @class = "govuk-link" })
+        @Html.ActionLink("Download as PDF", "DownloadSubmission", new { displayRegistrationDetails = false }, new { @class = "govuk-link" })
     </p>
 
     <div class="govuk-!-padding-top-6">

@@ -804,8 +804,10 @@
             methodInfo.Should().BeDecoratedWith<HttpGetAttribute>();
         }
 
-        [Fact]
-        public void DownloadSubmission_Get_GivenPdf_FileShouldBeReturned()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void DownloadSubmission_Get_GivenPdf_FileShouldBeReturned(bool displayRegistrationDetails)
         {
             //arrange
             var date = new DateTime(2022, 09, 2, 13, 22, 0);
@@ -819,14 +821,14 @@
 
             A.CallTo(() => mapper.Map<SubmissionsYearDetails, CheckAnswersViewModel>(
                 A<SubmissionsYearDetails>.That.Matches(s =>
-                    s.DisplayRegistrationDetails == true &&
+                    s.DisplayRegistrationDetails == displayRegistrationDetails &&
                     s.Year == null &&
                     s.SmallProducerSubmissionData == submissionData))).Returns(model);
             A.CallTo(() => templateExecutor.RenderRazorView(A<ControllerContext>._, "DownloadSubmission", model)).Returns(content);
             A.CallTo(() => pdfDocumentProvider.GeneratePdfFromHtml(content, null)).Returns(pdf);
 
             //act
-            var result = controller.DownloadSubmission() as FileContentResult;
+            var result = controller.DownloadSubmission(displayRegistrationDetails: displayRegistrationDetails) as FileContentResult;
 
             //assert
             result.FileContents.Should().BeSameAs(pdf);
@@ -835,8 +837,10 @@
             SystemTime.Unfreeze();
         }
 
-        [Fact]
-        public void DownloadSubmission_Get_WithComplianceYear_GivenPdf_FileShouldBeReturned()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void DownloadSubmission_Get_WithComplianceYear_GivenPdf_FileShouldBeReturned(bool displayRegistrationDetails)
         {
             // Arrange
             var complianceYear = 2024;
@@ -851,14 +855,14 @@
 
             A.CallTo(() => mapper.Map<SubmissionsYearDetails, CheckAnswersViewModel>(
                 A<SubmissionsYearDetails>.That.Matches(s =>
-                    s.DisplayRegistrationDetails == true &&
+                    s.DisplayRegistrationDetails == displayRegistrationDetails &&
                     s.Year == complianceYear &&
                     s.SmallProducerSubmissionData == submissionData))).Returns(model);
             A.CallTo(() => templateExecutor.RenderRazorView(A<ControllerContext>._, "DownloadSubmission", model)).Returns(content);
             A.CallTo(() => pdfDocumentProvider.GeneratePdfFromHtml(content, null)).Returns(pdf);
 
             // Act
-            var result = controller.DownloadSubmission(complianceYear) as FileContentResult;
+            var result = controller.DownloadSubmission(complianceYear, displayRegistrationDetails) as FileContentResult;
 
             // Assert
             result.Should().NotBeNull();
