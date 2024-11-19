@@ -80,6 +80,8 @@
                     var producerRegistrationNumber = organisationTransactionData.OrganisationViewModel.ProducerRegistrationNumber;
 
                     var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, brandName, contactDetails, contactAddress, representingCompany, additionalCompanyDetails, producerRegistrationNumber);
+
+                    organisation.IsRepresentingCompany = organisationTransactionData.AuthorisedRepresentative == YesNoType.Yes;
                     
                     directRegistrant = await genericDataAccess.Add(directRegistrant);
 
