@@ -158,5 +158,26 @@
             // Assert
             result.Should().BeFalse();
         }
+
+        [Theory]
+        [InlineData("SW123456789")] // 10 characters
+        [InlineData("W12345678")] // 9 characters
+        [InlineData("B123")]
+        public void PartialPostcodesWithinMaxLength_ShouldReturnTrue(string partialPostcode)
+        {
+            var result = ExternalAddressValidator.IsValidPartialPostcode(partialPostcode);
+
+            result.Should().BeTrue();
+        }
+
+        [Theory]
+        [InlineData("SW12345678901")] // 11 characters
+        [InlineData("W1234567890123")] // 13 characters
+        public void PartialPostcodesExceedingMaxLength_ShouldReturnFalse(string partialPostcode)
+        {
+            var result = ExternalAddressValidator.IsValidPartialPostcode(partialPostcode);
+
+            result.Should().BeFalse();
+        }
     }
 }
