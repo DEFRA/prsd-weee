@@ -210,5 +210,7 @@
         }
 
         public bool IsBalancingScheme => this.ProducerBalancingScheme != null;
+
+        public bool IsRepresentingCompany { get; set; }
     }
 }
