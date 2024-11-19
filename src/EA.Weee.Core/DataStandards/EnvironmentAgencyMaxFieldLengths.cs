@@ -3,7 +3,7 @@
     public static class EnvironmentAgencyMaxFieldLengths
     {
         public const int CompanyRegistrationNumber = 15;
-        public const int ExternallyCapturedCompanyNumber = 15;
+        public const int ExternallyCapturedCompanyNumber = 30;
         public const int SchemeName = 70;
         public const int SchemeApprovalNumber = 16;
         public const int IbisBillingReference = 10;
