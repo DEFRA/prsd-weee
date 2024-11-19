@@ -147,7 +147,6 @@
             {
                 SmallProducerSubmissionData = SmallProducerSubmissionData,
                 Year = SmallProducerSubmissionData.CurrentSubmission.ComplianceYear,
-                DisplayRegistrationDetails = false
             };
 
             var model = mapper.Map<SubmissionsYearDetails, CheckAnswersViewModel>(source);
@@ -273,13 +272,13 @@
 
         [HttpGet]
         [SmallProducerSubmissionContext]
-        public ActionResult DownloadSubmission(int? complianceYear = null)
+        public ActionResult DownloadSubmission(int? complianceYear = null, bool displayRegistrationDetails = false)
         {
             var source = new SubmissionsYearDetails()
             {
                 SmallProducerSubmissionData = SmallProducerSubmissionData,
                 Year = complianceYear,
-                DisplayRegistrationDetails = true
+                DisplayRegistrationDetails = displayRegistrationDetails
             };
 
             var model = mapper.Map<SubmissionsYearDetails, CheckAnswersViewModel>(source);
