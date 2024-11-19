@@ -63,19 +63,19 @@
         }
 
         [Fact]
-        public void CreateRegisteredCompany_RegistrationNumberIsLessThan7Characters_ThrowsException()
+        public void CreateRegisteredCompany_RegistrationNumberIsLessThan5Characters_ThrowsException()
         {
             const string companyName = "test company name";
-            const string companyRegistrationNumber = "6chars";
+            const string companyRegistrationNumber = "1234";
 
             Assert.Throws<InvalidOperationException>(() => Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber));
         }
 
         [Fact]
-        public void CreateRegisteredCompany_RegistrationNumberIsMoreThan15Characters_ThrowsException()
+        public void CreateRegisteredCompany_RegistrationNumberIsMoreThan30Characters_ThrowsException()
         {
             const string companyName = "test company name";
-            const string companyRegistrationNumber = "1234567890ABCDEF";
+            const string companyRegistrationNumber = "1234567890123456789012345678901";
 
             Assert.Throws<InvalidOperationException>(() => Organisation.CreateRegisteredCompany(companyName, companyRegistrationNumber));
         }
