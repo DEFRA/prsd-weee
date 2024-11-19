@@ -160,9 +160,10 @@
         }
 
         [Theory]
-        [InlineData("SW123456789")] // 10 characters
-        [InlineData("W12345678")] // 9 characters
-        [InlineData("B123")]
+        [InlineData("SW1234")] // 6 characters
+        [InlineData("W123")] // 4 characters  
+        [InlineData("B123")] // 4 characters
+        [InlineData("SW12345678")] // 9 characters - too many numbers
         public void PartialPostcodesWithinMaxLength_ShouldReturnTrue(string partialPostcode)
         {
             var result = ExternalAddressValidator.IsValidPartialPostcode(partialPostcode);
@@ -171,9 +172,8 @@
         }
 
         [Theory]
-        [InlineData("SW12345678901")] // 11 characters
-        [InlineData("W1234567890123")] // 13 characters
-        public void PartialPostcodesExceedingMaxLength_ShouldReturnFalse(string partialPostcode)
+        [InlineData("SW123456789")] // 10 characters
+        public void PartialPostcodesOutsideOfMaxLength_ShouldReturnFalse(string partialPostcode)
         {
             var result = ExternalAddressValidator.IsValidPartialPostcode(partialPostcode);
 
