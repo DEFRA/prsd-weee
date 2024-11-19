@@ -434,6 +434,7 @@
     <Content Include="scripts\Update\Release 7\Sprint7\20241114-1700-fix-existing-records.sql" />
     <Content Include="scripts\Update\Release 7\Sprint7\20241114-1657-add-auth-rep-indicator.sql" />
     <Content Include="scripts\Update\Release 7\Sprint7\20241115-1555-producer-details-sp-update-all-schemes.sql" />
+    <Content Include="scripts\Update\Release 7\Sprint7\20241119-1314-increase-company-house-number.sql" />
     <Content Include="scripts\Update\Release 7\Sprint7\20241115-1621-producer-eee-sp-update-all-schemes.sql" />
     <Content Include="scripts\Update\Release 7\Sprint7\20241112-1049-producer-register-report-rep-name.sql" />
     <Content Include="scripts\Update\Release 7\Sprint7\20241111-1345-producer-details-sp-update-rep-name.sql" />
