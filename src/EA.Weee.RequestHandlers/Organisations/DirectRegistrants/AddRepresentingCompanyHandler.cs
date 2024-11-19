@@ -45,7 +45,7 @@
 
             var representingCompany = await CreateRepresentingCompany(request.RepresentingCompanyDetailsViewModel);
 
-            // here if the current one is null set it
+            // if the current authorised rep is not set for the direct registrant then it would have been an import company so set the first
             if (existingDirectRegistrant.AuthorisedRepresentative == null)
             {
                 existingDirectRegistrant.AddOrUpdateAuthorisedRepresentitive(representingCompany);
