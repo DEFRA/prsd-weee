@@ -45,6 +45,16 @@
 
             var representingCompany = await CreateRepresentingCompany(request.RepresentingCompanyDetailsViewModel);
 
+            // if the current authorised rep is not set for the direct registrant then it would have been an import company so set the first
+            if (existingDirectRegistrant.AuthorisedRepresentative == null)
+            {
+                existingDirectRegistrant.AddOrUpdateAuthorisedRepresentitive(representingCompany);
+
+                await weeeContext.SaveChangesAsync();
+
+                return existingDirectRegistrant.Id;
+            }
+
             var directRegistrant = DirectRegistrant.CreateDirectRegistrant(existingDirectRegistrant.Organisation, existingDirectRegistrant.BrandName, existingDirectRegistrant.Contact, existingDirectRegistrant.Address, representingCompany, existingDirectRegistrant.AdditionalCompanyDetails.ToList(), null);
 
             var newRegistrant = await genericDataAccess.Add(directRegistrant);

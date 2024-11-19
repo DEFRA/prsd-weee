@@ -1,0 +1,1 @@
+ALTER TABLE [Organisation].[Organisation] ADD IsRepresentingCompany BIT NOT NULL DEFAULT(0);

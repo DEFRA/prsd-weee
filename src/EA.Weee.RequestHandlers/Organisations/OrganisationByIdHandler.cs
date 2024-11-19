@@ -58,7 +58,6 @@
         {
             await SetSchemeId(organisationData, organisationId);
             await SetFacilityInfo(organisationData, organisationId);
-            await SetIsRepresentingCompany(organisationData, organisationId);
             await SetDirectRegistrants(organisationData, organisationId);
         }
 
@@ -83,12 +82,6 @@
 
             organisationData.HasAatfs = facilities.Contains((int)FacilityType.Aatf.Value);
             organisationData.HasAes = facilities.Contains((int)FacilityType.Ae.Value);
-        }
-
-        private async Task SetIsRepresentingCompany(OrganisationData organisationData, Guid organisationId)
-        {
-            organisationData.IsRepresentingCompany = await context.DirectRegistrants
-                .AnyAsync(d => d.AuthorisedRepresentativeId.HasValue && d.OrganisationId == organisationId);
         }
 
         private async Task SetDirectRegistrants(OrganisationData organisationData, Guid organisationId)
