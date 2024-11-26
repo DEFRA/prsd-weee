@@ -7,15 +7,6 @@
         // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
-            // JQuery 1.x.x is used for IE 8 and earlier.
-            bundles.Add(new ScriptBundle("~/bundles/jquery-1").Include(
-                    "~/Scripts/jquery-1*",
-                    "~/Scripts/jquery.unobtrusive-ajax.js",
-                    "~/Scripts/jquery-ui-1-13.3.js",
-                    "~/Scripts/jquery.select-to-autocomplete.js",
-                    "~/Scripts/jquery.validate*",
-                    "~/Scripts/custom-validation.js"));
-
             // JQuery 3.x.x is used for all other browsers.
             bundles.Add(new ScriptBundle("~/bundles/jquery-3").Include(
                     "~/Scripts/jquery-3.6.0.js",
