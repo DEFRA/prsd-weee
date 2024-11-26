@@ -1939,8 +1939,6 @@
     <Content Include="Areas\Admin\Views\Scheme\Overview\RegisteredCompanyDetailsOverview.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\Overview\ContactDetailsOverview.cshtml" />
     <Content Include="Areas\Admin\Views\Scheme\Overview\_OverviewAvailableActions.cshtml" />
-    <Content Include="Scripts\jquery-1.11.3.js" />
-    <Content Include="Scripts\jquery-1.11.3.min.js" />
     <Content Include="Scripts\jquery.select-to-autocomplete.js" />
     <Content Include="Scripts\vendor\modernizr.custom.77028.js" />
     <Content Include="Scripts\weee-checkbox-toggle-visibility.js" />

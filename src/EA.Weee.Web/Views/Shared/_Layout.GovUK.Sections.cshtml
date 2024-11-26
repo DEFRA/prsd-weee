@@ -35,8 +35,7 @@
 }
 
 @section body_end {
-    <!--[if gt IE 8]><!-->@Scripts.Render("~/bundles/jquery-3")<!--<![endif]-->
-    <!--[if lte IE 8]>@Scripts.Render("~/bundles/jquery-1")<![endif]-->
+    @Scripts.Render("~/bundles/jquery-3")
     @Scripts.Render("~/bundles/govuk_frontend")
     @Scripts.Render("~/bundles/govuk_weee")
     @RenderSection("scripts", required: false)
