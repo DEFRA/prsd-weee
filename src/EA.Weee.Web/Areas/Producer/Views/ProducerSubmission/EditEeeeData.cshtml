@@ -6,7 +6,7 @@
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Producer.ViewModels.EditEeeDataViewModel
 @{
-    const string title = "EEE Details";
+    const string title = "EEE details";
     ViewBag.Title = title + " - GOV.UK";
 }
 
@@ -35,7 +35,7 @@
         @Html.AntiForgeryToken()
         @Html.Gds().ValidationSummary()
 
-        <p class="govuk-body">Please provide the amount of EEE in tonnes that you (or if you are an authorised representative your client) placed on the UK market (netting off exports) in the previous year.</p>
+        <p class="govuk-body">Please provide the amount of EEE in tonnes that you (or if you are an authorised representative your client) placed on the UK market in the previous year.</p>
         <p class="govuk-body">This is to be broken down by category and obligation type in the table below. The tonnages should be entered to three decimal places; for example, 211 kilograms should be entered as 0.211 tonnes.</p>
         <p class="govuk-body">Any B2B EEE that can be classed as dual use, is to be reported as B2C.</p>
         <p class="govuk-body">If you have placed 5 tonnes or more of EEE on the UK market, you don't fit the definition of a 'small producer' and the option to register here is not available to you and you need to join a producer compliance scheme.</p>
