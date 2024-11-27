@@ -127,8 +127,12 @@
             return searchWords;
         }
 
-        public Rank Match(IList<SearchWord> searchPhrase, IList<ResultTerm> resultTerms)
+        public Rank Match(IList<SearchWord> uneditedSearchPhrase, IList<ResultTerm> resultTerms)
         {
+            var searchPhrase = uneditedSearchPhrase
+            .Where(word => !ExcludedPhrases.Contains(word.Value))
+            .ToList();
+
             double[,] ranks = new double[searchPhrase.Count, resultTerms.Count];
 
             for (int searchRank = 0; searchRank < searchPhrase.Count; ++searchRank)
@@ -255,5 +259,10 @@
         /// A threshold of 1 will reutrn only exact matches with no common terms.
         /// </summary>
         protected abstract double ConfidenceThreshold { get; }
+
+        private static readonly HashSet<string> ExcludedPhrases = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
+        {
+            "UK", "GmBH", "Ltd", "Limited", "Inc",  // Add more as needed
+        };
     }
 }
