@@ -127,11 +127,15 @@
             return searchWords;
         }
 
-        public Rank Match(IList<SearchWord> uneditedSearchPhrase, IList<ResultTerm> resultTerms)
+        public Rank Match(IList<SearchWord> uneditedSearchPhrase, IList<ResultTerm> uneditedResultTerms)
         {
             var searchPhrase = uneditedSearchPhrase
-            .Where(word => !ExcludedPhrases.Contains(word.Value))
-            .ToList();
+                .Where(word => !ExcludedPhrases.Contains(word.Value))
+                .ToList();
+
+            var resultTerms = uneditedResultTerms
+                .Where(term => term.Term.Values.All(value => !ExcludedPhrases.Contains(value)))
+                .ToList();
 
             double[,] ranks = new double[searchPhrase.Count, resultTerms.Count];
 
