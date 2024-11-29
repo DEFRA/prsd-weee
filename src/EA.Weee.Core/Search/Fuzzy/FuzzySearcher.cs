@@ -266,7 +266,7 @@
 
         private static readonly HashSet<string> ExcludedPhrases = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
         {
-            "UK", "GmBH", "Ltd", "Limited", "Inc",  // Add more as needed
+            "UK", "(UK)", "GMBH", "Ltd", "Limited", "INC",  // Add more as needed
         };
     }
 }
