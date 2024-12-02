@@ -2427,5 +2427,82 @@
                 NpwdMigratedComplete = npwdMigratedComplete
             });
         }
+
+        [Theory]
+        [InlineData("buildingName", null, "buildingName")]
+        [InlineData(null, "123", "123")]
+        [InlineData("Manor House", "45", "45")]
+        public async Task FindCompany_HandlesAddressFieldsCorrectly(string buildingName, string buildingNumber, string expectedAddress1)
+        {
+            // Arrange
+            var apiModel = new DefraCompaniesHouseApiModel
+            {
+                Organisation = new Organisation
+                {
+                    Name = "Test Company",
+                    RegistrationNumber = "12345",
+                    RegisteredOffice = new RegisteredOffice
+                    {
+                        BuildingName = buildingName,
+                        BuildingNumber = buildingNumber,
+                        Street = "Test Street",
+                        Town = "Test Town",
+                        Postcode = "TE1 1ST",
+                        Country = new Country { Name = "United Kingdom" }
+                    }
+                }
+            };
+
+            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync(A<string>._, A<string>._))
+                .Returns(apiModel);
+
+            // Act
+            var result = await controller.FindCompany("12345") as JsonResult;
+            var model = result.Data as OrganisationViewModel;
+
+            // Assert
+            model.Address.Address1.Should().Be(expectedAddress1);
+        }
+
+        [Theory]
+        [InlineData("buildingName", null, "buildingName")]
+        [InlineData(null, "123", "123")]
+        [InlineData("Manor House", "45", "45")]
+        public async Task OrganisationDetails_Post_HandlesAddressFieldsCorrectly(string buildingName, string buildingNumber, string expectedAddress1)
+        {
+            // Arrange
+            var model = new OrganisationViewModel
+            {
+                Action = "Find Company",
+                CompaniesRegistrationNumber = "12345"
+            };
+
+            var apiModel = new DefraCompaniesHouseApiModel
+            {
+                Organisation = new Organisation
+                {
+                    RegisteredOffice = new RegisteredOffice
+                    {
+                        BuildingName = buildingName,
+                        BuildingNumber = buildingNumber,
+                        Country = new Country { Name = "United Kingdom" }
+                    }
+                }
+            };
+
+            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync(A<string>._, A<string>._))
+                .Returns(apiModel);
+
+            var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(countries);
+
+            // Act
+            var result = await controller.OrganisationDetails(model) as ViewResult;
+            var resultModel = result.Model as OrganisationViewModel;
+
+            // Assert
+            resultModel.Address.Address1.Should().Be(expectedAddress1);
+        }
     }
 }
