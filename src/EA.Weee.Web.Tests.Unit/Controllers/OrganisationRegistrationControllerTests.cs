@@ -27,6 +27,7 @@
     using Web.ViewModels.OrganisationRegistration;
     using Weee.Requests.Organisations;
     using Xunit;
+    using OrganisationData = Core.Organisations.OrganisationData;
 
     public class OrganisationRegistrationControllerTests : SimpleUnitTestBase
     {
@@ -2323,6 +2324,108 @@
             Assert.NotNull(viewModel);
 
             Assert.Equal(expectedMessageFlag, viewModel.ShowSmallProducerMessage);
+        }
+
+        public static IEnumerable<object[]> NpwdMigrationTestData()
+        {
+            yield return new object[] { true, true, true };
+            yield return new object[] { true, true, false };
+            yield return new object[] { true, false, false };
+            yield return new object[] { false, true, true };
+            yield return new object[] { false, true, false };
+            yield return new object[] { false, false, false };
+        }
+
+        [Theory]
+        [MemberData(nameof(NpwdMigrationTestData))]
+        public async Task GetExistingOrganisations_ShouldHandleNpwdMigrationStatus(
+        bool isRegistrationNumberSearch,
+        bool npwdMigrated,
+        bool npwdMigratedComplete)
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var companyName = "Test Company";
+            var registrationNumber = "12345678";
+
+            var model = new OrganisationViewModel
+            {
+                CompaniesRegistrationNumber = isRegistrationNumberSearch ? registrationNumber : string.Empty,
+                CompanyName = companyName,
+                Address = new ExternalAddressData
+                {
+                    CountryId = Guid.NewGuid(),
+                    Address1 = "Test Address",
+                    TownOrCity = "Test Town",
+                    Postcode = "TE1 1ST"
+                },
+                EEEBrandNames = "Brand Name",
+                Action = string.Empty
+            };
+
+            if (isRegistrationNumberSearch)
+            {
+                var orgData = new OrganisationData
+                {
+                    Id = organisationId,
+                    Name = companyName,
+                    CompanyRegistrationNumber = registrationNumber,
+                    NpwdMigrated = npwdMigrated,
+                    NpwdMigratedComplete = npwdMigratedComplete
+                };
+
+                A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
+                    .Returns(new List<OrganisationData> { orgData });
+            }
+            else
+            {
+                var searchResult = new OrganisationSearchResult
+                {
+                    OrganisationId = organisationId,
+                    Name = companyName,
+                    CompanyRegistrationNumber = registrationNumber,
+                    NpwdMigrated = npwdMigrated,
+                    NpwdMigratedComplete = npwdMigratedComplete
+                };
+
+                A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
+                    .Returns(new List<OrganisationData>());
+
+                A.CallTo(() => organisationSearcher.Search(companyName, A<int>._, false))
+                    .Returns(new List<OrganisationSearchResult> { searchResult });
+            }
+
+            var organisationTransactionData = new OrganisationTransactionData
+            {
+                AuthorisedRepresentative = YesNoType.No
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.OrganisationDetails(model) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("OrganisationFound");
+
+            var foundOrgs = controller.TempData["FoundOrganisations"] as OrganisationExistsSearchResult;
+            foundOrgs.Should().NotBeNull();
+            foundOrgs.FoundType.Should().Be(isRegistrationNumberSearch
+                ? OrganisationFoundType.CompanyNumber
+                : OrganisationFoundType.CompanyName);
+            foundOrgs.Organisations.Should().ContainSingle();
+
+            var foundOrg = foundOrgs.Organisations.First();
+            foundOrg.Should().BeEquivalentTo(new
+            {
+                OrganisationId = organisationId,
+                OrganisationName = companyName,
+                CompanyRegistrationNumber = registrationNumber,
+                NpwdMigrated = npwdMigrated,
+                NpwdMigratedComplete = npwdMigratedComplete
+            });
         }
     }
 }

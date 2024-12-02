@@ -547,7 +547,9 @@
                     {
                         OrganisationName = existing.Name,
                         CompanyRegistrationNumber = existing.CompanyRegistrationNumber,
-                        OrganisationId = existing.Id
+                        OrganisationId = existing.Id,
+                        NpwdMigrated = existing.NpwdMigrated,
+                        NpwdMigratedComplete = existing.NpwdMigratedComplete
                     }).ToList(),
                     FoundType = OrganisationFoundType.CompanyNumber
                 };
@@ -558,7 +560,9 @@
             {
                 OrganisationName = x.Name,
                 CompanyRegistrationNumber = x.CompanyRegistrationNumber,
-                OrganisationId = x.OrganisationId
+                OrganisationId = x.OrganisationId,
+                NpwdMigrated = x.NpwdMigrated,
+                NpwdMigratedComplete = x.NpwdMigratedComplete
             }).ToList();
 
             if (organisationsMapped.Any())
