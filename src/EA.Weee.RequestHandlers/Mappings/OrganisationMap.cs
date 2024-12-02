@@ -44,7 +44,9 @@
                 HasNotificationAddress = source.HasNotificationAddress,
                 OrganisationName = source.OrganisationName,
                 IsBalancingScheme = source.ProducerBalancingScheme != null,
-                IsRepresentingCompany = source.IsRepresentingCompany
+                IsRepresentingCompany = source.IsRepresentingCompany,
+                NpwdMigrated = source.NpwdMigrated,
+                NpwdMigratedComplete = source.NpwdMigratedComplete
             };
         }
 
