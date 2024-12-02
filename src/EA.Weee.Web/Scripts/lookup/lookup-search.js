@@ -76,6 +76,8 @@
                     results.forEach((item) => addOption(item[config.mappedFields.key], item[config.mappedFields.value]));
 
                     $select.find("option:odd").addClass('autocomplete__option--odd');
+
+                    $select.val("Select");
                 }
             }
         }
