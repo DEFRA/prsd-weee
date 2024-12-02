@@ -1,0 +1,1 @@
+ALTER TABLE [Organisation].Organisation ADD NPWDMigratedComplete BIT NOT NULL DEFAULT(0);

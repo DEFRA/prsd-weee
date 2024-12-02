@@ -17,10 +17,10 @@
         [InlineData(1, "7897898799", "DB83F5AB-E745-49CF-B2CA-23FE391B67A8", "The company registration number should be 7 to 8 characters long")]
         [InlineData(1, "7897898799", "4209EE95-0882-42F2-9A5D-355B4D89EF30", "The company registration number should be 7 to 8 characters long")]
         [InlineData(1, "7897898799", "7BFB8717-4226-40F3-BC51-B16FDF42550C", "The company registration number should be 7 to 8 characters long")]
-        [InlineData(1, "456", "", "The company registration number should be 7 to 15 characters long")]
-        [InlineData(2, "456", "184E1785-26B4-4AE4-80D3-AE319B103ACB", "The company registration number should be 7 to 15 characters long")]
-        [InlineData(3, "456", "184E1785-26B4-4AE4-80D3-AE319B103ACB", "The company registration number should be 7 to 15 characters long")]
-        [InlineData(3, "456", "", "The company registration number should be 7 to 15 characters long")]
+        [InlineData(1, "456", "", "The company registration number should be 7 to 30 characters long")]
+        [InlineData(2, "456", "184E1785-26B4-4AE4-80D3-AE319B103ACB", "The company registration number should be 7 to 30 characters long")]
+        [InlineData(3, "456", "184E1785-26B4-4AE4-80D3-AE319B103ACB", "The company registration number should be 7 to 30 characters long")]
+        [InlineData(3, "456", "", "The company registration number should be 7 to 30 characters long")]
         public void Validate_InvalidLength_NonEditMode_ShouldReturnError(
             int orgType,
             string companiesRegistrationNumber,
