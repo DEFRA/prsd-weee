@@ -3,7 +3,7 @@
   <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-	  <LangVersion>11.0</LangVersion>
+    <LangVersion>11.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -178,6 +178,7 @@
     <Compile Include="Mappings\OrganisationProducerBalancingSchemeMap.cs" />
     <Compile Include="Mappings\EeeDataMap.cs" />
     <Compile Include="Mappings\SmallProducerSubmissionHistoryDataMap.cs" />
+    <Compile Include="Organisations\DirectRegistrants\ContinueOrganisationRegistrationRequestHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\ProducerRegistrationNumberRequestHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddSignatoryAndCompleteRequestHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddPaymentSessionRequestHandler.cs" />
