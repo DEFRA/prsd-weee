@@ -47,5 +47,37 @@
             //assert
             result.IsBalancingScheme.Should().BeTrue();
         }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Map_GivenOrganisationIsNpwdMigrated_NpWdMigratedShouldBeSet(bool npwdMigrated)
+        {
+            //arrange
+            var organisation = A.Fake<Organisation>();
+            A.CallTo(() => organisation.NpwdMigrated).Returns(npwdMigrated);
+
+            //act
+            var result = map.Map(organisation);
+
+            //assert
+            result.NpwdMigrated.Should().Be(npwdMigrated);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Map_GivenOrganisationIsNpwdMigratedComplete_NpWdMigratedCompleteShouldBeSet(bool npwdMigratedComplete)
+        {
+            //arrange
+            var organisation = A.Fake<Organisation>();
+            A.CallTo(() => organisation.NpwdMigratedComplete).Returns(npwdMigratedComplete);
+
+            //act
+            var result = map.Map(organisation);
+
+            //assert
+            result.NpwdMigratedComplete.Should().Be(npwdMigratedComplete);
+        }
     }
 }
