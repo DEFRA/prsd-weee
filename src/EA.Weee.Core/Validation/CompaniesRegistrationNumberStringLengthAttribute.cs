@@ -47,7 +47,7 @@
 
             return isUkRegisteredCompany
                 ? UkMaxLength
-                : EnvironmentAgencyMaxFieldLengths.CompanyRegistrationNumber;
+                : EnvironmentAgencyMaxFieldLengths.ExternallyCapturedCompanyNumber;
         }
     }
 }
