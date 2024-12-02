@@ -8,6 +8,7 @@
     using Core.Shared;
     using EA.Prsd.Core.Extensions;
     using EA.Prsd.Core.Helpers;
+    using EA.Weee.Api.Client.Models;
     using EA.Weee.Api.Client.Models.AddressLookup;
     using EA.Weee.Core.Constants;
     using EA.Weee.Core.Organisations.Base;
@@ -368,6 +369,13 @@
         {
             var result = await GetCompany(companiesRegistrationNumber);
 
+            var orgModel = LookupOrganisationViewModel(result);
+
+            return Json(orgModel, JsonRequestBehavior.AllowGet);
+        }
+
+        private static OrganisationViewModel LookupOrganisationViewModel(DefraCompaniesHouseApiModel result)
+        {
             var orgModel = new OrganisationViewModel()
             {
                 CompanyName = result.Organisation?.Name,
@@ -375,15 +383,15 @@
                 LookupFound = !result.HasError,
                 Address = new ExternalAddressData
                 {
-                    Address1 = result.Organisation?.RegisteredOffice?.BuildingNumber,
+                    Address1 = result.Organisation?.RegisteredOffice?.BuildingNumber ?? result.Organisation?.RegisteredOffice?.BuildingName,
                     Address2 = result.Organisation?.RegisteredOffice?.Street,
                     TownOrCity = result.Organisation?.RegisteredOffice?.Town,
                     Postcode = result.Organisation?.RegisteredOffice?.Postcode,
+                    CountyOrRegion = result.Organisation?.RegisteredOffice?.County ?? result.Organisation?.RegisteredOffice?.Locality,
                     CountryId = UkCountry.GetIdByName(result.Organisation?.RegisteredOffice?.Country.Name)
                 },
             };
-
-            return Json(orgModel, JsonRequestBehavior.AllowGet);
+            return orgModel;
         }
 
         [HttpPost]
@@ -407,21 +415,7 @@
                     return View(model.CastToSpecificViewModel(model));
                 }
 
-                var orgModel = new OrganisationViewModel()
-                {
-                    CompanyName = result.Organisation.Name,
-                    CompaniesRegistrationNumber = result.Organisation?.RegistrationNumber,
-                    LookupFound = true,
-                    Address = new ExternalAddressData
-                    {
-                        Address1 = result.Organisation?.RegisteredOffice?.BuildingNumber,
-                        Address2 = result.Organisation?.RegisteredOffice?.Street,
-                        TownOrCity = result.Organisation?.RegisteredOffice?.Town,
-                        Postcode = result.Organisation?.RegisteredOffice?.Postcode,
-                        Countries = countries,
-                        CountryId = UkCountry.GetIdByName(result.Organisation?.RegisteredOffice?.Country.Name)
-                    },
-                };
+                var orgModel = LookupOrganisationViewModel(result);
 
                 return View(model.CastToSpecificViewModel(orgModel));
             }
@@ -521,7 +515,7 @@
             return new RedirectResult(returnUrl);
         }
 
-        private async Task<List<OrganisationData>> GetExistingByRegistrationNumber(OrganisationViewModel model)
+        private async Task<List<Core.Organisations.OrganisationData>> GetExistingByRegistrationNumber(OrganisationViewModel model)
         {
             using (var client = apiClient())
             {
@@ -533,7 +527,7 @@
 
         private async Task<OrganisationExistsSearchResult> GetExistingOrganisations(OrganisationViewModel model)
         {
-            var existingOrganisations = new List<OrganisationData>();
+            var existingOrganisations = new List<Core.Organisations.OrganisationData>();
             if (!string.IsNullOrWhiteSpace(model.CompaniesRegistrationNumber))
             {
                 existingOrganisations = await GetExistingByRegistrationNumber(model);
