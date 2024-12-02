@@ -48,6 +48,8 @@
                     AatfCount = r.AatfCount,
                     AeCount = r.AeCount,
                     IsBalancingScheme = r.Organisation.ProducerBalancingScheme != null,
+                    NpwdMigrated = r.Organisation.NpwdMigrated,
+                    NpwdMigratedComplete = r.Organisation.NpwdMigratedComplete,
                     DirectRegistrantCount = r.DirectRegistrantCount,
                     CompanyRegistrationNumber = r.Organisation.CompanyRegistrationNumber
                 })

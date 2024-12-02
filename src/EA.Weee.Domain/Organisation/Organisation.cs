@@ -53,7 +53,7 @@
             {
                 if (value != null && (value.Length < 5 || value.Length > 30))
                 {
-                    throw new InvalidOperationException("Company registration number must be 7 to 15 characters long");
+                    throw new InvalidOperationException("Company registration number must be 5 to 30 characters long");
                 }
 
                 companyRegistrationNumber = value;
@@ -67,6 +67,10 @@
         public virtual Address NotificationAddress { get; private set; }
 
         public virtual ProducerBalancingScheme ProducerBalancingScheme { get; private set; }
+
+        public virtual bool NpwdMigrated { get; set; }
+
+        public virtual bool NpwdMigratedComplete { get; set; }
 
         public static Organisation CreateSoleTrader(string companyName, string tradingName = null, string companyRegistrationNumber = null)
         {

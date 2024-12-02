@@ -10,5 +10,9 @@
         public string DisplayName { get; set; }
 
         public AddressData Address { get; set; }
+
+        public bool NpwdMigratedComplete { get; set; }
+
+        public bool NpwdMigrated { get; set; }
     }
 }
