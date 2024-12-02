@@ -23,7 +23,9 @@
                               : source.TradingName,
                 Address = source.BusinessAddress != null
                     ? addressMap.Map(source.BusinessAddress)
-                    : null
+                    : null,
+                NpwdMigratedComplete = source.NpwdMigratedComplete,
+                NpwdMigrated = source.NpwdMigrated
             };
         }
     }

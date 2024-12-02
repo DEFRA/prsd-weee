@@ -2,7 +2,7 @@
 {
     using EA.Weee.Core.Shared;
     using System;
-    using EA.Weee.Domain.Producer;
+
     public class OrganisationSearchResult : SearchResult
     {
         public Guid OrganisationId { get; set; }
@@ -22,6 +22,10 @@
         public int DirectRegistrantCount {get; set; }
 
         public bool IsBalancingScheme { get; set; }
+
+        public bool NpwdMigrated { get; set; }
+
+        public bool NpwdMigratedComplete { get; set; }
 
         public string AddressString
         {
@@ -52,12 +56,6 @@
             }
         }
 
-        public string NameWithAddress
-        {
-            get
-            {
-                return string.Format("{0} ({1})", this.Name, this.AddressString.Replace("<br/>", " "));
-            }
-        }
+        public string NameWithAddress => $"{this.Name} ({this.AddressString.Replace("<br/>", " ")})";
     }
 }

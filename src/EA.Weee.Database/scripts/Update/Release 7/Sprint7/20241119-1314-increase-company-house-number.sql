@@ -1,0 +1,1 @@
+ALTER TABLE [Organisation].Organisation ALTER COLUMN CompanyRegistrationNumber VARCHAR(30)

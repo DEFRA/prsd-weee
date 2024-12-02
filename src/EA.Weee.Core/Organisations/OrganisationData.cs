@@ -58,5 +58,9 @@
         public List<DirectRegistrantInfo> DirectRegistrants { get; set; } = new List<DirectRegistrantInfo>();
 
         public bool IsRepresentingCompany {get; set; }
+
+        public bool NpwdMigrated { get; set; }
+
+        public bool NpwdMigratedComplete { get; set; }
     }
 }

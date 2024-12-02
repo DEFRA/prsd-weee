@@ -68,6 +68,8 @@
                                 <td style="word-break: break-word" class="govuk-table__cell">
                                     @org.OrganisationName
                                     @Html.HiddenFor(m => Model.OrganisationFoundViewModels[i].OrganisationName)
+                                    @Html.HiddenFor(m => Model.OrganisationFoundViewModels[i].NpwdMigrated)
+                                    @Html.HiddenFor(m => Model.OrganisationFoundViewModels[i].NpwdMigratedComplete)
                                 </td>
                                 <td style="word-break: break-word" class="govuk-table__cell">
                                     @org.CompanyRegistrationNumber
