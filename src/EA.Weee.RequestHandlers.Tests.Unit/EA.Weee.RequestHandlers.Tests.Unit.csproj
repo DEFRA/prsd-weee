@@ -4,8 +4,8 @@
   <Import Project="..\packages\xunit.core.2.4.2\build\xunit.core.props" Condition="Exists('..\packages\xunit.core.2.4.2\build\xunit.core.props')" />
   <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
- <PropertyGroup>
-	  <LangVersion>11.0</LangVersion>
+  <PropertyGroup>
+    <LangVersion>11.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -402,6 +402,7 @@
     <Compile Include="Mapping\ObligationSummaryTotalsMapTests.cs" />
     <Compile Include="Mapping\OrganisationMapTests.cs" />
     <Compile Include="Mapping\OrganisationProducerBalancingSchemeMapTests.cs" />
+    <Compile Include="Mapping\PublicOrganisationMapTests.cs" />
     <Compile Include="Mapping\SchemeObligationDataMapTests.cs" />
     <Compile Include="Mapping\SchemeObligationUploadDataTests.cs" />
     <Compile Include="Mapping\SchemeOrganisationMapTests.cs" />

@@ -745,5 +745,65 @@
             Assert.Contains(results,
                 r => r.DirectRegistrantCount == 1);
         }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task FetchOrganisations_OrganisationThatIsNpwdMigrated_OrganisationReturned(bool npwdMigrated)
+        {
+            var organisationId = Guid.NewGuid();
+
+            var organisation = A.Dummy<Domain.Organisation.Organisation>();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
+            A.CallTo(() => organisation.OrganisationStatus).Returns(OrganisationStatus.Complete);
+            A.CallTo(() => organisation.NpwdMigrated).Returns(npwdMigrated);
+
+            var organisations = new List<Domain.Organisation.Organisation>()
+            {
+                organisation
+            };
+
+            A.CallTo(() => context.Organisations).Returns(dbContextHelper.GetAsyncEnabledDbSet(organisations));
+            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>()));
+            A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Domain.Scheme.Scheme>()));
+
+            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap());
+
+            var results = await dataAccess.FetchCompleteOrganisations();
+
+            results.Count.Should().Be(1);
+            results.Should().Contain(o => o.OrganisationId == organisationId);
+            results.ElementAt(0).NpwdMigrated.Should().Be(npwdMigrated);
+        }
+
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public async Task FetchOrganisations_OrganisationThatIsNpwdMigratedComplete_OrganisationReturned(bool npwdMigratedComplete)
+        {
+            var organisationId = Guid.NewGuid();
+
+            var organisation = A.Dummy<Domain.Organisation.Organisation>();
+            A.CallTo(() => organisation.Id).Returns(organisationId);
+            A.CallTo(() => organisation.OrganisationStatus).Returns(OrganisationStatus.Complete);
+            A.CallTo(() => organisation.NpwdMigratedComplete).Returns(npwdMigratedComplete);
+
+            var organisations = new List<Domain.Organisation.Organisation>()
+            {
+                organisation
+            };
+
+            A.CallTo(() => context.Organisations).Returns(dbContextHelper.GetAsyncEnabledDbSet(organisations));
+            A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>()));
+            A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Domain.Scheme.Scheme>()));
+
+            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap());
+
+            var results = await dataAccess.FetchCompleteOrganisations();
+
+            results.Count.Should().Be(1);
+            results.Should().Contain(o => o.OrganisationId == organisationId);
+            results.ElementAt(0).NpwdMigratedComplete.Should().Be(npwdMigratedComplete);
+        }
     }
 }
