@@ -2,6 +2,7 @@
 {
     public class RegisteredOffice
     {
+        public string BuildingName { get; set; }
         public string BuildingNumber { get; set; }
         public string Street { get; set; }
         public string Locality { get; set; }
