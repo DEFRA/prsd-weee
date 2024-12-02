@@ -33,6 +33,7 @@
             $("#Address_Address1").val(address.Address1);
             $("#Address_Address2").val(address.Address2);
             $("#Address_TownOrCity").val(address.TownOrCity);
+            $("#Address_CountyOrRegion").val(address.CountyOrRegion);
             $("#Address_Postcode").val(address.Postcode);
 
             setCountry(address)
