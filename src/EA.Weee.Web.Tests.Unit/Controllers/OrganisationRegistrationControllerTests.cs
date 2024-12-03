@@ -590,7 +590,8 @@
             var organisationTransactionData = new OrganisationTransactionData()
             {
                 TonnageType = TonnageType.FiveTonnesOrMore,
-                SearchTerm = "Test Company"
+                SearchTerm = "Test Company",
+                NpwdMigrated = false
             };
 
             A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
@@ -603,6 +604,7 @@
             Assert.NotNull(result);
             Assert.Equal(organisationTransactionData.SearchTerm, resultViewModel.SearchedText);
             Assert.Equal("5 tonnes or more", resultViewModel.SelectedValue);
+            Assert.Equal(organisationTransactionData.NpwdMigrated, resultViewModel.NpwdMigrated);
         }
 
         [Fact]
@@ -652,6 +654,27 @@
             A.CallTo(() =>
                     transactionService.CaptureData(A<string>._, A<TonnageTypeViewModel>.That.IsSameAs(viewModel)))
                 .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task TonnageTypePost_ValidViewModel_ReturnsCorrectRedirect_WhenNpwdMigratedIsTrue()
+        {
+            // Arrange
+            const string searchText = "company";
+            var viewModel = new TonnageTypeViewModel()
+            {
+                SearchedText = searchText,
+                SelectedValue = "Less than 5 tonnes",
+                NpwdMigrated = true
+            };
+
+            // Act
+            var result = await controller.TonnageType(viewModel) as RedirectToRouteResult;
+
+            // Assert
+            Assert.NotNull(result);
+            result.RouteValues["action"].Should().Be("AuthorisedRepresentative");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
         }
 
         [Fact]
