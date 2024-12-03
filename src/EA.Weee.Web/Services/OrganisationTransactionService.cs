@@ -106,5 +106,13 @@
                 await client.SendAsync(accessToken, new DeleteUserOrganisationTransaction());
             }
         }
+
+        public async Task<OrganisationTransactionData> ContinueMigratedProducerTransactionData(string accessToken, Guid organisationId)
+        {
+            using (var client = weeeClient())
+            {
+                return await client.SendAsync(accessToken, new ContinueOrganisationRegistrationRequest(organisationId));
+            }
+        }
     }
 }

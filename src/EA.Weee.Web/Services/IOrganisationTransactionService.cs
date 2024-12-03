@@ -13,5 +13,7 @@
         Task DeleteOrganisationTransactionData(string accessToken);
 
         Task<Guid> CompleteTransaction(string accessToken);
+
+        Task<OrganisationTransactionData> ContinueMigratedProducerTransactionData(string accessToken, Guid organisationId);
     }
 }
