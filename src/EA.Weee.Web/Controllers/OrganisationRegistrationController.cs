@@ -503,6 +503,8 @@
                 model.IsPreviousSchemeMember = true;
             }
 
+            model.NpwdMigrated = existingTransaction.NpwdMigrated;
+
             return model;
         }
 
@@ -788,6 +790,7 @@
             var viewModel = new AuthorisedRepresentativeViewModel
             {
                 SelectedValue = selectedValue,
+                NpwdMigrated = existingTransaction.NpwdMigrated
             };
 
             return View(viewModel);
