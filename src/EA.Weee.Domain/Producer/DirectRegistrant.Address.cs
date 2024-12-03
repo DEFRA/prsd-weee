@@ -6,7 +6,7 @@
 
     public partial class DirectRegistrant
     {
-        public void AddOrUpdateAddress(Address address)
+        public virtual void AddOrUpdateAddress(Address address)
         {
             Guard.ArgumentNotNull(() => address, address);
 
