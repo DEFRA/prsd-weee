@@ -2559,5 +2559,33 @@
             result.RouteValues["searchTerm"].Should().Be(string.Empty);
             result.RouteValues["action"].Should().Be("TonnageType");
         }
+
+        [Fact]
+        public async Task JoinOrganisation_Should_Not_Call_ContinueSmallProducerRegistration_When_NpwdMigrated_Is_False_Or_NpwdMigratedComplete_Is_True()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+
+            var publicOrganisationData = new PublicOrganisationData
+            {
+                NpwdMigrated = false,
+                NpwdMigratedComplete = true,
+                DisplayName = "Test Organisation"
+            };
+
+            // Arrange
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>._))
+                .Returns(publicOrganisationData);
+
+            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            // Act
+            ActionResult result = await controller.JoinOrganisation(organisationId);
+
+            // Assert
+            var viewResult = result as ViewResult;
+            viewResult.Should().NotBeNull();
+            viewResult.Model.Should().BeOfType<JoinOrganisationViewModel>();
+        }
     }
 }
