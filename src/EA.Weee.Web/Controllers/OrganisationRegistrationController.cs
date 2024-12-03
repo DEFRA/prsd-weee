@@ -358,7 +358,7 @@
         private async Task<ActionResult> CheckRepresentingCompanyDetailsAndRedirect(RepresentingCompanyDetailsViewModel model)
         {
             await transactionService.CaptureData(User.GetAccessToken(), model);
-            var organisationId = await transactionService.CompleteTransaction(User.GetAccessToken());
+            var organisationId = await transactionService.CompleteTransaction(User.GetAccessToken(), model.NpwdMigrated);
             await cache.InvalidateOrganisationSearch();
 
             return RedirectToAction(nameof(RegistrationComplete), typeof(OrganisationRegistrationController).GetControllerName(), new { organisationId });
@@ -376,6 +376,7 @@
 
             var countries = await GetCountries();
             model.Address.Countries = countries;
+            model.NpwdMigrated = existingTransaction.NpwdMigrated;
 
             ViewBag.ReturnUrl = returnUrl;
             return View(model);
@@ -637,7 +638,7 @@
             if (organisationTransactionData != null
                 && organisationTransactionData.AuthorisedRepresentative == YesNoType.No)
             {
-                var organisationId = await transactionService.CompleteTransaction(User.GetAccessToken());
+                var organisationId = await transactionService.CompleteTransaction(User.GetAccessToken(), organisationTransactionData.NpwdMigrated);
                 await cache.InvalidateOrganisationSearch();
 
                 return RedirectToAction(nameof(RegistrationComplete), typeof(OrganisationRegistrationController).GetControllerName(), new { organisationId });
