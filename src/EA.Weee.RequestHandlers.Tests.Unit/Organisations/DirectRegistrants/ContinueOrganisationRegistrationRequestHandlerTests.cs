@@ -99,7 +99,7 @@
         {
             // Arrange
             var request = new ContinueOrganisationRegistrationRequest(organisationId);
-            SetupValidDirectRegistrant();
+            var (directRegistrant, _) = SetupValidDirectRegistrant();
 
             // Act
             var result = await handler.HandleAsync(request);
@@ -107,6 +107,7 @@
             // Assert
             result.Should().NotBeNull();
             result.NpwdMigrated.Should().BeTrue();
+            result.DirectRegistrantId.Should().Be(directRegistrant.Id);
             result.OrganisationViewModel.Should().NotBeNull();
             result.OrganisationViewModel.CompaniesRegistrationNumber.Should().Be("12345678");
             result.OrganisationViewModel.ProducerRegistrationNumber.Should().Be("WEE/AB1234CD");
@@ -126,7 +127,7 @@
             var directRegistrant = A.Fake<DirectRegistrant>();
             A.CallTo(() => directRegistrant.Organisation).Returns(organisation);
             A.CallTo(() => directRegistrant.ProducerRegistrationNumber).Returns("WEE/AB1234CD");
-
+            A.CallTo(() => directRegistrant.Id).Returns(Guid.NewGuid());
             A.CallTo(() => smallProducerDataAccess.GetDirectRegistrantByOrganisationId(organisationId))
                 .Returns(Task.FromResult(directRegistrant));
 

@@ -30,6 +30,7 @@
 
             private readonly It shouldDefaultOrganisationData = () =>
             {
+                result.DirectRegistrantId.Should().Be(directRegistrant.Id);
                 result.OrganisationViewModel.Should().NotBeNull();
                 result.OrganisationViewModel.CompaniesRegistrationNumber.Should()
                     .Be(organisation.CompanyRegistrationNumber);
