@@ -677,7 +677,8 @@
             var viewModel = new TonnageTypeViewModel
             {
                 SearchedText = selectedSearch,
-                SelectedValue = selectedValue
+                SelectedValue = selectedValue,
+                NpwdMigrated = existingTransaction.NpwdMigrated
             };
 
             return View(viewModel);
@@ -699,6 +700,11 @@
             if (tonnageType == Core.Organisations.TonnageType.FiveTonnesOrMore)
             {
                 return RedirectToAction("FiveTonnesOrMore", "OrganisationRegistration");
+            }
+            if (tonnageTypeViewModel.NpwdMigrated)
+            {
+                return RedirectToAction(nameof(AuthorisedRepresentative),
+                    typeof(OrganisationRegistrationController).GetControllerName());
             }
 
             return RedirectToAction(nameof(PreviousRegistration),
