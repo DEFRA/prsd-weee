@@ -8,7 +8,7 @@
     {
         public bool HasContact => Contact != null;
 
-        public void AddOrUpdateMainContactPerson(Contact contactPerson)
+        public virtual void AddOrUpdateMainContactPerson(Contact contactPerson)
         {
             Guard.ArgumentNotNull(() => contactPerson, contactPerson);
 
