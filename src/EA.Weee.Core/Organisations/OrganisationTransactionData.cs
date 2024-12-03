@@ -19,6 +19,10 @@
 
         [Required] public YesNoType? AuthorisedRepresentative { get; set; }
 
+        public bool NpwdMigrated { get; set; }
+
+        public Guid? DirectRegistrantId { get; set; }
+
         public RepresentingCompanyDetailsViewModel RepresentingCompanyDetailsViewModel { get; set; }
 
         public OrganisationViewModel OrganisationViewModel { get; set; }
