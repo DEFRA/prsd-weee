@@ -15,26 +15,26 @@
             var model = new OrganisationDetailsTabsViewModel();
             model.OrganisationViewModel = new OrganisationViewModel { };
 
-            model.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Submitted;
+            model.Status = SubmissionStatus.Submitted;
             model.HasPaid = true;
 
             model.IsRegistered.Should().Be(true);
 
-            model.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.InComplete;
+            model.Status = SubmissionStatus.InComplete;
             model.HasPaid = true;
 
             model.IsRegistered.Should().Be(false);
 
-            model.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.InComplete;
+            model.Status = SubmissionStatus.InComplete;
             model.HasPaid = false;
 
             model.IsRegistered.Should().Be(false);
 
-            // Additional test for Returned status
-            model.Status = EA.Weee.Core.DirectRegistrant.SubmissionStatus.Returned;
+            // Test Returned status now returns false
+            model.Status = SubmissionStatus.Returned;
             model.HasPaid = true;
 
-            model.IsRegistered.Should().Be(true);
+            model.IsRegistered.Should().Be(false);
         }
 
         [Theory]
