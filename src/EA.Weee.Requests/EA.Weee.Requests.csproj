@@ -2,7 +2,7 @@
 <Project ToolsVersion="Current" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-	  <LangVersion>11.0</LangVersion>
+    <LangVersion>11.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -95,6 +95,7 @@
     <Compile Include="Admin\Obligations\GetSchemesWithObligation.cs" />
     <Compile Include="Admin\RemoveSmallProducer.cs" />
     <Compile Include="Admin\Reports\GetSchemesWithObligationOrEvidence.cs" />
+    <Compile Include="Organisations\DirectRegistrant\ContinueOrganisationRegistrationRequest.cs" />
     <Compile Include="Organisations\DirectRegistrant\ProducerRegistrationNumberRequest.cs" />
     <Compile Include="Organisations\DirectRegistrant\AddSignatoryAndCompleteRequest.cs" />
     <Compile Include="Organisations\DirectRegistrant\AddPaymentSessionRequest.cs" />
