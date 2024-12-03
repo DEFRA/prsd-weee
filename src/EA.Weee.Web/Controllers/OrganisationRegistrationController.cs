@@ -357,8 +357,12 @@
 
         private async Task<ActionResult> CheckRepresentingCompanyDetailsAndRedirect(RepresentingCompanyDetailsViewModel model)
         {
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
             await transactionService.CaptureData(User.GetAccessToken(), model);
-            var organisationId = await transactionService.CompleteTransaction(User.GetAccessToken(), model.NpwdMigrated);
+
+            var organisationId = await transactionService.CompleteTransaction(User.GetAccessToken(), existingTransaction.DirectRegistrantId);
+
             await cache.InvalidateOrganisationSearch();
 
             return RedirectToAction(nameof(RegistrationComplete), typeof(OrganisationRegistrationController).GetControllerName(), new { organisationId });
@@ -635,10 +639,10 @@
             var organisationTransactionData = await transactionService
                                                     .GetOrganisationTransactionData(User.GetAccessToken());
 
-            if (organisationTransactionData != null
-                && organisationTransactionData.AuthorisedRepresentative == YesNoType.No)
+            if (organisationTransactionData.AuthorisedRepresentative == YesNoType.No)
             {
-                var organisationId = await transactionService.CompleteTransaction(User.GetAccessToken(), organisationTransactionData.NpwdMigrated);
+                var organisationId = await transactionService.CompleteTransaction(User.GetAccessToken(), organisationTransactionData.DirectRegistrantId);
+
                 await cache.InvalidateOrganisationSearch();
 
                 return RedirectToAction(nameof(RegistrationComplete), typeof(OrganisationRegistrationController).GetControllerName(), new { organisationId });

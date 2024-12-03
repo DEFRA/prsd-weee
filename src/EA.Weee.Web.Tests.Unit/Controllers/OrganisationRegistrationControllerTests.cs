@@ -755,7 +755,7 @@
         [Theory]
         [InlineData(YesNoType.No, "RegistrationComplete", "OrganisationRegistration")]
         [InlineData(YesNoType.Yes, "RepresentingCompanyDetails", "OrganisationRegistration")]
-        public async Task OrganisationDetails_Post_ValidModel_RedirectsToHoldingController(YesNoType authorisedRep,
+        public async Task OrganisationDetails_Post_ValidModel_Redirects(YesNoType authorisedRep,
             string index, string controllerName)
         {
             // Arrange
@@ -772,7 +772,7 @@
 
             var organisationId = TestFixture.Create<Guid>();
 
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).Returns(organisationId);
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, A<Guid?>._)).Returns(organisationId);
 
             A.CallTo(() => this.weeeClient
                     .SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
@@ -794,13 +794,13 @@
 
             if (authorisedRep == YesNoType.No)
             {
-                A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustHaveHappenedOnceExactly();
+                A.CallTo(() => transactionService.CompleteTransaction(A<string>._, organisationTransactionData.DirectRegistrantId)).MustHaveHappenedOnceExactly();
                 A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
                 result.RouteValues["organisationId"].Should().Be(organisationId);
             }
             else
             {
-                A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustNotHaveHappened();
+                A.CallTo(() => transactionService.CompleteTransaction(A<string>._, organisationTransactionData.DirectRegistrantId)).MustNotHaveHappened();
                 A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
             }
         }
@@ -822,7 +822,7 @@
 
             var organisationId = TestFixture.Create<Guid>();
 
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).Returns(organisationId);
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, organisationTransactionData.DirectRegistrantId)).Returns(organisationId);
 
             // Act
             await controller.OrganisationDetails(model);
@@ -852,7 +852,7 @@
 
             var organisationId = TestFixture.Create<Guid>();
 
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).Returns(organisationId);
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, organisationTransactionData.DirectRegistrantId)).Returns(organisationId);
 
             A.CallTo(() => this.weeeClient
                     .SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>
@@ -886,7 +886,7 @@
 
             var organisationId = TestFixture.Create<Guid>();
 
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).Returns(organisationId);
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, organisationTransactionData.DirectRegistrantId)).Returns(organisationId);
 
             var org = new EA.Weee.Core.Organisations.OrganisationData { Id = Guid.NewGuid() };
 
@@ -1168,8 +1168,10 @@
             // Arrange
             var model = TestFixture.Create<RepresentingCompanyDetailsViewModel>();
             var organisationId = TestFixture.Create<Guid>();
+            var organisationTransactionData = TestFixture.Create<OrganisationTransactionData>();
 
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).Returns(organisationId);
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._)).Returns(organisationTransactionData);
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, A<Guid?>._)).Returns(organisationId);
 
             // Act
             var result = await controller.RepresentingCompanyDetails(model) as RedirectToRouteResult;
@@ -1180,7 +1182,8 @@
             result.RouteValues["controller"].Should().Be("OrganisationRegistration");
             result.RouteValues["organisationId"].Should().Be(organisationId);
             A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, organisationTransactionData.DirectRegistrantId)).MustHaveHappenedOnceExactly();
             A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
         }
 
@@ -1209,7 +1212,8 @@
 
             model.Address.Countries.Should().BeEquivalentTo(countries);
             A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustNotHaveHappened();
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, A<Guid?>._)).MustNotHaveHappened();
             A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
         }
 
@@ -2145,7 +2149,7 @@
             result.RouteValues["returnUrl"].Should().Be(returnUrl);
 
             A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, A<Guid?>._)).MustNotHaveHappened();
         }
 
         [Fact]
@@ -2160,7 +2164,7 @@
 
             A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
                 .Returns(transactionData);
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._))
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, transactionData.DirectRegistrantId))
                 .Returns(organisationId);
 
             // Act
@@ -2173,7 +2177,7 @@
             result.RouteValues["organisationId"].Should().Be(organisationId);
 
             A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, transactionData.DirectRegistrantId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -2200,7 +2204,7 @@
             result.RouteValues["returnUrl"].Should().Be(returnUrl);
 
             A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, A<Guid?>._)).MustNotHaveHappened();
         }
 
         [Theory]
@@ -2234,12 +2238,13 @@
             var expectedOrganisationId = Guid.NewGuid();
             var transactionData = new OrganisationTransactionData
             {
-                AuthorisedRepresentative = YesNoType.No
+                AuthorisedRepresentative = YesNoType.No,
+                DirectRegistrantId = TestFixture.Create<Guid?>()
             };
 
             A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
                 .Returns(transactionData);
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._))
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, transactionData.DirectRegistrantId))
                 .Returns(expectedOrganisationId);
 
             // Act
@@ -2256,7 +2261,8 @@
             // Arrange
             var transactionData = new OrganisationTransactionData
             {
-                AuthorisedRepresentative = YesNoType.No
+                AuthorisedRepresentative = YesNoType.No,
+                DirectRegistrantId = TestFixture.Create<Guid?>()
             };
 
             A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
@@ -2266,7 +2272,7 @@
             await controller.CheckAuthorisedRepresentitiveAndRedirect(null);
 
             // Assert
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._))
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, transactionData.DirectRegistrantId))
                 .MustHaveHappenedOnceExactly()
                 .Then(A.CallTo(() => weeeCache.InvalidateOrganisationSearch())
                     .MustHaveHappenedOnceExactly());
@@ -2280,7 +2286,8 @@
             // Arrange
             var transactionData = new OrganisationTransactionData
             {
-                AuthorisedRepresentative = authRepType
+                AuthorisedRepresentative = authRepType,
+                DirectRegistrantId = TestFixture.Create<Guid?>()
             };
 
             A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
@@ -2290,7 +2297,7 @@
             await controller.CheckAuthorisedRepresentitiveAndRedirect(null);
 
             // Assert
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._))
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, transactionData.DirectRegistrantId))
                 .MustNotHaveHappened();
             A.CallTo(() => weeeCache.InvalidateOrganisationSearch())
                 .MustNotHaveHappened();
