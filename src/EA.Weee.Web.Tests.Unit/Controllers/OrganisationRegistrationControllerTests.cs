@@ -1144,10 +1144,18 @@
             // Arrange
             var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
             string returnUrl = "/organisation-found";
+            var organisationTransactionData = new OrganisationTransactionData
+            {
+                RepresentingCompanyDetailsViewModel = null,
+                NpwdMigrated = true
+            };
 
             A.CallTo(() =>
                     weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
                 .Returns(countries);
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
 
             // Act
             var result = await controller.RepresentingCompanyDetails(returnUrl) as ViewResult;
@@ -1160,6 +1168,7 @@
             resultViewModel.Should().NotBeNull();
             resultViewModel.CompanyName.Should().BeNullOrWhiteSpace();
             resultViewModel.Address.Countries.Should().BeEquivalentTo(countries);
+            resultViewModel.NpwdMigrated.Should().Be(organisationTransactionData.NpwdMigrated);
         }
 
         [Fact]
