@@ -161,7 +161,13 @@
         }
 
         [HttpGet]
-        public async Task<ViewResult> JoinOrganisation(Guid organisationId)
+        public ActionResult ContinueSmallProducerRegistration(Guid organisationId)
+        {
+            return RedirectToAction(nameof(TonnageType), new { searchTerm = string.Empty });
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> JoinOrganisation(Guid organisationId)
         {
             using (var client = apiClient())
             {
@@ -187,6 +193,11 @@
 
                 var activeUsers = await client.SendAsync(User.GetAccessToken(),
                     new GetActiveOrganisationUsers(organisationId));
+
+                if (organisationData.NpwdMigrated && !organisationData.NpwdMigratedComplete)
+                {
+                    return ContinueSmallProducerRegistration(organisationId);
+                }
 
                 if (existingAssociation != null)
                 {
