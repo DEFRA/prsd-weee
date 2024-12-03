@@ -217,7 +217,7 @@
             const string accessToken = "test-token";
 
             // Act
-            await organisationService.CompleteTransaction(accessToken);
+            await organisationService.CompleteTransaction(accessToken, false);
 
             // Assert
             A.CallTo(() => weeeClient.SendAsync(accessToken,
