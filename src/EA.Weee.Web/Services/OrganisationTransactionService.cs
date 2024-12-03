@@ -81,7 +81,7 @@
             }
         }
 
-        public async Task<Guid> CompleteTransaction(string accessToken, bool NpwdMigrated)
+        public async Task<Guid> CompleteTransaction(string accessToken, bool npwdMigrated)
         {
             using (var client = weeeClient())
             {
