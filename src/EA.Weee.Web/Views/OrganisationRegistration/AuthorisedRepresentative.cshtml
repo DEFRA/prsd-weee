@@ -10,7 +10,14 @@
 
 @section full_main_content{
 
-    @(this.WeeeGds().BackLink(@Url.Action("PreviousRegistration")))
+    @{
+        var backLinkUrl = Model.NpwdMigrated
+            ? Url.Action("TonnageType")
+            : Url.Action("PreviousRegistration");
+    }
+
+    @(this.WeeeGds().BackLink(backLinkUrl))
+
 
     @using (Html.BeginForm())
     {
