@@ -45,6 +45,7 @@
             var organisationTransactionData = new OrganisationTransactionData()
             {
                 NpwdMigrated = true,
+                DirectRegistrantId = directRegistrant.Id,
                 OrganisationViewModel = new OrganisationViewModel()
                 {
                     CompaniesRegistrationNumber = organisation.CompanyRegistrationNumber,
