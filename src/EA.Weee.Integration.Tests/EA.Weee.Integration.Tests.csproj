@@ -9,7 +9,7 @@
   <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-	  <LangVersion>11.0</LangVersion>
+    <LangVersion>11.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -256,6 +256,7 @@
     <Compile Include="DatabaseSeeder.cs" />
     <Compile Include="DatabaseSeedingException.cs" />
     <Compile Include="Handlers\DirectRegistrant\AddRepresentingCompanyHandlerIntegrationTests.cs" />
+    <Compile Include="Handlers\DirectRegistrant\ContinueOrganisationRegistrationRequestHandlerTests.cs" />
     <Compile Include="Handlers\DirectRegistrant\ReturnSmallProducerSubmissionHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\DirectRegistrant\UpdateSubmissionPaymentDetailsRequestHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\DirectRegistrant\ValidateAndGetSubmissionPaymentHandlerIntegrationTests.cs" />

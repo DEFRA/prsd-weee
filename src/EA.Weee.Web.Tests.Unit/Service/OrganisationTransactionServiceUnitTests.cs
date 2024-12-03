@@ -11,6 +11,7 @@
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using FakeItEasy;
     using FluentAssertions;
+    using System;
     using System.Linq;
     using System.Threading.Tasks;
     using Xunit;
@@ -221,6 +222,58 @@
             // Assert
             A.CallTo(() => weeeClient.SendAsync(accessToken,
                 A<CompleteOrganisationTransaction>._)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task DeleteOrganisationTransactionData_ShouldDeleteOrganisationTransactionData()
+        {
+            // Arrange
+            const string accessToken = "test-token";
+
+            // Act
+            await organisationService.DeleteOrganisationTransactionData(accessToken);
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(accessToken,
+                A<DeleteUserOrganisationTransaction>._)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task GetOrganisationTransactionData_ShouldGetOrganisationTransactionData()
+        {
+            // Arrange
+            const string accessToken = "test-token";
+            var transactionData = fixture.Create<OrganisationTransactionData>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserOrganisationTransaction>._))
+                .Returns(transactionData);
+
+            // Act
+            var result = await organisationService.GetOrganisationTransactionData(accessToken);
+
+            // Assert
+            result.Should().Be(transactionData);
+        }
+
+        [Fact]
+        public async Task ContinueMigratedProducerTransactionData_ShouldContinueMigratedProducerTransactionData()
+        {
+            // Arrange
+            const string accessToken = "test-token";
+            var transactionData = fixture.Create<OrganisationTransactionData>();
+            var organisationId = fixture.Create<Guid>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ContinueOrganisationRegistrationRequest>._))
+                .Returns(transactionData);
+
+            // Act
+            var result = await organisationService.ContinueMigratedProducerTransactionData(accessToken, organisationId);
+
+            // Assert
+            result.Should().Be(transactionData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._,
+                    A<ContinueOrganisationRegistrationRequest>.That.Matches(c => c.OrganisationId == organisationId)))
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
