@@ -24,5 +24,6 @@ namespace EA.Weee.Core.Organisations
 
         public bool? RedirectToCheckAnswers { get; set; }
         public bool HasAuthorisedRepresentitive { get; set; }
+        public bool NpwdMigrated { get; set; }
     }
 }
