@@ -87,7 +87,7 @@
             {
                 if (directRegistrantId.HasValue)
                 {
-                    return await client.SendAsync(accessToken, new CompleteOrganisationTransaction());
+                    return await client.SendAsync(accessToken, new CompleteMigratedOrganisationTransaction(directRegistrantId.Value));
                 }
 
                 return await client.SendAsync(accessToken, new CompleteOrganisationTransaction());
