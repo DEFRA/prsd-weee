@@ -64,7 +64,7 @@
     </div>
 </div>
 
-@if (Model.IsPreviousSchemeMember)
+@if (Model.IsPreviousSchemeMember || Model.NpwdMigrated)
 {
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ProducerRegistrationNumber)">
         @Html.Gds().LabelFor(m => m.ProducerRegistrationNumber, showOptionalLabel: false)
