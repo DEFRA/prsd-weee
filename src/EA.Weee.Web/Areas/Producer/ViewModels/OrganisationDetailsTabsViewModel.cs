@@ -25,7 +25,7 @@
 
         public bool IsInternalAdmin => this.IsAdmin && this.IsInternal;
 
-        public bool IsRegistered => (this.Status == SubmissionStatus.Submitted || this.Status == SubmissionStatus.Returned) && this.HasPaid;
+        public bool IsRegistered => this.Status == SubmissionStatus.Submitted && this.HasPaid;
 
         public bool ShowReturnRegistrationToUser => this.IsInternalAdmin && this.CurrentYear == this.Year && this.Status == SubmissionStatus.Submitted;
 
