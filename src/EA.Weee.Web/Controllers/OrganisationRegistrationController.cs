@@ -162,8 +162,14 @@
         }
 
         [HttpGet]
-        public ActionResult ContinueSmallProducerRegistration(Guid organisationId)
+        public async Task<ActionResult> ContinueSmallProducerRegistration(Guid organisationId)
         {
+            var accessToken = User.GetAccessToken();
+
+            await transactionService.DeleteOrganisationTransactionData(accessToken);
+
+            var organisationTransactionData = await transactionService.ContinueMigratedProducerTransactionData(accessToken, organisationId);
+
             return RedirectToAction(nameof(TonnageType), new { searchTerm = string.Empty });
         }
 
@@ -197,7 +203,7 @@
 
                 if (organisationData.NpwdMigrated && !organisationData.NpwdMigratedComplete)
                 {
-                    return ContinueSmallProducerRegistration(organisationId);
+                    return await ContinueSmallProducerRegistration(organisationId);
                 }
 
                 if (existingAssociation != null)

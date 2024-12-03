@@ -13,6 +13,7 @@
     using EA.Weee.Requests.Shared;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Constant;
+    using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using FakeItEasy;
@@ -2503,6 +2504,60 @@
 
             // Assert
             resultModel.Address.Address1.Should().Be(expectedAddress1);
+        }
+
+        [Fact]
+        public async Task ContinueSmallProducerRegistration_Should_Call_TransactionServiceMethods()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+
+            A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>._)).Returns(Task.CompletedTask);
+
+            A.CallTo(() => transactionService.ContinueMigratedProducerTransactionData(A<string>._, organisationId))
+                .Returns(Task.FromResult(new OrganisationTransactionData()));
+
+            // Act
+            var result = await controller.ContinueSmallProducerRegistration(organisationId) as RedirectToRouteResult;
+
+            // Assert
+            A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionService.ContinueMigratedProducerTransactionData(A<string>._, organisationId)).MustHaveHappenedOnceExactly();
+
+            result.Should().NotBeNull();
+            result.RouteValues["searchTerm"].Should().Be(string.Empty);
+            result.RouteValues["action"].Should().Be("TonnageType");
+        }
+
+        [Fact]
+        public async Task JoinOrganisation_Should_Call_ContinueSmallProducerRegistration_When_NpwdMigrated_Is_True_And_NpwdMigratedComplete_Is_False()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+
+            var publicOrganisationData = new PublicOrganisationData
+            {
+                NpwdMigrated = true,
+                NpwdMigratedComplete = false,
+                DisplayName = "Test Organisation"
+            };
+
+            var getPublicOrganisationInfoRequest = new GetPublicOrganisationInfo(organisationId);
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetPublicOrganisationInfo>.That.Matches(r => r.Id == organisationId)))
+                .Returns(Task.FromResult(publicOrganisationData));
+
+            A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>.Ignored)).Returns(Task.CompletedTask);
+            A.CallTo(() => transactionService.ContinueMigratedProducerTransactionData(A<string>.Ignored, A<Guid>.Ignored))
+                .Returns(Task.FromResult(new OrganisationTransactionData()));
+
+            // Act
+            var result = await controller.JoinOrganisation(organisationId) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["searchTerm"].Should().Be(string.Empty);
+            result.RouteValues["action"].Should().Be("TonnageType");
         }
     }
 }
