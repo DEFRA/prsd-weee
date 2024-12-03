@@ -15,16 +15,17 @@
     using System;
     using System.Threading.Tasks;
 
-    internal class CompleteOrganisationTransactionHandler : CompleteOrganisationTransactionHandlerBase, IRequestHandler<CompleteOrganisationTransaction, Guid>
+    internal class CompleteMigratedOrganisationTransactionHandler : CompleteOrganisationTransactionHandlerBase, IRequestHandler<CompleteMigratedOrganisationTransaction, Guid>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly IOrganisationTransactionDataAccess organisationTransactionDataAccess;
         private readonly IJsonSerializer jsonSerializer;
         private readonly IWeeeTransactionAdapter transactionAdapter;
         private readonly IGenericDataAccess genericDataAccess;
+        private readonly WeeeContext weeeContext;
         private readonly IUserContext userContext;
 
-        public CompleteOrganisationTransactionHandler(
+        public CompleteMigratedOrganisationTransactionHandler(
             IWeeeAuthorization authorization,
             IOrganisationTransactionDataAccess organisationTransactionDataAccess,
             IJsonSerializer jsonSerializer,
@@ -38,18 +39,25 @@
             this.jsonSerializer = jsonSerializer;
             this.transactionAdapter = transactionAdapter;
             this.genericDataAccess = genericDataAccess;
+            this.weeeContext = weeeContext;
             this.userContext = userContext;
         }
 
-        public async Task<Guid> HandleAsync(CompleteOrganisationTransaction request)
+        public async Task<Guid> HandleAsync(CompleteMigratedOrganisationTransaction request)
         {
             authorization.EnsureCanAccessExternalArea();
 
             var organisationTransaction = await organisationTransactionDataAccess.FindIncompleteTransactionForCurrentUserAsync();
+            var directRegistrant = await genericDataAccess.GetById<DirectRegistrant>(request.DirectRegistrantId);
 
             if (organisationTransaction == null)
             {
                 throw new InvalidOperationException("Organisation transaction not found.");
+            }
+
+            if (directRegistrant == null)
+            {
+                throw new InvalidOperationException($"Migrated direct registrant not found {request.DirectRegistrantId}");
             }
 
             var organisationTransactionData = jsonSerializer.Deserialize<OrganisationTransactionData>(organisationTransaction.OrganisationJson);
@@ -57,44 +65,84 @@
             {
                 try
                 {
-                    var organisation = CreateOrganisation(organisationTransactionData);
+                    var organisation = directRegistrant.Organisation;
+
+                    if (!organisation.NpwdMigrated)
+                    {
+                        throw new InvalidOperationException("Not a NPWD migrated organisation.");
+                    }
+
                     var address = await CreateAndAddAddress(organisationTransactionData, organisation);
 
                     organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, address);
-                    organisation.CompleteRegistration();
+                    organisation.UpdateMigratedOrganisationType(GetOrganisationType(organisationTransactionData));
+                    organisation.UpdateDirectRegistrantDetails(organisationTransactionData.OrganisationViewModel.CompanyName,
+                        organisationTransactionData.OrganisationViewModel.BusinessTradingName,
+                        organisation.CompanyRegistrationNumber);
+                    organisation.ToMigrated();
 
                     var brandName = await CreateAndAddBrandName(organisationTransactionData);
                     var representingCompany = await CreateRepresentingCompany(organisationTransactionData);
-
                     var contactDetails = CreateContact(organisationTransactionData);
                     var contactAddress = await CreateContactAddress(organisationTransactionData);
 
                     var additionalCompanyDetails = CreateAdditionalCompanyDetails(organisationTransactionData);
 
-                    var producerRegistrationNumber = organisationTransactionData.OrganisationViewModel.ProducerRegistrationNumber;
+                    if (brandName != null)
+                    {
+                        directRegistrant.AddOrUpdateBrandName(brandName);
+                    }
 
-                    var directRegistrant = DirectRegistrant.CreateDirectRegistrant(organisation, brandName, contactDetails, contactAddress, representingCompany, additionalCompanyDetails, producerRegistrationNumber);
+                    directRegistrant.AddOrUpdateMainContactPerson(contactDetails);
+                    directRegistrant.AddOrUpdateAddress(contactAddress);
+
+                    if (representingCompany != null)
+                    {
+                        directRegistrant.AddOrUpdateAuthorisedRepresentitive(representingCompany);
+                    }
+
+                    if (additionalCompanyDetails != null)
+                    {
+                        directRegistrant.SetAdditionalCompanyDetails(additionalCompanyDetails);
+                    }
 
                     organisation.IsRepresentingCompany = organisationTransactionData.AuthorisedRepresentative == YesNoType.Yes;
-                    
-                    directRegistrant = await genericDataAccess.Add(directRegistrant);
 
                     await organisationTransactionDataAccess.CompleteTransactionAsync(directRegistrant.Organisation);
 
                     var organisationUser =
-                        new OrganisationUser(userContext.UserId, directRegistrant.Organisation.Id, UserStatus.Active);
-                    
+                        new OrganisationUser(userContext.UserId, directRegistrant.OrganisationId, UserStatus.Active);
+
                     await genericDataAccess.Add(organisationUser);
 
                     transactionAdapter.Commit(transaction);
 
-                    return directRegistrant.Organisation.Id;
+                    await weeeContext.SaveChangesAsync();
+
+                    return directRegistrant.OrganisationId;
                 }
                 catch
                 {
                     transactionAdapter.Rollback(transaction);
                     throw;
                 }
+            }
+        }
+
+        private static Domain.Organisation.OrganisationType GetOrganisationType(OrganisationTransactionData organisationTransactionData)
+        {
+            switch (organisationTransactionData.OrganisationType)
+            {
+                case ExternalOrganisationType.Partnership:
+                    return Domain.Organisation.OrganisationType.DirectRegistrantPartnership;
+                case ExternalOrganisationType.RegisteredCompany:
+                    return Domain.Organisation.OrganisationType.RegisteredCompany;
+                case ExternalOrganisationType.SoleTrader:
+                    return Domain.Organisation.OrganisationType.SoleTraderOrIndividual;
+                case null:
+                    throw new InvalidOperationException("Organisation type is null.");
+                default:
+                    throw new ArgumentOutOfRangeException();
             }
         }
     }
