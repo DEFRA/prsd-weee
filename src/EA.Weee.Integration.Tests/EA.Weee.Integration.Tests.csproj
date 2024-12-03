@@ -256,6 +256,7 @@
     <Compile Include="DatabaseSeeder.cs" />
     <Compile Include="DatabaseSeedingException.cs" />
     <Compile Include="Handlers\DirectRegistrant\AddRepresentingCompanyHandlerIntegrationTests.cs" />
+    <Compile Include="Handlers\DirectRegistrant\CompleteMigratedOrganisationTransactionHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\DirectRegistrant\ContinueOrganisationRegistrationRequestHandlerTests.cs" />
     <Compile Include="Handlers\DirectRegistrant\ReturnSmallProducerSubmissionHandlerIntegrationTests.cs" />
     <Compile Include="Handlers\DirectRegistrant\UpdateSubmissionPaymentDetailsRequestHandlerIntegrationTests.cs" />

@@ -95,6 +95,7 @@
     <Compile Include="Admin\Obligations\GetSchemesWithObligation.cs" />
     <Compile Include="Admin\RemoveSmallProducer.cs" />
     <Compile Include="Admin\Reports\GetSchemesWithObligationOrEvidence.cs" />
+    <Compile Include="Organisations\DirectRegistrant\CompleteMigratedOrganisationTransaction.cs" />
     <Compile Include="Organisations\DirectRegistrant\ContinueOrganisationRegistrationRequest.cs" />
     <Compile Include="Organisations\DirectRegistrant\ProducerRegistrationNumberRequest.cs" />
     <Compile Include="Organisations\DirectRegistrant\AddSignatoryAndCompleteRequest.cs" />
