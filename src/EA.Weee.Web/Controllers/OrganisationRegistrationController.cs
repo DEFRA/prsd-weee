@@ -140,7 +140,7 @@
         /// <summary>
         /// This method is called using AJAX by JS-users.
         /// </summary>
-        /// <param name="viewModel"></param>
+        /// <param name="searchTerm"></param>
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -169,9 +169,9 @@
 
             await transactionService.DeleteOrganisationTransactionData(accessToken);
 
-            var organisationTransactionData = await transactionService.ContinueMigratedProducerTransactionData(accessToken, organisationId);
+            await transactionService.ContinueMigratedProducerTransactionData(accessToken, organisationId);
 
-            return RedirectToAction(nameof(TonnageType), new { searchTerm = searchTerm });
+            return RedirectToAction(nameof(TonnageType), new { searchTerm });
         }
 
         [HttpGet]
@@ -551,47 +551,49 @@
 
         private async Task<OrganisationExistsSearchResult> GetExistingOrganisations(OrganisationViewModel model)
         {
-            var existingOrganisations = new List<Core.Organisations.OrganisationData>();
-            if (!string.IsNullOrWhiteSpace(model.CompaniesRegistrationNumber))
+            if (!model.NpwdMigrated)
             {
-                existingOrganisations = await GetExistingByRegistrationNumber(model);
-            }
-
-            if (existingOrganisations.Any())
-            {
-                return new OrganisationExistsSearchResult
+                var existingOrganisations = new List<Core.Organisations.OrganisationData>();
+                if (!string.IsNullOrWhiteSpace(model.CompaniesRegistrationNumber))
                 {
-                    Organisations = existingOrganisations.Select(existing => new OrganisationFoundViewModel
+                    existingOrganisations = await GetExistingByRegistrationNumber(model);
+                }
+
+                if (existingOrganisations.Any())
+                {
+                    return new OrganisationExistsSearchResult
                     {
-                        OrganisationName = existing.Name,
-                        CompanyRegistrationNumber = existing.CompanyRegistrationNumber,
-                        OrganisationId = existing.Id,
-                        NpwdMigrated = existing.NpwdMigrated,
-                        NpwdMigratedComplete = existing.NpwdMigratedComplete
-                    }).ToList(),
-                    FoundType = OrganisationFoundType.CompanyNumber
-                };
-            }
+                        Organisations = existingOrganisations.Select(existing => new OrganisationFoundViewModel
+                        {
+                            OrganisationName = existing.Name,
+                            CompanyRegistrationNumber = existing.CompanyRegistrationNumber,
+                            OrganisationId = existing.Id,
+                            NpwdMigrated = existing.NpwdMigrated,
+                            NpwdMigratedComplete = existing.NpwdMigratedComplete
+                        }).ToList(),
+                        FoundType = OrganisationFoundType.CompanyNumber
+                    };
+                }
 
-            var nameSearch = await organisationSearcher.Search(model.CompanyName, maximumSearchResults, false);
-            var organisationsMapped = nameSearch.Select(x => new OrganisationFoundViewModel
-            {
-                OrganisationName = x.Name,
-                CompanyRegistrationNumber = x.CompanyRegistrationNumber,
-                OrganisationId = x.OrganisationId,
-                NpwdMigrated = x.NpwdMigrated,
-                NpwdMigratedComplete = x.NpwdMigratedComplete
-            }).ToList();
-
-            if (organisationsMapped.Any())
-            {
-                return new OrganisationExistsSearchResult
+                var nameSearch = await organisationSearcher.Search(model.CompanyName, maximumSearchResults, false);
+                var organisationsMapped = nameSearch.Select(x => new OrganisationFoundViewModel
                 {
-                    Organisations = organisationsMapped,
-                    FoundType = OrganisationFoundType.CompanyName
-                };
-            }
+                    OrganisationName = x.Name,
+                    CompanyRegistrationNumber = x.CompanyRegistrationNumber,
+                    OrganisationId = x.OrganisationId,
+                    NpwdMigrated = x.NpwdMigrated,
+                    NpwdMigratedComplete = x.NpwdMigratedComplete
+                }).ToList();
 
+                if (organisationsMapped.Any())
+                {
+                    return new OrganisationExistsSearchResult
+                    {
+                        Organisations = organisationsMapped,
+                        FoundType = OrganisationFoundType.CompanyName
+                    };
+                }
+            }
             return new OrganisationExistsSearchResult
             {
                 Organisations = new List<OrganisationFoundViewModel>(),
@@ -994,7 +996,7 @@
             if (model.IsPreviousSchemeMember && string.IsNullOrWhiteSpace(model.ProducerRegistrationNumber))
             {
                 results.Add(new ValidationResult("Enter a producer registration number", new[] { nameof(model.ProducerRegistrationNumber) }));
-                ModelState.AddModelError(nameof(model.ProducerRegistrationNumber), "Enter a producer registration number");
+                ModelState.AddModelError(nameof(model.ProducerRegistrationNumber), @"Enter a producer registration number");
             }
             else
             {
@@ -1005,7 +1007,7 @@
                         var exists = await client.SendAsync(User.GetAccessToken(), new ProducerRegistrationNumberRequest(model.ProducerRegistrationNumber));
                         if (!exists)
                         {
-                            ModelState.AddModelError(nameof(OrganisationViewModel.ProducerRegistrationNumber), "This producer registration number does not exist");
+                            ModelState.AddModelError(nameof(OrganisationViewModel.ProducerRegistrationNumber), @"This producer registration number does not exist");
                         }
                     }
                 }
