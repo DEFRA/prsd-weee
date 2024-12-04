@@ -23,6 +23,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using System.Web.Caching;
     using System.Web.Mvc;
     using Web.Controllers;
     using Web.ViewModels.OrganisationRegistration;
@@ -1168,7 +1169,6 @@
             resultViewModel.Should().NotBeNull();
             resultViewModel.CompanyName.Should().BeNullOrWhiteSpace();
             resultViewModel.Address.Countries.Should().BeEquivalentTo(countries);
-            resultViewModel.NpwdMigrated.Should().Be(organisationTransactionData.NpwdMigrated);
         }
 
         [Fact]
@@ -2550,6 +2550,7 @@
         {
             // Arrange
             var organisationId = Guid.NewGuid();
+            var searchTerm = TestFixture.Create<string>();
 
             A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>._)).Returns(Task.CompletedTask);
 
@@ -2557,14 +2558,14 @@
                 .Returns(Task.FromResult(new OrganisationTransactionData()));
 
             // Act
-            var result = await controller.ContinueSmallProducerRegistration(organisationId) as RedirectToRouteResult;
+            var result = await controller.ContinueSmallProducerRegistration(organisationId, searchTerm) as RedirectToRouteResult;
 
             // Assert
             A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>._)).MustHaveHappenedOnceExactly();
             A.CallTo(() => transactionService.ContinueMigratedProducerTransactionData(A<string>._, organisationId)).MustHaveHappenedOnceExactly();
 
             result.Should().NotBeNull();
-            result.RouteValues["searchTerm"].Should().Be(string.Empty);
+            result.RouteValues["searchTerm"].Should().Be(searchTerm);
             result.RouteValues["action"].Should().Be("TonnageType");
         }
 
@@ -2625,6 +2626,40 @@
             var viewResult = result as ViewResult;
             viewResult.Should().NotBeNull();
             viewResult.Model.Should().BeOfType<JoinOrganisationViewModel>();
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_Post_WhenNpwdMigrated_SkipsOrganisationSearch()
+        {
+            // Arrange
+            var model = TestFixture.Build<OrganisationViewModel>()
+                .With(m => m.CompaniesRegistrationNumber, "12345")
+                .With(m => m.CompanyName, "Test Company")
+                .With(m => m.Action, string.Empty)
+                .With(m => m.Address, new ExternalAddressData { CountryId = Guid.NewGuid() })
+                .With(m => m.EEEBrandNames, "Test Brands")
+                .Create();
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.AuthorisedRepresentative, YesNoType.No)
+                .With(o => o.NpwdMigrated, true)
+                .Create();
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.OrganisationDetails(model);
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
+                .MustNotHaveHappened();
+            A.CallTo(() => organisationSearcher.Search(A<string>._, A<int>._, A<bool>._))
+                .MustNotHaveHappened();
+
+            result.Should().BeOfType<RedirectToRouteResult>();
+            var redirectResult = (RedirectToRouteResult)result;
+            redirectResult.RouteValues["action"].Should().NotBe("OrganisationFound");
         }
     }
 }
