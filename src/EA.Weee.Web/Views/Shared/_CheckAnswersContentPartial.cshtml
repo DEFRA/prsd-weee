@@ -1,5 +1,6 @@
 ﻿@using EA.Prsd.Core.Helpers
 @using EA.Weee.Core.DirectRegistrant
+@using EA.Weee.Core.Organisations
 @using MvcNavigationHelpers
 @using EA.Weee.Web.RazorHelpers
 @model EA.Weee.Web.Areas.Producer.ViewModels.CheckAnswersViewModel
@@ -28,6 +29,27 @@
     organisationDetails.Add("Postcode", Model.OrganisationDetails.Address.Postcode);
     organisationDetails.Add("Country", Model.OrganisationDetails.Address.CountryName);
     organisationDetails.Add("EEE brand names", Model.OrganisationDetails.EEEBrandNames);
+
+    if (Model.OrganisationDetails.OrganisationType != ExternalOrganisationType.RegisteredCompany)
+    {
+        string displayText = Model.OrganisationDetails.OrganisationType == ExternalOrganisationType.Partnership ? "Partner" : "Sole trader";
+
+        var sortedContacts = Model.OrganisationDetails.AdditionalContactModels.OrderBy(c => c.Order).ToList();
+
+        for (var i = 0; i < sortedContacts.Count; i++)
+        {
+            var contact = sortedContacts[i];
+            var index = Model.OrganisationDetails.AdditionalContactModels.IndexOf(contact);
+
+            @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].FirstName)
+            @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].LastName)
+            @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].Order)
+
+            var additionalIndex = (i + 1).ToString();
+            organisationDetails.Add($"{displayText} " + additionalIndex + " First name", contact.FirstName);
+            organisationDetails.Add($"{displayText} " + additionalIndex + " Last name", contact.LastName);
+        }
+    }
 
     if (Model.DisplayRegistrationDetails)
     {
@@ -65,25 +87,8 @@
         organisationDetails.Add("Submission date", submittedDate);
     }
 
-
-    var sortedContacts = Model.OrganisationDetails.AdditionalContactModels.OrderBy(c => c.Order).ToList();
-
-    for (var i = 0; i < sortedContacts.Count; i++)
+    var contactDetails = new Dictionary<string, object>
     {
-        var contact = sortedContacts[i];
-        var index = Model.OrganisationDetails.AdditionalContactModels.IndexOf(contact);
-
-    @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].FirstName)
-    @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].LastName)
-    @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].Order)
-
-    var partnerIndex = (i + 1).ToString();
-    organisationDetails.Add("Partner " + partnerIndex + " First name", contact.FirstName);
-    organisationDetails.Add("Partner " + partnerIndex + " Last name", contact.LastName);
-}
-
-var contactDetails = new Dictionary<string, object>
-{
             { "First name", Model.ContactDetails.FirstName },
             { "Last name", Model.ContactDetails.LastName },
             { "Position", Model.ContactDetails.Position },
@@ -97,8 +102,8 @@ var contactDetails = new Dictionary<string, object>
             { "Country", Model.ContactDetails.AddressData.CountryName }
     };
 
-var serviceOfNoticeData = new Dictionary<string, object>
-{
+    var serviceOfNoticeData = new Dictionary<string, object>
+    {
             { "Address line 1", Model.ServiceOfNoticeData.Address.Address1 },
             { "Address line 2", Model.ServiceOfNoticeData.Address.Address2 },
             { "Town or city", Model.ServiceOfNoticeData.Address.TownOrCity },
@@ -108,11 +113,11 @@ var serviceOfNoticeData = new Dictionary<string, object>
             { "Phone number", Model.ServiceOfNoticeData.Address.Telephone },
     };
 
-var representingCompanyDetails = new Dictionary<string, object>();
-if (representingOrg)
-{
-    representingCompanyDetails = new Dictionary<string, object>
-{
+    var representingCompanyDetails = new Dictionary<string, object>();
+    if (representingOrg)
+    {
+        representingCompanyDetails = new Dictionary<string, object>
+        {
                 { "Producer name", Model.RepresentingCompanyDetails.CompanyName },
                 { "Trading name", Model.RepresentingCompanyDetails.BusinessTradingName },
                 { "Address line 1", Model.RepresentingCompanyDetails.Address.Address1 },
@@ -124,7 +129,7 @@ if (representingOrg)
                 { "Phone number", Model.RepresentingCompanyDetails.Address.Telephone },
                 { "Email address", Model.RepresentingCompanyDetails.Address.Email },
         };
-}
+    }
 }
 
 <div>

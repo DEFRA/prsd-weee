@@ -60,6 +60,8 @@
 
         public bool HasAuthorisedRepresentitive { get; set; }
 
+        public bool NpwdMigrated { get; set; }
+
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();

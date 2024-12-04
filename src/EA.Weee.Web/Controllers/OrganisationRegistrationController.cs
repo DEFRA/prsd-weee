@@ -87,9 +87,10 @@
             // Check to see if an organisation was selected.
             if (viewModel.SelectedOrganisationId != null)
             {
-                return RedirectToAction("JoinOrganisation", new
+                return RedirectToAction(nameof(JoinOrganisation), new
                 {
-                    OrganisationId = viewModel.SelectedOrganisationId.Value
+                    OrganisationId = viewModel.SelectedOrganisationId.Value,
+                    SearchTerm = viewModel.SearchTerm
                 });
             }
 
@@ -132,14 +133,14 @@
 
             return RedirectToAction("JoinOrganisation", new
             {
-                OrganisationId = viewModel.SelectedOrganisationId.Value
+                OrganisationId = viewModel.SelectedOrganisationId.Value, viewModel.SearchTerm
             });
         }
 
         /// <summary>
         /// This method is called using AJAX by JS-users.
         /// </summary>
-        /// <param name="viewModel"></param>
+        /// <param name="searchTerm"></param>
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -162,7 +163,19 @@
         }
 
         [HttpGet]
-        public async Task<ViewResult> JoinOrganisation(Guid organisationId)
+        public async Task<ActionResult> ContinueSmallProducerRegistration(Guid organisationId, string searchTerm)
+        {
+            var accessToken = User.GetAccessToken();
+
+            await transactionService.DeleteOrganisationTransactionData(accessToken);
+
+            await transactionService.ContinueMigratedProducerTransactionData(accessToken, organisationId);
+
+            return RedirectToAction(nameof(TonnageType), new { searchTerm });
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> JoinOrganisation(Guid organisationId, string searchTerm = null)
         {
             using (var client = apiClient())
             {
@@ -188,6 +201,11 @@
 
                 var activeUsers = await client.SendAsync(User.GetAccessToken(),
                     new GetActiveOrganisationUsers(organisationId));
+
+                if (organisationData.NpwdMigrated && !organisationData.NpwdMigratedComplete)
+                {
+                    return await ContinueSmallProducerRegistration(organisationId, searchTerm);
+                }
 
                 if (existingAssociation != null)
                 {
@@ -340,8 +358,12 @@
 
         private async Task<ActionResult> CheckRepresentingCompanyDetailsAndRedirect(RepresentingCompanyDetailsViewModel model)
         {
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
+
             await transactionService.CaptureData(User.GetAccessToken(), model);
-            var organisationId = await transactionService.CompleteTransaction(User.GetAccessToken());
+
+            var organisationId = await transactionService.CompleteTransaction(User.GetAccessToken(), existingTransaction.DirectRegistrantId);
+
             await cache.InvalidateOrganisationSearch();
 
             return RedirectToAction(nameof(RegistrationComplete), typeof(OrganisationRegistrationController).GetControllerName(), new { organisationId });
@@ -486,6 +508,8 @@
                 model.IsPreviousSchemeMember = true;
             }
 
+            model.NpwdMigrated = existingTransaction.NpwdMigrated;
+
             return model;
         }
 
@@ -527,47 +551,49 @@
 
         private async Task<OrganisationExistsSearchResult> GetExistingOrganisations(OrganisationViewModel model)
         {
-            var existingOrganisations = new List<Core.Organisations.OrganisationData>();
-            if (!string.IsNullOrWhiteSpace(model.CompaniesRegistrationNumber))
+            if (!model.NpwdMigrated)
             {
-                existingOrganisations = await GetExistingByRegistrationNumber(model);
-            }
-
-            if (existingOrganisations.Any())
-            {
-                return new OrganisationExistsSearchResult
+                var existingOrganisations = new List<Core.Organisations.OrganisationData>();
+                if (!string.IsNullOrWhiteSpace(model.CompaniesRegistrationNumber))
                 {
-                    Organisations = existingOrganisations.Select(existing => new OrganisationFoundViewModel
+                    existingOrganisations = await GetExistingByRegistrationNumber(model);
+                }
+
+                if (existingOrganisations.Any())
+                {
+                    return new OrganisationExistsSearchResult
                     {
-                        OrganisationName = existing.Name,
-                        CompanyRegistrationNumber = existing.CompanyRegistrationNumber,
-                        OrganisationId = existing.Id,
-                        NpwdMigrated = existing.NpwdMigrated,
-                        NpwdMigratedComplete = existing.NpwdMigratedComplete
-                    }).ToList(),
-                    FoundType = OrganisationFoundType.CompanyNumber
-                };
-            }
+                        Organisations = existingOrganisations.Select(existing => new OrganisationFoundViewModel
+                        {
+                            OrganisationName = existing.Name,
+                            CompanyRegistrationNumber = existing.CompanyRegistrationNumber,
+                            OrganisationId = existing.Id,
+                            NpwdMigrated = existing.NpwdMigrated,
+                            NpwdMigratedComplete = existing.NpwdMigratedComplete
+                        }).ToList(),
+                        FoundType = OrganisationFoundType.CompanyNumber
+                    };
+                }
 
-            var nameSearch = await organisationSearcher.Search(model.CompanyName, maximumSearchResults, false);
-            var organisationsMapped = nameSearch.Select(x => new OrganisationFoundViewModel
-            {
-                OrganisationName = x.Name,
-                CompanyRegistrationNumber = x.CompanyRegistrationNumber,
-                OrganisationId = x.OrganisationId,
-                NpwdMigrated = x.NpwdMigrated,
-                NpwdMigratedComplete = x.NpwdMigratedComplete
-            }).ToList();
-
-            if (organisationsMapped.Any())
-            {
-                return new OrganisationExistsSearchResult
+                var nameSearch = await organisationSearcher.Search(model.CompanyName, maximumSearchResults, false);
+                var organisationsMapped = nameSearch.Select(x => new OrganisationFoundViewModel
                 {
-                    Organisations = organisationsMapped,
-                    FoundType = OrganisationFoundType.CompanyName
-                };
-            }
+                    OrganisationName = x.Name,
+                    CompanyRegistrationNumber = x.CompanyRegistrationNumber,
+                    OrganisationId = x.OrganisationId,
+                    NpwdMigrated = x.NpwdMigrated,
+                    NpwdMigratedComplete = x.NpwdMigratedComplete
+                }).ToList();
 
+                if (organisationsMapped.Any())
+                {
+                    return new OrganisationExistsSearchResult
+                    {
+                        Organisations = organisationsMapped,
+                        FoundType = OrganisationFoundType.CompanyName
+                    };
+                }
+            }
             return new OrganisationExistsSearchResult
             {
                 Organisations = new List<OrganisationFoundViewModel>(),
@@ -615,10 +641,10 @@
             var organisationTransactionData = await transactionService
                                                     .GetOrganisationTransactionData(User.GetAccessToken());
 
-            if (organisationTransactionData != null
-                && organisationTransactionData.AuthorisedRepresentative == YesNoType.No)
+            if (organisationTransactionData.AuthorisedRepresentative == YesNoType.No)
             {
-                var organisationId = await transactionService.CompleteTransaction(User.GetAccessToken());
+                var organisationId = await transactionService.CompleteTransaction(User.GetAccessToken(), organisationTransactionData.DirectRegistrantId);
+
                 await cache.InvalidateOrganisationSearch();
 
                 return RedirectToAction(nameof(RegistrationComplete), typeof(OrganisationRegistrationController).GetControllerName(), new { organisationId });
@@ -642,25 +668,11 @@
         {
             var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
 
-            var selectedValue = string.Empty;
-            var selectedSearch = searchTerm;
-            if (existingTransaction != null)
-            {
-                if (existingTransaction.TonnageType.HasValue)
-                {
-                    selectedValue = existingTransaction.TonnageType.GetDisplayName();
-                }
-
-                if (string.IsNullOrWhiteSpace(searchTerm))
-                {
-                    selectedSearch = existingTransaction.SearchTerm;
-                }
-            }
-
             var viewModel = new TonnageTypeViewModel
             {
-                SearchedText = selectedSearch,
-                SelectedValue = selectedValue
+                SearchedText = !string.IsNullOrWhiteSpace(searchTerm) ? searchTerm : existingTransaction?.SearchTerm ?? " ",
+                SelectedValue = existingTransaction?.TonnageType?.GetDisplayName() ?? string.Empty,
+                NpwdMigrated = existingTransaction?.NpwdMigrated ?? false
             };
 
             return View(viewModel);
@@ -681,7 +693,12 @@
 
             if (tonnageType == Core.Organisations.TonnageType.FiveTonnesOrMore)
             {
-                return RedirectToAction("FiveTonnesOrMore", "OrganisationRegistration");
+                return RedirectToAction(nameof(FiveTonnesOrMore), typeof(OrganisationRegistrationController).GetControllerName());
+            }
+            if (tonnageTypeViewModel.NpwdMigrated)
+            {
+                return RedirectToAction(nameof(AuthorisedRepresentative),
+                    typeof(OrganisationRegistrationController).GetControllerName());
             }
 
             return RedirectToAction(nameof(PreviousRegistration),
@@ -715,7 +732,7 @@
             var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
 
             var selectedValue = string.Empty;
-            var searchTerm = string.Empty;
+            
             if (existingTransaction?.PreviousRegistration != null)
             {
                 selectedValue = existingTransaction.PreviousRegistration.GetDisplayName();
@@ -744,7 +761,7 @@
             var previousRegistration = previousRegistrationViewModel.SelectedValue.GetValueFromDisplayName<PreviouslyRegisteredProducerType>();
             if (previousRegistration == PreviouslyRegisteredProducerType.YesPreviousSmallProducer)
             {
-                return RedirectToAction("Search", "OrganisationRegistration");
+                return RedirectToAction(nameof(Search), typeof(OrganisationRegistrationController).GetControllerName());
             }
 
             return RedirectToAction(nameof(AuthorisedRepresentative),
@@ -757,14 +774,22 @@
             var existingTransaction = await transactionService.GetOrganisationTransactionData(User.GetAccessToken());
 
             var selectedValue = string.Empty;
-            if (existingTransaction?.AuthorisedRepresentative != null)
+            var npwdMigrated = false;
+
+            if (existingTransaction != null)
             {
-                selectedValue = existingTransaction.AuthorisedRepresentative.GetDisplayName();
+                if (existingTransaction.AuthorisedRepresentative != null)
+                {
+                    selectedValue = existingTransaction.AuthorisedRepresentative.GetDisplayName();
+                }
+
+                npwdMigrated = existingTransaction.NpwdMigrated;
             }
 
             var viewModel = new AuthorisedRepresentativeViewModel
             {
                 SelectedValue = selectedValue,
+                NpwdMigrated = npwdMigrated
             };
 
             return View(viewModel);
@@ -968,21 +993,24 @@
         {
             var results = new List<ValidationResult>();
 
-            if (model.IsPreviousSchemeMember && string.IsNullOrWhiteSpace(model.ProducerRegistrationNumber))
+            if (!model.NpwdMigrated)
             {
-                results.Add(new ValidationResult("Enter a producer registration number", new[] { nameof(model.ProducerRegistrationNumber) }));
-                ModelState.AddModelError(nameof(model.ProducerRegistrationNumber), "Enter a producer registration number");
-            }
-            else
-            {
-                using (var client = apiClient())
+                if (model.IsPreviousSchemeMember && string.IsNullOrWhiteSpace(model.ProducerRegistrationNumber))
                 {
-                    if (!string.IsNullOrWhiteSpace(model.ProducerRegistrationNumber))
+                    results.Add(new ValidationResult("Enter a producer registration number", new[] { nameof(model.ProducerRegistrationNumber) }));
+                    ModelState.AddModelError(nameof(model.ProducerRegistrationNumber), @"Enter a producer registration number");
+                }
+                else
+                {
+                    using (var client = apiClient())
                     {
-                        var exists = await client.SendAsync(User.GetAccessToken(), new ProducerRegistrationNumberRequest(model.ProducerRegistrationNumber));
-                        if (!exists)
+                        if (!string.IsNullOrWhiteSpace(model.ProducerRegistrationNumber))
                         {
-                            ModelState.AddModelError(nameof(OrganisationViewModel.ProducerRegistrationNumber), "This producer registration number does not exist");
+                            var exists = await client.SendAsync(User.GetAccessToken(), new ProducerRegistrationNumberRequest(model.ProducerRegistrationNumber));
+                            if (!exists)
+                            {
+                                ModelState.AddModelError(nameof(OrganisationViewModel.ProducerRegistrationNumber), @"This producer registration number does not exist");
+                            }
                         }
                     }
                 }

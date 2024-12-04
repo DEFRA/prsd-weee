@@ -215,13 +215,28 @@
         {
             // Arrange
             const string accessToken = "test-token";
-
+  
             // Act
-            await organisationService.CompleteTransaction(accessToken);
+            await organisationService.CompleteTransaction(accessToken, null);
 
             // Assert
             A.CallTo(() => weeeClient.SendAsync(accessToken,
                 A<CompleteOrganisationTransaction>._)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task CompleteTransaction_WithMigratedDirectRegistrant_ShouldCompleteTheTransaction()
+        {
+            // Arrange
+            const string accessToken = "test-token";
+            var directRegistrantId = Guid.NewGuid();
+
+            // Act
+            await organisationService.CompleteTransaction(accessToken, directRegistrantId);
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(accessToken,
+                A<CompleteMigratedOrganisationTransaction>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]

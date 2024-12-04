@@ -10,7 +10,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using System.Collections.Generic;
-    using System.Security.AccessControl;
+    using System.Linq;
     using Xunit;
 
     public class SubmissionsOrganisationViewModelMapTests
@@ -169,6 +169,114 @@
             result.EEEBrandNames.Should().BeEquivalentTo(year.HasValue
                 ? source.SmallProducerSubmissionData.SubmissionHistory[year.Value].EEEBrandNames
                 : source.SmallProducerSubmissionData.EeeBrandNames);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(2024)]
+        public void Map_ShouldMapAdditionalContacts_WhenDataExists(int? year)
+        {
+            // Arrange
+            var producerSubmission = fixture.Create<SmallProducerSubmissionData>();
+            producerSubmission.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>()
+            {
+                { 2024, fixture.Create<SmallProducerSubmissionHistoryData>() }
+            };
+
+            var contactDetails = new List<AdditionalCompanyDetailsData>
+            {
+                fixture.Build<AdditionalCompanyDetailsData>()
+                    .With(x => x.FirstName, "John")
+                    .With(x => x.LastName, "Doe")
+                    .Create(),
+                fixture.Build<AdditionalCompanyDetailsData>()
+                    .With(x => x.FirstName, "Jane")
+                    .With(x => x.LastName, "Smith")
+                    .Create()
+            };
+
+            var currentSubmission = fixture.Build<SmallProducerSubmissionHistoryData>()
+                .With(x => x.AdditionalCompanyDetailsData, contactDetails)
+                .Create();
+
+            producerSubmission.CurrentSubmission = currentSubmission;
+
+            var source = fixture.Build<SubmissionsYearDetails>()
+                .With(x => x.SmallProducerSubmissionData, producerSubmission)
+                .With(x => x.Year, year)
+                .Create();
+
+            // Act
+            var result = map.Map(source);
+
+            // Assert
+            result.AdditionalContactModels.Should().NotBeNull();
+            result.AdditionalContactModels.Should().HaveCount(2);
+
+            result.AdditionalContactModels.ElementAt(0).FirstName.Should().Be("John");
+            result.AdditionalContactModels.ElementAt(0).LastName.Should().Be("Doe");
+            result.AdditionalContactModels.ElementAt(0).Order.Should().Be(0);
+
+            result.AdditionalContactModels.ElementAt(1).FirstName.Should().Be("Jane");
+            result.AdditionalContactModels.ElementAt(1).LastName.Should().Be("Smith");
+            result.AdditionalContactModels.ElementAt(1).Order.Should().Be(1);
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(2024)]
+        public void Map_ShouldHandleNullCurrentSubmission(int? year)
+        {
+            // Arrange
+            var producerSubmission = fixture.Create<SmallProducerSubmissionData>();
+            producerSubmission.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>()
+            {
+                { 2024, fixture.Create<SmallProducerSubmissionHistoryData>() }
+            };
+            producerSubmission.CurrentSubmission = null;
+
+            var source = fixture.Build<SubmissionsYearDetails>()
+                .With(x => x.SmallProducerSubmissionData, producerSubmission)
+                .With(x => x.Year, year)
+                .Create();
+
+            // Act
+            var result = map.Map(source);
+
+            // Assert
+            result.AdditionalContactModels.Should().NotBeNull();
+            result.AdditionalContactModels.Should().BeEmpty();
+        }
+
+        [Theory]
+        [InlineData(null)]
+        [InlineData(2024)]
+        public void Map_ShouldHandleNullAdditionalCompanyDetails(int? year)
+        {
+            // Arrange
+            var producerSubmission = fixture.Create<SmallProducerSubmissionData>();
+            producerSubmission.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>()
+            {
+                { 2024, fixture.Create<SmallProducerSubmissionHistoryData>() }
+            };
+
+            var currentSubmission = fixture.Build<SmallProducerSubmissionHistoryData>()
+                .With(x => x.AdditionalCompanyDetailsData, (IList<AdditionalCompanyDetailsData>)null)
+                .Create();
+
+            producerSubmission.CurrentSubmission = currentSubmission;
+
+            var source = fixture.Build<SubmissionsYearDetails>()
+                .With(x => x.SmallProducerSubmissionData, producerSubmission)
+                .With(x => x.Year, year)
+                .Create();
+
+            // Act
+            var result = map.Map(source);
+
+            // Assert
+            result.AdditionalContactModels.Should().NotBeNull();
+            result.AdditionalContactModels.Should().BeEmpty();
         }
     }
 }

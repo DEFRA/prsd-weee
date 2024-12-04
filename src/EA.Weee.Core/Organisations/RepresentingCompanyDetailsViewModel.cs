@@ -23,6 +23,7 @@ namespace EA.Weee.Core.Organisations
         public RepresentingCompanyAddressData Address { get; set; } = new RepresentingCompanyAddressData();
 
         public bool? RedirectToCheckAnswers { get; set; }
+
         public bool HasAuthorisedRepresentitive { get; set; }
     }
 }
