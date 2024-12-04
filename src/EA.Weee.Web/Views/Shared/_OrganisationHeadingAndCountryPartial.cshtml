@@ -49,7 +49,7 @@
                    value="Find Company"
                    name="action"
                    class="govuk-button govuk-button--secondary"
-                   data-prevent-double-click="true"/>
+                   data-prevent-double-click="true" />
         </noscript>
 
         <button type="button"
@@ -70,7 +70,11 @@
         @Html.Gds().LabelFor(m => m.ProducerRegistrationNumber, showOptionalLabel: false)
         @Html.Gds().HintParagraph("Please provide your producer registration number (PRN). If you do not know this, then you can find it in the producer public register on gov.uk. Alternatively, you can contact us")
         @Html.Gds().ValidationMessageFor(m => m.ProducerRegistrationNumber)
-        @Html.Gds().TextBoxFor(m => m.ProducerRegistrationNumber, new { @maxlength = CommonMaxFieldLengths.ProducerRegistrationNumber })
+        @Html.Gds().TextBoxFor(m => m.ProducerRegistrationNumber, new
+        {
+            @maxlength = CommonMaxFieldLengths.ProducerRegistrationNumber,
+            @readonly = Model.NpwdMigrated ? "readonly" : null
+        })
     </div>
 }
 
