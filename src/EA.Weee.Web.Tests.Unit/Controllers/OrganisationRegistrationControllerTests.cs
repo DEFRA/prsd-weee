@@ -2484,22 +2484,27 @@
         }
 
         [Theory]
-        [InlineData("buildingName", null, "buildingName")]
-        [InlineData(null, "123", "123")]
-        [InlineData("Manor House", "45", "45")]
-        public async Task FindCompany_HandlesAddressFieldsCorrectly(string buildingName, string buildingNumber, string expectedAddress1)
+        [InlineData("123", null, null, "123", "Test Street")]  // Building number - street in Address2
+        [InlineData(null, "Manor House", null, "Manor House", "Test Street")]
+        [InlineData(null, null, "Flat 1", "Flat 1", "Test Street")]
+        [InlineData(null, null, null, "Test Street", null)]  // Street only
+        [InlineData("123", "Manor House", "Flat 1", "123", "Test Street")]
+        public async Task FindCompany_HandlesAddressFieldsCorrectly(
+            string buildingNumber,
+            string buildingName,
+            string subBuildingName,
+            string expectedAddress1,
+            string expectedAddress2)
         {
-            // Arrange
             var apiModel = new DefraCompaniesHouseApiModel
             {
                 Organisation = new Organisation
                 {
-                    Name = "Test Company",
-                    RegistrationNumber = "12345",
                     RegisteredOffice = new RegisteredOffice
                     {
-                        BuildingName = buildingName,
                         BuildingNumber = buildingNumber,
+                        BuildingName = buildingName,
+                        SubBuildingName = subBuildingName,
                         Street = "Test Street",
                         Town = "Test Town",
                         Postcode = "TE1 1ST",
@@ -2511,19 +2516,25 @@
             A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync(A<string>._, A<string>._))
                 .Returns(apiModel);
 
-            // Act
             var result = await controller.FindCompany("12345") as JsonResult;
             var model = result.Data as OrganisationViewModel;
 
-            // Assert
             model.Address.Address1.Should().Be(expectedAddress1);
+            model.Address.Address2.Should().Be(expectedAddress2);
         }
 
         [Theory]
-        [InlineData("buildingName", null, "buildingName")]
-        [InlineData(null, "123", "123")]
-        [InlineData("Manor House", "45", "45")]
-        public async Task OrganisationDetails_Post_HandlesAddressFieldsCorrectly(string buildingName, string buildingNumber, string expectedAddress1)
+        [InlineData("123", null, null, "123", "Test Street")]  // Building number only - street goes to Address2
+        [InlineData(null, "Manor House", null, "Manor House", "Test Street")]  // Building name only
+        [InlineData(null, null, "Flat 1", "Flat 1", "Test Street")]  // Sub-building only  
+        [InlineData(null, null, null, "Test Street", null)]  // Street only - no Address2
+        [InlineData("123", "Manor House", "Flat 1", "123", "Test Street")]  // All fields
+        public async Task OrganisationDetails_Post_HandlesAddressFieldsCorrectly(
+            string buildingNumber,
+            string buildingName,
+            string subBuildingName,
+            string expectedAddress1,
+            string expectedAddress2)
         {
             // Arrange
             var model = new OrganisationViewModel
@@ -2538,8 +2549,10 @@
                 {
                     RegisteredOffice = new RegisteredOffice
                     {
-                        BuildingName = buildingName,
                         BuildingNumber = buildingNumber,
+                        BuildingName = buildingName,
+                        SubBuildingName = subBuildingName,
+                        Street = "Test Street",
                         Country = new Country { Name = "United Kingdom" }
                     }
                 }
@@ -2558,6 +2571,7 @@
 
             // Assert
             resultModel.Address.Address1.Should().Be(expectedAddress1);
+            resultModel.Address.Address2.Should().Be(expectedAddress2);
         }
 
         [Fact]
