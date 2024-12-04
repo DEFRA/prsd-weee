@@ -1991,6 +1991,38 @@
         }
 
         [Fact]
+        public async Task OrganisationDetails_Post_MigratedOrg_IgnoresPrnValidation()
+        {
+            // Arrange
+            var model = TestFixture.Build<OrganisationViewModel>().Create();
+            model.ProducerRegistrationNumber = string.Empty;
+            model.IsPreviousSchemeMember = true;
+            model.OrganisationType = ExternalOrganisationType.RegisteredCompany;
+            model.CompaniesRegistrationNumber = "4567894";
+            model.NpwdMigrated = true;
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.AuthorisedRepresentative, YesNoType.No)
+                .With(o => o.NpwdMigrated, true)
+                .Create();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProducerRegistrationNumberRequest>._))
+                .Returns(Task.FromResult(true));
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.OrganisationDetails(model) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("RegistrationComplete");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+            controller.ModelState.IsValid.Should().BeTrue();
+        }
+
+        [Fact]
         public async Task OrganisationDetails_Post_PreviousSchemeMember_ValidProducerRegistrationNumber_DoesNotAddError()
         {
             // Arrange
