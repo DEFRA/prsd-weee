@@ -398,6 +398,12 @@
 
         private static OrganisationViewModel LookupOrganisationViewModel(DefraCompaniesHouseApiModel result)
         {
+            var address1 = result.Organisation?.RegisteredOffice?.BuildingNumber ??
+                           result.Organisation?.RegisteredOffice?.BuildingName ??
+                           result.Organisation?.RegisteredOffice?.SubBuildingName;
+
+            var address2 = result.Organisation?.RegisteredOffice?.Street;
+
             var orgModel = new OrganisationViewModel()
             {
                 CompanyName = result.Organisation?.Name,
@@ -405,8 +411,8 @@
                 LookupFound = !result.HasError,
                 Address = new ExternalAddressData
                 {
-                    Address1 = result.Organisation?.RegisteredOffice?.BuildingNumber ?? result.Organisation?.RegisteredOffice?.BuildingName,
-                    Address2 = result.Organisation?.RegisteredOffice?.Street,
+                    Address1 = address1 ?? address2,
+                    Address2 = address1 != null ? address2 : null,
                     TownOrCity = result.Organisation?.RegisteredOffice?.Town,
                     Postcode = result.Organisation?.RegisteredOffice?.Postcode,
                     CountyOrRegion = result.Organisation?.RegisteredOffice?.County ?? result.Organisation?.RegisteredOffice?.Locality,
