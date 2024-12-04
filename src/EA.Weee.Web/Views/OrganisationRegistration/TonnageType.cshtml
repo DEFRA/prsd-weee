@@ -15,6 +15,7 @@
     {
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.SearchedText)
+        @Html.HiddenFor(m => m.NpwdMigrated)
 
         @Html.AntiForgeryToken()
         <header class="hgroup">

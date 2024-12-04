@@ -128,7 +128,7 @@
         }
 
         [Fact]
-        public async Task HandleAsync__WhenAddressDataIsNull_ShouldThrowInvalidOperationException()
+        public async Task HandleAsync_WhenAddressDataIsNull_ShouldThrowInvalidOperationException()
         {
             // Arrange
             var organisationTransaction = A.Fake<OrganisationTransaction>();

@@ -65,5 +65,10 @@
         {
             return new DirectRegistrant(organisation, brandName, contactDetails, contactAddress, representingCompany, additionalCompanyDetails, producerRegistrationNumber);
         }
+
+        public virtual void SetAdditionalCompanyDetails(List<AdditionalCompanyDetails> additionalCompanyDetails)
+        {
+            AdditionalCompanyDetails = additionalCompanyDetails;
+        }
     }
 }

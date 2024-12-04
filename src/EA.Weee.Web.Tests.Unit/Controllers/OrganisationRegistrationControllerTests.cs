@@ -13,6 +13,7 @@
     using EA.Weee.Requests.Shared;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Constant;
+    using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using FakeItEasy;
@@ -22,6 +23,7 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
+    using System.Web.Caching;
     using System.Web.Mvc;
     using Web.Controllers;
     using Web.ViewModels.OrganisationRegistration;
@@ -589,7 +591,8 @@
             var organisationTransactionData = new OrganisationTransactionData()
             {
                 TonnageType = TonnageType.FiveTonnesOrMore,
-                SearchTerm = "Test Company"
+                SearchTerm = "Test Company",
+                NpwdMigrated = false
             };
 
             A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
@@ -602,6 +605,7 @@
             Assert.NotNull(result);
             Assert.Equal(organisationTransactionData.SearchTerm, resultViewModel.SearchedText);
             Assert.Equal("5 tonnes or more", resultViewModel.SelectedValue);
+            Assert.Equal(organisationTransactionData.NpwdMigrated, resultViewModel.NpwdMigrated);
         }
 
         [Fact]
@@ -651,6 +655,27 @@
             A.CallTo(() =>
                     transactionService.CaptureData(A<string>._, A<TonnageTypeViewModel>.That.IsSameAs(viewModel)))
                 .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task TonnageTypePost_ValidViewModel_ReturnsCorrectRedirect_WhenNpwdMigratedIsTrue()
+        {
+            // Arrange
+            const string searchText = "company";
+            var viewModel = new TonnageTypeViewModel()
+            {
+                SearchedText = searchText,
+                SelectedValue = "Less than 5 tonnes",
+                NpwdMigrated = true
+            };
+
+            // Act
+            var result = await controller.TonnageType(viewModel) as RedirectToRouteResult;
+
+            // Assert
+            Assert.NotNull(result);
+            result.RouteValues["action"].Should().Be("AuthorisedRepresentative");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
         }
 
         [Fact]
@@ -731,7 +756,7 @@
         [Theory]
         [InlineData(YesNoType.No, "RegistrationComplete", "OrganisationRegistration")]
         [InlineData(YesNoType.Yes, "RepresentingCompanyDetails", "OrganisationRegistration")]
-        public async Task OrganisationDetails_Post_ValidModel_RedirectsToHoldingController(YesNoType authorisedRep,
+        public async Task OrganisationDetails_Post_ValidModel_Redirects(YesNoType authorisedRep,
             string index, string controllerName)
         {
             // Arrange
@@ -748,7 +773,7 @@
 
             var organisationId = TestFixture.Create<Guid>();
 
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).Returns(organisationId);
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, A<Guid?>._)).Returns(organisationId);
 
             A.CallTo(() => this.weeeClient
                     .SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
@@ -770,13 +795,13 @@
 
             if (authorisedRep == YesNoType.No)
             {
-                A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustHaveHappenedOnceExactly();
+                A.CallTo(() => transactionService.CompleteTransaction(A<string>._, organisationTransactionData.DirectRegistrantId)).MustHaveHappenedOnceExactly();
                 A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
                 result.RouteValues["organisationId"].Should().Be(organisationId);
             }
             else
             {
-                A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustNotHaveHappened();
+                A.CallTo(() => transactionService.CompleteTransaction(A<string>._, organisationTransactionData.DirectRegistrantId)).MustNotHaveHappened();
                 A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
             }
         }
@@ -789,6 +814,7 @@
             model.ProducerRegistrationNumber = null;
             model.IsPreviousSchemeMember = false;
             model.CompaniesRegistrationNumber = "4567894";
+            model.NpwdMigrated = false;
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, YesNoType.Yes).Create();
@@ -798,7 +824,7 @@
 
             var organisationId = TestFixture.Create<Guid>();
 
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).Returns(organisationId);
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, organisationTransactionData.DirectRegistrantId)).Returns(organisationId);
 
             // Act
             await controller.OrganisationDetails(model);
@@ -819,6 +845,7 @@
             model.ProducerRegistrationNumber = null;
             model.IsPreviousSchemeMember = false;
             model.CompaniesRegistrationNumber = "4567894";
+            model.NpwdMigrated = false;
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, YesNoType.Yes).Create();
@@ -828,7 +855,7 @@
 
             var organisationId = TestFixture.Create<Guid>();
 
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).Returns(organisationId);
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, organisationTransactionData.DirectRegistrantId)).Returns(organisationId);
 
             A.CallTo(() => this.weeeClient
                     .SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>
@@ -853,6 +880,7 @@
             model.ProducerRegistrationNumber = null;
             model.IsPreviousSchemeMember = false;
             model.CompaniesRegistrationNumber = "4567894";
+            model.NpwdMigrated = false;
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, YesNoType.Yes).Create();
@@ -862,7 +890,7 @@
 
             var organisationId = TestFixture.Create<Guid>();
 
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).Returns(organisationId);
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, organisationTransactionData.DirectRegistrantId)).Returns(organisationId);
 
             var org = new EA.Weee.Core.Organisations.OrganisationData { Id = Guid.NewGuid() };
 
@@ -1120,10 +1148,18 @@
             // Arrange
             var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
             string returnUrl = "/organisation-found";
+            var organisationTransactionData = new OrganisationTransactionData
+            {
+                RepresentingCompanyDetailsViewModel = null,
+                NpwdMigrated = true
+            };
 
             A.CallTo(() =>
                     weeeClient.SendAsync(A<string>._, A<GetCountries>.That.Matches(g => g.UKRegionsOnly == false)))
                 .Returns(countries);
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
 
             // Act
             var result = await controller.RepresentingCompanyDetails(returnUrl) as ViewResult;
@@ -1144,8 +1180,10 @@
             // Arrange
             var model = TestFixture.Create<RepresentingCompanyDetailsViewModel>();
             var organisationId = TestFixture.Create<Guid>();
+            var organisationTransactionData = TestFixture.Create<OrganisationTransactionData>();
 
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).Returns(organisationId);
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._)).Returns(organisationTransactionData);
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, A<Guid?>._)).Returns(organisationId);
 
             // Act
             var result = await controller.RepresentingCompanyDetails(model) as RedirectToRouteResult;
@@ -1156,7 +1194,8 @@
             result.RouteValues["controller"].Should().Be("OrganisationRegistration");
             result.RouteValues["organisationId"].Should().Be(organisationId);
             A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, organisationTransactionData.DirectRegistrantId)).MustHaveHappenedOnceExactly();
             A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
         }
 
@@ -1185,7 +1224,8 @@
 
             model.Address.Countries.Should().BeEquivalentTo(countries);
             A.CallTo(() => transactionService.CaptureData(A<string>._, model)).MustNotHaveHappened();
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, A<Guid?>._)).MustNotHaveHappened();
             A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
         }
 
@@ -1931,6 +1971,7 @@
             model.ProducerRegistrationNumber = string.Empty;
             model.IsPreviousSchemeMember = true;
             model.OrganisationType = ExternalOrganisationType.RegisteredCompany;
+            model.NpwdMigrated = false;
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, YesNoType.No)
@@ -1951,6 +1992,38 @@
             controller.ModelState.IsValid.Should().BeFalse();
             controller.ModelState["ProducerRegistrationNumber"].Errors.Should().ContainSingle()
                 .Which.ErrorMessage.Should().Be("Enter a producer registration number");
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_Post_MigratedOrg_IgnoresPrnValidation()
+        {
+            // Arrange
+            var model = TestFixture.Build<OrganisationViewModel>().Create();
+            model.ProducerRegistrationNumber = string.Empty;
+            model.IsPreviousSchemeMember = true;
+            model.OrganisationType = ExternalOrganisationType.RegisteredCompany;
+            model.CompaniesRegistrationNumber = "4567894";
+            model.NpwdMigrated = true;
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.AuthorisedRepresentative, YesNoType.No)
+                .With(o => o.NpwdMigrated, true)
+                .Create();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProducerRegistrationNumberRequest>._))
+                .Returns(Task.FromResult(true));
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.OrganisationDetails(model) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("RegistrationComplete");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+            controller.ModelState.IsValid.Should().BeTrue();
         }
 
         [Fact]
@@ -1991,6 +2064,7 @@
             model.ProducerRegistrationNumber = "InvalidRegistrationNumber";
             model.IsPreviousSchemeMember = true;
             model.OrganisationType = ExternalOrganisationType.RegisteredCompany;
+            model.NpwdMigrated = false;
 
             var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
                 .With(o => o.AuthorisedRepresentative, YesNoType.No)
@@ -2103,28 +2177,6 @@
         }
 
         [Fact]
-        public async Task CheckAuthorisedRepresentitiveAndRedirect_NoTransactionData_RedirectsToRepresentingCompanyDetails()
-        {
-            // Arrange
-            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
-                .Returns(Task.FromResult<OrganisationTransactionData>(null));
-
-            const string returnUrl = "/test-return-url";
-
-            // Act
-            var result = await controller.CheckAuthorisedRepresentitiveAndRedirect(returnUrl) as RedirectToRouteResult;
-
-            // Assert
-            result.Should().NotBeNull();
-            result.RouteValues["action"].Should().Be("RepresentingCompanyDetails");
-            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
-            result.RouteValues["returnUrl"].Should().Be(returnUrl);
-
-            A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustNotHaveHappened();
-        }
-
-        [Fact]
         public async Task CheckAuthorisedRepresentitiveAndRedirect_WithNoAuthorisedRepresentative_CompletesRegistrationAndRedirects()
         {
             // Arrange
@@ -2136,7 +2188,7 @@
 
             A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
                 .Returns(transactionData);
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._))
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, transactionData.DirectRegistrantId))
                 .Returns(organisationId);
 
             // Act
@@ -2149,7 +2201,7 @@
             result.RouteValues["organisationId"].Should().Be(organisationId);
 
             A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, transactionData.DirectRegistrantId)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -2176,7 +2228,7 @@
             result.RouteValues["returnUrl"].Should().Be(returnUrl);
 
             A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustNotHaveHappened();
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, A<Guid?>._)).MustNotHaveHappened();
         }
 
         [Theory]
@@ -2210,12 +2262,13 @@
             var expectedOrganisationId = Guid.NewGuid();
             var transactionData = new OrganisationTransactionData
             {
-                AuthorisedRepresentative = YesNoType.No
+                AuthorisedRepresentative = YesNoType.No,
+                DirectRegistrantId = TestFixture.Create<Guid?>()
             };
 
             A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
                 .Returns(transactionData);
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._))
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, transactionData.DirectRegistrantId))
                 .Returns(expectedOrganisationId);
 
             // Act
@@ -2232,7 +2285,8 @@
             // Arrange
             var transactionData = new OrganisationTransactionData
             {
-                AuthorisedRepresentative = YesNoType.No
+                AuthorisedRepresentative = YesNoType.No,
+                DirectRegistrantId = TestFixture.Create<Guid?>()
             };
 
             A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
@@ -2242,7 +2296,7 @@
             await controller.CheckAuthorisedRepresentitiveAndRedirect(null);
 
             // Assert
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._))
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, transactionData.DirectRegistrantId))
                 .MustHaveHappenedOnceExactly()
                 .Then(A.CallTo(() => weeeCache.InvalidateOrganisationSearch())
                     .MustHaveHappenedOnceExactly());
@@ -2256,7 +2310,8 @@
             // Arrange
             var transactionData = new OrganisationTransactionData
             {
-                AuthorisedRepresentative = authRepType
+                AuthorisedRepresentative = authRepType,
+                DirectRegistrantId = TestFixture.Create<Guid?>()
             };
 
             A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
@@ -2266,7 +2321,7 @@
             await controller.CheckAuthorisedRepresentitiveAndRedirect(null);
 
             // Assert
-            A.CallTo(() => transactionService.CompleteTransaction(A<string>._))
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, transactionData.DirectRegistrantId))
                 .MustNotHaveHappened();
             A.CallTo(() => weeeCache.InvalidateOrganisationSearch())
                 .MustNotHaveHappened();
@@ -2503,6 +2558,297 @@
 
             // Assert
             resultModel.Address.Address1.Should().Be(expectedAddress1);
+        }
+
+        [Fact]
+        public async Task ContinueSmallProducerRegistration_Should_Call_TransactionServiceMethods()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var searchTerm = TestFixture.Create<string>();
+
+            A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>._)).Returns(Task.CompletedTask);
+
+            A.CallTo(() => transactionService.ContinueMigratedProducerTransactionData(A<string>._, organisationId))
+                .Returns(Task.FromResult(new OrganisationTransactionData()));
+
+            // Act
+            var result = await controller.ContinueSmallProducerRegistration(organisationId, searchTerm) as RedirectToRouteResult;
+
+            // Assert
+            A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionService.ContinueMigratedProducerTransactionData(A<string>._, organisationId)).MustHaveHappenedOnceExactly();
+
+            result.Should().NotBeNull();
+            result.RouteValues["searchTerm"].Should().Be(searchTerm);
+            result.RouteValues["action"].Should().Be("TonnageType");
+        }
+
+        [Fact]
+        public async Task JoinOrganisation_Should_Call_ContinueSmallProducerRegistration_When_NpwdMigrated_Is_True_And_NpwdMigratedComplete_Is_False()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+
+            var publicOrganisationData = new PublicOrganisationData
+            {
+                NpwdMigrated = true,
+                NpwdMigratedComplete = false,
+                DisplayName = "Test Organisation"
+            };
+
+            var searchTerm = TestFixture.Create<string>();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>.Ignored, A<GetPublicOrganisationInfo>.That.Matches(r => r.Id == organisationId)))
+                .Returns(Task.FromResult(publicOrganisationData));
+
+            A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>.Ignored)).Returns(Task.CompletedTask);
+            A.CallTo(() => transactionService.ContinueMigratedProducerTransactionData(A<string>.Ignored, A<Guid>.Ignored))
+                .Returns(Task.FromResult(new OrganisationTransactionData()));
+
+            // Act
+            var result = await controller.JoinOrganisation(organisationId, searchTerm) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["searchTerm"].Should().Be(searchTerm);
+            result.RouteValues["action"].Should().Be("TonnageType");
+        }
+
+        [Fact]
+        public async Task JoinOrganisation_Should_Not_Call_ContinueSmallProducerRegistration_When_NpwdMigrated_Is_False_Or_NpwdMigratedComplete_Is_True()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+
+            var publicOrganisationData = new PublicOrganisationData
+            {
+                NpwdMigrated = false,
+                NpwdMigratedComplete = true,
+                DisplayName = "Test Organisation"
+            };
+
+            // Arrange
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>._))
+                .Returns(publicOrganisationData);
+
+            var organisationSearcher = A.Dummy<ISearcher<OrganisationSearchResult>>();
+
+            // Act
+            ActionResult result = await controller.JoinOrganisation(organisationId);
+
+            // Assert
+            var viewResult = result as ViewResult;
+            viewResult.Should().NotBeNull();
+            viewResult.Model.Should().BeOfType<JoinOrganisationViewModel>();
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_Post_WhenNpwdMigrated_SkipsOrganisationSearch()
+        {
+            // Arrange
+            var model = TestFixture.Build<OrganisationViewModel>()
+                .With(m => m.CompaniesRegistrationNumber, "1234567")
+                .With(m => m.CompanyName, "Test Company")
+                .With(m => m.Action, string.Empty)
+                .With(m => m.Address, new ExternalAddressData { CountryId = Guid.NewGuid() })
+                .With(m => m.EEEBrandNames, "Test Brands")
+                .Create();
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.AuthorisedRepresentative, YesNoType.No)
+                .With(o => o.NpwdMigrated, true)
+                .Create();
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.OrganisationDetails(model);
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
+                .MustNotHaveHappened();
+            A.CallTo(() => organisationSearcher.Search(A<string>._, A<int>._, A<bool>._))
+                .MustNotHaveHappened();
+
+            result.Should().BeOfType<RedirectToRouteResult>();
+            var redirectResult = (RedirectToRouteResult)result;
+            redirectResult.RouteValues["action"].Should().NotBe("OrganisationFound");
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_Post_WhenNotNpwdMigrated_SearchesForExistingOrganisations()
+        {
+            // Arrange
+            var model = TestFixture.Build<OrganisationViewModel>()
+                .With(m => m.CompaniesRegistrationNumber, "1234567")
+                .With(m => m.CompanyName, "Test Company")
+                .With(m => m.Action, string.Empty)
+                .With(m => m.Address, new ExternalAddressData
+                {
+                    CountryId = Guid.NewGuid(),
+                    Address1 = "Test Address",
+                    TownOrCity = "Test Town",
+                    Postcode = "TE1 1ST"
+                })
+                .With(o => o.NpwdMigrated, false)
+                .With(m => m.EEEBrandNames, "Test Brands")
+                .With(m => m.BusinessTradingName, "Test Business")
+                .With(m => m.OrganisationType, ExternalOrganisationType.RegisteredCompany)
+                .Create();
+
+            var existingOrg = TestFixture.Build<OrganisationData>()
+                .With(o => o.Name, "Test Company")
+                .With(o => o.CompanyRegistrationNumber, "1234567")
+                .Create();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
+                .Returns(new List<OrganisationData> { existingOrg });
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.AuthorisedRepresentative, YesNoType.No)
+                .With(o => o.NpwdMigrated, false)
+                .Create();
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProducerRegistrationNumberRequest>._)).Returns(true);
+
+            // Act
+            var result = await controller.OrganisationDetails(model);
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
+                .MustHaveHappened();
+
+            result.Should().BeOfType<RedirectToRouteResult>();
+            var redirectResult = (RedirectToRouteResult)result;
+            redirectResult.RouteValues["action"].Should().Be("OrganisationFound");
+
+            var foundOrgs = controller.TempData["FoundOrganisations"] as OrganisationExistsSearchResult;
+            foundOrgs.Should().NotBeNull();
+            foundOrgs.FoundType.Should().Be(OrganisationFoundType.CompanyNumber);
+            foundOrgs.Organisations.Should().ContainSingle();
+            foundOrgs.Organisations.First().Should().BeEquivalentTo(new
+            {
+                OrganisationName = existingOrg.Name,
+                CompanyRegistrationNumber = existingOrg.CompanyRegistrationNumber,
+                NpwdMigrated = existingOrg.NpwdMigrated,
+                NpwdMigratedComplete = existingOrg.NpwdMigratedComplete
+            });
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_Post_WhenNotNpwdMigratedAndNoCompanyNumberMatch_SearchesByName()
+        {
+            // Arrange
+            var model = TestFixture.Build<OrganisationViewModel>()
+                .With(m => m.CompaniesRegistrationNumber, "1234567")
+                .With(m => m.CompanyName, "Test Company")
+                .With(m => m.Action, string.Empty)
+                .With(m => m.Address, new ExternalAddressData
+                {
+                    CountryId = Guid.NewGuid(),
+                    Address1 = "Test Address",
+                    TownOrCity = "Test Town",
+                    Postcode = "TE1 1ST"
+                })
+                .With(o => o.NpwdMigrated, false)
+                .With(m => m.EEEBrandNames, "Test Brands")
+                .With(m => m.BusinessTradingName, "Test Business")
+                .With(m => m.OrganisationType, ExternalOrganisationType.RegisteredCompany)
+                .Create();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
+                .Returns(new List<OrganisationData>());
+
+            var searchResult = TestFixture.Build<OrganisationSearchResult>()
+                .With(s => s.Name, "Test Company")
+                .With(s => s.CompanyRegistrationNumber, "1234567")
+                .Create();
+
+            A.CallTo(() => organisationSearcher.Search(model.CompanyName, A<int>._, false))
+                .Returns(new List<OrganisationSearchResult> { searchResult });
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.AuthorisedRepresentative, YesNoType.No)
+                .With(o => o.NpwdMigrated, false)
+                .Create();
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProducerRegistrationNumberRequest>._)).Returns(true);
+
+            // Act
+            var result = await controller.OrganisationDetails(model);
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationByRegistrationNumberValue>._))
+                .MustHaveHappened();
+            A.CallTo(() => organisationSearcher.Search(model.CompanyName, A<int>._, false))
+                .MustHaveHappened();
+
+            result.Should().BeOfType<RedirectToRouteResult>();
+            var redirectResult = (RedirectToRouteResult)result;
+            redirectResult.RouteValues["action"].Should().Be("OrganisationFound");
+
+            var foundOrgs = controller.TempData["FoundOrganisations"] as OrganisationExistsSearchResult;
+            foundOrgs.Should().NotBeNull();
+            foundOrgs.FoundType.Should().Be(OrganisationFoundType.CompanyName);
+            foundOrgs.Organisations.Should().ContainSingle();
+            foundOrgs.Organisations.First().Should().BeEquivalentTo(new
+            {
+                OrganisationName = searchResult.Name,
+                CompanyRegistrationNumber = searchResult.CompanyRegistrationNumber,
+                NpwdMigrated = searchResult.NpwdMigrated,
+                NpwdMigratedComplete = searchResult.NpwdMigratedComplete
+            });
+        }
+
+        [Fact]
+        public async Task OrganisationDetails_Post_WhenNpwdMigrated_SkipsProducerRegistrationValidation()
+        {
+            // Arrange
+            var model = TestFixture.Build<OrganisationViewModel>()
+                .With(m => m.CompaniesRegistrationNumber, "1234567")
+                .With(m => m.CompanyName, "Test Company")
+                .With(m => m.Action, string.Empty)
+                .With(m => m.Address, new ExternalAddressData
+                {
+                    CountryId = UkCountry.Ids.England,
+                    Address1 = "Test Address",
+                    TownOrCity = "Test Town",
+                    Postcode = "TE1 1ST"
+                })
+                .With(m => m.EEEBrandNames, "Test Brands")
+                .With(m => m.BusinessTradingName, "Test Business")
+                .With(m => m.OrganisationType, ExternalOrganisationType.RegisteredCompany)
+                .With(m => m.IsPreviousSchemeMember, true)
+                .With(m => m.ProducerRegistrationNumber, string.Empty) // Invalid registration number
+                .With(o => o.NpwdMigrated, true)  // NPWD Migrated is true
+                .Create();
+
+            var organisationTransactionData = TestFixture.Build<OrganisationTransactionData>()
+                .With(o => o.AuthorisedRepresentative, YesNoType.No)
+                .Create();
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(organisationTransactionData);
+
+            // Act
+            var result = await controller.OrganisationDetails(model);
+
+            // Assert
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProducerRegistrationNumberRequest>._))
+                .MustNotHaveHappened();
+
+            result.Should().BeOfType<RedirectToRouteResult>();
+            var redirectResult = (RedirectToRouteResult)result;
+            redirectResult.RouteValues["action"].Should().NotBe("OrganisationFound");
+
+            controller.ModelState.IsValid.Should().BeTrue();
+            controller.ModelState.Keys.Should().NotContain(nameof(OrganisationViewModel.ProducerRegistrationNumber));
         }
     }
 }
