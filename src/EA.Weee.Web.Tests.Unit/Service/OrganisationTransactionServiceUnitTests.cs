@@ -236,7 +236,7 @@
 
             // Assert
             A.CallTo(() => weeeClient.SendAsync(accessToken,
-                A<CompleteOrganisationTransaction>._)).MustHaveHappenedOnceExactly();
+                A<CompleteMigratedOrganisationTransaction>._)).MustHaveHappenedOnceExactly();
         }
 
         [Fact]
