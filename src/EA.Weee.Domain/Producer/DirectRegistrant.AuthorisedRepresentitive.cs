@@ -8,7 +8,7 @@
     {
         public bool HasAuthorisedRepresentitive => AuthorisedRepresentative != null;
 
-        public void AddOrUpdateAuthorisedRepresentitive(AuthorisedRepresentative authorisedRepresentative)
+        public virtual void AddOrUpdateAuthorisedRepresentitive(AuthorisedRepresentative authorisedRepresentative)
         {
             Guard.ArgumentNotNull(() => authorisedRepresentative, authorisedRepresentative);
 
