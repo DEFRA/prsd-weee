@@ -12,7 +12,7 @@
 
         Task DeleteOrganisationTransactionData(string accessToken);
 
-        Task<Guid> CompleteTransaction(string accessToken, bool npwdMigrated);
+        Task<Guid> CompleteTransaction(string accessToken, Guid? directRegistrantId);
 
         Task<OrganisationTransactionData> ContinueMigratedProducerTransactionData(string accessToken, Guid organisationId);
     }
