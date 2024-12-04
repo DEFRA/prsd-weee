@@ -995,21 +995,24 @@
         {
             var results = new List<ValidationResult>();
 
-            if (model.IsPreviousSchemeMember && string.IsNullOrWhiteSpace(model.ProducerRegistrationNumber))
+            if (!model.NpwdMigrated)
             {
-                results.Add(new ValidationResult("Enter a producer registration number", new[] { nameof(model.ProducerRegistrationNumber) }));
-                ModelState.AddModelError(nameof(model.ProducerRegistrationNumber), "Enter a producer registration number");
-            }
-            else
-            {
-                using (var client = apiClient())
+                if (model.IsPreviousSchemeMember && string.IsNullOrWhiteSpace(model.ProducerRegistrationNumber))
                 {
-                    if (!string.IsNullOrWhiteSpace(model.ProducerRegistrationNumber))
+                    results.Add(new ValidationResult("Enter a producer registration number", new[] { nameof(model.ProducerRegistrationNumber) }));
+                    ModelState.AddModelError(nameof(model.ProducerRegistrationNumber), "Enter a producer registration number");
+                }
+                else
+                {
+                    using (var client = apiClient())
                     {
-                        var exists = await client.SendAsync(User.GetAccessToken(), new ProducerRegistrationNumberRequest(model.ProducerRegistrationNumber));
-                        if (!exists)
+                        if (!string.IsNullOrWhiteSpace(model.ProducerRegistrationNumber))
                         {
-                            ModelState.AddModelError(nameof(OrganisationViewModel.ProducerRegistrationNumber), "This producer registration number does not exist");
+                            var exists = await client.SendAsync(User.GetAccessToken(), new ProducerRegistrationNumberRequest(model.ProducerRegistrationNumber));
+                            if (!exists)
+                            {
+                                ModelState.AddModelError(nameof(OrganisationViewModel.ProducerRegistrationNumber), "This producer registration number does not exist");
+                            }
                         }
                     }
                 }
