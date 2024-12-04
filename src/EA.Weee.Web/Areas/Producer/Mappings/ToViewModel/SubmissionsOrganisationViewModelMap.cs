@@ -5,6 +5,8 @@
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Core.Shared;
+    using System.Collections.Generic;
+    using System.Linq;
 
     public class SubmissionsOrganisationViewModelMap : IMap<SubmissionsYearDetails, OrganisationViewModel>
     {
@@ -17,41 +19,59 @@
 
         public OrganisationViewModel Map(SubmissionsYearDetails source)
         {
+            var model = new OrganisationViewModel();
             if (source.Year.HasValue)
             {
                 var sub = source.SmallProducerSubmissionData.SubmissionHistory[source.Year.Value];
 
-                return new OrganisationViewModel()
-                {
-                    Status = sub.Status,
-                    HasPaid = sub.HasPaid,
-                    RegistrationDate = sub.RegistrationDate,
-                    SubmittedDate = sub.SubmittedDate,
-                    DirectProducerSubmissionId = sub.DirectProducerSubmissionId,
-                    PaymentReference = sub.PaymentReference,
-                    ProducerRegistrationNumber = sub.ProducerRegistrationNumber,
-                    Address = mapper.Map<AddressData, ExternalAddressData>(sub.BusinessAddressData),
-                    CompanyName = sub.CompanyName,
-                    BusinessTradingName = sub.TradingName,
-                    CompaniesRegistrationNumber = source.SmallProducerSubmissionData.OrganisationData.CompanyRegistrationNumber,
-                    OrganisationType = MapOrganisationType(source.SmallProducerSubmissionData.OrganisationData.OrganisationType),
-                    EEEBrandNames = sub.EEEBrandNames
-                };
+                model.Status = sub.Status;
+                model.HasPaid = sub.HasPaid;
+                model.RegistrationDate = sub.RegistrationDate;
+                model.SubmittedDate = sub.SubmittedDate;
+                model.DirectProducerSubmissionId = sub.DirectProducerSubmissionId;
+                model.PaymentReference = sub.PaymentReference;
+                model.ProducerRegistrationNumber = sub.ProducerRegistrationNumber;
+                model.Address = mapper.Map<AddressData, ExternalAddressData>(sub.BusinessAddressData);
+                model.CompanyName = sub.CompanyName;
+                model.BusinessTradingName = sub.TradingName;
+                model.CompaniesRegistrationNumber =
+                    source.SmallProducerSubmissionData.OrganisationData.CompanyRegistrationNumber;
+                model.OrganisationType =
+                    MapOrganisationType(source.SmallProducerSubmissionData.OrganisationData.OrganisationType);
+                model.EEEBrandNames = sub.EEEBrandNames;
+            }
+            else
+            {
+                model.ProducerRegistrationNumber = source.SmallProducerSubmissionData.ProducerRegistrationNumber;
+                model.Address =
+                    mapper.Map<AddressData, ExternalAddressData>(source.SmallProducerSubmissionData.OrganisationData
+                        .BusinessAddress);
+                model.CompanyName = source.SmallProducerSubmissionData.OrganisationData.Name;
+                model.BusinessTradingName = source.SmallProducerSubmissionData.OrganisationData.TradingName;
+                model.CompaniesRegistrationNumber =
+                    source.SmallProducerSubmissionData.OrganisationData.CompanyRegistrationNumber;
+                model.OrganisationType =
+                    MapOrganisationType(source.SmallProducerSubmissionData.OrganisationData.OrganisationType);
+                model.EEEBrandNames = source.SmallProducerSubmissionData.EeeBrandNames;
             }
 
-            return new OrganisationViewModel()
+            model.AdditionalContactModels = new List<AdditionalContactModel>();
+            if (source.SmallProducerSubmissionData?.CurrentSubmission?.AdditionalCompanyDetailsData != null)
             {
-                ProducerRegistrationNumber = source.SmallProducerSubmissionData.ProducerRegistrationNumber,
-                Address = mapper.Map<AddressData, ExternalAddressData>(source.SmallProducerSubmissionData.OrganisationData.BusinessAddress),
-                CompanyName = source.SmallProducerSubmissionData.OrganisationData.Name,
-                BusinessTradingName = source.SmallProducerSubmissionData.OrganisationData.TradingName,
-                CompaniesRegistrationNumber = source.SmallProducerSubmissionData.OrganisationData.CompanyRegistrationNumber,
-                OrganisationType = MapOrganisationType(source.SmallProducerSubmissionData.OrganisationData.OrganisationType),
-                EEEBrandNames = source.SmallProducerSubmissionData.EeeBrandNames
-            };
+                model.AdditionalContactModels.AddRange(
+                    source.SmallProducerSubmissionData.CurrentSubmission.AdditionalCompanyDetailsData
+                        .Select((p, index) => new AdditionalContactModel
+                        {
+                            FirstName = p.FirstName,
+                            LastName = p.LastName,
+                            Order = index
+                        }));
+            }
+
+            return model;
         }
 
-        private ExternalOrganisationType MapOrganisationType(OrganisationType organisationType)
+        private static ExternalOrganisationType MapOrganisationType(OrganisationType organisationType)
         {
             switch (organisationType)
             {
