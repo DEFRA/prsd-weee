@@ -64,7 +64,7 @@
                         {
                             FirstName = p.FirstName,
                             LastName = p.LastName,
-                            Order = index
+                            Order = index,
                         }));
             }
 
