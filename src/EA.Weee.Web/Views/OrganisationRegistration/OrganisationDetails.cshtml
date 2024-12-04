@@ -21,6 +21,7 @@
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.IsPreviousSchemeMember)
         @Html.HiddenFor(m => m.HasAuthorisedRepresentitive)
+        @Html.HiddenFor(m => m.NpwdMigrated)
 
         @Html.Partial("_OrganisationHeadingAndCountryPartial", Model)
 

@@ -11,6 +11,8 @@
         [Required(ErrorMessage = "Please indicate if you are a producer of electrical or electronic equipment")]
         public override string SelectedValue { get; set; }
 
+        public bool NpwdMigrated { get; set; }
+
         public TonnageTypeViewModel()
             : base(CreateFromEnum<TonnageType>().PossibleValues)
         {

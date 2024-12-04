@@ -42,6 +42,11 @@
 
         public virtual OrganisationType OrganisationType { get; private set; }
 
+        public void UpdateMigratedOrganisationType(OrganisationType newMigratedOrganisationType)
+        {
+            OrganisationType = newMigratedOrganisationType;
+        }
+
         public virtual OrganisationStatus OrganisationStatus { get; set; }
 
         public virtual string TradingName { get; private set; }
@@ -121,12 +126,13 @@
             TradingName = tradingName;
         }
 
-        public void UpdateDirectRegistrantDetails(string companyName, string tradingName)
+        public void UpdateDirectRegistrantDetails(string companyName, string tradingName, string companyNumber)
         {
             Condition.Requires(companyName).IsNotNullOrWhiteSpace();
 
             Name = companyName;
             TradingName = tradingName;
+            CompanyRegistrationNumber = companyRegistrationNumber;
         }
 
         public void UpdateSoleTraderDetails(string companyName, string tradingName)
@@ -164,6 +170,16 @@
             }
 
             OrganisationStatus = OrganisationStatus.Complete;
+        }
+
+        public void ToMigrated()
+        {
+            if (NpwdMigratedComplete)
+            {
+                throw new InvalidOperationException("Organisation migrated must be not complete");
+            }
+
+            NpwdMigratedComplete = true;
         }
 
         public bool HasBusinessAddress
@@ -216,5 +232,10 @@
         public bool IsBalancingScheme => this.ProducerBalancingScheme != null;
 
         public bool IsRepresentingCompany { get; set; }
+
+        public void SetNpwdMigrated(bool npwdMigrated)
+        {
+            NpwdMigrated = npwdMigrated;
+        }
     }
 }

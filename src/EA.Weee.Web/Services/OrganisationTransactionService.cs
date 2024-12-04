@@ -81,10 +81,15 @@
             }
         }
 
-        public async Task<Guid> CompleteTransaction(string accessToken)
+        public async Task<Guid> CompleteTransaction(string accessToken, Guid? directRegistrantId)
         {
             using (var client = weeeClient())
             {
+                if (directRegistrantId.HasValue)
+                {
+                    return await client.SendAsync(accessToken, new CompleteMigratedOrganisationTransaction(directRegistrantId.Value));
+                }
+
                 return await client.SendAsync(accessToken, new CompleteOrganisationTransaction());
             }
         }
