@@ -70,11 +70,22 @@
         @Html.Gds().LabelFor(m => m.ProducerRegistrationNumber, showOptionalLabel: false)
         @Html.Gds().HintParagraph("Please provide your producer registration number (PRN). If you do not know this, then you can find it in the producer public register on gov.uk. Alternatively, you can contact us")
         @Html.Gds().ValidationMessageFor(m => m.ProducerRegistrationNumber)
-        @Html.Gds().TextBoxFor(m => m.ProducerRegistrationNumber, new
+
+        @if (Model.IsPreviousSchemeMember)
         {
-            @maxlength = CommonMaxFieldLengths.ProducerRegistrationNumber,
-            @readonly = Model.NpwdMigrated ? "readonly" : null
-        })
+            @Html.Gds().TextBoxFor(m => m.ProducerRegistrationNumber, new
+            {
+                @maxlength = CommonMaxFieldLengths.ProducerRegistrationNumber
+            })
+        }
+        else if (Model.NpwdMigrated)
+        {
+            @Html.Gds().TextBoxFor(m => m.ProducerRegistrationNumber, new
+            {
+                @maxlength = CommonMaxFieldLengths.ProducerRegistrationNumber,
+                @readonly = "readonly"
+            })
+        }
     </div>
 }
 
@@ -89,5 +100,10 @@
 <style>
     .spinner-image {
         margin-top: 2px;
+    }
+    .govuk-input[readonly] {
+        background-color: #f3f2f1; /* GDS grey background */
+        border: 2px solid #505a5f; /* Darker border for contrast */
+        cursor: not-allowed;
     }
 </style>
