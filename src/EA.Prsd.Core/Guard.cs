@@ -6,7 +6,7 @@
     public static class Guard
     {
         [Obsolete("This method does not put the correct parameter name in the exception. Use ArgumentNotNull<T>(Expression<Func<int>> reference, T value) instead.", false)]
-        public static void ArgumentNotNull<T>(T value) where T : class 
+        public static void ArgumentNotNull<T>(T value) where T : class
         {
             if (value == null)
             {

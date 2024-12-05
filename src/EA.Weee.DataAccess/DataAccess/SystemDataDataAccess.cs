@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.DataAccess.DataAccess
 {
-    using System;
     using Domain;
+    using Prsd.Core;
+    using System;
     using System.Data.Entity;
     using System.Threading.Tasks;
-    using Prsd.Core;
 
     public class SystemDataDataAccess : ISystemDataDataAccess
     {

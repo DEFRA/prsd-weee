@@ -32,14 +32,14 @@
         /// <summary>
         /// Equivalent to DateTime.Now
         /// </summary>
-        public static DateTime Now 
-        { 
-            get 
+        public static DateTime Now
+        {
+            get
             {
                 var now = utcNowInstance.Value().ToLocalTime();
                 now = DateTime.SpecifyKind(now, DateTimeKind.Local);
                 return now;
-            } 
+            }
         }
 
         /// <summary>

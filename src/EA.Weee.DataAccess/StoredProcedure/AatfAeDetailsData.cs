@@ -1,10 +1,9 @@
 ﻿namespace EA.Weee.DataAccess.StoredProcedure
 {
-    using System;
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Helpers;
-    using EA.Weee.Domain.Obligation;
     using EA.Weee.Domain.Organisation;
+    using System;
 
     /// <summary>
     /// This class maps to the results of [AATF].[getAatfAeDetailsDataCsvData]

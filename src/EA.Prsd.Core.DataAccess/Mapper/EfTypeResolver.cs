@@ -1,8 +1,8 @@
 ﻿namespace EA.Prsd.Core.DataAccess.Mapper
 {
+    using EA.Prsd.Core.Mapper;
     using System;
     using System.Data.Entity.Core.Objects;
-    using Core.Mapper;
 
     public class EfTypeResolver : ITypeResolver
     {

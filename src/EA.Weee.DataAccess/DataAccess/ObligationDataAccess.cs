@@ -1,15 +1,15 @@
 ﻿namespace EA.Weee.DataAccess.DataAccess
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Domain;
     using Domain.Evidence;
     using Domain.Obligation;
     using Domain.Scheme;
     using Prsd.Core.Domain;
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Z.EntityFramework.Plus;
 
     public class ObligationDataAccess : IObligationDataAccess

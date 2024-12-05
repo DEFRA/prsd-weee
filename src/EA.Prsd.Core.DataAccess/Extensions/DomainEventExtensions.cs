@@ -1,9 +1,9 @@
 ﻿namespace EA.Prsd.Core.DataAccess.Extensions
 {
+    using EA.Prsd.Core.Domain;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using Domain;
 
     public static class DomainEventExtensions
     {

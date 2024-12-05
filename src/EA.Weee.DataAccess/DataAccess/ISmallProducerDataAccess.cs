@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.DataAccess.DataAccess
 {
+    using EA.Weee.Domain.Producer;
     using System;
     using System.Threading.Tasks;
-    using EA.Weee.Domain.Producer;
 
     public interface ISmallProducerDataAccess
     {

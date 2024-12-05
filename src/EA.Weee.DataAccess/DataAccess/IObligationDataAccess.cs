@@ -1,11 +1,11 @@
 ﻿namespace EA.Weee.DataAccess.DataAccess
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
     using Domain;
     using Domain.Obligation;
     using Domain.Scheme;
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public interface IObligationDataAccess
     {

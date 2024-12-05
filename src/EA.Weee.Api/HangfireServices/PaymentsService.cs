@@ -65,61 +65,59 @@
 
         private async Task ProcessPayment(PaymentSession payment, Guid jobId)
         {
-            using (var transaction = transactionAdapter.BeginTransaction())
+            using var transaction = transactionAdapter.BeginTransaction();
+            try
             {
-                try
+                // Double-check the payment hasn't been processed
+                var freshPayment = await paymentSessionDataAccess.GetByIdAsync(payment.Id);
+
+                if (freshPayment != null)
                 {
-                    // Double-check the payment hasn't been processed
-                    var freshPayment = await paymentSessionDataAccess.GetByIdAsync(payment.Id);
-
-                    if (freshPayment != null)
+                    if (freshPayment.InFinalState)
                     {
-                        if (freshPayment.InFinalState)
-                        {
-                            logger.Information($"Payment {payment.PaymentId} already processed. Skipping. Job ID: {jobId}");
-                            return;
-                        }
-                        var status = await payClient.GetPaymentAsync(payment.PaymentId);
-
-                        if (status != null)
-                        {
-                            freshPayment.Status = status.State.Status.ToDomainEnumeration<PaymentState>();
-                            freshPayment.InFinalState = status.State.IsInFinalState();
-
-                            if (status.State.IsInFinalState())
-                            {
-                                freshPayment.DirectProducerSubmission.FinalPaymentSession = freshPayment;
-                                freshPayment.DirectProducerSubmission.PaymentFinished = status.State.Status == PaymentStatus.Success;
-                            }
-                        }
-                        else 
-                        {
-                            freshPayment.Status = PaymentState.Error;
-                            freshPayment.InFinalState = true;
-
-                            logger.Information($"Payment {payment.PaymentId} not found in GOV.UK pay. Setting it to error. Job ID: {jobId}");
-                        }
-
-                        freshPayment.LastProcessedAt = DateTime.UtcNow;
-                        
-                        context.SetCurrentJobId(jobId);
-
-                        await context.SaveChangesAsync(CancellationToken.None);
-                        transaction.Commit();
-
-                        logger.Information($"Successfully processed payment {payment.PaymentId}. Job ID: {jobId}");
+                        logger.Information($"Payment {payment.PaymentId} already processed. Skipping. Job ID: {jobId}");
+                        return;
                     }
-                    else
+                    var status = await payClient.GetPaymentAsync(payment.PaymentId);
+
+                    if (status != null)
                     {
-                        logger.Information($"Payment {payment.PaymentId} not found. Skipping. Job ID: {jobId}");
+                        freshPayment.Status = status.State.Status.ToDomainEnumeration<PaymentState>();
+                        freshPayment.InFinalState = status.State.IsInFinalState();
+
+                        if (status.State.IsInFinalState())
+                        {
+                            freshPayment.DirectProducerSubmission.FinalPaymentSession = freshPayment;
+                            freshPayment.DirectProducerSubmission.PaymentFinished = status.State.Status == PaymentStatus.Success;
+                        }
                     }
-                }
-                catch (Exception ex)
-                {
-                    logger.Error(ex, $"Error processing payment {payment.PaymentId}. Job ID: {jobId}");
+                    else 
+                    {
+                        freshPayment.Status = PaymentState.Error;
+                        freshPayment.InFinalState = true;
+
+                        logger.Information($"Payment {payment.PaymentId} not found in GOV.UK pay. Setting it to error. Job ID: {jobId}");
+                    }
+
+                    freshPayment.LastProcessedAt = DateTime.UtcNow;
+
+                    context.SetCurrentJobId(jobId);
+
+                    await context.SaveChangesAsync(CancellationToken.None);
                     transaction.Commit();
-                    throw;
+
+                    logger.Information($"Successfully processed payment {payment.PaymentId}. Job ID: {jobId}");
                 }
+                else
+                {
+                    logger.Information($"Payment {payment.PaymentId} not found. Skipping. Job ID: {jobId}");
+                }
+            }
+            catch (Exception ex)
+            {
+                logger.Error(ex, $"Error processing payment {payment.PaymentId}. Job ID: {jobId}");
+                transaction.Commit();
+                throw;
             }
         }
     }
