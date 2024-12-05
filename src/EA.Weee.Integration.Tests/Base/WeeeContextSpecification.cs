@@ -25,7 +25,7 @@
                     testCleanup += value;
                 }
             }
-            remove { testCleanup -= value; }
+            remove => testCleanup -= value;
         }
 
         public IEnumerator GetEnumerator()

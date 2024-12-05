@@ -9,8 +9,8 @@
 
         public override IList<string> PossibleValues
         {
-            get { return model.PossibleValues; }
-            set { model.PossibleValues = value; }
+            get => model.PossibleValues;
+            set => model.PossibleValues = value;
         }
 
         public sealed override string SelectedValue { get; set; }

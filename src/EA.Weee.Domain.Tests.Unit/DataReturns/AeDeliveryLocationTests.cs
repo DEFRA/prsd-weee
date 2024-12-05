@@ -87,10 +87,7 @@
                 return new AeDeliveryLocation(approvalNumber, operatorName);
             }
 
-            public static AeDeliveryLocation NewAeDeliveryLocation
-            {
-                get { return new AeDeliveryLocationBuilder().Build(); }
-            }
+            public static AeDeliveryLocation NewAeDeliveryLocation => new AeDeliveryLocationBuilder().Build();
 
             public static AeDeliveryLocation WithApprovalNumber(string approvalNumber)
             {

@@ -95,10 +95,7 @@
                 return new Partner(name);
             }
 
-            public static Partner NewPartner
-            {
-                get { return new PartnerBuilder().Build(); }
-            }
+            public static Partner NewPartner => new PartnerBuilder().Build();
 
             public static Partner WithName(string name)
             {

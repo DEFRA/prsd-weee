@@ -604,7 +604,7 @@
                     .Create();
 
                 request = new GetEvidenceNotesForTransferRequest(note.OrganisationId,
-                    new List<int>() {1}, note.ComplianceYear, new List<Guid>());
+                    new List<int>() { 1 }, note.ComplianceYear, new List<Guid>());
             };
 
             private readonly Because of = () =>

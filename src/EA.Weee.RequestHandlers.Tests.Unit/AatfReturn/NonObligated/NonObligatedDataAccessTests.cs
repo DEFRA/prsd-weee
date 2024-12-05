@@ -217,13 +217,7 @@
 
             public Guid EntityId { get; private set; }
 
-            public override Guid Id
-            {
-                get
-                {
-                    return EntityId;
-                }
-            }
+            public override Guid Id => EntityId;
         }
 
         public class ReturnWrapper : Return
@@ -235,13 +229,7 @@
 
             public Guid EntityId { get; private set; }
 
-            public override Guid Id
-            {
-                get
-                {
-                    return EntityId;
-                }
-            }
+            public override Guid Id => EntityId;
         }
     }
 }

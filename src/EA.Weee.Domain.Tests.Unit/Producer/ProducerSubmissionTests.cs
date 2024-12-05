@@ -567,10 +567,7 @@
                 return producerSubmission;
             }
 
-            public static ProducerSubmission NewProducer
-            {
-                get { return new ProducerBuilder().Build(); }
-            }
+            public static ProducerSubmission NewProducer => new ProducerBuilder().Build();
 
             public static ProducerSubmission WithTradingName(string tradingName)
             {

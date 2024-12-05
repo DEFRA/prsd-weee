@@ -27,20 +27,11 @@
             };
         }
 
-        public IUnauthenticatedUser User
-        {
-            get { return user ?? (user = new UnauthenticatedUser(httpClient)); }
-        }
+        public IUnauthenticatedUser User => user ?? (user = new UnauthenticatedUser(httpClient));
 
-        public ISmokeTest SmokeTest
-        {
-            get { return smokeTest ?? (smokeTest = new SmokeTest(httpClient)); }
-        }
+        public ISmokeTest SmokeTest => smokeTest ?? (smokeTest = new SmokeTest(httpClient));
 
-        public IErrorLog ErrorLog
-        {
-            get { return errorLog ?? (errorLog = new ErrorLog(httpClient)); }
-        }
+        public IErrorLog ErrorLog => errorLog ?? (errorLog = new ErrorLog(httpClient));
 
         public async Task<TResult> SendAsync<TResult>(IRequest<TResult> request)
         {

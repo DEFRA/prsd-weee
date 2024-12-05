@@ -18,7 +18,8 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
 
-        public ObligationDataAccess(IUserContext userContext,
+        public ObligationDataAccess(
+            IUserContext userContext,
             IGenericDataAccess genericDataAccess,
             WeeeContext weeeContext)
         {
@@ -57,7 +58,8 @@
             return await schemes.ToListAsync();
         }
 
-        public async Task<Guid> AddObligationUpload(UKCompetentAuthority ukCompetentAuthority,
+        public async Task<Guid> AddObligationUpload(
+            UKCompetentAuthority ukCompetentAuthority,
             string data,
             string fileName,
             IList<ObligationUploadError> errors,

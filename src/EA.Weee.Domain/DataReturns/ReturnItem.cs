@@ -45,8 +45,8 @@
         /// </summary>
         public string DatabaseObligationType
         {
-            get { return ObligationType.ToString(); }
-            set { ObligationType = (ObligationType)Enum.Parse(typeof(ObligationType), value); }
+            get => ObligationType.ToString();
+            set => ObligationType = (ObligationType)Enum.Parse(typeof(ObligationType), value);
         }
 
         public bool Equals(ReturnItem other)

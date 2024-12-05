@@ -22,7 +22,7 @@
 
         public TestUserEmailDomainElement this[int index]
         {
-            get { return (TestUserEmailDomainElement)BaseGet(index); }
+            get => (TestUserEmailDomainElement)BaseGet(index);
             set
             {
                 if (BaseGet(index) != null)

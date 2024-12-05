@@ -74,7 +74,7 @@
 
         public string CNCountry { get; set; }
 
-        //Registered Office details
+        // Registered Office details
         public string CompanyNumber { get; set; }
 
         public string CompanyContactTitle { get; set; }
@@ -107,7 +107,7 @@
 
         public string CompanyContactCountry { get; set; }
 
-        //Principal place of business details
+        // Principal place of business details
         public string Partners { get; set; }
 
         public string PPOBContactTitle { get; set; }
@@ -140,7 +140,7 @@
 
         public string PPOBContactCountry { get; set; }
 
-        //Overseas contact details
+        // Overseas contact details
         public string OverseasProducerName { get; set; }
 
         public string OverseasContactTitle { get; set; }

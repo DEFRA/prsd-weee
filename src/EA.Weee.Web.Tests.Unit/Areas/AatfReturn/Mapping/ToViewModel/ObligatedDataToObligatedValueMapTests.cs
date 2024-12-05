@@ -116,7 +116,7 @@
 
             var weeeDataValues = new List<WeeeObligatedData>()
             {
-                new WeeeObligatedData() { CategoryId = 1, B2B = null, B2C = null},
+                new WeeeObligatedData() { CategoryId = 1, B2B = null, B2C = null },
                 new WeeeObligatedData() { CategoryId = 2, B2B = 1m, B2C = 1m },
                 new WeeeObligatedData() { CategoryId = 3, B2B = 1000m, B2C = 1000m },
                 new WeeeObligatedData() { CategoryId = 4, B2B = 0m, B2C = 0m },

@@ -147,7 +147,7 @@
             var schemeName = TestFixture.Create<string>();
             var evidenceNoteData = new EvidenceNoteData() 
             { 
-                OrganisationSchemaData = new SchemeData() { SchemeName = schemeName},
+                OrganisationSchemaData = new SchemeData() { SchemeName = schemeName },
                 RecipientOrganisationData = new OrganisationData(),
                 RecipientSchemeData = new SchemeData(),
                 Type = NoteType.Transfer

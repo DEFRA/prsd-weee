@@ -6,13 +6,7 @@
 
     public class SchemeAreaRegistration : AreaRegistration
     {
-        public override string AreaName
-        {
-            get
-            {
-                return "Scheme";
-            }
-        }
+        public override string AreaName => "Scheme";
 
         public override void RegisterArea(AreaRegistrationContext context)
         {

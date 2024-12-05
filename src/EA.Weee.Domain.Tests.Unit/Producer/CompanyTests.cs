@@ -92,10 +92,7 @@
                 return new Company(name, registrationNumber, contact);
             }
 
-            public static Company NewCompany
-            {
-                get { return new CompanyBuilder().Build(); }
-            }
+            public static Company NewCompany => new CompanyBuilder().Build();
 
             public static Company WithName(string name)
             {

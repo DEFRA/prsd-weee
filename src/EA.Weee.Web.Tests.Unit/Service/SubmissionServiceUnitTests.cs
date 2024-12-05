@@ -619,22 +619,30 @@
                 CurrentSystemYear = 2010,
                 SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>()
                 {
-                    { 2004, TestFixture.Build<SmallProducerSubmissionHistoryData>()
+                    {
+                        2004, TestFixture.Build<SmallProducerSubmissionHistoryData>()
                         .With(s => s.Status, SubmissionStatus.Submitted)
                         .With(s => s.HasPaid, true)
-                        .Create() },
-                    { 2024, TestFixture.Build<SmallProducerSubmissionHistoryData>()
+                        .Create()
+                    },
+                    {
+                        2024, TestFixture.Build<SmallProducerSubmissionHistoryData>()
                         .With(s => s.Status, SubmissionStatus.Submitted)
                         .With(s => s.HasPaid, true)
-                        .Create() },
-                    { 2026, TestFixture.Build<SmallProducerSubmissionHistoryData>()
+                        .Create()
+                    },
+                    {
+                        2026, TestFixture.Build<SmallProducerSubmissionHistoryData>()
                         .With(s => s.Status, SubmissionStatus.InComplete)
                         .With(s => s.HasPaid, false)
-                        .Create() },
-                    { 2030, TestFixture.Build<SmallProducerSubmissionHistoryData>()
+                        .Create()
+                    },
+                    {
+                        2030, TestFixture.Build<SmallProducerSubmissionHistoryData>()
                         .With(s => s.Status, SubmissionStatus.Submitted)
                         .With(s => s.HasPaid, true)
-                        .Create() }
+                        .Create()
+                    }
                 },
                 CurrentSubmission = new Core.DirectRegistrant.SmallProducerSubmissionHistoryData
                 {

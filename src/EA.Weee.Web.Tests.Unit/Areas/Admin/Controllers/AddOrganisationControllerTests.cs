@@ -185,7 +185,7 @@
         {
             var viewModel = new Web.Areas.Admin.ViewModels.AddOrganisation.Details.PartnershipDetailsViewModel
             {
-                BusinessTradingName = "Company", OrganisationType = "Sole trader or individual", Address = {Countries = countries}
+                BusinessTradingName = "Company", OrganisationType = "Sole trader or individual", Address = { Countries = countries }
             };
 
             controller.ModelState.AddModelError("error", "error");
@@ -210,7 +210,7 @@
                 BusinessTradingName = "Company",
                 OrganisationType = "Sole trader or individual",
                 EntityType = type,
-                Address = {Countries = countries}
+                Address = { Countries = countries }
             };
 
             var result = await controller.PartnershipDetails(viewModel) as RedirectToRouteResult;
@@ -270,7 +270,7 @@
         {
             var viewModel = new Web.Areas.Admin.ViewModels.AddOrganisation.Details.SoleTraderDetailsViewModel
             {
-                BusinessTradingName = "Company", OrganisationType = "Sole trader or individual", Address = {Countries = countries}
+                BusinessTradingName = "Company", OrganisationType = "Sole trader or individual", Address = {Countries = countries }
             };
 
             controller.ModelState.AddModelError("error", "error");
@@ -295,7 +295,7 @@
                 BusinessTradingName = "Company",
                 OrganisationType = "Sole trader or individual",
                 EntityType = type,
-                Address = {Countries = countries}
+                Address = { Countries = countries }
             };
 
             var result = await controller.SoleTraderDetails(viewModel) as RedirectToRouteResult;
@@ -359,7 +359,7 @@
                 OrganisationType = "Registered company",
                 CompaniesRegistrationNumber = "1234567",
                 CompanyName = "Name",
-                Address = {Countries = countries}
+                Address = { Countries = countries }
             };
 
             await controller.RegisteredCompanyDetails(viewModel);
@@ -556,7 +556,7 @@
                 OrganisationType = "Registered company",
                 CompaniesRegistrationNumber = "1234567",
                 CompanyName = "Name",
-                Address = {Countries = countries}
+                Address = { Countries = countries }
             };
 
             await controller.RegisteredCompanyDetails(viewModel);

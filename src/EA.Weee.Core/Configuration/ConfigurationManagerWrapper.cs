@@ -6,10 +6,7 @@
 
     public class ConfigurationManagerWrapper : IConfigurationManagerWrapper
     {
-        public NameValueCollection AppSettings
-        {
-            get { return ConfigurationManager.AppSettings; }
-        }
+        public NameValueCollection AppSettings => ConfigurationManager.AppSettings;
 
         public string GetKeyValue(string key)
         {
@@ -21,10 +18,7 @@
             return ConfigurationManager.AppSettings.AllKeys.Select((string x) => x.ToUpperInvariant()).Contains(key.ToUpperInvariant());
         }
 
-        public bool IsLiveEnvironment
-        {
-            get { return AppSettings["Weee.Environment"] == "Live"; }
-        }
+        public bool IsLiveEnvironment => AppSettings["Weee.Environment"] == "Live";
 
         public ITestUserEmailDomains TestInternalUserEmailDomains
         {

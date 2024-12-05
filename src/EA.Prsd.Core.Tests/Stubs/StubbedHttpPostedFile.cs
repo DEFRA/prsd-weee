@@ -6,10 +6,7 @@
     {
         private readonly string contentType;
 
-        public override string ContentType
-        {
-            get { return contentType; }
-        }
+        public override string ContentType => contentType;
 
         public StubbedHttpPostedFile(string contentType)
         {

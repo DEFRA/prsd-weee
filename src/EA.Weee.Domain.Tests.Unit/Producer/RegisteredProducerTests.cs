@@ -133,10 +133,7 @@
                 return new RegisteredProducer(producerRegistrationNumber, complianceYear, scheme);
             }
 
-            public static RegisteredProducer NewRegisteredProducer
-            {
-                get { return new RegisteredProducerBuilder().Build(); }
-            }
+            public static RegisteredProducer NewRegisteredProducer => new RegisteredProducerBuilder().Build();
 
             public static RegisteredProducer WithComplianceYear(int complianceYear)
             {

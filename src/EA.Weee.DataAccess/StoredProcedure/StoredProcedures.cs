@@ -234,7 +234,8 @@
             var filterByScheme = new SqlParameter("@FilterBySchemes", filterBySchemes);
 
             return await context.Database
-                .SqlQuery<ProducerEeeCsvData>("[Producer].[spgProducerEeeCsvData] @ComplianceYear, @SchemeId, @ObligationType, @FilterByDirectRegistrant, @FilterBySchemes",
+                .SqlQuery<ProducerEeeCsvData>(
+                    "[Producer].[spgProducerEeeCsvData] @ComplianceYear, @SchemeId, @ObligationType, @FilterByDirectRegistrant, @FilterBySchemes",
                     complianceYearParameter,
                     schemeIdParameter,
                     obligationTypeParameter,
@@ -257,7 +258,8 @@
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
 
-            return await context.Database.SqlQuery<UkNonObligatedWeeeReceivedData>("[AATF].[getUkNonObligatedWeeeReceivedByComplianceYear] @ComplianceYear",
+            return await context.Database.SqlQuery<UkNonObligatedWeeeReceivedData>(
+                "[AATF].[getUkNonObligatedWeeeReceivedByComplianceYear] @ComplianceYear",
                 complianceYearParameter).ToListAsync();
         }
 
@@ -290,7 +292,7 @@
                 var date = dataReader.GetDateTime(dataReader.GetOrdinal("SubmittedDate"));
                 var latest = dataReader.GetString(dataReader.GetOrdinal("LatestData"));
 
-                //B2C categories
+                // B2C categories
                 var cat1b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT1B2C"));
                 var cat2b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT2B2C"));
                 var cat3b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT3B2C"));
@@ -306,7 +308,7 @@
                 var cat13b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT13B2C"));
                 var cat14b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT14B2C"));
 
-                //B2B categories
+                // B2B categories
                 var cat1b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT1B2B"));
                 var cat2b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT2B2B"));
                 var cat3b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT3B2B"));
@@ -416,7 +418,8 @@
                 .ToListAsync();
         }
 
-        public async Task<List<MissingProducerDataCsvData>> SpgMissingProducerDataCsvData(int complianceYear,
+        public async Task<List<MissingProducerDataCsvData>> SpgMissingProducerDataCsvData(
+            int complianceYear,
             string obligationType,
             int? quarter,
             Guid? schemeId)
@@ -446,7 +449,8 @@
                     .ToListAsync();
         }
 
-        public async Task<List<AatfAeReturnData>> GetAatfAeReturnDataCsvData(int complianceYear,
+        public async Task<List<AatfAeReturnData>> GetAatfAeReturnDataCsvData(
+            int complianceYear,
             int quarter,
             int facilityType,
             int? returnStatus,

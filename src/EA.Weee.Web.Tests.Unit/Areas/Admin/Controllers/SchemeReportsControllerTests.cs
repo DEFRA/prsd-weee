@@ -590,8 +590,8 @@
 
             var schemes = new List<SchemeData>
             {
-                new SchemeData() {Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1"},
-                new SchemeData() {Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2"}
+                new SchemeData() {Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1" },
+                new SchemeData() {Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2" }
             };
             A.CallTo(() => client.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
 
@@ -656,8 +656,8 @@
 
             var schemes = new List<SchemeData>
             {
-                new SchemeData() {Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1"},
-                new SchemeData() {Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2"}
+                new SchemeData() {Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1" },
+                new SchemeData() {Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2" }
             };
             A.CallTo(() => client.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
 
@@ -1100,8 +1100,8 @@
 
             var schemes = new List<SchemeData>
             {
-                new SchemeData() {Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1"},
-                new SchemeData() {Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2"}
+                new SchemeData() {Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1" },
+                new SchemeData() {Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2" }
             };
             A.CallTo(() => client.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
 
@@ -1167,8 +1167,8 @@
 
             var schemes = new List<SchemeData>
             {
-                new SchemeData() {Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1"},
-                new SchemeData() {Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2"}
+                new SchemeData() {Id = new Guid("F0D0B242-7656-46FA-AF15-204E710E9850"), SchemeName = "Scheme 1" },
+                new SchemeData() {Id = new Guid("2FE842AD-E122-4C40-9C39-EC183CFCD9F3"), SchemeName = "Scheme 2" }
             };
             A.CallTo(() => client.SendAsync(A<string>._, A<Weee.Requests.Admin.GetSchemes>._)).Returns(schemes);
 

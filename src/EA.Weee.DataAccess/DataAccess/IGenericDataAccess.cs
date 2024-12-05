@@ -9,22 +9,31 @@
 
     public interface IGenericDataAccess
     {
-        Task<TEntity> Add<TEntity>(TEntity entity) where TEntity : Entity;
+        Task<TEntity> Add<TEntity>(TEntity entity)
+            where TEntity : Entity;
 
-        Task AddMany<TEntity>(IEnumerable<TEntity> entities) where TEntity : Entity;
+        Task AddMany<TEntity>(IEnumerable<TEntity> entities)
+            where TEntity : Entity;
 
-        Task<IEnumerable<TEntity>> GetAll<TEntity>() where TEntity : class;
+        Task<IEnumerable<TEntity>> GetAll<TEntity>()
+            where TEntity : class;
 
-        Task<TEntity> GetById<TEntity>(Guid id) where TEntity : Entity;
+        Task<TEntity> GetById<TEntity>(Guid id)
+            where TEntity : Entity;
 
-        Task<TEntity> GetSingleByExpression<TEntity>(ISpecification<TEntity> specification) where TEntity : Entity;
+        Task<TEntity> GetSingleByExpression<TEntity>(ISpecification<TEntity> specification)
+            where TEntity : Entity;
 
-        Task<List<TEntity>> GetManyByExpression<TEntity>(ISpecification<TEntity> specification) where TEntity : Entity;
+        Task<List<TEntity>> GetManyByExpression<TEntity>(ISpecification<TEntity> specification)
+            where TEntity : Entity;
 
-        Task<List<TEntity>> GetManyByReturnId<TEntity>(Guid returnId) where TEntity : Entity, IReturnOption;
+        Task<List<TEntity>> GetManyByReturnId<TEntity>(Guid returnId)
+            where TEntity : Entity, IReturnOption;
 
-        void Remove<TEntity>(TEntity entity) where TEntity : Entity;
+        void Remove<TEntity>(TEntity entity)
+            where TEntity : Entity;
 
-        void RemoveMany<TEntity>(IEnumerable<TEntity> entities) where TEntity : Entity;
+        void RemoveMany<TEntity>(IEnumerable<TEntity> entities)
+            where TEntity : Entity;
     }
 }

@@ -110,10 +110,7 @@
                 return new EeeOutputAmount(obligationType, weeeCategory, tonnage, registeredProducer);
             }
 
-            public static EeeOutputAmount NewEeeOutputAmount
-            {
-                get { return new EeeOutputAmountBuilder().Build(); }
-            }
+            public static EeeOutputAmount NewEeeOutputAmount => new EeeOutputAmountBuilder().Build();
 
             public static EeeOutputAmount WithObligationType(ObligationType obligationType)
             {

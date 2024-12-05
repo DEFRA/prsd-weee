@@ -103,10 +103,7 @@
                 return new Partnership(name, principalPlaceOfBusiness, partners);
             }
 
-            public static Partnership NewPartnership
-            {
-                get { return new PartnershipBuilder().Build(); }
-            }
+            public static Partnership NewPartnership => new PartnershipBuilder().Build();
 
             public static Partnership WithName(string name)
             {

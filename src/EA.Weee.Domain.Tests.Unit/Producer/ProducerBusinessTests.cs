@@ -124,10 +124,7 @@
                 return new ProducerBusiness(companyDetails, partnership, correspondentForNoticesContact);
             }
 
-            public static ProducerBusiness NewProducerBusiness
-            {
-                get { return new ProducerBusinessBuilder().Build(); }
-            }
+            public static ProducerBusiness NewProducerBusiness => new ProducerBusinessBuilder().Build();
 
             public static ProducerBusiness WithCompanyDetails(Company company)
             {

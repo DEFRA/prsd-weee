@@ -14,10 +14,7 @@
         /// <summary>
         /// The collection of invoices associated with the transaction file.
         /// </summary>
-        public IReadOnlyList<Invoice> Invoices
-        {
-            get { return mInvoices; }
-        }
+        public IReadOnlyList<Invoice> Invoices => mInvoices;
 
         private string mBillRunId;
 
@@ -26,7 +23,7 @@
         /// </summary>
         public string BillRunId
         {
-            get { return mBillRunId; }
+            get => mBillRunId;
             set
             {
                 if (value != null && value.Length > 20)

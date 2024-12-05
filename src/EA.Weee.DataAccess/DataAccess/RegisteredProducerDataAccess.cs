@@ -123,7 +123,8 @@
             return false;
         }
 
-        private bool SubmissionsAfterDate(string producerRegistrationNumber,
+        private bool SubmissionsAfterDate(
+            string producerRegistrationNumber,
             int complianceYear,
             string schemeApprovalNumber,
             StatusType status,

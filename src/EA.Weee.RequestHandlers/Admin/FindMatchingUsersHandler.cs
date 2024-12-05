@@ -127,9 +127,9 @@
         {
             private Dictionary<string, int> ranks = new Dictionary<string, int>()
             {
-                { "N/A", 0},
-                { "Standard", 1},
-                { "Administrator", 2},
+                { "N/A", 0 },
+                { "Standard", 1 },
+                { "Administrator", 2 },
             };
 
             public int Compare(string x, string y)

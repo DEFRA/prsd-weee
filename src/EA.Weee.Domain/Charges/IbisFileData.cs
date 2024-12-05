@@ -52,8 +52,8 @@
         /// </summary>
         public long FileIdDatabaseValue
         {
-            get { return (long)FileId; }
-            set { FileId = (ulong)value; }
+            get => (long)FileId;
+            set => FileId = (ulong)value;
         }
     }
 }

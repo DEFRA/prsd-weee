@@ -33,8 +33,8 @@
         /// </summary>
         public long InitialIbisFileIdDatabaseValue
         {
-            get { return (long)InitialIbisFileId; }
-            private set { InitialIbisFileId = (ulong)value; }
+            get => (long)InitialIbisFileId;
+            private set => InitialIbisFileId = (ulong)value;
         }
     }
 }

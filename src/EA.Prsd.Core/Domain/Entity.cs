@@ -14,10 +14,7 @@
         [Browsable(false)]
         public byte[] RowVersion { get; set; }
 
-        public IEnumerable<IEvent> Events
-        {
-            get { return events.ToSafeIEnumerable(); }
-        }
+        public IEnumerable<IEvent> Events => events.ToSafeIEnumerable();
 
         public int CompareTo(Entity other)
         {

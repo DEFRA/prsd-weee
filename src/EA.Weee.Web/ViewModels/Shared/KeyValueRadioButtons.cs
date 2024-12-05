@@ -56,7 +56,7 @@
                     return PossibleValues.FirstOrDefault(pv => pv.Value.Equals(SelectedValue));
                 }
             }
-            set { SelectedValue = value.Value; }
+            set => SelectedValue = value.Value;
         }
 
         /// <summary>

@@ -1,13 +1,12 @@
 ﻿namespace EA.Weee.Api.Tests.Unit.Filters
 {
+    using Api.Filters;
+    using FluentAssertions;
     using System.Net;
     using System.Net.Http;
     using System.Threading;
     using System.Threading.Tasks;
     using System.Web.Http.Controllers;
-    using Api.Filters;
-    using FakeItEasy;
-    using FluentAssertions;
     using Xunit;
 
     public class MaintenanceModeFilterTests
@@ -18,7 +17,7 @@
             var filter = new MaintenanceModeFilter();
             var httpContext = new HttpActionContext();
             var request = new HttpRequestMessage();
-            var controllerContext = new HttpControllerContext {Request = request};
+            var controllerContext = new HttpControllerContext { Request = request };
             httpContext.ControllerContext = controllerContext;
 
             var result = await filter.ExecuteActionFilterAsync(httpContext, new CancellationToken(), null);

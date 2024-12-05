@@ -8,14 +8,8 @@
 
         public ViewDataDictionary ViewData 
         {
-            get 
-            { 
-                return viewData; 
-            } 
-            set 
-            { 
-                viewData = value; 
-            } 
+            get => viewData;
+            set => viewData = value;
         }
     }
 }

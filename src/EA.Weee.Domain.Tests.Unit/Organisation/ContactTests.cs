@@ -85,10 +85,7 @@
                 return new Contact(FirstName, LastName, Position);
             }
 
-            public static Contact NewContact
-            {
-                get { return new ContactBuilder().Build(); }
-            }
+            public static Contact NewContact => new ContactBuilder().Build();
 
             public static Contact WithFirstName(string firstName)
             {

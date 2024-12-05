@@ -95,10 +95,7 @@
                 return new BrandName(name);
             }
 
-            public static BrandName NewBrandName
-            {
-                get { return new BrandNameBuilder().Build(); }
-            }
+            public static BrandName NewBrandName => new BrandNameBuilder().Build();
 
             public static BrandName WithName(string name)
             {

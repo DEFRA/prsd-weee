@@ -12,8 +12,7 @@
     /// </summary>
     internal class IgnoreEntityRelationsContractResolver : DefaultContractResolver
     {
-        protected override JsonProperty CreateProperty(MemberInfo member,
-            MemberSerialization memberSerialization)
+        protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
             var property = base.CreateProperty(member, memberSerialization);
             var isDefaultValueIgnored =

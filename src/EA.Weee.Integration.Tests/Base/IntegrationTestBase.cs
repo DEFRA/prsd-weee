@@ -177,15 +177,15 @@
 
                         if (created.Succeeded)
                         {
-                            Console.WriteLine($"Created default user with id { userId }");
+                            Console.WriteLine($"Created default user with id {userId}");
                         }
                         else
                         {
-                            Console.WriteLine($"Failed to create default user { string.Join(",", created.Errors)} ");
+                            Console.WriteLine($"Failed to create default user {string.Join(",", created.Errors)} ");
                         }
                     }
 
-                    Console.WriteLine($"Using default user with id { User.Id } ");
+                    Console.WriteLine($"Using default user with id {User.Id} ");
 
                     var testUserContextUpdater = Container.Resolve<Action<TestUserContext>>();
                     testUserContextUpdater(new TestUserContext(Guid.Parse(User.Id), false));

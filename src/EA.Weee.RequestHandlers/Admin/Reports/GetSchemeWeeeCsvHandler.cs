@@ -259,20 +259,11 @@
             private readonly int quarterType;
             private readonly Guid schemeId;
 
-            public int Category
-            {
-                get { return category; }
-            }
+            public int Category => category;
 
-            public int QuarterType
-            {
-                get { return quarterType; }
-            }
+            public int QuarterType => quarterType;
 
-            public Guid SchemeId
-            {
-                get { return schemeId; }
-            }
+            public Guid SchemeId => schemeId;
 
             public WeeeAmountKey(int category, int quarterType, Guid schemeId)
             {

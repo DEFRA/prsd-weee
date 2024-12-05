@@ -10,7 +10,8 @@
     {
         Task<List<ProducerCsvData>> SpgCSVDataByOrganisationIdAndComplianceYear(Guid organisationId, int complianceYear);
 
-        Task<List<MembersDetailsCsvData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(int complianceYear,
+        Task<List<MembersDetailsCsvData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(
+            int complianceYear,
             bool includeRemovedProducer,
             bool includeBrandNames,
             Guid? schemeId = null,
@@ -28,7 +29,8 @@
 
         Task<SpgSchemeWeeeCsvResult> SpgSchemeWeeeCsvAsync(int complianceYear, Guid? schemeId, string obligationType);
 
-        Task<List<ProducerEeeCsvData>> SpgProducerEeeCsvData(int complianceYear,
+        Task<List<ProducerEeeCsvData>> SpgProducerEeeCsvData(
+            int complianceYear,
             Guid? schemeId,
             string obligationType,
             bool directRegistrantFilter,
@@ -46,7 +48,8 @@
 
         Task<List<SchemeObligationCsvData>> SpgSchemeObligationDataCsv(int complianceYear);
 
-        Task<List<MissingProducerDataCsvData>> SpgMissingProducerDataCsvData(int complianceYear,
+        Task<List<MissingProducerDataCsvData>> SpgMissingProducerDataCsvData(
+            int complianceYear,
             string obligationType,
             int? quarter,
             Guid? schemeId);

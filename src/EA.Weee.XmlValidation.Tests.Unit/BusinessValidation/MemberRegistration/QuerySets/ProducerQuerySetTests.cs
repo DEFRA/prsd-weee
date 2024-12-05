@@ -97,7 +97,7 @@
             A.CallTo(() => currentProducersByRegistrationNumber.Run())
                 .Returns(new Dictionary<string, List<ProducerSubmission>>
                 {
-                    { existingPrn, new List<ProducerSubmission> { producer }}
+                    { existingPrn, new List<ProducerSubmission> { producer } }
                 });
 
             var result = ProducerQuerySet().GetLatestProducerFromPreviousComplianceYears(thisPrn);
@@ -116,7 +116,7 @@
             A.CallTo(() => currentProducersByRegistrationNumber.Run())
                 .Returns(new Dictionary<string, List<ProducerSubmission>>
                 {
-                    { prn, new List<ProducerSubmission> { oldestProducer, newestProducer }}
+                    { prn, new List<ProducerSubmission> { oldestProducer, newestProducer } }
                 });
 
             var result = ProducerQuerySet().GetLatestProducerFromPreviousComplianceYears(prn);

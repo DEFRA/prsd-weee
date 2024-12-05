@@ -15,18 +15,14 @@
         [XmlIgnore]
         public decimal? annualTurnover
         {
-            get
-            {
-                return string.IsNullOrEmpty(annualTurnoverString)
+            get =>
+                string.IsNullOrEmpty(annualTurnoverString)
                     ? (decimal?)null
                     : decimal.Round(decimal.Parse(annualTurnoverString), 12);
-            }
-            set
-            {
+            set =>
                 annualTurnoverString = value.HasValue
                     ? value.Value.ToString(CultureInfo.InvariantCulture)
                     : null;
-            }
         }
     }
 }

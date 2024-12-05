@@ -441,7 +441,7 @@
             private Guid schemeId;
             public Guid SchemeId
             {
-                get { return schemeId; }
+                get => schemeId;
                 set
                 {
                     schemeId = value;

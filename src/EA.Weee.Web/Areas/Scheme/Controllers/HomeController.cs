@@ -296,7 +296,7 @@
                 // 8. Manage PBS Evidence Notes
                 if (viewModel.SelectedValue == PcsAction.ManagePBSEvidenceNotes)
                 {
-                    return this.RedirectToAction("Index", "ManageEvidenceNotes", new { pcsId = viewModel.OrganisationId});
+                    return this.RedirectToAction("Index", "ManageEvidenceNotes", new { pcsId = viewModel.OrganisationId });
                 }
 
                 if (viewModel.SelectedValue == ProducerSubmissionConstant.NewProducerRegistrationSubmission)

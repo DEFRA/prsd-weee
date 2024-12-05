@@ -150,8 +150,8 @@
                     WeeeCategory.MedicalDevices.ToInt()
                 };
 
-                var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch, 
-                    new List<Guid>() { noteToBeExcluded.Id}, SystemTime.Now.Year, null, null, 1, int.MaxValue);
+                var notes = await dataAccess.GetNotesToTransfer(organisation1.Id, categorySearch,
+                    new List<Guid>() { noteToBeExcluded.Id }, SystemTime.Now.Year, null, null, 1, int.MaxValue);
 
                 notes.NumberOfResults.Should().Be(2);
                 notes.Notes.Count().Should().Be(2);

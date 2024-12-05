@@ -21,13 +21,7 @@
         /// <summary>
         /// Equivalent to DateTime.UtcNow
         /// </summary>
-        public static DateTime UtcNow
-        {
-            get
-            {
-                return utcNowInstance.Value();
-            }
-        }
+        public static DateTime UtcNow => utcNowInstance.Value();
 
         /// <summary>
         /// Equivalent to DateTime.Now

@@ -17,10 +17,7 @@
 
         public string SubmittingUserId { get; private set; }
 
-        public virtual bool IsSubmitted
-        {
-            get { return SubmittedDate.HasValue; }
-        }
+        public virtual bool IsSubmitted => SubmittedDate.HasValue;
 
         public DateTime CreatedDate { get; private set; }
 
