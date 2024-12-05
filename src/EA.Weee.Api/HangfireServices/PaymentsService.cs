@@ -48,6 +48,8 @@
                     try
                     {
                         await ProcessPayment(payment, jobId);
+
+                        await Task.Delay(500); // Half second delay
                     }
                     catch (Exception ex)
                     {
@@ -117,7 +119,7 @@
                 catch (Exception ex)
                 {
                     logger.Error(ex, $"Error processing payment {payment.PaymentId}. Job ID: {jobId}");
-                    transaction.Commit();
+                    transaction.Rollback();
                     throw;
                 }
             }
