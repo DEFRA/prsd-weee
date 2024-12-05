@@ -48,6 +48,8 @@
                     try
                     {
                         await ProcessPayment(payment, jobId);
+
+                        await Task.Delay(500); // Half second delay
                     }
                     catch (Exception ex)
                     {
@@ -91,7 +93,7 @@
                             freshPayment.DirectProducerSubmission.PaymentFinished = status.State.Status == PaymentStatus.Success;
                         }
                     }
-                    else 
+                    else
                     {
                         freshPayment.Status = PaymentState.Error;
                         freshPayment.InFinalState = true;
@@ -116,7 +118,7 @@
             catch (Exception ex)
             {
                 logger.Error(ex, $"Error processing payment {payment.PaymentId}. Job ID: {jobId}");
-                transaction.Commit();
+                transaction.Rollback();
                 throw;
             }
         }
