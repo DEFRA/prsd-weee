@@ -18,8 +18,8 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
 
-        public ObligationDataAccess(IUserContext userContext, 
-            IGenericDataAccess genericDataAccess, 
+        public ObligationDataAccess(IUserContext userContext,
+            IGenericDataAccess genericDataAccess,
             WeeeContext weeeContext)
         {
             this.userContext = userContext;
@@ -47,7 +47,7 @@
         {
             var schemes = weeeContext.Schemes
                 .IncludeFilter(s => s.ObligationSchemes.Where(s1 => s1.ComplianceYear == complianceYear && s1.SchemeId == s.Id))
-                .Where(s => s.ObligationSchemes.Any(o => o.ComplianceYear == complianceYear && o.SchemeId == s.Id)  || s.SchemeStatus.Value == SchemeStatus.Approved.Value);
+                .Where(s => s.ObligationSchemes.Any(o => o.ComplianceYear == complianceYear && o.SchemeId == s.Id) || s.SchemeStatus.Value == SchemeStatus.Approved.Value);
 
             if (authority != null)
             {
@@ -58,7 +58,7 @@
         }
 
         public async Task<Guid> AddObligationUpload(UKCompetentAuthority ukCompetentAuthority,
-            string data, 
+            string data,
             string fileName,
             IList<ObligationUploadError> errors,
             IList<ObligationScheme> obligations)

@@ -3,9 +3,9 @@
     using EA.Weee.Domain.Producer;
     using System.Data.Entity.ModelConfiguration;
 
-    public class DirectProducerSubmissionConfiguration : EntityTypeConfiguration<DirectProducerSubmission>
+    public class DirectProducerSubmissionMapping : EntityTypeConfiguration<DirectProducerSubmission>
     {
-        public DirectProducerSubmissionConfiguration()
+        public DirectProducerSubmissionMapping()
         {
             ToTable("DirectProducerSubmission", "Producer");
 

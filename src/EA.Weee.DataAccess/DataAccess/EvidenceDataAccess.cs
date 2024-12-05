@@ -19,7 +19,8 @@
         private readonly IGenericDataAccess genericDataAccess;
 
         public EvidenceDataAccess(WeeeContext context,
-            IUserContext userContext, IGenericDataAccess genericDataAccess)
+            IUserContext userContext,
+            IGenericDataAccess genericDataAccess)
         {
             this.context = context;
             this.userContext = userContext;
@@ -39,7 +40,10 @@
             return note;
         }
 
-        public async Task<Note> Update(Note note, Organisation recipient, DateTime startDate, DateTime endDate,
+        public async Task<Note> Update(Note note,
+            Organisation recipient,
+            DateTime startDate,
+            DateTime endDate,
             WasteType wasteType,
             Protocol? protocol,
             IList<NoteTonnage> tonnages,
@@ -296,7 +300,8 @@
         }
 
         public async Task<EvidenceNoteResults> GetTransferSelectedNotes(Guid recipientOrganisationId,
-            List<Guid> evidenceNotes, List<int> categories)
+            List<Guid> evidenceNotes,
+            List<int> categories)
         {
             var pagedNotes = await context.Notes.Where(n => n.RecipientId == recipientOrganisationId &&
                                                             evidenceNotes.Contains(n.Id) &&
@@ -353,7 +358,8 @@
                 .ToListAsync();
         }
 
-        public async Task<Note> UpdateTransfer(Note note, Organisation recipient,
+        public async Task<Note> UpdateTransfer(Note note,
+            Organisation recipient,
             IList<NoteTransferTonnage> tonnages,
             NoteStatus status,
             DateTime updateDate)

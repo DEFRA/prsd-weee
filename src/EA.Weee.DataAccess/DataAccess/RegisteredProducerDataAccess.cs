@@ -68,7 +68,7 @@
         public async Task<DirectRegistrant> GetDirectRegistrantByRegistration(string producerRegistrationNumber)
         {
             var directRegistrant = await context.DirectProducerSubmissions
-                .Include(p => p.RegisteredProducer)  // Include RegisteredProducer to access Removed property
+                .Include(p => p.RegisteredProducer) // Include RegisteredProducer to access Removed property
                 .Where(p => p.RegisteredProducer.ProducerRegistrationNumber == producerRegistrationNumber)
                 .Select(p => p.DirectRegistrant)
                 .FirstOrDefaultAsync();
@@ -123,7 +123,10 @@
             return false;
         }
 
-        private bool SubmissionsAfterDate(string producerRegistrationNumber, int complianceYear, string schemeApprovalNumber, StatusType status,
+        private bool SubmissionsAfterDate(string producerRegistrationNumber,
+            int complianceYear,
+            string schemeApprovalNumber,
+            StatusType status,
             DateTime date)
         {
             var query = context.ProducerSubmissions.Where(p =>

@@ -502,6 +502,10 @@
     <Content Include="scripts\Update\Release 1\Sprint07\20150616-UpdateCATable-Remove_IsSysetmUser.sql" />
     <Content Include="scripts\Update\Release 1\Sprint07\20150618-162503-AddOrganisationUserTable.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

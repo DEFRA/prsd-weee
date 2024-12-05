@@ -60,18 +60,9 @@
         /// <summary>
         /// Gets all the member detail for specified compliance year for all schemes and all authorised authority.
         ///     If scheme Id is specified then filters on scheme Id
-        ///     If AA Id is specified then filters on AA Id
+        ///     If AA Id is specified then filters on AA Id.
         /// </summary>
-        /// <param name="complianceYear"></param>
-        /// <param name="includeRemovedProducer"></param>
-        /// <param name="includeBrandNames"></param>
-        /// <param name="schemeId"></param>
-        /// <param name="competentAuthorityId"></param>
-        /// <param name="directRegistrantFilter"></param>
-        /// <param name="schemesFilter"></param>
-        /// <returns></returns>
-        public async Task<List<MembersDetailsCsvData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(int complianceYear, bool includeRemovedProducer,
-            bool includeBrandNames, Guid? schemeId, Guid? competentAuthorityId, bool directRegistrantFilter, bool schemesFilter)
+        public async Task<List<MembersDetailsCsvData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(int complianceYear, bool includeRemovedProducer, bool includeBrandNames, Guid? schemeId, Guid? competentAuthorityId, bool directRegistrantFilter, bool schemesFilter)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
 
@@ -97,10 +88,8 @@
         }
 
         /// <summary>
-        /// Gets Producer public register data by compliance year
+        /// Gets Producer public register data by compliance year.
         /// </summary>
-        /// <param name="complianceYear"></param>
-        /// <returns></returns>
         public async Task<List<ProducerPublicRegisterCSVData>> SpgProducerPublicRegisterCSVDataByComplianceYear(int complianceYear)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
@@ -112,10 +101,8 @@
         }
 
         /// <summary>
-        /// Gets producer amendments history
+        /// Gets producer amendments history.
         /// </summary>
-        /// <param name="prn"></param>
-        /// <returns></returns>
         public async Task<List<ProducerAmendmentsHistoryCSVData>> SpgProducerAmendmentsCSVDataByPRN(string prn)
         {
             var prnParameter = new SqlParameter("@PRN", prn);
@@ -136,8 +123,6 @@
         /// <summary>
         /// Gets the details of the producers for an invoice run.
         /// </summary>
-        /// <param name="invoiceRunId"></param>
-        /// <returns></returns>
         public async Task<List<PCSChargesCSVData>> SpgInvoiceRunChargeBreakdown(Guid invoiceRunId)
         {
             var invoiceRunIdParameter = new SqlParameter("@InvoiceRunId", invoiceRunId);
@@ -240,8 +225,7 @@
             return result;
         }
 
-        public async Task<List<ProducerEeeCsvData>> SpgProducerEeeCsvData(int complianceYear, Guid? schemeId, string obligationType, 
-            bool directRegistrantFilter, bool filterBySchemes)
+        public async Task<List<ProducerEeeCsvData>> SpgProducerEeeCsvData(int complianceYear, Guid? schemeId, string obligationType, bool directRegistrantFilter, bool filterBySchemes)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
             var schemeIdParameter = new SqlParameter("@SchemeId", (object)schemeId ?? DBNull.Value);
@@ -305,6 +289,7 @@
                 var quarter = dataReader.GetInt32(dataReader.GetOrdinal("Quarter"));
                 var date = dataReader.GetDateTime(dataReader.GetOrdinal("SubmittedDate"));
                 var latest = dataReader.GetString(dataReader.GetOrdinal("LatestData"));
+
                 //B2C categories
                 var cat1b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT1B2C"));
                 var cat2b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT2B2C"));
@@ -320,6 +305,7 @@
                 var cat12b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT12B2C"));
                 var cat13b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT13B2C"));
                 var cat14b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT14B2C"));
+
                 //B2B categories
                 var cat1b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT1B2B"));
                 var cat2b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT2B2B"));
@@ -460,8 +446,14 @@
                     .ToListAsync();
         }
 
-        public async Task<List<AatfAeReturnData>> GetAatfAeReturnDataCsvData(int complianceYear, int quarter,
-           int facilityType, int? returnStatus, Guid? authority, Guid? area, Guid? panArea, bool includeResubmissions)
+        public async Task<List<AatfAeReturnData>> GetAatfAeReturnDataCsvData(int complianceYear,
+            int quarter,
+            int facilityType,
+            int? returnStatus,
+            Guid? authority,
+            Guid? area,
+            Guid? panArea,
+            bool includeResubmissions)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
             var quarterParameter = new SqlParameter("@Quarter", quarter);
@@ -609,8 +601,7 @@
 
             return await context.Database
                 .SqlQuery<AatfReuseSitesData>(
-                    "[AATF].[getAllAatfReuseSitesCsvData] @ComplianceYear, @CA, @PanArea",
-                    complianceYearParameter, authorityParameter, panAreaParameter)
+                    "[AATF].[getAllAatfReuseSitesCsvData] @ComplianceYear, @CA, @PanArea", complianceYearParameter, authorityParameter, panAreaParameter)
                 .ToListAsync();
         }
 
@@ -625,7 +616,11 @@
             return await context.Database
                 .SqlQuery<AatfAeDetailsData>(
                     "[AATF].[getAatfAeDetailsCsvData] @ComplianceYear, @FacilityType, @CA, @Area, @PanArea",
-                    complianceYearParameter, facilityTypeParameter, authorityParameter, areaParameter, panAreaParameter)
+                    complianceYearParameter,
+                    facilityTypeParameter,
+                    authorityParameter,
+                    areaParameter,
+                    panAreaParameter)
                 .ToListAsync();
         }
 
@@ -638,7 +633,9 @@
             return await context.Database
                .SqlQuery<PcsAatfComparisonDataCsvData>(
                    "[AATF].[getPcsAatfDiscrepancyCsvData] @ComplianceYear, @Quarter, @ObligationType",
-                   complianceYearParameter, quarterParameter, obligationTypeParameter)
+                   complianceYearParameter,
+                   quarterParameter,
+                   obligationTypeParameter)
                .ToListAsync();
         }
     }

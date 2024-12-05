@@ -3,9 +3,9 @@
     using Domain.DataReturns;
     using System.Data.Entity.ModelConfiguration;
 
-    internal class DataReturnsUploadRawDataMapping : EntityTypeConfiguration<DataReturnUploadRawData>
+    internal class DataReturnUploadRawDataMapping : EntityTypeConfiguration<DataReturnUploadRawData>
     {
-        public DataReturnsUploadRawDataMapping()
+        public DataReturnUploadRawDataMapping()
         {
             ToTable("DataReturnUpload", "PCS");
         }

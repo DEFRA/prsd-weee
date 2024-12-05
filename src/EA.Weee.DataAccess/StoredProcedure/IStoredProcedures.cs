@@ -10,8 +10,13 @@
     {
         Task<List<ProducerCsvData>> SpgCSVDataByOrganisationIdAndComplianceYear(Guid organisationId, int complianceYear);
 
-        Task<List<MembersDetailsCsvData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(int complianceYear, bool includeRemovedProducer,
-            bool includeBrandNames, Guid? schemeId = null, Guid? competentAuthorityId = null, bool directRegistrantFilter = false, bool schemesFilter = false);
+        Task<List<MembersDetailsCsvData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(int complianceYear,
+            bool includeRemovedProducer,
+            bool includeBrandNames,
+            Guid? schemeId = null,
+            Guid? competentAuthorityId = null,
+            bool directRegistrantFilter = false,
+            bool schemesFilter = false);
 
         Task<int> SpgNextIbisTransactionNumber();
 
@@ -23,8 +28,11 @@
 
         Task<SpgSchemeWeeeCsvResult> SpgSchemeWeeeCsvAsync(int complianceYear, Guid? schemeId, string obligationType);
 
-        Task<List<ProducerEeeCsvData>> SpgProducerEeeCsvData(int complianceYear, Guid? schemeId, string obligationType,
-            bool directRegistrantFilter, bool filterBySchemes);
+        Task<List<ProducerEeeCsvData>> SpgProducerEeeCsvData(int complianceYear,
+            Guid? schemeId,
+            string obligationType,
+            bool directRegistrantFilter,
+            bool filterBySchemes);
 
         Task<List<UkEeeCsvData>> SpgUKEEEDataByComplianceYear(int complianceYear);
 
@@ -38,7 +46,9 @@
 
         Task<List<SchemeObligationCsvData>> SpgSchemeObligationDataCsv(int complianceYear);
 
-        Task<List<MissingProducerDataCsvData>> SpgMissingProducerDataCsvData(int complianceYear, string obligationType, int? quarter,
+        Task<List<MissingProducerDataCsvData>> SpgMissingProducerDataCsvData(int complianceYear,
+            string obligationType,
+            int? quarter,
             Guid? schemeId);
 
         Task<List<SubmissionChangesCsvData>> SpgSubmissionChangesCsvData(Guid memberUploadId);

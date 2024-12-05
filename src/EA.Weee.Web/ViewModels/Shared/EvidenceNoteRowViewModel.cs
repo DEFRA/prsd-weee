@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Web.ViewModels.Shared
 {
-    using System;
-    using System.ComponentModel;
     using Core.AatfEvidence;
     using Core.Helpers;
     using Infrastructure;
+    using System;
+    using System.ComponentModel;
 
     [Serializable]
     public class EvidenceNoteRowViewModel 

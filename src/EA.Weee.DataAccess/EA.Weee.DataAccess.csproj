@@ -217,7 +217,7 @@
     <Compile Include="Mappings\DataReturnMapping.cs" />
     <Compile Include="Mappings\DataReturnVersionMapping.cs" />
     <Compile Include="Mappings\DataReturnUploadMapping.cs" />
-    <Compile Include="Mappings\DataRetunUploadRawDataMapping.cs" />
+    <Compile Include="Mappings\DataReturnUploadRawDataMapping.cs" />
     <Compile Include="Mappings\UploadErrorTypeMapping.cs" />
     <Compile Include="Mappings\MemberUploadRawDataMapping.cs" />
     <Compile Include="Mappings\MigratedProducerMapping.cs" />
@@ -240,7 +240,7 @@
     <Compile Include="Mappings\OrganisationUserMapping.cs" />
     <Compile Include="Mappings\UserStatusMapping.cs" />
     <Compile Include="Mappings\ProducerSubmissionMapping.cs" />
-    <Compile Include="Mappings\ProducerCompany.cs" />
+    <Compile Include="Mappings\ProducerCompanyMapping.cs" />
     <Compile Include="Mappings\ProducerPartnerMapping.cs" />
     <Compile Include="Mappings\ProducerPartnershipMapping.cs" />
     <Compile Include="Mappings\ProducerSISCodeMapping.cs" />
@@ -292,6 +292,10 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="EventHandlers\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.CodeFixes.dll" />
+    <Analyzer Include="..\packages\StyleCop.Analyzers.1.1.118\analyzers\dotnet\cs\StyleCop.Analyzers.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">

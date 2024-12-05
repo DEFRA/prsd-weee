@@ -34,7 +34,7 @@
         /// </summary>
         public IIbisFormatter Formatter
         {
-            get { return mFormatter; }
+            get => mFormatter;
             set
             {
                 if (value == null)

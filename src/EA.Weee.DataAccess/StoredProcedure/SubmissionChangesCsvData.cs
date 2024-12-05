@@ -104,8 +104,6 @@
 
         public string CompanyContactCountry { get; set; }
 
-        //Principal place of business details
-
         public string PPOBContactTitle { get; set; }
 
         public string PPOBContactForename { get; set; }

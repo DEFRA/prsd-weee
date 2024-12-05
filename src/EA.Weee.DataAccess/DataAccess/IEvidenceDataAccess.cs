@@ -11,11 +11,11 @@
     {
         Task<Note> GetNoteById(Guid id);
 
-        Task<Note> Update(Note note, 
-            Organisation recipient, 
-            DateTime startDate, 
-            DateTime endDate, 
-            WasteType wasteType, 
+        Task<Note> Update(Note note,
+            Organisation recipient,
+            DateTime startDate,
+            DateTime endDate,
+            WasteType wasteType,
             Protocol? protocol,
             IList<NoteTonnage> tonnages,
             NoteStatus status,
@@ -27,7 +27,7 @@
 
         Task<int> GetNoteCountByStatusAndAatf(NoteStatus status, Guid aatfId, int complianceYear);
 
-        Task<EvidenceNoteResults> GetNotesToTransfer(Guid recipientOrganisationId, 
+        Task<EvidenceNoteResults> GetNotesToTransfer(Guid recipientOrganisationId,
             List<int> categories,
             List<Guid> excludeEvidenceNotes,
             int complianceYear,
@@ -36,7 +36,7 @@
             int pageNumber,
             int pageSize);
 
-        Task<EvidenceNoteResults> GetTransferSelectedNotes(Guid recipientOrganisationId, 
+        Task<EvidenceNoteResults> GetTransferSelectedNotes(Guid recipientOrganisationId,
             List<Guid> evidenceNotes,
             List<int> categories);
 
@@ -50,7 +50,8 @@
 
         Task<List<NoteTonnage>> GetTonnageByIds(List<Guid> ids);
 
-        Task<Note> UpdateTransfer(Note note, Organisation recipient,
+        Task<Note> UpdateTransfer(Note note,
+            Organisation recipient,
             IList<NoteTransferTonnage> tonnages,
             NoteStatus status,
             DateTime updateDate);

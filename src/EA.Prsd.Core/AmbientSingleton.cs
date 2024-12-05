@@ -306,7 +306,10 @@ namespace EA.Prsd.Core
 
                 return defaultValue.Value;
             }
-            set { CallContext.SetData(slotName, value); }
+            set
+            {
+                CallContext.SetData(slotName, value);
+            }
         }
     }
 }

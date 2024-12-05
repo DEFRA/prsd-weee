@@ -26,7 +26,7 @@
 
         public string Position
         {
-            get { return position; }
+            get => position;
             private set
             {
                 if (value != null && value.Length > 35)
@@ -39,7 +39,7 @@
 
         public string FirstName
         {
-            get { return firstname; }
+            get => firstname;
             private set
             {
                 if (value != null && value.Length > 35)
@@ -52,7 +52,7 @@
 
         public string LastName
         {
-            get { return lastname; }
+            get => lastname;
             private set
             {
                 if (value != null && value.Length > 35)
@@ -63,10 +63,7 @@
             }
         }
 
-        public string FullName
-        {
-            get { return string.Format("{0} {1}", FirstName, LastName); }
-        }
+        public string FullName => string.Format("{0} {1}", FirstName, LastName);
 
         public void Overwrite(Contact otherContact)
         {

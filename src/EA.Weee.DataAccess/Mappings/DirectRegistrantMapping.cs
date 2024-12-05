@@ -3,9 +3,9 @@
     using EA.Weee.Domain.Producer;
     using System.Data.Entity.ModelConfiguration;
 
-    public class DirectRegistrantConfiguration : EntityTypeConfiguration<DirectRegistrant>
+    public class DirectRegistrantMapping : EntityTypeConfiguration<DirectRegistrant>
     {
-        public DirectRegistrantConfiguration()
+        public DirectRegistrantMapping()
         {
             ToTable("DirectRegistrant", "Producer");
 

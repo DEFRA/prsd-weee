@@ -10,7 +10,7 @@
     public interface IObligationDataAccess
     {
         Task<Guid> AddObligationUpload(UKCompetentAuthority ukCompetentAuthority,
-            string data, 
+            string data,
             string fileName,
             IList<ObligationUploadError> errors,
             IList<ObligationScheme> obligations);

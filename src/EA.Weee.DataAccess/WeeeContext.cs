@@ -87,12 +87,12 @@
         public virtual DbSet<ProducerBalancingScheme> ProducerBalancingSchemes { get; set; }
 
         /// <summary>
-        /// Registered producers including items marked as removed.
+        /// Gets or sets registered producers including items marked as removed.
         /// </summary>
         internal virtual DbSet<RegisteredProducer> AllRegisteredProducers { get; set; }
 
         /// <summary>
-        /// Registered producers excluding records marked as removed.
+        /// Gets registered producers excluding records marked as removed.
         /// </summary>
         public virtual IQueryable<RegisteredProducer> RegisteredProducers
         {
@@ -105,7 +105,7 @@
         }
 
         /// <summary>
-        /// Registered producers marked as removed.
+        /// Gets registered producers marked as removed.
         /// </summary>
         public virtual IQueryable<RegisteredProducer> RemovedRegisteredProducers
         {
@@ -118,12 +118,12 @@
         }
 
         /// <summary>
-        /// Producer submissions including removed producers.
+        /// Gets or sets producer submissions including removed producers.
         /// </summary>
         public virtual DbSet<ProducerSubmission> AllProducerSubmissions { get; set; }
 
         /// <summary>
-        /// Producer submissions excluding removed producers.
+        /// Gets producer submissions excluding removed producers.
         /// </summary>
         public virtual IQueryable<ProducerSubmission> ProducerSubmissions
         {
@@ -252,7 +252,7 @@
 
         public override int SaveChanges()
         {
-            bool alreadyHasTransaction = (this.Database.CurrentTransaction != null);
+            bool alreadyHasTransaction = this.Database.CurrentTransaction != null;
 
             this.SetEntityId();
             this.AuditChanges(userContext.UserId);
@@ -282,7 +282,7 @@
 
         public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken)
         {
-            bool alreadyHasTransaction = (this.Database.CurrentTransaction != null);
+            bool alreadyHasTransaction = this.Database.CurrentTransaction != null;
 
             this.SetEntityId();
             this.AuditChanges((jobId != Guid.Empty) ? jobId : userContext.UserId);

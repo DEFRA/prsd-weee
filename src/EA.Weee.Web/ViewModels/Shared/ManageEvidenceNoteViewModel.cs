@@ -3,7 +3,6 @@
     using System;
     using System.Collections.Generic;
     using System.ComponentModel;
-    using EA.Weee.Web.Areas.Aatf.ViewModels;
 
     [Serializable]
     public class ManageEvidenceNoteViewModel
