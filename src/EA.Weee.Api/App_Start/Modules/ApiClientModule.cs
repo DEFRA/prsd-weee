@@ -15,9 +15,6 @@
     {
         protected override void Load(ContainerBuilder builder)
         {
-            var configurationService = new ConfigurationService();
-            if (configurationService.CurrentConfiguration.GovUkPayMopUpJobEnabled)
-            {
                 builder.Register(c =>
                 {
                     var cc = c.Resolve<IComponentContext>();
@@ -38,7 +35,6 @@
                     return new PayClient(config.GovUkPayBaseUrl, config.GovUkPayApiKey, httpClient, retryPolicy,
                         jsonSerializer, httpClientHandlerConfig, logger);
                 }).As<IPayClient>();
-            }
         }
     }
 }
