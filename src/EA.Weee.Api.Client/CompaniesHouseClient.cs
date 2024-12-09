@@ -87,7 +87,7 @@
 
         private bool IsValidCompanyReference(string companyReference)
         {
-            return !string.IsNullOrWhiteSpace(companyReference) && companyReference.All(char.IsDigit);
+            return !string.IsNullOrWhiteSpace(companyReference);
         }
 
         public void Dispose()
