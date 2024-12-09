@@ -88,7 +88,7 @@
         {
             // Arrange
             const string endpoint = "api/companies";
-            const string companyReference = "invalid123";
+            const string companyReference = " ";
 
             // Act
             var result = await companiesHouseClient.GetCompanyDetailsAsync(endpoint, companyReference);
@@ -143,7 +143,7 @@
         {
             // Arrange
             const string endpoint = "api/companies";
-            const string companyReference = "invalid123";
+            const string companyReference = " ";
 
             // Act
             var result = await companiesHouseClient.GetCompanyDetailsAsync(endpoint, companyReference);
