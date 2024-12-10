@@ -396,13 +396,14 @@
             return Json(orgModel, JsonRequestBehavior.AllowGet);
         }
 
-        private static OrganisationViewModel LookupOrganisationViewModel(DefraCompaniesHouseApiModel result)
+        private static OrganisationViewModel LookupOrganisationViewModel(DefraCompaniesHouseApiModel result, OrganisationViewModel model = null)
         {
             var address1 = result.Organisation?.RegisteredOffice?.BuildingNumber ??
                            result.Organisation?.RegisteredOffice?.BuildingName ??
                            result.Organisation?.RegisteredOffice?.SubBuildingName;
 
             var address2 = result.Organisation?.RegisteredOffice?.Street;
+            var countryId = UkCountry.GetIdByName(result.Organisation?.RegisteredOffice?.Country.Name);
 
             var orgModel = new OrganisationViewModel()
             {
@@ -416,7 +417,7 @@
                     TownOrCity = result.Organisation?.RegisteredOffice?.Town,
                     Postcode = result.Organisation?.RegisteredOffice?.Postcode,
                     CountyOrRegion = result.Organisation?.RegisteredOffice?.County ?? result.Organisation?.RegisteredOffice?.Locality,
-                    CountryId = UkCountry.GetIdByName(result.Organisation?.RegisteredOffice?.Country.Name)
+                    CountryId = DetermineCountryId(countryId, model)
                 },
             };
             return orgModel;
@@ -432,9 +433,9 @@
 
                 var countries = await GetCountries();
 
-                model.Address.Countries = countries;
-
                 ModelState.Clear();
+
+                model.Address.Countries = countries;
 
                 if (result.HasError)
                 {
@@ -443,7 +444,8 @@
                     return View(model.CastToSpecificViewModel(model));
                 }
 
-                var orgModel = LookupOrganisationViewModel(result);
+                var orgModel = LookupOrganisationViewModel(result, model);
+                orgModel.Address.Countries = countries;
 
                 return View(model.CastToSpecificViewModel(orgModel));
             }
@@ -1033,6 +1035,21 @@
                     configurationService.CurrentConfiguration.CompaniesHouseReferencePath,
                     companiesRegistrationNumber);
             }
+        }
+
+        private static Guid DetermineCountryId(Guid? countryId, OrganisationViewModel model)
+        {
+            if (countryId.HasValue && countryId.Value != Guid.Empty)
+            {
+                return countryId.Value;
+            }
+
+            if (model?.Address?.CountryId != null && model.Address.CountryId != Guid.Empty)
+            {
+                return model.Address.CountryId;
+            }
+
+            return Guid.Empty;
         }
     }
 }

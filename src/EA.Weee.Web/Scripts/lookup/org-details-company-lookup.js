@@ -36,7 +36,9 @@
             $("#Address_CountyOrRegion").val(address.CountyOrRegion);
             $("#Address_Postcode").val(address.Postcode);
 
-            setCountry(address)
+            if (address.CountryId && address.CountryId !== '00000000-0000-0000-0000-000000000000') {
+                setCountry(address)
+            }
         }
 
         function setCountry(selected) {

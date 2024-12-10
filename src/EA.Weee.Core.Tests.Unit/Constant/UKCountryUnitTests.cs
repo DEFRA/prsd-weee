@@ -53,11 +53,10 @@
         }
 
         [Fact]
-        public void GetIdByName_WithInvalidCountryName_ShouldThrowArgumentException()
+        public void GetIdByName_WithInvalidCountryName_ShouldReturnEmptyGuid()
         {
-            Action act = () => UkCountry.GetIdByName("Invalid Country");
-            act.Should().Throw<ArgumentException>()
-               .WithMessage("No matching GUID found for country: Invalid Country");
+            var result = UkCountry.GetIdByName("Invalid Country");
+            result.Should().Be(Guid.Empty);
         }
 
         [Theory]
