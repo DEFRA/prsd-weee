@@ -42,7 +42,8 @@
                 CompanyName = submissionData.CurrentSubmission.CompanyName,
                 BusinessTradingName = submissionData.CurrentSubmission.TradingName,
                 CompaniesRegistrationNumber = submissionData.OrganisationData.CompanyRegistrationNumber,
-                ProducerRegistrationNumber = submissionData.CurrentSubmission.ProducerRegistrationNumber
+                ProducerRegistrationNumber = submissionData.CurrentSubmission.ProducerRegistrationNumber,
+                HasAuthorisedRepresentitive = submissionData.HasAuthorisedRepresentitive
             };
 
             var viewModel = new EditOrganisationDetailsViewModel

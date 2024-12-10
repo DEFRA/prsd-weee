@@ -927,7 +927,7 @@
             var existingTransaction = new OrganisationTransactionData
             {
                 OrganisationType = ExternalOrganisationType.RegisteredCompany,
-                SearchTerm = null, 
+                SearchTerm = null,
                 PreviousRegistration = PreviouslyRegisteredProducerType.No
             };
 
@@ -1096,7 +1096,7 @@
 
             var countries = new List<CountryData>
             {
-                new CountryData { Id = UkCountry.Ids.England, Name = "United Kingdom" }
+                new CountryData { Id = UkCountry.Ids.England, Name = "England" }
             };
 
             A.CallTo(() =>
@@ -1834,7 +1834,7 @@
         {
             // Arrange
             var model = new OrganisationViewModel
-                { CompaniesRegistrationNumber = string.Empty, CompanyName = "Test Company" };
+            { CompaniesRegistrationNumber = string.Empty, CompanyName = "Test Company" };
 
             // Act
             await controller.OrganisationDetails(model);
@@ -2863,6 +2863,188 @@
 
             controller.ModelState.IsValid.Should().BeTrue();
             controller.ModelState.Keys.Should().NotContain(nameof(OrganisationViewModel.ProducerRegistrationNumber));
+        }
+
+        [Theory]
+        [MemberData(nameof(CountryTestData))]
+        public async Task OrganisationDetails_Post_HandlesCountryIdDetermination(
+    string apiCountryName,
+    string modelCountryId,
+    string expectedError,
+    string expectedCountryId)
+        {
+            // Arrange
+            var model = new OrganisationViewModel
+            {
+                Action = "Find Company",
+                CompaniesRegistrationNumber = "12345",
+                Address = new ExternalAddressData
+                {
+                    CountryId = modelCountryId != null ? new Guid(modelCountryId) : Guid.Empty
+                }
+            };
+
+            var apiModel = new DefraCompaniesHouseApiModel
+            {
+                Organisation = new Organisation
+                {
+                    Name = "Test Company",
+                    RegistrationNumber = "12345",
+                    RegisteredOffice = new RegisteredOffice
+                    {
+                        BuildingNumber = "123",
+                        Street = "Test Street",
+                        Town = "Test Town",
+                        Postcode = "TE1 1ST",
+                        Country = apiCountryName != null ? new Country { Name = apiCountryName } : new Country()
+                    }
+                }
+            };
+
+            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync(A<string>._, A<string>._))
+                .Returns(apiModel);
+
+            var countries = new List<CountryData> { new CountryData { Id = Guid.NewGuid(), Name = "United Kingdom" } };
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(countries);
+
+            // Act
+            var result = await controller.OrganisationDetails(model) as ViewResult;
+            var resultModel = result.Model as OrganisationViewModel;
+
+            // Assert
+            resultModel.Should().NotBeNull();
+            resultModel.Address.Should().NotBeNull();
+            resultModel.Address.CountryId.Should().Be(new Guid(expectedCountryId));
+            if (expectedError != null)
+            {
+                controller.ModelState.Should().ContainKey("CountryId")
+                    .WhoseValue.Errors.Should().Contain(e => e.ErrorMessage == expectedError);
+            }
+        }
+
+        public static IEnumerable<object[]> CountryTestData()
+        {
+            yield return new object[]
+            {
+                null,
+                UkCountry.Ids.England.ToString(),
+                null,
+                UkCountry.Ids.England.ToString()
+            };
+
+            yield return new object[]
+            {
+                "England",
+                null,
+                null,
+                UkCountry.Ids.England.ToString()
+            };
+
+            yield return new object[]
+            {
+                "Scotland",
+                UkCountry.Ids.England.ToString(),
+                null,
+                UkCountry.Ids.Scotland.ToString()
+            };
+
+            yield return new object[]
+            {
+                "Invalid Country",
+                UkCountry.Ids.England.ToString(),
+                null,
+                UkCountry.Ids.England.ToString()
+            };
+        }
+
+        [Theory]
+        [MemberData(nameof(AddressFieldCombinations))]
+        public async Task FindCompany_HandlesAddressAndCountryFieldsCorrectly(
+            string buildingNumber,
+            string buildingName,
+            string subBuildingName,
+            string street,
+            string countryName,
+            string expectedAddress1,
+            string expectedAddress2,
+            string expectedCountryId)
+        {
+            // Arrange
+            var apiModel = new DefraCompaniesHouseApiModel
+            {
+                Organisation = new Organisation
+                {
+                    Name = "Test Company",
+                    RegistrationNumber = "12345",
+                    RegisteredOffice = new RegisteredOffice
+                    {
+                        BuildingNumber = buildingNumber,
+                        BuildingName = buildingName,
+                        SubBuildingName = subBuildingName,
+                        Street = street,
+                        Town = "Test Town",
+                        Postcode = "TE1 1ST",
+                        Country = new Country { Name = countryName }
+                    }
+                }
+            };
+
+            A.CallTo(() => companiesHouseClient.GetCompanyDetailsAsync(A<string>._, A<string>._))
+                .Returns(apiModel);
+
+            // Act
+            var result = await controller.FindCompany("12345") as JsonResult;
+            var resultModel = result.Data as OrganisationViewModel;
+
+            // Assert
+            resultModel.Should().NotBeNull();
+            resultModel.Address.Address1.Should().Be(expectedAddress1);
+            resultModel.Address.Address2.Should().Be(expectedAddress2);
+            resultModel.Address.CountryId.Should().Be(new Guid(expectedCountryId));
+        }
+
+        public static IEnumerable<object[]> AddressFieldCombinations()
+        {
+            yield return new object[]
+            {
+                "123", null, null, "Test Street",
+                "England",
+                "123", "Test Street",
+                UkCountry.Ids.England.ToString()
+            };
+
+            yield return new object[]
+            {
+                null, "Manor House", null, "Test Street",
+                "Scotland",
+                "Manor House", "Test Street",
+                UkCountry.Ids.Scotland.ToString()
+            };
+
+            yield return new object[]
+            {
+                null, null, "Flat 1", "Test Street",
+                "Wales",
+                "Flat 1", "Test Street",
+                UkCountry.Ids.Wales.ToString()
+            };
+
+            yield return new object[]
+            {
+                null, null, null, "Test Street",
+                "Northern Ireland",
+                "Test Street", null,
+                UkCountry.Ids.NorthernIreland.ToString()
+            };
+
+            yield return new object[]
+            {
+                "123", "Manor House", "Flat 1", "Test Street",
+                "Invalid Country",
+                "123", "Test Street",
+                Guid.Empty.ToString()
+            };
         }
     }
 }
