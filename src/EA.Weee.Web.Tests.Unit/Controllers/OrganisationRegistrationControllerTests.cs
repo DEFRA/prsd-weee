@@ -2587,7 +2587,7 @@
                 .Returns(Task.FromResult(new OrganisationTransactionData()));
 
             // Act
-            var result = await controller.ContinueSmallProducerRegistration(organisationId, searchTerm) as RedirectToRouteResult;
+            var result = await controller.ContinueSmallProducerRegistration(organisationId, searchTerm, false) as RedirectToRouteResult;
 
             // Assert
             A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>._)).MustHaveHappenedOnceExactly();
@@ -3045,6 +3045,99 @@
                 "123", "Test Street",
                 Guid.Empty.ToString()
             };
+        }
+
+        [Fact]
+        public async Task ContinueSmallProducerRegistration_WhenSmallProducerNotFound_DeletesExistingTransactionData()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var searchTerm = TestFixture.Create<string>();
+            var smallProducerFound = false;
+
+            // Act
+            await controller.ContinueSmallProducerRegistration(organisationId, searchTerm, smallProducerFound);
+
+            // Assert
+            A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>._))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task ContinueSmallProducerRegistration_WhenSmallProducerFound_DoesNotDeleteExistingTransactionData()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var searchTerm = TestFixture.Create<string>();
+            var smallProducerFound = true;
+
+            // Act
+            await controller.ContinueSmallProducerRegistration(organisationId, searchTerm, smallProducerFound);
+
+            // Assert
+            A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>._))
+                .MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task JoinOrganisation_WhenNpwdMigratedAndNotComplete_ContinuesSmallProducerRegistration()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var searchTerm = TestFixture.Create<string>();
+            var smallProducerFound = true;
+
+            var organisationData = new PublicOrganisationData
+            {
+                NpwdMigrated = true,
+                NpwdMigratedComplete = false,
+                DisplayName = "Test Organisation"
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>.That.Matches(x => x.Id == organisationId)))
+                .Returns(organisationData);
+
+            // Act
+            var result = await controller.JoinOrganisation(organisationId, searchTerm, smallProducerFound) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("TonnageType");
+            result.RouteValues["searchTerm"].Should().Be(searchTerm);
+
+            A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>._))
+                .MustNotHaveHappened();
+            A.CallTo(() => transactionService.ContinueMigratedProducerTransactionData(A<string>._, organisationId))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public void OrganisationFound_Post_RedirectsToJoinOrganisationWithSmallProducerFound()
+        {
+            // Arrange
+            var viewModel = new OrganisationsFoundViewModel
+            {
+                OrganisationFoundViewModels = new List<OrganisationFoundViewModel>
+                {
+                    new OrganisationFoundViewModel
+                    {
+                        OrganisationName = "Test Organisation",
+                        OrganisationId = Guid.NewGuid(),
+                        CompanyRegistrationNumber = "123456789"
+                    }
+                },
+                SelectedOrganisationId = Guid.NewGuid(),
+                OrganisationFoundType = OrganisationFoundType.CompanyNumber
+            };
+
+            // Act
+            var result = controller.OrganisationFound(viewModel) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("JoinOrganisation");
+            result.RouteValues["SmallProducerFound"].Should().Be(true);
+            result.RouteValues["OrganisationId"].Should().Be(viewModel.SelectedOrganisationId.Value);
         }
     }
 }
