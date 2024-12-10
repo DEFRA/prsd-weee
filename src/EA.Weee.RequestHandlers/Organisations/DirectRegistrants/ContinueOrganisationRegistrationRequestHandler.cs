@@ -84,8 +84,18 @@
 
             data.NpwdMigrated = true;
             data.DirectRegistrantId = directRegistrant.Id;
-            data.OrganisationViewModel = CreateOrganisationViewModel(organisation, directRegistrant);
 
+            if (data.OrganisationViewModel != null)
+            {
+                data.OrganisationViewModel.CompaniesRegistrationNumber = organisation.CompanyRegistrationNumber;
+                data.OrganisationViewModel.ProducerRegistrationNumber = directRegistrant.ProducerRegistrationNumber;
+                data.OrganisationViewModel.CompanyName = organisation.Name;
+                data.OrganisationViewModel.BusinessTradingName = organisation.TradingName;
+            }
+            else
+            {
+                data.OrganisationViewModel = CreateOrganisationViewModel(organisation, directRegistrant);
+            }
             return data;
         }
 
