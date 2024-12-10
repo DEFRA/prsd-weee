@@ -39,12 +39,7 @@
                 return Guid.Empty;
             }
 
-            if (NameToIdMapping.TryGetValue(countryName, out var guid))
-            {
-                return guid;
-            }
-
-            throw new ArgumentException($"No matching GUID found for country: {countryName}");
+            return NameToIdMapping.TryGetValue(countryName, out var guid) ? guid : Guid.Empty;
         }
 
         public static bool IsValidId(Guid id)
