@@ -5,19 +5,26 @@
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.DataAccess.DataAccess;
+    using EA.Weee.Domain.Organisation;
+    using EA.Weee.Domain.Producer;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using Security;
     using System;
     using System.Threading.Tasks;
 
-    internal class ContinueOrganisationRegistrationRequestHandler : IRequestHandler<ContinueOrganisationRegistrationRequest, OrganisationTransactionData>
+    internal class ContinueOrganisationRegistrationRequestHandler
+        : IRequestHandler<ContinueOrganisationRegistrationRequest, OrganisationTransactionData>
     {
         private readonly IWeeeAuthorization authorization;
         private readonly ISmallProducerDataAccess smallProducerDataAccess;
         private readonly IOrganisationTransactionDataAccess organisationTransactionDataAccess;
         private readonly IJsonSerializer serializer;
 
-        public ContinueOrganisationRegistrationRequestHandler(IWeeeAuthorization authorization, ISmallProducerDataAccess smallProducerDataAccess, IOrganisationTransactionDataAccess organisationTransactionDataAccess, IJsonSerializer serializer)
+        public ContinueOrganisationRegistrationRequestHandler(
+            IWeeeAuthorization authorization,
+            ISmallProducerDataAccess smallProducerDataAccess,
+            IOrganisationTransactionDataAccess organisationTransactionDataAccess,
+            IJsonSerializer serializer)
         {
             this.authorization = authorization;
             this.smallProducerDataAccess = smallProducerDataAccess;
@@ -25,11 +32,28 @@
             this.serializer = serializer;
         }
 
-        public async Task<OrganisationTransactionData> HandleAsync(ContinueOrganisationRegistrationRequest request)
+        public async Task<OrganisationTransactionData> HandleAsync(
+            ContinueOrganisationRegistrationRequest request)
         {
             authorization.EnsureCanAccessExternalArea();
 
-            var directRegistrant = await smallProducerDataAccess.GetDirectRegistrantByOrganisationId(request.OrganisationId);
+            var (directRegistrant, organisation) = await ValidateAndGetOrganisation(request.OrganisationId);
+            var existingTransaction = await GetExistingTransaction();
+
+            var transactionData = existingTransaction != null
+                ? UpdateExistingTransaction(existingTransaction, directRegistrant, organisation)
+                : CreateNewTransaction(directRegistrant, organisation);
+
+            await SaveTransaction(transactionData);
+
+            return transactionData;
+        }
+
+        private async Task<(DirectRegistrant directRegistrant, Organisation organisation)>
+            ValidateAndGetOrganisation(Guid organisationId)
+        {
+            var directRegistrant = await smallProducerDataAccess
+                .GetDirectRegistrantByOrganisationId(organisationId);
             var organisation = directRegistrant.Organisation;
 
             if (!organisation.NpwdMigrated)
@@ -42,24 +66,58 @@
                 throw new InvalidOperationException("Migrated organisation is already complete");
             }
 
-            var organisationTransactionData = new OrganisationTransactionData()
+            return (directRegistrant, organisation);
+        }
+
+        private async Task<OrganisationTransaction> GetExistingTransaction()
+        {
+            return await organisationTransactionDataAccess.FindIncompleteTransactionForCurrentUserAsync();
+        }
+
+        private OrganisationTransactionData UpdateExistingTransaction(
+            OrganisationTransaction existingTransaction,
+            DirectRegistrant directRegistrant,
+            Organisation organisation)
+        {
+            var data = serializer.Deserialize<OrganisationTransactionData>(
+                existingTransaction.OrganisationJson);
+
+            data.NpwdMigrated = true;
+            data.DirectRegistrantId = directRegistrant.Id;
+            data.OrganisationViewModel = CreateOrganisationViewModel(organisation, directRegistrant);
+
+            return data;
+        }
+
+        private static OrganisationTransactionData CreateNewTransaction(
+            DirectRegistrant directRegistrant,
+            Organisation organisation)
+        {
+            return new OrganisationTransactionData
             {
                 NpwdMigrated = true,
                 DirectRegistrantId = directRegistrant.Id,
-                OrganisationViewModel = new OrganisationViewModel()
-                {
-                    CompaniesRegistrationNumber = organisation.CompanyRegistrationNumber,
-                    ProducerRegistrationNumber = directRegistrant.ProducerRegistrationNumber,
-                    CompanyName = organisation.Name,
-                    BusinessTradingName = organisation.TradingName,
-                }
+                OrganisationViewModel = CreateOrganisationViewModel(organisation, directRegistrant)
             };
+        }
 
-            var organisationJson = serializer.Serialize(organisationTransactionData);
+        private static OrganisationViewModel CreateOrganisationViewModel(
+            Organisation organisation,
+            DirectRegistrant directRegistrant)
+        {
+            return new OrganisationViewModel
+            {
+                CompaniesRegistrationNumber = organisation.CompanyRegistrationNumber,
+                ProducerRegistrationNumber = directRegistrant.ProducerRegistrationNumber,
+                CompanyName = organisation.Name,
+                BusinessTradingName = organisation.TradingName
+            };
+        }
 
+        private async Task SaveTransaction(OrganisationTransactionData transactionData)
+        {
+            var organisationJson = serializer.Serialize(transactionData);
             await organisationTransactionDataAccess.UpdateOrCreateTransactionAsync(organisationJson);
-
-            return organisationTransactionData;
         }
     }
 }
