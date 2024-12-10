@@ -18,6 +18,12 @@
         @Html.HiddenFor(m => m.NpwdMigrated)
 
         @Html.AntiForgeryToken()
+
+        if (Model.NpwdMigrated)
+        {
+            <p class="govuk-body">Your organisation has been migrated from the legacy NPWD system. Before you are able to complete a new producer registration, we require you to provide us some more information.</p>
+        }
+
         <header class="hgroup">
             <h1 class="govuk-heading-l">
                 @title
