@@ -18,7 +18,7 @@
         {
             if (countryId == Guid.Empty)
             {
-                yield return new ValidationResult("Please select a country",
+                yield return new ValidationResult("Enter country",
                     new[] { countryIdName });
             }
             else if (UkCountry.ValidIds.Contains(countryId) && !string.IsNullOrWhiteSpace(postCode))
