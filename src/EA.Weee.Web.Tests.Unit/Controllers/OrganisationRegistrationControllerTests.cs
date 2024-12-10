@@ -927,7 +927,7 @@
             var existingTransaction = new OrganisationTransactionData
             {
                 OrganisationType = ExternalOrganisationType.RegisteredCompany,
-                SearchTerm = null, 
+                SearchTerm = null,
                 PreviousRegistration = PreviouslyRegisteredProducerType.No
             };
 
@@ -1834,7 +1834,7 @@
         {
             // Arrange
             var model = new OrganisationViewModel
-                { CompaniesRegistrationNumber = string.Empty, CompanyName = "Test Company" };
+            { CompaniesRegistrationNumber = string.Empty, CompanyName = "Test Company" };
 
             // Act
             await controller.OrganisationDetails(model);
@@ -2868,10 +2868,10 @@
         [Theory]
         [MemberData(nameof(CountryTestData))]
         public async Task OrganisationDetails_Post_HandlesCountryIdDetermination(
-            string apiCountryName,
-            string modelCountryId,
-            string expectedError,
-            string expectedCountryId)
+    string apiCountryName,
+    string modelCountryId,
+    string expectedError,
+    string expectedCountryId)
         {
             // Arrange
             var model = new OrganisationViewModel
@@ -2888,9 +2888,15 @@
             {
                 Organisation = new Organisation
                 {
+                    Name = "Test Company",
+                    RegistrationNumber = "12345",
                     RegisteredOffice = new RegisteredOffice
                     {
-                        Country = apiCountryName != null ? new Country { Name = apiCountryName } : null
+                        BuildingNumber = "123",
+                        Street = "Test Street",
+                        Town = "Test Town",
+                        Postcode = "TE1 1ST",
+                        Country = apiCountryName != null ? new Country { Name = apiCountryName } : new Country()
                     }
                 }
             };
@@ -2907,6 +2913,8 @@
             var resultModel = result.Model as OrganisationViewModel;
 
             // Assert
+            resultModel.Should().NotBeNull();
+            resultModel.Address.Should().NotBeNull();
             resultModel.Address.CountryId.Should().Be(new Guid(expectedCountryId));
             if (expectedError != null)
             {
@@ -2914,14 +2922,40 @@
                     .WhoseValue.Errors.Should().Contain(e => e.ErrorMessage == expectedError);
             }
         }
+
         public static IEnumerable<object[]> CountryTestData()
         {
-            var englandGuid = "87C5FC23-39F2-4D96-B5F1-5EB100CA42DC";
+            yield return new object[]
+            {
+                null,
+                UkCountry.Ids.England.ToString(),
+                null,
+                UkCountry.Ids.England.ToString()
+            };
 
-            yield return new object[] { null, null, null, Guid.Empty.ToString() };
-            yield return new object[] { "England", null, null, englandGuid };
-            yield return new object[] { null, englandGuid, null, englandGuid };
-            yield return new object[] { "Invalid Country", englandGuid, null, englandGuid };
+            yield return new object[]
+            {
+                "England",
+                null,
+                null,
+                UkCountry.Ids.England.ToString()
+            };
+
+            yield return new object[]
+            {
+                "Scotland",
+                UkCountry.Ids.England.ToString(),
+                null,
+                UkCountry.Ids.Scotland.ToString()
+            };
+
+            yield return new object[]
+            {
+                "Invalid Country",
+                UkCountry.Ids.England.ToString(),
+                null,
+                UkCountry.Ids.England.ToString()
+            };
         }
 
         [Theory]
