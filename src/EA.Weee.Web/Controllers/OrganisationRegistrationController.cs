@@ -163,11 +163,14 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ContinueSmallProducerRegistration(Guid organisationId, string searchTerm)
+        public async Task<ActionResult> ContinueSmallProducerRegistration(Guid organisationId, string searchTerm, bool smallProducerFound)
         {
             var accessToken = User.GetAccessToken();
 
-            await transactionService.DeleteOrganisationTransactionData(accessToken);
+            if (!smallProducerFound)
+            {
+                await transactionService.DeleteOrganisationTransactionData(accessToken);
+            }
 
             await transactionService.ContinueMigratedProducerTransactionData(accessToken, organisationId);
 
@@ -175,7 +178,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> JoinOrganisation(Guid organisationId, string searchTerm = null)
+        public async Task<ActionResult> JoinOrganisation(Guid organisationId, string searchTerm = null, bool smallProducerFound = false)
         {
             using (var client = apiClient())
             {
@@ -204,7 +207,7 @@
 
                 if (organisationData.NpwdMigrated && !organisationData.NpwdMigratedComplete)
                 {
-                    return await ContinueSmallProducerRegistration(organisationId, searchTerm);
+                    return await ContinueSmallProducerRegistration(organisationId, searchTerm, smallProducerFound);
                 }
 
                 if (existingAssociation != null)
@@ -622,7 +625,7 @@
                     OrganisationFoundType = organisationsExistSearchResults.FoundType
                 };
 
-                return View("OrganisationFound", vm);
+                return View(nameof(OrganisationFound), vm);
             }
 
             return View(new OrganisationsFoundViewModel());
@@ -637,9 +640,10 @@
                 return View(orgsFoundViewModel);
             }
 
-            return RedirectToAction("JoinOrganisation", new
+            return RedirectToAction(nameof(JoinOrganisation), new
             {
-                OrganisationId = orgsFoundViewModel.SelectedOrganisationId.Value
+                OrganisationId = orgsFoundViewModel.SelectedOrganisationId.Value,
+                SmallProducerFound = true
             });
         }
 
