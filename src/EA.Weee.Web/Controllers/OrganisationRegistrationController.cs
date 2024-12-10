@@ -501,11 +501,20 @@
                 };
             }
 
-            var model = existingTransaction.OrganisationViewModel ?? new OrganisationViewModel
+            OrganisationViewModel model;
+            if (existingTransaction.OrganisationViewModel != null)
             {
-                CompanyName = existingTransaction.SearchTerm,
-                OrganisationType = existingTransaction.OrganisationType ?? ExternalOrganisationType.RegisteredCompany
-            };
+                model = existingTransaction.OrganisationViewModel;
+                model.OrganisationType = existingTransaction.OrganisationType ?? ExternalOrganisationType.RegisteredCompany;
+            }
+            else
+            {
+                model = new OrganisationViewModel
+                {
+                    CompanyName = existingTransaction.SearchTerm,
+                    OrganisationType = existingTransaction.OrganisationType ?? ExternalOrganisationType.RegisteredCompany
+                };
+            }
 
             model.HasAuthorisedRepresentitive = existingTransaction?.AuthorisedRepresentative == YesNoType.Yes;
 
