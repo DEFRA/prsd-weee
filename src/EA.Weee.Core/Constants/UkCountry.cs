@@ -27,8 +27,6 @@
             { "Wales", Ids.Wales },
             { "Scotland", Ids.Scotland },
             { "Northern Ireland", Ids.NorthernIreland },
-            { "Great Britain", Ids.England },
-            { "United Kingdom", Ids.England },
             { "Not specified", Guid.Empty }
         };
 
@@ -39,12 +37,7 @@
                 return Guid.Empty;
             }
 
-            if (NameToIdMapping.TryGetValue(countryName, out var guid))
-            {
-                return guid;
-            }
-
-            throw new ArgumentException($"No matching GUID found for country: {countryName}");
+            return NameToIdMapping.TryGetValue(countryName, out var guid) ? guid : Guid.Empty;
         }
 
         public static bool IsValidId(Guid id)
