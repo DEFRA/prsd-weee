@@ -115,6 +115,46 @@
             result.OrganisationViewModel.BusinessTradingName.Should().Be("Trading Name");
         }
 
+        [Fact]
+        public async Task HandleAsync_WithExistingTransaction_UpdatesExistingData()
+        {
+            // Arrange
+            var request = new ContinueOrganisationRegistrationRequest(organisationId);
+            var existingTransaction = new OrganisationTransaction { OrganisationJson = "existing-json" };
+            var existingData = new OrganisationTransactionData();
+
+            SetupValidDirectRegistrant();
+            A.CallTo(() => organisationTransactionDataAccess.FindIncompleteTransactionForCurrentUserAsync())
+                .Returns(existingTransaction);
+            A.CallTo(() => serializer.Deserialize<OrganisationTransactionData>("existing-json"))
+                .Returns(existingData);
+
+            // Act
+            var result = await handler.HandleAsync(request);
+
+            // Assert
+            result.Should().BeSameAs(existingData);
+            A.CallTo(() => serializer.Serialize(existingData)).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task HandleAsync_WithNoExistingTransaction_CreatesNewData()
+        {
+            // Arrange
+            var request = new ContinueOrganisationRegistrationRequest(organisationId);
+            SetupValidDirectRegistrant();
+            A.CallTo(() => organisationTransactionDataAccess.FindIncompleteTransactionForCurrentUserAsync())
+                .Returns(Task.FromResult<OrganisationTransaction>(null));
+
+            // Act
+            var result = await handler.HandleAsync(request);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Should().BeOfType<OrganisationTransactionData>();
+            result.NpwdMigrated.Should().BeTrue();
+        }
+
         private (DirectRegistrant, Organisation) SetupValidDirectRegistrant(
             bool npwdMigrated = true,
             bool npwdMigratedComplete = false)
