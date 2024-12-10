@@ -27,8 +27,6 @@
             { "Wales", Ids.Wales },
             { "Scotland", Ids.Scotland },
             { "Northern Ireland", Ids.NorthernIreland },
-            { "Great Britain", Ids.England },
-            { "United Kingdom", Ids.England },
             { "Not specified", Guid.Empty }
         };
 

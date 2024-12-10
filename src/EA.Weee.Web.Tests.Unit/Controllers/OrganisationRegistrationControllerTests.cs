@@ -1096,7 +1096,7 @@
 
             var countries = new List<CountryData>
             {
-                new CountryData { Id = UkCountry.Ids.England, Name = "United Kingdom" }
+                new CountryData { Id = UkCountry.Ids.England, Name = "England" }
             };
 
             A.CallTo(() =>
@@ -2966,7 +2966,6 @@
             string subBuildingName,
             string street,
             string countryName,
-            string existingCountryId,
             string expectedAddress1,
             string expectedAddress2,
             string expectedCountryId)
@@ -3010,7 +3009,7 @@
             yield return new object[]
             {
                 "123", null, null, "Test Street",
-                "England", null,
+                "England",
                 "123", "Test Street",
                 UkCountry.Ids.England.ToString()
             };
@@ -3018,7 +3017,7 @@
             yield return new object[]
             {
                 null, "Manor House", null, "Test Street",
-                "Scotland", null,
+                "Scotland",
                 "Manor House", "Test Street",
                 UkCountry.Ids.Scotland.ToString()
             };
@@ -3026,7 +3025,7 @@
             yield return new object[]
             {
                 null, null, "Flat 1", "Test Street",
-                "Wales", null,
+                "Wales",
                 "Flat 1", "Test Street",
                 UkCountry.Ids.Wales.ToString()
             };
@@ -3034,7 +3033,7 @@
             yield return new object[]
             {
                 null, null, null, "Test Street",
-                "Northern Ireland", null,
+                "Northern Ireland",
                 "Test Street", null,
                 UkCountry.Ids.NorthernIreland.ToString()
             };
@@ -3042,7 +3041,7 @@
             yield return new object[]
             {
                 "123", "Manor House", "Flat 1", "Test Street",
-                "Invalid Country", null,
+                "Invalid Country",
                 "123", "Test Street",
                 Guid.Empty.ToString()
             };

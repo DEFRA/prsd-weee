@@ -3,7 +3,6 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core;
-    using EA.Weee.Core.Constants;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
@@ -11,7 +10,6 @@
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Producer.Filters;
-    using EA.Weee.Web.Areas.Producer.Mappings.ToRequest;
     using EA.Weee.Web.Areas.Producer.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Constant;
@@ -23,7 +21,6 @@
     using EA.Weee.Web.Services.Caching;
     using System;
     using System.Collections.Generic;
-    using System.Configuration;
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
