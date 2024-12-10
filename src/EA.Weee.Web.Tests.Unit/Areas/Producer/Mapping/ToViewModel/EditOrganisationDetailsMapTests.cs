@@ -63,11 +63,18 @@
             result.Organisation.OrganisationType.Should().Be(expectedType);
         }
 
-        [Fact]
-        public void Map_ShouldUseCurrentSubmissionDataWhenAvailable()
+        [Theory]
+        [InlineData(true)]
+        [InlineData(false)]
+        public void Map_ShouldUseCurrentSubmissionDataWhenAvailable(bool hasAuthorisedRep)
         {
             // Arrange
-            var source = fixture.Create<SmallProducerSubmissionMapperData>();
+            var smallSubmissionData = fixture.Build<SmallProducerSubmissionData>()
+                .With(a => a.HasAuthorisedRepresentitive, hasAuthorisedRep).Create();
+
+            var source = fixture.Build<SmallProducerSubmissionMapperData>()
+                .With(a => a.SmallProducerSubmissionData, smallSubmissionData).Create();
+            
             var submissionData = source.SmallProducerSubmissionData;
 
             // Act

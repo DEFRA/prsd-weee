@@ -23,7 +23,7 @@
 
             // Assert
             result.Should().HaveCount(1);
-            result[0].ErrorMessage.Should().Be("Please select a country");
+            result[0].ErrorMessage.Should().Be("Enter country");
             result[0].MemberNames.Should().ContainSingle().Which.Should().Be(countryIdName);
         }
 
