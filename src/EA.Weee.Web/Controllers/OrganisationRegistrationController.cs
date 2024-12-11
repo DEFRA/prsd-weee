@@ -172,6 +172,8 @@
             {
                 await transactionService.DeleteOrganisationTransactionData(accessToken);
 
+                await transactionService.ContinueMigratedProducerTransactionData(accessToken, organisationId);
+
                 return RedirectToAction(nameof(TonnageType), new { searchTerm });
             }
 
@@ -182,7 +184,7 @@
             // this means the user has been around the loop, completed all the data, found their organisation and are trying to re-join it.
             // as all data has been completed indicated by smallProducerFound being true, just complete the organisation.
             // we shouldn't get here if the organisation isn't an NPWD migrated one.
-            if (existingTransaction != null && smallProducerFound && continuedData != null)
+            if (existingTransaction != null && continuedData != null)
             {
                 if (existingTransaction.AuthorisedRepresentative == YesNoType.Yes)
                 {
