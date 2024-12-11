@@ -2602,6 +2602,11 @@
             result.Should().NotBeNull();
             result.RouteValues["searchTerm"].Should().Be(searchTerm);
             result.RouteValues["action"].Should().Be("TonnageType");
+
+            A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>._))
+                .MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionService.ContinueMigratedProducerTransactionData(A<string>.Ignored, organisationId))
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
