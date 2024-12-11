@@ -2,6 +2,7 @@
 {
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
+    using EA.Weee.Core.Organisations.Base;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.Domain.Producer;
@@ -153,6 +154,89 @@
             result.Should().NotBeNull();
             result.Should().BeOfType<OrganisationTransactionData>();
             result.NpwdMigrated.Should().BeTrue();
+        }
+
+        [Fact]
+        public async Task HandleAsync_WithExistingTransaction_AndNullOrganisationViewModel_CreatesNewViewModel()
+        {
+            // Arrange
+            var request = new ContinueOrganisationRegistrationRequest(organisationId);
+            var existingTransaction = new OrganisationTransaction { OrganisationJson = "existing-json" };
+            var existingData = new OrganisationTransactionData { OrganisationViewModel = null };
+            var (directRegistrant, organisation) = SetupValidDirectRegistrant();
+
+            A.CallTo(() => organisationTransactionDataAccess.FindIncompleteTransactionForCurrentUserAsync())
+                .Returns(existingTransaction);
+            A.CallTo(() => serializer.Deserialize<OrganisationTransactionData>("existing-json"))
+                .Returns(existingData);
+
+            // Act
+            var result = await handler.HandleAsync(request);
+
+            // Assert
+            result.OrganisationViewModel.Should().NotBeNull();
+            result.OrganisationViewModel.CompaniesRegistrationNumber.Should().Be(organisation.CompanyRegistrationNumber);
+            result.OrganisationViewModel.ProducerRegistrationNumber.Should().Be(directRegistrant.ProducerRegistrationNumber);
+            result.OrganisationViewModel.CompanyName.Should().Be(organisation.Name);
+            result.OrganisationViewModel.BusinessTradingName.Should().Be(organisation.TradingName);
+        }
+
+        [Fact]
+        public async Task HandleAsync_WithExistingTransaction_AndExistingOrganisationViewModel_UpdatesViewModel()
+        {
+            // Arrange
+            var request = new ContinueOrganisationRegistrationRequest(organisationId);
+            var existingTransaction = new OrganisationTransaction { OrganisationJson = "existing-json" };
+            var existingViewModel = new OrganisationViewModel
+            {
+                CompaniesRegistrationNumber = "OLD123",
+                ProducerRegistrationNumber = "OLD/PRN",
+                CompanyName = "Old Name",
+                BusinessTradingName = "Old Trading Name"
+            };
+            var existingData = new OrganisationTransactionData { OrganisationViewModel = existingViewModel };
+            var (directRegistrant, organisation) = SetupValidDirectRegistrant();
+
+            A.CallTo(() => organisationTransactionDataAccess.FindIncompleteTransactionForCurrentUserAsync())
+                .Returns(existingTransaction);
+            A.CallTo(() => serializer.Deserialize<OrganisationTransactionData>("existing-json"))
+                .Returns(existingData);
+
+            // Act
+            var result = await handler.HandleAsync(request);
+
+            // Assert
+            result.OrganisationViewModel.Should().BeSameAs(existingViewModel);
+            result.OrganisationViewModel.CompaniesRegistrationNumber.Should().Be(organisation.CompanyRegistrationNumber);
+            result.OrganisationViewModel.ProducerRegistrationNumber.Should().Be(directRegistrant.ProducerRegistrationNumber);
+            result.OrganisationViewModel.CompanyName.Should().Be(organisation.Name);
+            result.OrganisationViewModel.BusinessTradingName.Should().Be(organisation.TradingName);
+        }
+
+        [Fact]
+        public async Task HandleAsync_WithExistingTransaction_SetsNpwdMigratedAndDirectRegistrantId()
+        {
+            // Arrange
+            var request = new ContinueOrganisationRegistrationRequest(organisationId);
+            var existingTransaction = new OrganisationTransaction { OrganisationJson = "existing-json" };
+            var existingData = new OrganisationTransactionData
+            {
+                NpwdMigrated = false,
+                DirectRegistrantId = Guid.Empty
+            };
+            var (directRegistrant, _) = SetupValidDirectRegistrant();
+
+            A.CallTo(() => organisationTransactionDataAccess.FindIncompleteTransactionForCurrentUserAsync())
+                .Returns(existingTransaction);
+            A.CallTo(() => serializer.Deserialize<OrganisationTransactionData>("existing-json"))
+                .Returns(existingData);
+
+            // Act
+            var result = await handler.HandleAsync(request);
+
+            // Assert
+            result.NpwdMigrated.Should().BeTrue();
+            result.DirectRegistrantId.Should().Be(directRegistrant.Id);
         }
 
         private (DirectRegistrant, Organisation) SetupValidDirectRegistrant(
