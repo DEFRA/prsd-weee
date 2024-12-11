@@ -167,12 +167,29 @@
         {
             var accessToken = User.GetAccessToken();
 
-            if (!smallProducerFound)
+            var existingTransaction = await transactionService.GetOrganisationTransactionData(accessToken);
+
+            var continuedData = await transactionService.ContinueMigratedProducerTransactionData(accessToken, organisationId);
+
+            // this means the user has been around the loop, completed all the data, found their organisation and are trying to re-join it.
+            // as all data has been completed indicated by smallProducerFound being true, just complete the organisation.
+            // we shouldn't get here if the organisation isn't an NPWD migrated one.
+            if (existingTransaction != null && smallProducerFound && continuedData != null)
             {
-                await transactionService.DeleteOrganisationTransactionData(accessToken);
+                if (existingTransaction.AuthorisedRepresentative == YesNoType.Yes)
+                {
+                    var returnUrl = Url.Action(nameof(OrganisationDetails));
+                    return RedirectToAction(nameof(RepresentingCompanyDetails), typeof(OrganisationRegistrationController).GetControllerName(), new { returnUrl });
+                }
+
+                await transactionService.CompleteTransaction(accessToken, continuedData.DirectRegistrantId);
+
+                await cache.InvalidateOrganisationSearch();
+
+                return RedirectToAction(nameof(RegistrationComplete), typeof(OrganisationRegistrationController).GetControllerName(), new { organisationId });
             }
 
-            await transactionService.ContinueMigratedProducerTransactionData(accessToken, organisationId);
+            await transactionService.DeleteOrganisationTransactionData(accessToken);
 
             return RedirectToAction(nameof(TonnageType), new { searchTerm });
         }
