@@ -3250,5 +3250,39 @@
             result.RouteValues["SmallProducerFound"].Should().Be(true);
             result.RouteValues["OrganisationId"].Should().Be(viewModel.SelectedOrganisationId.Value);
         }
+
+        [Fact]
+        public async Task JoinOrganisation_WhenNpwdMigratedAndNotComplete_ContinuesSmallProducerRegistration()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var searchTerm = TestFixture.Create<string>();
+            var smallProducerFound = true;
+
+            var organisationData = new PublicOrganisationData
+            {
+                NpwdMigrated = true,
+                NpwdMigratedComplete = false,
+                DisplayName = "Test Organisation"
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>.That.Matches(x => x.Id == organisationId)))
+                .Returns(organisationData);
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._)).Returns<OrganisationTransactionData>(null);
+
+            // Act
+            var result = await controller.JoinOrganisation(organisationId, searchTerm, smallProducerFound) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("TonnageType");
+            result.RouteValues["searchTerm"].Should().Be(searchTerm);
+
+            A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>._))
+                .MustNotHaveHappened();
+            A.CallTo(() => transactionService.ContinueMigratedProducerTransactionData(A<string>._, organisationId))
+                .MustHaveHappenedOnceExactly();
+        }
     }
 }

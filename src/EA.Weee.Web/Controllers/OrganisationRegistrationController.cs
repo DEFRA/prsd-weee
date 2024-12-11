@@ -189,7 +189,10 @@
                 return RedirectToAction(nameof(RegistrationComplete), typeof(OrganisationRegistrationController).GetControllerName(), new { organisationId });
             }
 
-            await transactionService.DeleteOrganisationTransactionData(accessToken);
+            if (!smallProducerFound)
+            {
+                await transactionService.DeleteOrganisationTransactionData(accessToken);
+            }
 
             return RedirectToAction(nameof(TonnageType), new { searchTerm });
         }
