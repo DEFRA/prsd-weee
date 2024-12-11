@@ -7,13 +7,13 @@
     using EA.Prsd.Core.Helpers;
     using EA.Weee.Api.Client.Models;
     using EA.Weee.Core.Constants;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Core.Search;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Constant;
-    using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services.Caching;
     using EA.Weee.Web.ViewModels.OrganisationRegistration.Type;
     using FakeItEasy;
@@ -23,7 +23,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
-    using System.Web.Caching;
     using System.Web.Mvc;
     using Web.Controllers;
     using Web.ViewModels.OrganisationRegistration;
@@ -3080,25 +3079,137 @@
         }
 
         [Fact]
-        public async Task JoinOrganisation_WhenNpwdMigratedAndNotComplete_ContinuesSmallProducerRegistration()
+        public async Task ContinueSmallProducerRegistration_WhenSmallProducerNotFound_DeletesExistingTransactionDataAndRedirectsToTonnageType()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var searchTerm = TestFixture.Create<string>();
+            var smallProducerFound = false;
+
+            A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>._))
+                .Returns(Task.CompletedTask);
+
+            A.CallTo(() => transactionService.ContinueMigratedProducerTransactionData(A<string>._, organisationId))
+                .Returns(Task.FromResult<OrganisationTransactionData>(null));
+
+            // Act
+            var result = await controller.ContinueSmallProducerRegistration(organisationId, searchTerm, smallProducerFound) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("TonnageType");
+            result.RouteValues["searchTerm"].Should().Be(searchTerm);
+            A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>._))
+                .MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, A<Guid?>._))
+                .MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task ContinueSmallProducerRegistration_WhenExistingTransactionAndSmallProducerFoundWithAuthorisedRep_RedirectsToRepresentingCompanyDetails()
         {
             // Arrange
             var organisationId = Guid.NewGuid();
             var searchTerm = TestFixture.Create<string>();
             var smallProducerFound = true;
 
-            var organisationData = new PublicOrganisationData
+            var existingTransaction = new OrganisationTransactionData
             {
-                NpwdMigrated = true,
-                NpwdMigratedComplete = false,
-                DisplayName = "Test Organisation"
+                AuthorisedRepresentative = YesNoType.Yes
             };
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetPublicOrganisationInfo>.That.Matches(x => x.Id == organisationId)))
-                .Returns(organisationData);
+            var continuedData = new OrganisationTransactionData();
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(existingTransaction);
+
+            A.CallTo(() => transactionService.ContinueMigratedProducerTransactionData(A<string>._, organisationId))
+                .Returns(continuedData);
+
+            // Mock the UrlHelper
+            var urlHelper = A.Fake<UrlHelper>();
+            var returnUrl = "/OrganisationDetails";
+            A.CallTo(() => urlHelper.Action("OrganisationDetails")).Returns(returnUrl);
+            controller.Url = urlHelper;
 
             // Act
-            var result = await controller.JoinOrganisation(organisationId, searchTerm, smallProducerFound) as RedirectToRouteResult;
+            var result = await controller.ContinueSmallProducerRegistration(organisationId, searchTerm, smallProducerFound) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("RepresentingCompanyDetails");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+            result.RouteValues["returnUrl"].Should().Be(returnUrl);
+
+            A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>._))
+                .MustNotHaveHappened();
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, A<Guid?>._))
+                .MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task ContinueSmallProducerRegistration_WhenExistingTransactionAndSmallProducerFoundWithoutAuthorisedRep_CompletesRegistration()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var searchTerm = TestFixture.Create<string>();
+            var smallProducerFound = true;
+
+            var existingTransaction = new OrganisationTransactionData
+            {
+                AuthorisedRepresentative = YesNoType.No,
+                DirectRegistrantId = TestFixture.Create<Guid?>()
+            };
+
+            var continuedData = new OrganisationTransactionData()
+            {
+                DirectRegistrantId = Guid.NewGuid()
+            };
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(existingTransaction);
+
+            A.CallTo(() => transactionService.ContinueMigratedProducerTransactionData(A<string>._, organisationId))
+                .Returns(continuedData);
+
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, existingTransaction.DirectRegistrantId))
+                .Returns(organisationId);
+
+            // Act
+            var result = await controller.ContinueSmallProducerRegistration(organisationId, searchTerm, smallProducerFound) as RedirectToRouteResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("RegistrationComplete");
+            result.RouteValues["controller"].Should().Be("OrganisationRegistration");
+            result.RouteValues["organisationId"].Should().Be(organisationId);
+
+            A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>._))
+                .MustNotHaveHappened();
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, continuedData.DirectRegistrantId))
+                .MustHaveHappenedOnceExactly();
+            A.CallTo(() => weeeCache.InvalidateOrganisationSearch())
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task ContinueSmallProducerRegistration_WhenNoContinuedData_DeletesTransactionAndRedirectsToTonnageType()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var searchTerm = TestFixture.Create<string>();
+            var smallProducerFound = true;
+
+            var existingTransaction = new OrganisationTransactionData();
+
+            A.CallTo(() => transactionService.GetOrganisationTransactionData(A<string>._))
+                .Returns(existingTransaction);
+
+            A.CallTo(() => transactionService.ContinueMigratedProducerTransactionData(A<string>._, organisationId))
+                .Returns(Task.FromResult<OrganisationTransactionData>(null));
+
+            // Act
+            var result = await controller.ContinueSmallProducerRegistration(organisationId, searchTerm, smallProducerFound) as RedirectToRouteResult;
 
             // Assert
             result.Should().NotBeNull();
@@ -3106,9 +3217,9 @@
             result.RouteValues["searchTerm"].Should().Be(searchTerm);
 
             A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>._))
-                .MustNotHaveHappened();
-            A.CallTo(() => transactionService.ContinueMigratedProducerTransactionData(A<string>._, organisationId))
                 .MustHaveHappenedOnceExactly();
+            A.CallTo(() => transactionService.CompleteTransaction(A<string>._, A<Guid?>._))
+                .MustNotHaveHappened();
         }
 
         [Fact]
