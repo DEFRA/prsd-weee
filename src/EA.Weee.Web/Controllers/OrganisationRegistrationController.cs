@@ -167,6 +167,14 @@
         {
             var accessToken = User.GetAccessToken();
 
+            // Handle the case where no producer was found first, before making unnecessary service calls
+            if (!smallProducerFound)
+            {
+                await transactionService.DeleteOrganisationTransactionData(accessToken);
+
+                return RedirectToAction(nameof(TonnageType), new { searchTerm });
+            }
+
             var existingTransaction = await transactionService.GetOrganisationTransactionData(accessToken);
 
             var continuedData = await transactionService.ContinueMigratedProducerTransactionData(accessToken, organisationId);
@@ -187,11 +195,6 @@
                 await cache.InvalidateOrganisationSearch();
 
                 return RedirectToAction(nameof(RegistrationComplete), typeof(OrganisationRegistrationController).GetControllerName(), new { organisationId });
-            }
-
-            if (!smallProducerFound)
-            {
-                await transactionService.DeleteOrganisationTransactionData(accessToken);
             }
 
             return RedirectToAction(nameof(TonnageType), new { searchTerm });
