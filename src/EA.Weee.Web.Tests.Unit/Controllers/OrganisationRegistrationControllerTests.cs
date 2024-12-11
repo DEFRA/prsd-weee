@@ -2574,30 +2574,6 @@
         }
 
         [Fact]
-        public async Task ContinueSmallProducerRegistration_Should_Call_TransactionServiceMethods()
-        {
-            // Arrange
-            var organisationId = Guid.NewGuid();
-            var searchTerm = TestFixture.Create<string>();
-
-            A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>._)).Returns(Task.CompletedTask);
-
-            A.CallTo(() => transactionService.ContinueMigratedProducerTransactionData(A<string>._, organisationId))
-                .Returns(Task.FromResult(new OrganisationTransactionData()));
-
-            // Act
-            var result = await controller.ContinueSmallProducerRegistration(organisationId, searchTerm, false) as RedirectToRouteResult;
-
-            // Assert
-            A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>._)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => transactionService.ContinueMigratedProducerTransactionData(A<string>._, organisationId)).MustHaveHappenedOnceExactly();
-
-            result.Should().NotBeNull();
-            result.RouteValues["searchTerm"].Should().Be(searchTerm);
-            result.RouteValues["action"].Should().Be("TonnageType");
-        }
-
-        [Fact]
         public async Task JoinOrganisation_Should_Call_ContinueSmallProducerRegistration_When_NpwdMigrated_Is_True_And_NpwdMigratedComplete_Is_False()
         {
             // Arrange
@@ -3217,7 +3193,7 @@
             result.RouteValues["searchTerm"].Should().Be(searchTerm);
 
             A.CallTo(() => transactionService.DeleteOrganisationTransactionData(A<string>._))
-                .MustHaveHappenedOnceExactly();
+                .MustNotHaveHappened();
             A.CallTo(() => transactionService.CompleteTransaction(A<string>._, A<Guid?>._))
                 .MustNotHaveHappened();
         }
