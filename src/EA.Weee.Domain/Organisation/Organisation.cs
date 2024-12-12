@@ -132,7 +132,7 @@
 
             Name = companyName;
             TradingName = tradingName;
-            CompanyRegistrationNumber = companyRegistrationNumber;
+            CompanyRegistrationNumber = companyNumber;
         }
 
         public void UpdateSoleTraderDetails(string companyName, string tradingName)
