@@ -78,7 +78,7 @@
                     organisation.UpdateMigratedOrganisationType(GetOrganisationType(organisationTransactionData));
                     organisation.UpdateDirectRegistrantDetails(organisationTransactionData.OrganisationViewModel.CompanyName,
                         organisationTransactionData.OrganisationViewModel.BusinessTradingName,
-                        organisation.CompanyRegistrationNumber);
+                        GetCompanyRegistrationNumber(organisation, organisationTransactionData));
                     organisation.ToMigrated();
 
                     var brandName = await CreateAndAddBrandName(organisationTransactionData);
@@ -127,6 +127,21 @@
                     throw;
                 }
             }
+        }
+
+        private static string GetCompanyRegistrationNumber(Organisation organisation,
+            OrganisationTransactionData organisationTransactionData)
+        {
+            var companyRegistrationNumber = organisation.CompanyRegistrationNumber;
+            if (string.IsNullOrWhiteSpace(companyRegistrationNumber) &&
+                !string.IsNullOrWhiteSpace(organisationTransactionData.OrganisationViewModel
+                    .CompaniesRegistrationNumber))
+            {
+                companyRegistrationNumber = organisationTransactionData.OrganisationViewModel
+                    .CompaniesRegistrationNumber;
+            }
+
+            return companyRegistrationNumber;
         }
 
         private static Domain.Organisation.OrganisationType GetOrganisationType(OrganisationTransactionData organisationTransactionData)
