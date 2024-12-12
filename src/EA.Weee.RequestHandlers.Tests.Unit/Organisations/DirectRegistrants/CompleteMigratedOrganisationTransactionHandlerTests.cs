@@ -407,13 +407,46 @@
             }
         }
 
+        [Theory]
+        [InlineData(null, "1234567", "1234567")] // Empty original, uses new
+        [InlineData("         ", "1234567", "1234567")]   // Empty original, uses new
+        [InlineData("67890", "1234567", "67890")] // Keeps original if exists
+        [InlineData("67890", "", "67890")]    // Keeps original if new is empty
+        public async Task HandleAsync_UpdatesCompanyRegistrationNumber_Correctly(
+            string existingNumber,
+            string newNumber,
+            string expectedNumber)
+        {
+            // Arrange
+            var request = new CompleteMigratedOrganisationTransaction(Guid.NewGuid());
+            var organisation = Organisation.CreateRegisteredCompany(CompanyName, existingNumber, TradingName);
+            organisation.SetNpwdMigrated(true);
+            var directRegistrant = A.Fake<DirectRegistrant>();
+            var transaction = new OrganisationTransaction { OrganisationJson = "{}" };
+
+            A.CallTo(() => directRegistrant.Organisation).Returns(organisation);
+            A.CallTo(() => dataAccess.FindIncompleteTransactionForCurrentUserAsync()).Returns(transaction);
+            A.CallTo(() => genericDataAccess.GetById<DirectRegistrant>(request.DirectRegistrantId)).Returns(directRegistrant);
+
+            SetupValidOrganisationTransaction(
+                ExternalOrganisationType.RegisteredCompany,
+                companyRegNumber: newNumber);
+
+            // Act
+            await handler.HandleAsync(request);
+
+            // Assert
+            organisation.CompanyRegistrationNumber.Should().Be(expectedNumber);
+        }
+
         private OrganisationTransactionData SetupValidOrganisationTransaction(
-            ExternalOrganisationType organisationType = ExternalOrganisationType.RegisteredCompany,
-            string brandNames = null,
-            YesNoType? authorisedRepresentative = null,
-            string companyName = CompanyName,
-            string businessTradingName = TradingName,
-            ExternalAddressData addressData = null)
+                                            ExternalOrganisationType organisationType = ExternalOrganisationType.RegisteredCompany,
+                                            string brandNames = null,
+                                            YesNoType? authorisedRepresentative = null,
+                                            string companyName = CompanyName,
+                                            string businessTradingName = TradingName,
+                                            ExternalAddressData addressData = null,
+                                            string companyRegNumber = CompanyRegNumber)
         {
             var transaction = new OrganisationTransaction { OrganisationJson = "{}" };
             A.CallTo(() => dataAccess.FindIncompleteTransactionForCurrentUserAsync())
@@ -433,7 +466,7 @@
                 {
                     CompanyName = companyName,
                     BusinessTradingName = businessTradingName,
-                    CompaniesRegistrationNumber = CompanyRegNumber,
+                    CompaniesRegistrationNumber = companyRegNumber,  // Use the parameter instead of constant
                     Address = addressData,
                     EEEBrandNames = brandNames
                 },
