@@ -4,8 +4,10 @@
     using EA.Weee.Core.Search;
     using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess;
+    using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.Organisation;
+    using System;
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
@@ -15,17 +17,21 @@
     {
         private readonly WeeeContext context;
         private readonly IMap<Address, AddressData> addressMapper;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
 
-        public FetchOrganisationSearchResultsForCacheDataAccess(WeeeContext context, IMap<Address, AddressData> addressMapper)
+        public FetchOrganisationSearchResultsForCacheDataAccess(WeeeContext context, IMap<Address, AddressData> addressMapper, ISystemDataDataAccess systemDataDataAccess)
         {
             this.context = context;
             this.addressMapper = addressMapper;
+            this.systemDataDataAccess = systemDataDataAccess;
         }
 
-        public async Task<IList<OrganisationSearchResult>> FetchCompleteOrganisations()
+        public async Task<IList<OrganisationSearchResult>> FetchCompleteOrganisations(DateTime smallProducerEnabledFrom)
         {
+            var currentDate = await systemDataDataAccess.GetSystemDateTime();
+
             var completeOrganisations = await context.Organisations
-                .Where(p => p.OrganisationStatus.Value == Domain.Organisation.OrganisationStatus.Complete.Value)
+                .Where(p => p.OrganisationStatus.Value == Domain.Organisation.OrganisationStatus.Complete.Value && (!p.NpwdMigrated || (p.NpwdMigrated && currentDate >= smallProducerEnabledFrom)))
                 .Include(o => o.BusinessAddress)
                 .Include(o => o.ProducerBalancingScheme)
                 .Select(o => new
