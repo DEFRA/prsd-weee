@@ -6,6 +6,7 @@
     using Domain.Organisation;
     using EA.Weee.Core.Search;
     using EA.Weee.DataAccess;
+    using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.Producer;
     using EA.Weee.RequestHandlers.Search.FetchOrganisationSearchResultsForCache;
@@ -26,6 +27,7 @@
         private readonly Fixture fixture = new Fixture();
         private readonly WeeeContext context = A.Fake<WeeeContext>();
         private readonly DbContextHelper dbContextHelper = new DbContextHelper();
+        private readonly ISystemDataDataAccess systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
         public FetchOrganisationSearchResultsForCacheDataAccessTests()
         {
@@ -59,10 +61,10 @@
                 database.Model.Schemes.Add(scheme);
                 database.Model.SaveChanges();
 
-                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap());
+                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap(), systemDataDataAccess);
 
                 // Act
-                IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
+                IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations(A.Dummy<DateTime>());
 
                 // Assert
                 Assert.DoesNotContain(results,
@@ -96,10 +98,10 @@
                 database.Model.Schemes.Add(scheme);
                 database.Model.SaveChanges();
 
-                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap());
+                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap(), systemDataDataAccess);
 
                 // Act
-                IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
+                IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations(A.Dummy<DateTime>());
 
                 // Assert
                 Assert.DoesNotContain(results,
@@ -133,10 +135,10 @@
                 database.Model.Schemes.Add(scheme);
                 database.Model.SaveChanges();
 
-                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap());
+                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap(), systemDataDataAccess);
 
                 // Act
-                IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
+                IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations(A.Dummy<DateTime>());
 
                 // Assert
                 Assert.Contains(results,
@@ -170,10 +172,10 @@
                 database.Model.Schemes.Add(scheme);
                 database.Model.SaveChanges();
 
-                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap());
+                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap(), systemDataDataAccess);
 
                 // Act
-                IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
+                IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations(A.Dummy<DateTime>());
 
                 // Assert
                 Assert.Contains(results,
@@ -207,10 +209,10 @@
                 database.Model.Schemes.Add(scheme);
                 database.Model.SaveChanges();
 
-                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap());
+                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap(), systemDataDataAccess);
 
                 // Act
-                IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
+                IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations(A.Dummy<DateTime>());
 
                 // Assert
                 Assert.Contains(results,
@@ -269,10 +271,10 @@
                 database.Model.Schemes.Add(scheme3);
                 database.Model.SaveChanges();
 
-                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap());
+                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap(), systemDataDataAccess);
 
                 // Act
-                IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
+                IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations(A.Dummy<DateTime>());
 
                 // Assert
                 int indexOfCompanyA = results.IndexOf(results.First(r => r.OrganisationId == new Guid("659A5E1B-90F8-4E5C-8939-436189424AB6")));
@@ -301,10 +303,10 @@
                 database.Model.Organisations.Add(organisation);
                 database.Model.SaveChanges();
 
-                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap());
+                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap(), systemDataDataAccess);
 
                 // Act
-                var results = await dataAccess.FetchCompleteOrganisations();
+                var results = await dataAccess.FetchCompleteOrganisations(A.Dummy<DateTime>());
 
                 // Assert
                 Assert.DoesNotContain(results, r => r.OrganisationId == organisationGuid);
@@ -336,10 +338,10 @@
 
                 database.Model.SaveChanges();
 
-                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap());
+                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap(), systemDataDataAccess);
 
                 // Act
-                var results = await dataAccess.FetchCompleteOrganisations();
+                var results = await dataAccess.FetchCompleteOrganisations(A.Dummy<DateTime>());
 
                 // Assert
                 Assert.DoesNotContain(results, r => r.OrganisationId == organisationGuid);
@@ -374,10 +376,10 @@
 
                 database.Model.SaveChanges();
 
-                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap());
+                var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(database.WeeeContext, new AddressMap(), systemDataDataAccess);
 
                 // Act
-                IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
+                IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations(A.Dummy<DateTime>());
 
                 // Assert
                 Assert.Contains(results,
@@ -417,9 +419,9 @@
             A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(aatfs));
             A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(schemes));
 
-            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap());
+            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap(), systemDataDataAccess);
 
-            var results = await dataAccess.FetchCompleteOrganisations();
+            var results = await dataAccess.FetchCompleteOrganisations(A.Dummy<DateTime>());
 
             Assert.NotEmpty(results);
         }
@@ -445,11 +447,11 @@
             A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>()));
             A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Domain.Scheme.Scheme>()));
 
-            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap());
+            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap(), systemDataDataAccess);
 
-            var results = await dataAccess.FetchCompleteOrganisations();
+            var results = await dataAccess.FetchCompleteOrganisations(A.Dummy<DateTime>());
 
-            results.Count.Should().Be(1);
+            results.Count.Should().Be(1);   
             results.Should().Contain(o => o.OrganisationId == organisationId);
             results.ElementAt(0).IsBalancingScheme.Should().BeTrue();
         }
@@ -480,9 +482,9 @@
             A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>()));
             A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(schemes));
 
-            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap());
+            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap(), systemDataDataAccess);
 
-            var results = await dataAccess.FetchCompleteOrganisations();
+            var results = await dataAccess.FetchCompleteOrganisations(A.Dummy<DateTime>());
 
             results.Count.Should().Be(1);
             results.Should().Contain(o => o.OrganisationId == organisationId);
@@ -519,9 +521,9 @@
             A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(aatfs));
             A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(schemes));
 
-            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap());
+            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap(), systemDataDataAccess);
 
-            var results = await dataAccess.FetchCompleteOrganisations();
+            var results = await dataAccess.FetchCompleteOrganisations(A.Dummy<DateTime>());
 
             Assert.Empty(results);
         }
@@ -558,9 +560,9 @@
             A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(aatfs));
             A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(schemes));
 
-            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap());
+            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap(), systemDataDataAccess);
 
-            var results = await dataAccess.FetchCompleteOrganisations();
+            var results = await dataAccess.FetchCompleteOrganisations(A.Dummy<DateTime>());
 
             Assert.NotEmpty(results);
         }
@@ -594,9 +596,9 @@
             A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(aatfs));
             A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(schemes));
 
-            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap());
+            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap(), systemDataDataAccess);
 
-            IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
+            IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations(A.Dummy<DateTime>());
 
             Assert.Contains(results,
                 r => r.PcsCount == 1);
@@ -631,9 +633,9 @@
             A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(aatfs));
             A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(schemes));
 
-            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap());
+            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap(), systemDataDataAccess);
 
-            IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
+            IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations(A.Dummy<DateTime>());
 
             Assert.Contains(results,
                 r => r.AatfCount == 2);
@@ -668,9 +670,9 @@
             A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(aatfs));
             A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(schemes));
 
-            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap());
+            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap(), systemDataDataAccess);
 
-            IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
+            IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations(A.Dummy<DateTime>());
 
             Assert.Contains(results,
                 r => r.AeCount == 2);
@@ -702,9 +704,9 @@
             A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>()));
             A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(schemes));
 
-            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap());
+            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap(), systemDataDataAccess);
 
-            IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
+            IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations(A.Dummy<DateTime>());
 
             Assert.Contains(results,
                 r => r.PcsCount == 1);
@@ -738,9 +740,9 @@
             A.CallTo(() => context.Organisations).Returns(dbContextHelper.GetAsyncEnabledDbSet(organisations));
             A.CallTo(() => context.DirectRegistrants).Returns(dbContextHelper.GetAsyncEnabledDbSet(directRegistrants));
 
-            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap());
+            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap(), systemDataDataAccess);
 
-            IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations();
+            IList<OrganisationSearchResult> results = await dataAccess.FetchCompleteOrganisations(A.Dummy<DateTime>());
 
             Assert.Contains(results,
                 r => r.DirectRegistrantCount == 1);
@@ -767,9 +769,9 @@
             A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>()));
             A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Domain.Scheme.Scheme>()));
 
-            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap());
+            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap(), systemDataDataAccess);
 
-            var results = await dataAccess.FetchCompleteOrganisations();
+            var results = await dataAccess.FetchCompleteOrganisations(A.Dummy<DateTime>());
 
             results.Count.Should().Be(1);
             results.Should().Contain(o => o.OrganisationId == organisationId);
@@ -797,9 +799,9 @@
             A.CallTo(() => context.Aatfs).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Aatf>()));
             A.CallTo(() => context.Schemes).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<Domain.Scheme.Scheme>()));
 
-            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap());
+            var dataAccess = new FetchOrganisationSearchResultsForCacheDataAccess(context, new AddressMap(), systemDataDataAccess);
 
-            var results = await dataAccess.FetchCompleteOrganisations();
+            var results = await dataAccess.FetchCompleteOrganisations(A.Dummy<DateTime>());
 
             results.Count.Should().Be(1);
             results.Should().Contain(o => o.OrganisationId == organisationId);
