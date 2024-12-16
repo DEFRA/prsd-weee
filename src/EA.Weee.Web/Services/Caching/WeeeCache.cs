@@ -244,7 +244,7 @@
         {
             using (var client = apiClient())
             {
-                var request = new FetchOrganisationSearchResultsForCache();
+                var request = new FetchOrganisationSearchResultsForCache(configurationService.CurrentConfiguration.SmallProducerFeatureEnabledFrom);
                 var result = await client.SendAsync(accessToken, request);
 
                 return result;
