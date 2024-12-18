@@ -17,6 +17,7 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Tests.Core;
@@ -53,7 +54,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
             var schemeData = A.Fake<SchemeDataList>();
@@ -94,7 +95,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
+        public async Task IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
         {
             var schemeList = A.Fake<SchemeDataList>();
             var returnId = Guid.NewGuid();
@@ -108,7 +109,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_ApiShouldBeCalledWithReturnRequest()
+        public async Task IndexGet_GivenReturn_ApiShouldBeCalledWithReturnRequest()
         {
             var schemeList = A.Fake<SchemeDataList>();
             var returnId = Guid.NewGuid();
@@ -123,7 +124,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionAndParameters_ReceivedPcsListViewModelShouldBeReturned()
+        public async Task IndexGet_GivenActionAndParameters_ReceivedPcsListViewModelShouldBeReturned()
         {
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
@@ -148,7 +149,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_ReceivedPcsListViewModelShouldBeBuilt()
+        public async Task IndexGet_GivenReturn_ReceivedPcsListViewModelShouldBeBuilt()
         {
             var @return = A.Fake<ReturnData>();
 
@@ -161,7 +162,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmit_PageRedirectsToAatfTaskList()
+        public async Task IndexPost_OnSubmit_PageRedirectsToAatfTaskList()
         {
             var model = new ReceivedPcsListViewModel();
             var returnId = new Guid();

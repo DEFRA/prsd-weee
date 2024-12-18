@@ -128,7 +128,7 @@
 
             // Assert
             Assert.NotNull(transactionFile);
-            Assert.Equal(1, transactionFile.Invoices.Count);
+            Assert.Single(transactionFile.Invoices);
 
             Invoice invoice = transactionFile.Invoices[0];
             Assert.NotNull(invoice);
@@ -143,7 +143,7 @@
             Assert.Equal("WEE00000001", invoice.CustomerReference);
 
             Assert.NotNull(invoice.LineItems);
-            Assert.Equal(1, invoice.LineItems.Count);
+            Assert.Single(invoice.LineItems);
 
             InvoiceLineItem lineItem = invoice.LineItems[0];
             Assert.NotNull(lineItem);
@@ -220,7 +220,7 @@
 
             // Assert
             Assert.NotNull(transactionFile);
-            Assert.Equal(1, transactionFile.Invoices.Count);
+            Assert.Single(transactionFile.Invoices);
 
             Invoice invoice = transactionFile.Invoices[0];
             Assert.NotNull(invoice);
@@ -316,7 +316,7 @@
             Assert.Equal(100, invoice1.TransactionTotal);
 
             Assert.NotNull(invoice1.LineItems);
-            Assert.Equal(1, invoice1.LineItems.Count);
+            Assert.Single(invoice1.LineItems);
 
             InvoiceLineItem lineItem1 = invoice1.LineItems[0];
             Assert.NotNull(lineItem1);
@@ -327,7 +327,7 @@
             Assert.Equal(200, invoice2.TransactionTotal);
 
             Assert.NotNull(invoice2.LineItems);
-            Assert.Equal(1, invoice2.LineItems.Count);
+            Assert.Single(invoice2.LineItems);
 
             InvoiceLineItem lineItem2 = invoice2.LineItems[0];
             Assert.NotNull(lineItem2);
@@ -382,7 +382,7 @@
         }
 
         [Fact]
-        public async void CreateTransactionFile_GivenMemberUploadContainsAnnualChargeAndSchemeHasAnnualChargeAmount_DescriptionShouldContainAnnualCharge()
+        public async Task CreateTransactionFile_GivenMemberUploadContainsAnnualChargeAndSchemeHasAnnualChargeAmount_DescriptionShouldContainAnnualCharge()
         {
             var organisation = A.Fake<Organisation>();
             var authority = A.Fake<UKCompetentAuthority>();
@@ -419,7 +419,7 @@
         }
 
         [Fact]
-        public async void CreateTransactionFile_GivenMemberUploadSchemeHasZeroAnnualChargeAmount_DescriptionShouldNotContainAnnualCharge()
+        public async Task CreateTransactionFile_GivenMemberUploadSchemeHasZeroAnnualChargeAmount_DescriptionShouldNotContainAnnualCharge()
         {
             var organisation = A.Fake<Organisation>();
             var authority = A.Fake<UKCompetentAuthority>();
@@ -456,7 +456,7 @@
         }
 
         [Fact]
-        public async void CreateTransactionFile_GivenMemberUploadSchemeHasNoAnnualAmount_DescriptionShouldNotContainAnnualCharge()
+        public async Task CreateTransactionFile_GivenMemberUploadSchemeHasNoAnnualAmount_DescriptionShouldNotContainAnnualCharge()
         {
             var organisation = A.Fake<Organisation>();
             var authority = A.Fake<UKCompetentAuthority>();

@@ -46,7 +46,7 @@
 
         public string Name { get; private set; }
 
-        public virtual Guid ProducerSubmissionId { get; private set; }
+        public virtual Guid? ProducerSubmissionId { get; private set; }
 
         public virtual ProducerSubmission ProducerSubmission { get; private set; }
     }

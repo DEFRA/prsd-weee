@@ -17,6 +17,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Tests.Core;
@@ -57,7 +58,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
+        public async Task IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
             var model = new ObligatedViewModel(calculator);
             var request = new AddObligatedSentOn();
@@ -70,7 +71,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenInvalidViewModel_ApiShouldNotBeCalled()
+        public async Task IndexPost_GivenInvalidViewModel_ApiShouldNotBeCalled()
         {
             controller.ModelState.AddModelError("error", "error");
 
@@ -80,7 +81,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
             const string orgName = "orgName";
@@ -114,7 +115,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
+        public async Task IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<String>()) as ViewResult;
 
@@ -122,7 +123,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_MapperShouldBeCalledWithCorrectParameters()
+        public async Task IndexGet_GivenValidViewModel_MapperShouldBeCalledWithCorrectParameters()
         {
             var siteName = "SiteName";
             var returnId = Guid.NewGuid();
@@ -149,7 +150,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_ViewModelShouldBeReturnedWithCorrectValues()
+        public async Task IndexGet_GivenValidViewModel_ViewModelShouldBeReturnedWithCorrectValues()
         {
             var operatorName = "OpName";
             var returnId = Guid.NewGuid();
@@ -168,7 +169,7 @@
         }
 
         [Fact]
-        public async void IndexGet_ProvidedTempDataForCopyPasteValues_MapperShouldReturnViewModelWithCopyPasteValues()
+        public async Task IndexGet_ProvidedTempDataForCopyPasteValues_MapperShouldReturnViewModelWithCopyPasteValues()
         {
             string siteName = "SiteName";
             Guid returnId = Guid.NewGuid();

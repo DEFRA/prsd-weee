@@ -2,6 +2,9 @@
 <Project ToolsVersion="Current" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
+	  <LangVersion>11.0</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{D38EA5EF-F9F5-480C-AE0A-214122559426}</ProjectGuid>
@@ -91,6 +94,7 @@
     <Compile Include="SystemTime.cs" />
     <Compile Include="Validation\HttpPostedFileTypeAttribute.cs" />
     <Compile Include="Validation\MustBeTrueAttribute.cs" />
+    <Compile Include="Validation\RequiredIfOtherValueNotNullAttribute.cs" />
     <Compile Include="Validation\RequiredIfAttribute.cs" />
     <Compile Include="Validation\RequiredIfPropertiesEqualAttribute.cs" />
     <Compile Include="Validation\UkPhoneNumberAttribute.cs" />

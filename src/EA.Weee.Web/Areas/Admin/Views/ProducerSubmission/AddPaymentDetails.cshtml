@@ -1,0 +1,102 @@
+﻿@model EA.Weee.Web.Areas.Admin.ViewModels.Producers.PaymentDetailsViewModel
+@using EA.Weee.Core.DataStandards;
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@{
+    var title = "Add payment details";
+    ViewBag.Title = @title + " - GOV.UK";
+}
+
+@section full_main_content
+{
+    @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.ProducerSubmissionController> (a => a.OrganisationDetails(Model.RegistrationNumber, Model.Year))))
+
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">
+            @title
+        </h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        @Html.Hidden("directProducerSubmissionId", Model.DirectProducerSubmissionId)
+
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-full govuk-!-margin-bottom-4">
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PaymentMethod)">
+                    @Html.Gds().LabelFor(m => m.PaymentMethod)
+                    @Html.Gds().ValidationMessageFor(m => m.PaymentMethod)
+                    @Html.Gds().TextBoxFor(m => m.PaymentMethod, new { @maxlength = CommonMaxFieldLengths.LongDefaultString })
+                </div>
+            </div>
+
+            <div class="govuk-grid-column-one-half govuk-!-margin-bottom-3">
+
+                <div class="govuk-form-group">
+                    <fieldset class="govuk-fieldset" role="group">
+                        <legend class="govuk-fieldset__legend">
+                            @Html.DisplayNameFor(x => x.PaymentReceivedDate)
+                        </legend>
+
+                        @Html.Gds().ValidationMessageFor(m => m.PaymentReceivedDate.Day)
+                        @Html.Gds().ValidationMessageFor(m => m.PaymentReceivedDate.Month)
+                        @Html.Gds().ValidationMessageFor(m => m.PaymentReceivedDate.Year)
+                        <div class="govuk-hint">
+                            For example, 27 3 2007
+                        </div>
+                        <div class="govuk-date-input">
+                            <div class="govuk-date-input__item">
+                                <div class="govuk-form-group">
+                                    @Html.Gds().LabelFor(m => m.PaymentReceivedDate.Day, false)
+                                    @Html.TextBoxFor(m => m.PaymentReceivedDate.Day,
+                                       new
+                                            {
+                                               @maxlength = 2,
+                                               @class = "govuk-input govuk-date-input__input govuk-input--width-2",
+                                               @ariaLabeledBy = "PaymentReceivedDate payment-received-date-label"
+                                           })
+                                </div>
+                            </div>
+                            <div class="govuk-date-input__item">
+                                <div class="govuk-form-group">
+                                    @Html.Gds().LabelFor(m => m.PaymentReceivedDate.Month, false)
+                                    @Html.TextBoxFor(m => m.PaymentReceivedDate.Month, new { @maxlength = 2, @class = "govuk-input govuk-date-input__input govuk-input--width-2" })
+                                </div>
+                            </div>
+                            <div class="govuk-date-input__item">
+                                <div class="govuk-form-group">
+                                    @Html.Gds().LabelFor(m => m.PaymentReceivedDate.Year, false)
+                                    @Html.TextBoxFor(m => m.PaymentReceivedDate.Year, new { @maxlength = 4, @class = "govuk-input govuk-date-input__input govuk-input--width-4" })
+                                </div>
+                            </div>
+                        </div>
+                    </fieldset>
+                </div>
+            </div>
+
+            <div class="govuk-grid-column-full">
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PaymentDetailsDescription)">
+                    @Html.Gds().LabelFor(m => m.PaymentDetailsDescription)
+                    @Html.Gds().ValidationMessageFor(m => m.PaymentDetailsDescription)
+                    @Html.Gds().TextAreaFor(m => m.PaymentDetailsDescription, new { @maxlength = 2000 })
+                </div>
+            </div>
+
+            <div class="govuk-grid-column-full govuk-!-margin-bottom-5">
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ConfirmPaymentMade)">
+                    @Html.Gds().ValidationMessageFor(m => m.ConfirmPaymentMade)
+                    <div class="govuk-!-padding-bottom-1">
+                        @Html.Gds().CheckBoxFrontEndFor(m => m.ConfirmPaymentMade, System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(new { @id = "ConfirmPaymentMade", @class = "govuk-checkboxes__input" }), "Confirm Payment Made")
+                    </div>
+                </div>
+            </div>
+            <div class="govuk-grid-column-full">
+                @(this.WeeeGds().Button("Confirm payment details"))
+            </div>
+
+        </div>
+    }
+}

@@ -67,7 +67,7 @@
 
         public virtual Guid CountryId { get; private set; }
 
-        public virtual Country Country { get; protected set; }
+        public virtual Country Country { get; set; }
 
         /// <summary>
         /// Returns a concatenated string containing the address represented by this instance.
@@ -91,6 +91,25 @@
                 return Country.Name.Contains("UK");
             }
             throw new InvalidOperationException("Country not defined.");
+        }
+
+        public ProducerAddress OverwriteWhereNull(ProducerAddress other)
+        {
+            if (other == null)
+            {
+                return this;
+            }
+
+            other.Country = Country;
+            other.PrimaryName = PrimaryName;
+            other.SecondaryName = SecondaryName;
+            other.Street = Street;
+            other.Town = Town;
+            other.Locality = Locality;
+            other.AdministrativeArea = AdministrativeArea;
+            other.PostCode = PostCode;
+
+            return other;
         }
     }
 }

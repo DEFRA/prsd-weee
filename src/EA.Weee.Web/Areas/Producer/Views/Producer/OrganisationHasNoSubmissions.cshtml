@@ -1,0 +1,22 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model Guid
+
+@{
+    const string title = "This organisation has no registration yet";
+    ViewBag.Title = title + " - GOV.UK";
+}
+@section full_main_content
+{
+    @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model, null))))
+
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">@title</h1>
+    </header>
+
+    <p class="govuk-body">
+        This organisation has not yet submitted a registration. When they do, it will appear here.
+    </p>
+
+    @(this.WeeeGds().GovUkButtonLink("Perform another activity", @Url.UrlFor<EA.Weee.Web.Areas.Scheme.Controllers.HomeController>(a => a.ChooseActivity(Model, null))))
+}

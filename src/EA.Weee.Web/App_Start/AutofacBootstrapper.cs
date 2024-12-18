@@ -1,31 +1,33 @@
 ﻿namespace EA.Weee.Web
 {
+    using Areas.Aatf.Helpers;
+    using Areas.Aatf.Mappings.Filters;
     using Areas.AatfReturn.Attributes;
+    using Areas.Scheme.Requests;
     using Authorization;
     using Autofac;
     using Autofac.Integration.Mvc;
+    using Core.Shared;
+    using EA.Weee.Api.Client;
     using EA.Weee.Core;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Search;
     using EA.Weee.Core.Search.Fuzzy;
     using EA.Weee.Core.Search.Simple;
     using EA.Weee.Web.Areas.Admin.ViewModels.Validation;
+    using EA.Weee.Web.Areas.Producer.Filters;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
+    using EA.Weee.Web.Services.SubmissionsService;
     using EA.Weee.Web.ViewModels.Returns.Mappings.ToViewModel;
     using FluentValidation;
+    using Infrastructure;
+    using Infrastructure.PDF;
     using Prsd.Core.Autofac;
     using Prsd.Core.Mapper;
     using Requests.Base;
     using Security;
     using System.Reflection;
-    using Areas.Aatf.Helpers;
-    using Areas.Aatf.Mappings.Filters;
-    using Areas.Scheme.Requests;
-    using Core.Shared;
-    using Infrastructure;
-    using Infrastructure.PDF;
-    using Prsd.Email;
 
     public class AutofacBootstrapper
     {
@@ -67,11 +69,14 @@
             // Register security module
             builder.RegisterModule(new SecurityModule());
 
+            builder.RegisterModule(new ApiClientModule());
+
             // Register caching
             builder.RegisterType<InMemoryCacheProvider>().As<ICacheProvider>();
             builder.RegisterType<WeeeCache>()
                 .As<IWeeeCache>()
                 .As<ISearchResultProvider<ProducerSearchResult>>()
+                .As<ISearchResultProvider<SmallProducerSearchResult>>()
                 .As<ISearchResultProvider<OrganisationSearchResult>>();
 
             // Breadcrumb
@@ -79,13 +84,17 @@
 
             // Authorization
             builder.RegisterType<WeeeAuthorization>().As<IWeeeAuthorization>();
-
+           
             // External route resolution
             builder.RegisterType<ExternalRouteService>().As<IExternalRouteService>().InstancePerRequest();
 
             // We're going to use the simple producer searcher.
             builder.RegisterType<SimpleProducerSearcher>()
                 .As<ISearcher<ProducerSearchResult>>()
+                .InstancePerRequest();
+
+            builder.RegisterType<SimpleSmallProducerSearcher>()
+                .As<ISearcher<SmallProducerSearchResult>>()
                 .InstancePerRequest();
 
             // We're going to use the fuzzy organisation searcher.
@@ -103,6 +112,7 @@
             builder.RegisterType<TonnageUtilities>().As<ITonnageUtilities>();
             builder.RegisterType<FacilityViewModelBaseValidatorWrapper>().As<IFacilityViewModelBaseValidatorWrapper>();
             builder.RegisterType<ValidateOrganisationActionFilterAttribute>().PropertiesAutowired();
+            builder.RegisterType<SmallProducerSubmissionContextAttribute>().PropertiesAutowired();
             builder.RegisterType<SessionService>().As<ISessionService>();
             builder.RegisterType<HttpContextService>().As<IHttpContextService>();
             builder.RegisterType<TransferEvidenceNoteRequestCreator>().As<ITransferEvidenceRequestCreator>();
@@ -110,6 +120,12 @@
 
             builder.RegisterType<MvcTemplateExecutor>().As<IMvcTemplateExecutor>();
             builder.RegisterType<PdfDocumentProvider>().As<IPdfDocumentProvider>();
+            builder.RegisterType<OrganisationTransactionService>().As<IOrganisationTransactionService>();
+            builder.RegisterType<PaymentService>().As<IPaymentService>();
+            builder.RegisterType<SecureReturnUrlHelper>().As<ISecureReturnUrlHelper>();
+            builder.RegisterType<PaymentReferenceGenerator>().As<IPaymentReferenceGenerator>();
+
+            builder.RegisterType<SubmissionService>().As<ISubmissionService>();
 
             return builder.Build();
         }

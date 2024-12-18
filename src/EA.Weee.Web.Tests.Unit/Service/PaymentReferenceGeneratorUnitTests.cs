@@ -1,0 +1,98 @@
+﻿namespace EA.Weee.Web.Tests.Unit.Service
+{
+    using EA.Prsd.Core;
+    using EA.Weee.Web.Services;
+    using FluentAssertions;
+    using System;
+    using System.Collections.Generic;
+    using Xunit;
+    public class PaymentReferenceGeneratorTests
+    {
+        private readonly PaymentReferenceGenerator generator = new PaymentReferenceGenerator();
+
+        [Fact]
+        public void GeneratePaymentReference_ShouldReturnCorrectLength()
+        {
+            var reference = generator.GeneratePaymentReference(20);
+            reference.Should().HaveLength(20);
+        }
+
+        [Fact]
+        public void GeneratePaymentReference_ShouldStartWithWEEEAndYear()
+        {
+            var reference = generator.GeneratePaymentReference();
+            reference.Should().StartWith($"WEEE{DateTime.UtcNow.Year}");
+        }
+
+        [Theory]
+        [InlineData(9)]
+        [InlineData(256)]
+        public void GeneratePaymentReference_ShouldThrowArgumentException_WhenLengthIsInvalid(int length)
+        {
+            Action act = () => generator.GeneratePaymentReference(length);
+            act.Should().Throw<ArgumentException>()
+                .WithMessage("Length must be between 10 and 255");
+        }
+
+        [Fact]
+        public void GeneratePaymentReference_ShouldGenerateUniqueReferences()
+        {
+            // Arrange
+            const int numberOfReferences = 1000;
+            var references = new HashSet<string>();
+
+            // Act
+            for (var i = 0; i < numberOfReferences; i++)
+            {
+                var reference = generator.GeneratePaymentReference();
+                references.Add(reference).Should().BeTrue($"Generated duplicate reference: {reference}");
+            }
+
+            // Assert
+            references.Count.Should().Be(numberOfReferences, "All generated references should be unique");
+        }
+
+        [Fact]
+        public void GeneratePaymentReferenceWithSeparators_ShouldReturnCorrectLength()
+        {
+            var reference = generator.GeneratePaymentReferenceWithSeparators(20);
+            reference.Should().HaveLength(20);
+        }
+
+        [Fact]
+        public void GeneratePaymentReferenceWithSeparators_ShouldContainCorrectSeparators()
+        {
+            var reference = generator.GeneratePaymentReferenceWithSeparators(20);
+            reference.Should().MatchRegex(@"^WEEE-\d{4}-\d{6}-[A-Z0-9]{3}$");
+        }
+
+        [Theory]
+        [InlineData(13)]
+        [InlineData(256)]
+        public void GeneratePaymentReferenceWithSeparators_ShouldThrowArgumentException_WhenLengthIsInvalid(int length)
+        {
+            Action act = () => generator.GeneratePaymentReferenceWithSeparators(length);
+            act.Should().Throw<ArgumentException>()
+                .WithMessage("Length must be between 14 and 255");
+        }
+
+        [Fact]
+        public void GeneratePaymentReferenceWithSeparators_ShouldHaveCorrectFormat()
+        {
+            var dateTime = new DateTime(2024, 1, 1);
+
+            SystemTime.Freeze(dateTime);
+            var reference = generator.GeneratePaymentReferenceWithSeparators(20);
+            reference.Should().MatchRegex(@"^WEEE-\d{4}-\d{6}-[A-Z0-9]{3}$");
+            SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public void GeneratePaymentReferenceWithSeparators_ShouldGenerateUniqueReferences()
+        {
+            var reference1 = generator.GeneratePaymentReferenceWithSeparators(20);
+            var reference2 = generator.GeneratePaymentReferenceWithSeparators(20);
+            reference1.Should().NotBe(reference2);
+        }
+    }
+}

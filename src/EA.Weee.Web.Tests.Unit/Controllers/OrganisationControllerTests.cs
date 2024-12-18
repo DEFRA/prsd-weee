@@ -1,22 +1,41 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Controllers
 {
+    using AutoFixture;
+    using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Organisations;
+    using EA.Weee.Requests.Organisations.DirectRegistrant;
+    using EA.Weee.Requests.Shared;
+    using EA.Weee.Tests.Core;
     using EA.Weee.Web.Controllers;
     using EA.Weee.Web.ViewModels.Organisation;
+    using EA.Weee.Web.ViewModels.Organisation.Mapping.ToViewModel;
     using FakeItEasy;
+    using FluentAssertions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Xunit;
 
-    public class OrganisationControllerTests
+    public class OrganisationControllerTests : SimpleUnitTestBase
     {
+        private readonly IWeeeClient weeeClient;
+        private readonly IMapper mapper;
+        private readonly OrganisationController controller;
+
+        public OrganisationControllerTests()
+        {
+            weeeClient = A.Fake<IWeeeClient>();
+            mapper = A.Fake<IMapper>();
+            controller = new OrganisationController(() => weeeClient, mapper);
+        }
+
         [Fact]
-        public async void GetIndex_OneActiveOrg_RedirectsToSchemeChooseActivity()
+        public async Task GetIndex_OneActiveOrg_RedirectsToSchemeChooseActivity()
         {
             // Arrange
             Guid organisationId = new Guid("433DB128-12A1-44FB-B26A-8128F8E36598");
@@ -37,7 +56,7 @@
                     }
                 });
 
-            OrganisationController controller = new OrganisationController(() => weeeClient);
+            OrganisationController controller = new OrganisationController(() => weeeClient, mapper);
 
             // Act
             ActionResult result = await controller.Index();
@@ -54,7 +73,7 @@
         }
 
         [Fact]
-        public async void GetIndex_OneActiveOrg_And_OneInactiveOrg_ShowsYourOrganisationsView()
+        public async Task GetIndex_OneActiveOrg_And_OneInactiveOrg_ShowsYourOrganisationsView()
         {
             // Arrange
             Guid organisationId1 = new Guid("433DB128-12A1-44FB-B26A-8128F8E36598");
@@ -86,7 +105,7 @@
                     }
                 });
 
-            OrganisationController controller = new OrganisationController(() => weeeClient);
+            OrganisationController controller = new OrganisationController(() => weeeClient, mapper);
 
             // Act
             ActionResult result = await controller.Index();
@@ -102,7 +121,7 @@
 
             YourOrganisationsViewModel model = viewResult.Model as YourOrganisationsViewModel;
 
-            Assert.Equal(1, model.Organisations.Count);
+            Assert.Single(model.Organisations);
 
             Assert.Equal(organisationId1, model.Organisations[0].OrganisationId);
             Assert.Equal("Organisation Name 1", model.Organisations[0].Organisation.OrganisationName);
@@ -119,7 +138,7 @@
         }
 
         [Fact]
-        public async void GetIndex_OneInactiveOrg_ShowsPendingView()
+        public async Task GetIndex_OneInactiveOrg_ShowsPendingView()
         {
             // Arrange
             Guid organisationId = new Guid("433DB128-12A1-44FB-B26A-8128F8E36598");
@@ -140,7 +159,7 @@
                     }
                 });
 
-            OrganisationController controller = new OrganisationController(() => weeeClient);
+            OrganisationController controller = new OrganisationController(() => weeeClient, mapper);
 
             // Act
             ActionResult result = await controller.Index();
@@ -163,14 +182,14 @@
         }
 
         [Fact]
-        public async void GetIndex_NoOrganisations_RedirectsToCreateJoinOrganisation()
+        public async Task GetIndex_NoOrganisations_RedirectsToCreateJoinOrganisation()
         {
             // Arrange
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
                 .Returns(new List<OrganisationUserData>());
 
-            OrganisationController controller = new OrganisationController(() => weeeClient);
+            OrganisationController controller = new OrganisationController(() => weeeClient, mapper);
 
             // Act
             ActionResult result = await controller.Index();
@@ -191,7 +210,7 @@
         /// with statues of "Pending" and "Rejected", only the pending association should be shown.
         /// </summary>
         [Fact]
-        public async void GetIndex_WithPendingAndRejectedAssociation_ShowsOnlyPendingAssociation()
+        public async Task GetIndex_WithPendingAndRejectedAssociation_ShowsOnlyPendingAssociation()
         {
             // Arrange
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
@@ -220,7 +239,7 @@
                     }
                 });
 
-            OrganisationController controller = new OrganisationController(() => weeeClient);
+            OrganisationController controller = new OrganisationController(() => weeeClient, mapper);
 
             // Act
             ActionResult result = await controller.Index();
@@ -244,7 +263,7 @@
         /// with statues of "Inactive" and "Rejected", only the inactive association should be shown.
         /// </summary>
         [Fact]
-        public async void GetIndex_WithInactiveAndRejectedAssociation_ShowsOnlyInactiveAssociation()
+        public async Task GetIndex_WithInactiveAndRejectedAssociation_ShowsOnlyInactiveAssociation()
         {
             // Arrange
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
@@ -273,7 +292,7 @@
                     }
                 });
 
-            OrganisationController controller = new OrganisationController(() => weeeClient);
+            OrganisationController controller = new OrganisationController(() => weeeClient, mapper);
 
             // Act
             ActionResult result = await controller.Index();
@@ -289,6 +308,118 @@
             OrganisationUserData result1 = model.InaccessibleOrganisations.First();
 
             Assert.Equal(UserStatus.Inactive, result1.UserStatus);
+        }
+
+        [Fact]
+        public async Task GetRepresentingCompanies_MapsCorrectly()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var organisationInfo = new OrganisationData { Id = organisationId };
+            var organisations = new List<OrganisationUserData> { CreateOrganisationUserData(organisationId, UserStatus.Active) };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetOrganisationInfo>._))
+                .Returns(organisationInfo);
+
+            SetupWeeeClientWithOrganisations(organisations.ToArray());
+
+            var expectedModel = new RepresentingCompaniesViewModel();
+            A.CallTo(() => mapper.Map<RepresentingCompaniesViewModelMapSource, RepresentingCompaniesViewModel>(A<RepresentingCompaniesViewModelMapSource>._))
+                .Returns(expectedModel);
+
+            // Act
+            var result = await controller.RepresentingCompanies(organisationId) as ViewResult;
+
+            // Assert
+            result.Model.Should().Be(expectedModel);
+
+            A.CallTo(() => mapper.Map<RepresentingCompaniesViewModelMapSource, RepresentingCompaniesViewModel>(A<RepresentingCompaniesViewModelMapSource>.That.Matches(
+                m => m.OrganisationData == organisationInfo && m.OrganisationsData.SequenceEqual(organisations)))).MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task GetRepresentingOrganisation_ReturnsViewWithModel()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var countries = TestFixture.CreateMany<CountryData>().ToList();
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(countries);
+
+            // Act
+            var result = await controller.RepresentingOrganisation(organisationId);
+
+            // Assert
+            result.Should().BeOfType<ViewResult>()
+                .Which.Model.Should().BeOfType<RepresentingCompanyDetailsViewModel>()
+                .Which.Should().Match<RepresentingCompanyDetailsViewModel>(m =>
+                    m.OrganisationId == organisationId &&
+                    m.Address.Countries == countries);
+        }
+
+        [Fact]
+        public async Task PostRepresentingOrganisation_WithValidModel_RedirectsToChooseActivity()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var directRegistrantId = Guid.NewGuid();
+            var model = new RepresentingCompanyDetailsViewModel { OrganisationId = organisationId };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<AddRepresentingCompany>._))
+                .Returns(directRegistrantId);
+
+            // Act
+            var result = await controller.RepresentingOrganisation(model);
+
+            // Assert
+            result.Should().BeOfType<RedirectToRouteResult>()
+                .Which.RouteValues.Should().ContainKeys("action", "controller", "area", "pcsId", "directRegistrantId")
+                .And.ContainValues("ChooseActivity", "Home", "Scheme", organisationId, directRegistrantId);
+        }
+
+        [Fact]
+        public async Task PostRepresentingOrganisation_WithInvalidModel_ReturnsViewWithModel()
+        {
+            // Arrange
+            var organisationId = Guid.NewGuid();
+            var model = new RepresentingCompanyDetailsViewModel { OrganisationId = organisationId };
+            var countries = TestFixture.CreateMany<CountryData>().ToList();
+
+            controller.ModelState.AddModelError("TestError", "This is a test error");
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
+                .Returns(countries);
+
+            // Act
+            var result = await controller.RepresentingOrganisation(model) as ViewResult;
+
+            // Assert
+            result.Should().BeOfType<ViewResult>()
+                .Which.Model.Should().BeOfType<RepresentingCompanyDetailsViewModel>()
+                .Which.Should().Match<RepresentingCompanyDetailsViewModel>(m =>
+                    m.OrganisationId == organisationId &&
+                    m.Address.Countries == countries);
+        }
+
+        private void SetupWeeeClientWithOrganisations(params OrganisationUserData[] organisations)
+        {
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
+                .Returns(organisations.ToList());
+        }
+
+        private OrganisationUserData CreateOrganisationUserData(Guid organisationId, UserStatus status)
+        {
+            return new OrganisationUserData
+            {
+                OrganisationId = organisationId,
+                UserStatus = status,
+                Organisation = new OrganisationData
+                {
+                    OrganisationName = $"Organisation {organisationId}",
+                    OrganisationStatus = OrganisationStatus.Complete,
+                }
+            };
         }
     }
 }

@@ -1,0 +1,102 @@
+﻿@using EA.Weee.Core.DataStandards
+@using MvcNavigationHelpers
+@using EA.Weee.Web.Controllers
+@using EA.Weee.Web.Extensions
+@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.ViewModels.OrganisationRegistration
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.OrganisationsFoundViewModel
+@{
+    var title = "Your organisation has been found";
+    if (Model.OrganisationFoundType == OrganisationFoundType.CompanyName)
+    {
+        title = "Your organisation may have been found";
+    }
+
+    ViewBag.Title = title + " - GOV.UK";
+}
+@section full_main_content
+{
+    @(this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.OrganisationDetails())))
+
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">@title</h1>
+    </header>
+
+    @Html.Gds().ValidationSummary()
+
+    @if (Model.OrganisationFoundType == OrganisationFoundType.CompanyNumber)
+    {
+        <p class="govuk-body">
+            This company registration number has already been registered. If the organisation below is yours request access.
+            If this isn't your organisation, return to the organisation details page and enter a different company registration number.
+        </p>
+    }
+    @if (Model.OrganisationFoundType == OrganisationFoundType.CompanyName)
+    {
+        <p class="govuk-body">
+            Organisation details that are similar to yours have been found. If one of the organisations below is yours, request access.
+            If none of these organisations are yours, select continue.
+        </p>
+    }
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.OrganisationFoundType)
+
+        var hasError = Html.ViewData.ModelState.HasErrorForProperty<OrganisationsFoundViewModel, Guid?>(m => m.SelectedOrganisationId);
+        var errorStyle = hasError ? "govuk-form-group--error" : "";
+
+
+        <fieldset class="prsd-table-fieldset">
+            <legend class="govuk-visually-hidden">select organisation</legend>
+            <div class="@errorStyle">
+                <table id="organisationSearchResultsTable" class="govuk-table prsd-table hover-effect">
+                    <thead class="govuk-table__head">
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="width: 40%" scope="col">Organisation name</th>
+                            <th class="govuk-table__header" style="width: 40%" scope="col">Company registration number</th>
+                            <th class="govuk-table__header" style="width: 20%" scope="col">Confirm organisation</th>
+                        </tr>
+                    </thead>
+                    <tbody class="govuk-table__body">
+                        @for (int i = 0; i < Model.OrganisationFoundViewModels.Count(); i++)
+                        {
+                            var org = Model.OrganisationFoundViewModels.ElementAt(i);
+                            var id = "selectOrg" + org.OrganisationId;
+                            <tr class="govuk-table__row">
+                                <td style="word-break: break-word" class="govuk-table__cell">
+                                    @org.OrganisationName
+                                    @Html.HiddenFor(m => Model.OrganisationFoundViewModels[i].OrganisationName)
+                                    @Html.HiddenFor(m => Model.OrganisationFoundViewModels[i].NpwdMigrated)
+                                    @Html.HiddenFor(m => Model.OrganisationFoundViewModels[i].NpwdMigratedComplete)
+                                </td>
+                                <td style="word-break: break-word" class="govuk-table__cell">
+                                    @org.CompanyRegistrationNumber
+                                    @Html.HiddenFor(m => Model.OrganisationFoundViewModels[i].CompanyRegistrationNumber)
+                                </td>
+                                <td style="padding-right: 15px; text-align: center" class="govuk-table__cell">
+                                    <label class="govuk-visually-hidden" for="@id">Confirm organisation</label>
+                                    @Html.HiddenFor(m => Model.OrganisationFoundViewModels[i].OrganisationId)
+                                    @Html.RadioButtonFor(m => m.SelectedOrganisationId, org.OrganisationId, new { id = id })
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </fieldset>
+        <div class="govuk-button-group govuk-!-padding-top-3">
+            @(this.WeeeGds().Button("Request access to organisation"))
+
+            @if (Model.OrganisationFoundType == OrganisationFoundType.CompanyNumber)
+            {
+                @(this.WeeeGds().GovUkButtonLink("Return to organisation details", @Url.UrlFor<OrganisationRegistrationController>(a => a.OrganisationDetails()), true))
+            }
+            @if (Model.OrganisationFoundType == OrganisationFoundType.CompanyName)
+            {
+                @(this.WeeeGds().GovUkButtonLink("Continue", @Url.UrlFor<OrganisationRegistrationController>(a => a.CheckAuthorisedRepresentitiveAndRedirect(@Request.Url.AbsolutePath)), true))
+            }
+        </div>
+    }
+}

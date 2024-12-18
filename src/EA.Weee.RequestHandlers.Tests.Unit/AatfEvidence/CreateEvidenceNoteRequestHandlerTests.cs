@@ -237,7 +237,7 @@
         public async Task HandleAsync_GivenDraftRequestWithRecipientOrganisation_NoteShouldBeAddedToContext(bool isPbs, WasteType wasteType)
         {
             //arrange
-            var currentDate = TestFixture.Create<DateTime>();
+            var currentDate = new DateTime(2024, 1, 1, 1, 1, 1);
             SystemTime.Freeze(currentDate);
 
             A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(A<Guid>._, A<int>._)).Returns(aatf);
@@ -301,7 +301,7 @@
         public async Task HandleAsync_GivenSubmittedRequest_NoteShouldBeAddedToContext(bool isPbs, WasteType wasteType)
         {
             //arrange
-            var currentDate = TestFixture.Create<DateTime>();
+            var currentDate = new DateTime(2024, 1, 1, 1, 1, 1);
             SystemTime.Freeze(currentDate);
 
             var systemDateTime = new DateTime(2021, 12, 1);
@@ -397,7 +397,7 @@
         public async Task HandleAsync_GivenRequestWithNullWasteAndProtocol_NoteShouldBeAddedToContext()
         {
             //act
-            var currentDate = TestFixture.Create<DateTime>();
+            var currentDate = new DateTime(2024, 1, 1, 1, 1, 1);
             SystemTime.Freeze(currentDate);
 
             A.CallTo(() => aatfDataAccess.GetAatfByAatfIdAndComplianceYear(A<Guid>._, A<int>._)).Returns(aatf);

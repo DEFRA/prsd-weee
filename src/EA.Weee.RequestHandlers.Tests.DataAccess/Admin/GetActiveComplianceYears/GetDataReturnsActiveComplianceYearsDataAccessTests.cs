@@ -3,13 +3,14 @@
     using Core.DataReturns;
     using RequestHandlers.Admin.GetActiveComplianceYears;
     using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core.Model;
     using Xunit;
 
     public class GetDataReturnsActiveComplianceYearsDataAccessTests
     {
         [Fact]
-        public async void Get_TwoUploadsForTheSameComplianceYear_OnlyReturnsTheYearOnce()
+        public async Task Get_TwoUploadsForTheSameComplianceYear_OnlyReturnsTheYearOnce()
         {
             using (var database = new DatabaseWrapper())
             {

@@ -75,7 +75,7 @@
         }
 
         [Fact]
-        public async void NotOrganisationUser_ThrowsSecurityException()
+        public async Task NotOrganisationUser_ThrowsSecurityException()
         {
             var authorisationDeniedHandler = new ProcessXMLFileHandler(context, denyingAuthorization, xmlValidator, generator, xmlConverter, xmlChargeBandCalculator, producerSubmissionDataAccess, totalChargeCalculator, totalChargeCalculatorDataAccess);
 
@@ -85,7 +85,7 @@
         }
 
         [Fact]
-        public async void ProcessXmlfile_ParsesXMLFile_SavesValidProducers()
+        public async Task ProcessXmlfile_ParsesXMLFile_SavesValidProducers()
         {
             IEnumerable<ProducerSubmission> generatedProducers = new[] { TestProducer("ForestMoonOfEndor") };
 
@@ -100,7 +100,7 @@
         }
 
         [Fact]
-        public async void TotalChargeCalculator_Returns_ProducerCharges()
+        public async Task TotalChargeCalculator_Returns_ProducerCharges()
         {
             var producerCharges = new Dictionary<string, ProducerCharge>();
             var anyAmount = 30;
@@ -120,7 +120,7 @@
         }
 
         [Fact]
-        public async void ProcessXmlfile_ParsesXMLFile_CalculateTotalCharges()
+        public async Task ProcessXmlfile_ParsesXMLFile_CalculateTotalCharges()
         {
             decimal? totalCharges = 0;
 
@@ -134,7 +134,7 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async void ProcessXmlfile_GivenSchemeNeedsAnnualCharges_CalculateTotalCharges(bool annualCharge)
+        public async Task ProcessXmlfile_GivenSchemeNeedsAnnualCharges_CalculateTotalCharges(bool annualCharge)
         {
             decimal? totalCharges = 0;
 
@@ -148,7 +148,7 @@
         }
 
         [Fact]
-        public async void ProcessXmlfile_SchemaErrors_DoesntTryToCalculateCharges()
+        public async Task ProcessXmlfile_SchemaErrors_DoesntTryToCalculateCharges()
         {
             IEnumerable<MemberUploadError> errors = new[]
             {
@@ -167,7 +167,7 @@
         }
 
         [Fact]
-        public async void ProcessXmlfile_BusinessErrors_TriesToCalculateCharges()
+        public async Task ProcessXmlfile_BusinessErrors_TriesToCalculateCharges()
         {
             IEnumerable<MemberUploadError> errors = new[]
             {
@@ -195,7 +195,7 @@
         }
 
         [Fact]
-        public async void ProcessXmlfile_NoErrors_TriesToCalculateCharges()
+        public async Task ProcessXmlfile_NoErrors_TriesToCalculateCharges()
         {
             IEnumerable<MemberUploadError> errors = new List<MemberUploadError>();
 
@@ -215,7 +215,7 @@
         }
 
         [Fact]
-        public async void ProcessXmlfile_InvalidXmlfile_NotGenerateProducerObjects()
+        public async Task ProcessXmlfile_InvalidXmlfile_NotGenerateProducerObjects()
         {
             IEnumerable<MemberUploadError> errors = new[]
             {
@@ -229,7 +229,7 @@
         }
 
         [Fact]
-        public async void ProcessXmlfile_XmlfileWithBusinessError_NotGenerateProducerObjects()
+        public async Task ProcessXmlfile_XmlfileWithBusinessError_NotGenerateProducerObjects()
         {
             var errors = new List<MemberUploadError>
             {
@@ -244,7 +244,7 @@
         }
 
         [Fact]
-        public async void ProcessXmlfile_HasNoValidationErrors_HasProducerChargeCalculationErrors_ThrowsException()
+        public async Task ProcessXmlfile_HasNoValidationErrors_HasProducerChargeCalculationErrors_ThrowsException()
         {
             var errors = new List<MemberUploadError>
             {
@@ -258,7 +258,7 @@
         }
 
         [Fact]
-        public async void ProcessXmlfile_StoresProcessTime()
+        public async Task ProcessXmlfile_StoresProcessTime()
         {
             IEnumerable<MemberUploadError> errors = new List<MemberUploadError>();
             A.CallTo(() => xmlValidator.Validate(Message))
@@ -284,7 +284,7 @@
         }
 
         [Fact]
-        public async void ProcessXmlFile_GivenSchemeDoesNotHaveAnnualCharge_MemberUploadAnnualChargePropertyShouldBeSet()
+        public async Task ProcessXmlFile_GivenSchemeDoesNotHaveAnnualCharge_MemberUploadAnnualChargePropertyShouldBeSet()
         {
             A.CallTo(() => totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(A<Scheme>._, A<int>._)).Returns(false);
             SetupSchemeTypeComplianceYear();
@@ -296,7 +296,7 @@
         }
 
         [Fact]
-        public async void ProcessXmlFile_GivenSchemeDoesHaveAnnualCharge_MemberUploadAnnualChargePropertyShouldBeSet()
+        public async Task ProcessXmlFile_GivenSchemeDoesHaveAnnualCharge_MemberUploadAnnualChargePropertyShouldBeSet()
         {
             A.CallTo(() => totalChargeCalculatorDataAccess.CheckSchemeHasAnnualCharge(A<Scheme>._, A<int>._)).Returns(true);
             SetupSchemeTypeComplianceYear();

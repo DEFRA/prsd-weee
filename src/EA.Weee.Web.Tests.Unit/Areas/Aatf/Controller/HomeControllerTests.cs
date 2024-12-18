@@ -15,6 +15,7 @@
     using Services.Caching;
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Xunit;
 
@@ -48,7 +49,7 @@
         [Theory]
         [InlineData(FacilityType.Aatf, "AATF")]
         [InlineData(FacilityType.Ae, "AE")]
-        public async void IndexGet_GivenValidViewModelAndIsAE_BreadcrumbShouldBeSet(FacilityType facilityType, string expected)
+        public async Task IndexGet_GivenValidViewModelAndIsAE_BreadcrumbShouldBeSet(FacilityType facilityType, string expected)
         {
             var organisationName = "Organisation";
             var model = new HomeViewModel()
@@ -69,7 +70,7 @@
         [Theory]
         [InlineData(FacilityType.Aatf, "AATF")]
         [InlineData(FacilityType.Ae, "AE")]
-        public async void IndexPost_GivenInValidViewModelAndIsAE_BreadcrumbShouldBeSet(FacilityType facilityType, string expected)
+        public async Task IndexPost_GivenInValidViewModelAndIsAE_BreadcrumbShouldBeSet(FacilityType facilityType, string expected)
         {
             var organisationName = "organisation";
             var model = new HomeViewModel()
@@ -89,7 +90,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
+        public async Task IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
             var model = new HomeViewModel()
             {
@@ -104,7 +105,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenOrganisationId_AatfsForOrganisationShouldBeRetrievedFromCache()
+        public async Task IndexGet_GivenOrganisationId_AatfsForOrganisationShouldBeRetrievedFromCache()
         {
             var organisationId = Guid.NewGuid();
             var model = new HomeViewModel()
@@ -120,7 +121,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenOrganisationId_MapperShouldBeCalled()
+        public async Task IndexGet_GivenOrganisationId_MapperShouldBeCalled()
         {
             var organisationId = Guid.NewGuid();
             var model = new HomeViewModel()
@@ -138,7 +139,7 @@
         }
 
         [Fact]
-        public async void IndexGet_OnSingleAatf_PageRedirectsContactDetails()
+        public async Task IndexGet_OnSingleAatf_PageRedirectsContactDetails()
         {
             var organisationId = Guid.NewGuid();
             var aatfList = new List<AatfData>();
@@ -168,7 +169,7 @@
         }
 
         [Fact]
-        public async void IndexPost_ValidViewModel_PageRedirectsContactDetails()
+        public async Task IndexPost_ValidViewModel_PageRedirectsContactDetails()
         {
             var model = new HomeViewModel()
             {

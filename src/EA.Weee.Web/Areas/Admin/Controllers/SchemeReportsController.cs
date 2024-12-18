@@ -3,6 +3,8 @@
     using Api.Client;
     using Core.Admin;
     using Core.Shared;
+    using EA.Weee.Core.Constants;
+    using Extensions;
     using Infrastructure;
     using Prsd.Core;
     using Services;
@@ -12,7 +14,6 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Extensions;
     using ViewModels.Reports;
     using ViewModels.SchemeReports;
     using Weee.Requests.AatfEvidence.Reports;
@@ -192,7 +193,7 @@
 
             fileName.AppendFormat("{0:D4}", complianceYear);
 
-            if (schemeId != null)
+            if (schemeId != null && schemeId != ReportsFixedIdConstant.AllDirectRegistrantFixedId && schemeId != ReportsFixedIdConstant.AllSchemeFixedId)
             {
                 using (var client = apiClient())
                 {
@@ -201,6 +202,15 @@
 
                     fileName.AppendFormat("_{0}", scheme.ApprovalName);
                 }
+            }
+
+            if (schemeId == ReportsFixedIdConstant.AllDirectRegistrantFixedId)
+            {
+                fileName.AppendFormat("_{0}", ReportsFixedIdConstant.AllDirectRegistrants);
+            }
+            if (schemeId == ReportsFixedIdConstant.AllSchemeFixedId)
+            {
+                fileName.AppendFormat("_{0}", ReportsFixedIdConstant.AllSchemes);
             }
 
             if (authorityId != null)
@@ -272,20 +282,20 @@
             SetBreadcrumb();
             ViewBag.TriggerDownload = false;
 
-            var model = new ProducersDataViewModel();
-            await PopulateFilters(model, true);
+            var model = new ProducersIncSmallProducersDataViewModel();
+            await PopulateFilters(model, true, true, true);
 
             return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ProducerEeeData(ProducersDataViewModel model)
+        public async Task<ActionResult> ProducerEeeData(ProducersIncSmallProducersDataViewModel model)
         {
             SetBreadcrumb();
             ViewBag.TriggerDownload = ModelState.IsValid;
 
-            await PopulateFilters(model, true);
+            await PopulateFilters(model, true, true, true);
 
             return View(model);
         }
@@ -508,7 +518,7 @@
         private async Task PopulateFilters(ReportsFilterViewModel model)
         {
             var years = await FetchComplianceYearsForMemberRegistrations();
-            var schemes = await FetchSchemes();
+            var schemes = await FetchSchemes(true, true);
             var authorities = await FetchAuthorities();
 
             model.ComplianceYears = new SelectList(years);
@@ -528,7 +538,7 @@
             model.ComplianceYears = new SelectList(FetchAllComplianceYears());
         }
 
-        private async Task PopulateFilters(ProducersDataViewModel model, bool populateSchemes)
+        private async Task PopulateFilters(ProducersDataViewModelBase model, bool populateSchemes, bool includeDirectRegistrants = false, bool includeAllSchemes = false)
         {
             var years = await FetchComplianceYearsForDataReturns();
 
@@ -536,7 +546,7 @@
 
             if (populateSchemes)
             {
-                var schemes = await FetchSchemes();
+                var schemes = await FetchSchemes(includeDirectRegistrants, includeAllSchemes);
                 model.Schemes = new SelectList(schemes, "Id", "SchemeName");
             }
         }
@@ -567,12 +577,13 @@
         /// <returns></returns>
         private async Task<List<int>> FetchComplianceYearsForDataReturns()
         {
-            var request = new GetDataReturnsActiveComplianceYears();
+            var request = new GetDataReturnsActiveComplianceYears(true);
             using (var client = apiClient())
             {
                 return await client.SendAsync(User.GetAccessToken(), request);
             }
         }
+
         private async Task PopulateFilters(UkEeeDataViewModel model)
         {
             var years = await FetchComplianceYearsForDataReturns();
@@ -581,7 +592,7 @@
 
         private async Task<List<int>> FetchComplianceYearsForMemberRegistrations()
         {
-            var request = new GetMemberRegistrationsActiveComplianceYears();
+            var request = new GetMemberRegistrationsActiveComplianceYears(true);
             using (var client = apiClient())
             {
                 return await client.SendAsync(User.GetAccessToken(), request);

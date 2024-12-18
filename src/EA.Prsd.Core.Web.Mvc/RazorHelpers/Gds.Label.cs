@@ -36,7 +36,6 @@
         {
             return LabelFor(expression, htmlAttributes, CssLabelClass, optionalMessage);
         }
-
         private MvcHtmlString LabelFor<TValue>(Expression<Func<TModel, TValue>> expression, IDictionary<string, object> htmlAttributes, string cssClass, string optionalMessage = "", bool showOptionalLabel = true)
         {
             var modelMetadata = ModelMetadata.FromLambdaExpression(expression, htmlHelper.ViewData);
@@ -73,9 +72,12 @@
                 labelTag.Attributes.Add("id",
                     $"{htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId(htmlFieldName)}-label");
             }
-            
-            labelTag.Attributes.Add("for",
-                htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId(htmlFieldName));
+
+            if (!labelTag.Attributes.ContainsKey("for"))
+            {
+                labelTag.Attributes.Add("for",
+               htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId(htmlFieldName));
+            }
 
             labelTag.InnerHtml = labelText + " " + appendOptional;
 

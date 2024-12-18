@@ -67,5 +67,49 @@
         int DefaultInternalPagingPageSize { get; set; }
 
         int DefaultExternalPagingPageSize { get; set; }
+
+        bool ProxyEnabled { get; set; }
+
+        bool ByPassProxyOnLocal { get; set; }
+
+        string ProxyWebAddress { get; set; }
+
+        bool ProxyUseDefaultCredentials { get; set; }
+
+        string CompaniesHouseReferencePath { get; set; }
+
+        string CompaniesHouseBaseUrl { get; set; }
+
+        string AddressLookupReferencePath { get; set; }
+
+        string AddressLookupBaseUrl { get; set; }
+
+        string GovUkPayBaseUrl { get; set; }
+
+        string GovUkPayApiKey { get; set; }
+
+        string GovUkPayReturnBaseUrl { get; set; }
+
+        string GovUkPayDescription { get; set; }
+
+        int GovUkPayAmountInPence { get; set; }
+
+        string GovUkPayTokenSecret { get; set; }
+
+        string GovUkPayTokenSalt { get; set; }
+
+        TimeSpan GovUkPayTokenLifeTime { get; set; }
+
+        string OAuthTokenEndpoint { get; set; }
+
+        string OAuthTokenClientId { get; set; }
+
+        string OAuthTokenClientSecret { get; set; }
+
+        string CompaniesHouseScope { get; set; }
+
+        string AddressLookupScope { get; set; }
+
+        DateTime SmallProducerFeatureEnabledFrom { get; set; }
     }
 }

@@ -1,0 +1,26 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
+@model EA.Weee.Web.Areas.Admin.ViewModels.Producers.OrganisationIdViewModel
+
+@{
+    const string title = "This organisation has no registration yet";
+    ViewBag.Title = title + " - GOV.UK";
+}
+@section full_main_content
+{
+    @if (Model.DisplayBack)
+    {
+        @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.ProducersController>(a => a.Search(SearchTypeEnum.SmallProducer))))
+    }
+
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">@title</h1>
+    </header>
+
+    <p class="govuk-body">
+        This organisation has not yet submitted a registration. When they do, it will appear here.
+    </p>
+
+    @this.WeeeGds().GovUkButtonLink("Perform another activity", @Url.UrlFor<EA.Weee.Web.Areas.Admin.Controllers.HomeController>(a => a.ChooseActivity()))
+}

@@ -6,7 +6,9 @@
     using Domain.Audit;
     using Domain.Charges;
     using Domain.DataReturns;
+    using Domain.Evidence;
     using Domain.Lookup;
+    using Domain.Obligation;
     using Domain.Organisation;
     using Domain.Producer;
     using Domain.Scheme;
@@ -17,12 +19,11 @@
     using Prsd.Core.Domain;
     using Prsd.Core.Domain.Auditing;
     using StoredProcedure;
+    using System;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading;
     using System.Threading.Tasks;
-    using Domain.Evidence;
-    using Domain.Obligation;
 
     public class WeeeContext : DbContext
     {
@@ -198,9 +199,28 @@
 
         public virtual DbSet<ObligationSchemeAmount> ObligationSchemeAmounts { get; set; }
 
+        public virtual DbSet<DirectProducerSubmission> DirectProducerSubmissions { get; set; }
+
+        public virtual DbSet<DirectProducerSubmissionHistory> DirectProducerSubmissionHistories { get; set; }
+
+        public virtual DbSet<AdditionalCompanyDetails> AdditionalCompanyDetails { get; set; }
+
+        public virtual DbSet<DirectRegistrant> DirectRegistrants { get; set; }
+
+        public virtual DbSet<OrganisationTransaction> OrganisationTransactions { get; set; }
+
+        public virtual DbSet<PaymentSession> PaymentSessions { get; set; }
+
         public virtual IStoredProcedures StoredProcedures { get; private set; }
 
         public virtual IEvidenceStoredProcedures EvidenceStoredProcedures { get; private set; }
+
+        public void SetCurrentJobId(Guid job)
+        {
+            jobId = job;
+        }
+
+        private Guid jobId;
 
         public WeeeContext(IUserContext userContext, IEventDispatcher dispatcher)
             : base("name=Weee.DefaultConnection")
@@ -265,7 +285,7 @@
             bool alreadyHasTransaction = (this.Database.CurrentTransaction != null);
 
             this.SetEntityId();
-            this.AuditChanges(userContext.UserId);
+            this.AuditChanges((jobId != Guid.Empty) ? jobId : userContext.UserId);
             AuditEntities();
 
             int result;

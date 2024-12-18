@@ -2,7 +2,10 @@
 {
     using Core.Admin;
     using Core.Shared;
+    using EA.Prsd.Core;
+    using EA.Weee.Core.Constants;
     using FakeItEasy;
+    using FluentAssertions;
     using RequestHandlers.Admin.Reports.GetProducerEeeDataCsv;
     using RequestHandlers.Security;
     using Requests.Admin.Reports;
@@ -78,6 +81,31 @@
 
             // Assert
             Assert.NotEmpty(data.FileContent);
+        }
+
+        [Fact]
+        public async Task HandleAsync_WithDirectRegistrantId_GeneratesCorrectFileName()
+        {
+            // Arrange
+            var time = new DateTime(2016, 1, 2, 11, 12, 30);
+            SystemTime.Freeze(time);
+            var request = new GetProducerEeeDataCsv(
+                2016,
+                ReportsFixedIdConstant.AllDirectRegistrantFixedId,
+                ObligationType.B2B);
+
+            var handler = new GetProducerEeeDataCsvHandler(
+                AuthorizationBuilder.CreateUserWithAllRights(),
+                A.Fake<IGetProducerEeeDataCsvDataAccess>(),
+                A.Fake<CsvWriterFactory>());
+
+            // Act
+            var result = await handler.HandleAsync(request);
+            
+            // Assert
+            result.FileName.Should().Be("2016_Direct registrants_B2B_producerEEE_02012016_1112.csv");
+
+            SystemTime.Unfreeze();
         }
     }
 }

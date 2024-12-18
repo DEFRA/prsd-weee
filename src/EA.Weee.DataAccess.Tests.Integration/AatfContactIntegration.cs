@@ -1,16 +1,15 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
     using EA.Weee.Core.AatfReturn;
-    using EA.Weee.RequestHandlers.AatfReturn;
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
     using FluentAssertions;
+    using RequestHandlers.Aatf;
     using RequestHandlers.Factories;
     using System;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
-    using RequestHandlers.Aatf;
     using Weee.DataAccess.DataAccess;
     using Weee.Tests.Core;
     using Xunit;
@@ -18,14 +17,10 @@
 
     public class AatfContactIntegration
     {
-        private readonly IQuarterWindowFactory quarterWindowFactory;
-        public AatfContactIntegration()
-        {
-            quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
-        }
+        private readonly IQuarterWindowFactory quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
 
         [Fact]
-        public async void UpdateDetails_GivenDetailsToUpdate_ContextShouldContainUpdatedDetails()
+        public async Task UpdateDetails_GivenDetailsToUpdate_ContextShouldContainUpdatedDetails()
         {
             using (var database = new DatabaseWrapper())
             {
@@ -39,7 +34,7 @@
 
                 var aatfId = await CreateContact(database, aatfAddress);
 
-                var oldContact = context.Aatfs.First(a => a.Id == aatfId).Contact;
+                var oldContact = context.Aatfs.Include(aatf => aatf.Contact).First(a => a.Id == aatfId).Contact;
 
                 var newAddressData = new AatfContactAddressData(null, "Address11", "Address21", "Town1", "County1", "PO12ST341", country.Id, country.Name);
                 var newContact = new AatfContactData(A.Dummy<Guid>(), "FirstName1", "LastName1", "Position1", newAddressData, "Telephone1", "Email1");

@@ -1,29 +1,36 @@
-﻿using EA.Weee.Api;
+﻿using System.Collections.Generic;
+using EA.Weee.Api;
+using EA.Weee.Api.App_Start;
+using Hangfire;
 using Microsoft.Owin;
 
 [assembly: OwinStartup(typeof(Startup))]
 
 namespace EA.Weee.Api
 {
-    using System.Linq;
-    using System.Net;
     using Autofac;
     using Autofac.Integration.WebApi;
+    using EA.Weee.Api.HangfireServices;
+    using EA.Weee.Core.Configuration;
+    using EA.Weee.Core.Configuration.Logging;
     using Elmah.Contrib.WebApi;
     using IdentityServer3.AccessTokenValidation;
     using IdentityServer3.Core.Configuration;
-    using IdentityServer3.Core.Logging;
     using IdSrv;
+    using Infrastructure.Infrastructure;
     using Microsoft.Owin.Security.DataProtection;
+    using Newtonsoft.Json;
     using Newtonsoft.Json.Serialization;
     using Owin;
     using Serilog;
     using Services;
+    using System;
+    using System.Configuration;
+    using System.Net;
+    using System.Reflection;
     using System.Web;
     using System.Web.Http;
     using System.Web.Http.ExceptionHandling;
-    using System.Web.Http.Filters;
-    using Infrastructure.Infrastructure;
     using LoggerConfigurationExtensions = Logging.LoggerConfigurationExtensions;
 
     public class Startup
@@ -52,6 +59,9 @@ namespace EA.Weee.Api
             builder.Register(c => Log.Logger).As<ILogger>().SingleInstance();
             builder.RegisterType<ElmahSqlLogger>().AsSelf().InstancePerRequest();
 
+            LoggerConfig.ConfigureSerilogWithSqlServer();
+            builder.Register(c => Log.Logger).As<ILogger>().SingleInstance();
+
             var container = AutofacBootstrapper.Initialize(builder, config);
             System.Net.ServicePointManager.SecurityProtocol |=
                 SecurityProtocolType.Tls11 | SecurityProtocolType.Tls12;
@@ -77,6 +87,19 @@ namespace EA.Weee.Api
             app.UseAutofacWebApi(config);
             app.UseClaimsTransformation(ClaimsTransformationOptionsFactory.Create());
             app.UseWebApi(config);
+
+            Hangfire.GlobalConfiguration.Configuration
+                .UseAutofacActivator(container)
+                .UseSqlServerStorage("Weee.DefaultConnection");
+
+            HangfireBootstrapper.Instance.Start();
+
+            if (configurationService.CurrentConfiguration.GovUkPayMopUpJobEnabled)
+            {
+                RecurringJob.AddOrUpdate<PaymentsJob>("payments-job", job => job.Execute(Guid.NewGuid()), configurationService.CurrentConfiguration.GovUkPayMopUpJobSchedule);
+            }
+
+            DiagnosticSourceDisposer.DisposeDiagnosticSourceEventSource();
         }
 
         private static IdentityServerOptions GetIdentityServerOptions(IAppBuilder app, AppConfiguration config)

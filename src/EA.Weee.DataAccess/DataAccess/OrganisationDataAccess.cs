@@ -3,6 +3,7 @@
     using Domain.AatfReturn;
     using Domain.Organisation;
     using Domain.User;
+    using EA.Weee.Domain.Scheme;
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
@@ -25,6 +26,15 @@
                 .SingleAsync(s => s.Id == schemeId);
 
             return scheme.Organisation;
+        }
+
+        public async Task<List<Organisation>> GetByRegistrationNumber(string companyRegistrationNumber)
+        {
+            var organisation = await context
+                .Organisations
+                .Where(s => s.CompanyRegistrationNumber == companyRegistrationNumber).ToListAsync();
+
+            return organisation;
         }
 
         public async Task<Organisation> GetById(Guid organisationId)

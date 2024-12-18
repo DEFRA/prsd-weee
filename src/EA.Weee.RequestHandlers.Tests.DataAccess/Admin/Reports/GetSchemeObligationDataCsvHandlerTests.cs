@@ -1,13 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin.Reports
 {
     using RequestHandlers.Admin.Reports.GetSchemeObligationDataCsv;
+    using System.Threading.Tasks;
     using Weee.DataAccess.StoredProcedure;
     using Weee.Tests.Core.Model;
     using Xunit;
+
     public class GetSchemeObligationDataCsvHandlerTests
     {
         [Fact]
-        public async void DataAccess_ReturnsOnlyB2CSchemeForProducer_WhenTheyAreRegisteredB2BandB2COverTwoSchemesInCurrentYear()
+        public async Task DataAccess_ReturnsOnlyB2CSchemeForProducer_WhenTheyAreRegisteredB2BandB2COverTwoSchemesInCurrentYear()
         {
             using (var db = new DatabaseWrapper())
             {

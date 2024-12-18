@@ -53,8 +53,10 @@
         [Required]
         [StringLength(CommonMaxFieldLengths.EmailAddress)]
         [EmailAddress]
-        [Display(Name = "Email")]
+        [Display(Name = "Email address")]
         public string Email { get; set; }
+
+        public string WebAddress { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {

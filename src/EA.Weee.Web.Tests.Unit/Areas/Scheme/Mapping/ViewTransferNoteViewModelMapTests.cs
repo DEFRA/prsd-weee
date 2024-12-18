@@ -650,9 +650,9 @@
             //arrange
             var source = new ViewTransferNoteViewModelMapTransfer(TestFixture.Create<Guid>(),
                 TestFixture.Build<TransferEvidenceNoteData>()
-                    .With(x => x.ApprovedTransfererDetails, string.Empty)
+                    .With(x => x.ApprovedTransfererDetails, "approved details")
                     .With(x => x.ApprovedRecipientDetails, string.Empty)
-                    .With(x => x.TransferredOrganisationData, CreateOrganisationData(true))
+                    .With(x => x.TransferredOrganisationData, CreateOrganisationData(false))
                     .Create(),
                 false);
 
@@ -670,6 +670,7 @@
             //arrange
             var organisation = TestFixture.Build<OrganisationData>()
                 .With(o => o.HasBusinessAddress, false)
+                .With(o => o.IsBalancingScheme, false)
                 .With(o => o.OrganisationName, "org").Create();
             var evidenceData = TestFixture.Build<TransferEvidenceNoteData>()
                 .With(e => e.RecipientOrganisationData, organisation)

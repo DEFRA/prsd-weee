@@ -86,7 +86,7 @@
         if (autocompleteInput.length > 0) {
             positionDiv(autocompleteInput, autoCompleteSearchDiv);
         }
-        
+
         var countryInput = $(".govuk-form-group.countries select");
         if (countryInput.length > 0) {
             positionDiv(countryInput.next("input"), autoCompleteSearchDiv);
@@ -130,7 +130,7 @@
         altFormat: "d/m/Y",
         disableMobile: "true",
         locale: "en"
-	    }
+    }
     );
 
     function getUrlParameter(name) {
@@ -145,7 +145,7 @@
         $("#" + parameter).focus();
     }
 
-    $("#ReturnsExternalSelectedComplianceYear").change(function() {
+    $("#ReturnsExternalSelectedComplianceYear").change(function () {
         $("#ReturnsQueryParameterForm").submit();
     });
     $("#ReturnsExternalSelectedQuarter").change(function () {
@@ -154,7 +154,7 @@
     $("#CopyPreviousSchemes").change(function () {
         $("#SelectPcsForm").submit();
     });
- 
+
     $("#TransferAllTonnage").change(function () {
         $("#TransferEvidenceForm").submit();
     });
@@ -209,7 +209,7 @@ function setupAutoCompletes() {
                 element: newElement,
                 displayMenu: useOverLay ? 'overlay' : 'inline',
                 name: element.id + "-auto",
-                onConfirm: function(confirmed) {
+                onConfirm: function (confirmed) {
 
                     function isNullOrWhitespace(input) {
                         if (typeof input === "undefined" || input == null) return true;
@@ -240,7 +240,7 @@ function setupAutoCompletes() {
                         }
                     }
                 },
-                dropdownArrow: function(config) {
+                dropdownArrow: function (config) {
                     return '<svg class="autocomplete__dropdown-arrow-down" viewBox="0 0 512 512" ><path d="M256,298.3L256,298.3L256,298.3l174.2-167.2c4.3-4.2,11.4-4.1,15.8,0.2l30.6,29.9c4.4,4.3,4.5,11.3,0.2,15.5L264.1,380.9  c-2.2,2.2-5.2,3.2-8.1,3c-3,0.1-5.9-0.9-8.1-3L35.2,176.7c-4.3-4.2-4.2-11.2,0.2-15.5L66,131.3c4.4-4.3,11.5-4.4,15.8-0.2L256,298.3  z"/></svg>'
                 }
             });
@@ -339,7 +339,7 @@ function setAAAutoCompleteZIndex() {
 $(".transfer-choose-notes-submit").closest('form').on('submit', function (event) {
     event.preventDefault();
     $(".transfer-choose-notes-submit").prop("disabled", true);
-    this.submit(); 
+    this.submit();
 });
 
 /* When a uer selects an item from the autocomplete, the ID is stored in the hidden input
@@ -377,18 +377,23 @@ $(".transfer-choose-notes-submit").closest('form').on('submit', function (event)
 })(jQuery);
 
 
-function initJQueryAutoComplete(searchUrl, mapFunction, renderFunction, selectedValueControl) {
+function initJQueryAutoComplete(searchUrl, mapFunction, renderFunction, selectedValueControl, additionalData = {}) {
     var searchTerm = '';
     $("#SearchTerm")
         .focus(function () { searchTerm = $(this).val(); })
         .blur(function () { if (searchTerm != $(this).val()) { selectedValueControl.val(""); } })
         .autocomplete({
             source: function (request, response) {
+                var data = {
+                    SearchTerm: request.term,
+                    __RequestVerificationToken: $("[name=__RequestVerificationToken]").val(),
+                    ...additionalData  // Spread the additional data here
+                };
                 $.ajax({
                     type: "POST",
                     url: searchUrl,
                     context: document.body,
-                    data: { SearchTerm: request.term, __RequestVerificationToken: $("[name=__RequestVerificationToken]").val() },
+                    data: data,
                     success: (data) => {
                         var data = $.map(data, mapFunction);
                         response(data);
@@ -432,16 +437,16 @@ function initialiseTabs() {
         var nextIndex;
 
         switch (e.keyCode) {
-        case keys.left:
-        case keys.up:
-            nextIndex = currentIndex - 1;
-            break;
-        case keys.right:
-        case keys.down:
-            nextIndex = currentIndex + 1;
-            break;
-        default:
-            return;
+            case keys.left:
+            case keys.up:
+                nextIndex = currentIndex - 1;
+                break;
+            case keys.right:
+            case keys.down:
+                nextIndex = currentIndex + 1;
+                break;
+            default:
+                return;
         }
 
         e.preventDefault();
@@ -466,3 +471,30 @@ function initialiseTabs() {
         tab.addEventListener('keydown', onTabKeydown);
     });
 }
+
+(function ($) {
+    let $button = $("#discard-button");
+    if (!$button) return;
+
+    let $form = $('form');
+
+    let originalData = $form.serialize();
+
+    let disableButton = () => {
+        $button.attr("disabled", true);
+        $button.css({ "pointer-events": "none" });
+    }
+
+    disableButton();
+
+    $form.on('keyup change paste', 'input, select, textarea', () => {
+        let currentData = $form.serialize();
+
+        if (currentData == originalData) {
+            disableButton();
+        } else {
+            $button.removeAttr("disabled");
+            $button.css({ "pointer-events": "auto" });
+        }
+    });
+})(jQuery);

@@ -55,7 +55,7 @@
         }
 
         [Fact]
-        public async void HttpPost_Create_ModelIsInvalid_ShouldReturnViewWithModel()
+        public async Task HttpPost_Create_ModelIsInvalid_ShouldReturnViewWithModel()
         {
             var controller = AccountController();
             controller.ModelState.AddModelError("Key", "Something went wrong :(");
@@ -68,7 +68,7 @@
         }
 
         [Fact]
-        public async void HttpPost_Create_ModelIsValid_ShouldIncludeUserDetails()
+        public async Task HttpPost_Create_ModelIsValid_ShouldIncludeUserDetails()
         {
             var model = ValidModel();
             var newUser = A.Fake<IUnauthenticatedUser>();
@@ -100,7 +100,7 @@
         }
 
         [Fact]
-        public async void HttpPost_Create_ModelIsValid_ShouldSubmitUserDetailsOnce_AndShouldSignInOnce()
+        public async Task HttpPost_Create_ModelIsValid_ShouldSubmitUserDetailsOnce_AndShouldSignInOnce()
         {
             var model = ValidModel();
             var newUser = A.Fake<IUnauthenticatedUser>();
@@ -120,7 +120,7 @@
         }
 
         [Fact]
-        public async void HttpPost_Create_SignInIsUnsuccessful_ShouldAddErrorToModel_AndReturnViewWithModel()
+        public async Task HttpPost_Create_SignInIsUnsuccessful_ShouldAddErrorToModel_AndReturnViewWithModel()
         {
             var model = ValidModel();
             const string loginError = "Oops";
@@ -143,7 +143,7 @@
         }
 
         [Fact]
-        public async void HttpPost_Create_SignInSuccessful_ShouldAddUserToCompetentAuthority_AndRedirectToAccountActivation()
+        public async Task HttpPost_Create_SignInSuccessful_ShouldAddUserToCompetentAuthority_AndRedirectToAccountActivation()
         {
             var newUser = A.Fake<IUnauthenticatedUser>();
             A.CallTo(() => apiClient.User).Returns(newUser);
@@ -164,7 +164,7 @@
         }
 
         [Fact]
-        public async void HttpPost_Create_ModelIsValid_ApiThrowsException_ShouldNotCatch()
+        public async Task HttpPost_Create_ModelIsValid_ApiThrowsException_ShouldNotCatch()
         {
             var model = ValidModel();
 
@@ -177,7 +177,7 @@
         }
 
         [Fact]
-        public async void HttpGet_SignIn_IsNotSignedIn_ShouldReturnLoginView()
+        public async Task HttpGet_SignIn_IsNotSignedIn_ShouldReturnLoginView()
         {
             A.CallTo(() => weeeAuthorization.GetAuthorizationState())
                 .Returns(AuthorizationState.NotLoggedIn());
@@ -189,7 +189,7 @@
         }
 
         [Fact]
-        public async void HttpPost_SignIn_ModelIsInvalid_ShouldRedirectViewWithModel()
+        public async Task HttpPost_SignIn_ModelIsInvalid_ShouldRedirectViewWithModel()
         {
             var controller = AccountController();
             controller.ModelState.AddModelError("Key", "Any error");
@@ -208,7 +208,7 @@
         }
 
         [Fact]
-        public async void HttpPost_AdminAccountActivationRequired_IfUserResendsActivationEmail_ShouldSendActivationEmail()
+        public async Task HttpPost_AdminAccountActivationRequired_IfUserResendsActivationEmail_ShouldSendActivationEmail()
         {
             // Arrange
             IUnauthenticatedUser user = A.Fake<IUnauthenticatedUser>();
@@ -313,7 +313,7 @@
         }
 
         [Fact]
-        public async void HttpPost_SignIn_ModelIsValid_AndSignInSucceeds_ShouldRedirectToDefaultLoginAction()
+        public async Task HttpPost_SignIn_ModelIsValid_AndSignInSucceeds_ShouldRedirectToDefaultLoginAction()
         {
             var model = new InternalLoginViewModel
             {
@@ -335,7 +335,7 @@
         }
 
         [Fact]
-        public async void HttpPost_SignIn_ModelIsValid_ButSignInFails_ShouldAddModelError_AndReturnViewWithModel()
+        public async Task HttpPost_SignIn_ModelIsValid_ButSignInFails_ShouldAddModelError_AndReturnViewWithModel()
         {
             var loginError = ":(";
             var model = new InternalLoginViewModel
@@ -361,7 +361,7 @@
         }
 
         [Fact]
-        public async void HttpPost_ResetPassword_ModelIsInvalid_ReturnsViewWithModel()
+        public async Task HttpPost_ResetPassword_ModelIsInvalid_ReturnsViewWithModel()
         {
             // Arrange
             var controller = AccountController();
@@ -378,7 +378,7 @@
         }
 
         [Fact]
-        public async void HttpPost_ResetPassword_ModelIsValid_CallsApiToResetPassword()
+        public async Task HttpPost_ResetPassword_ModelIsValid_CallsApiToResetPassword()
         {
             // Arrange
             IUnauthenticatedUser unauthenticatedUserClient = A.Fake<IUnauthenticatedUser>();
@@ -402,7 +402,7 @@
         }
 
         [Fact]
-        public async void HttpPost_ResetPassword_ModelIsValid_PasswordResetThrowsApiBadRequestExceptionWithModelErrors_ReturnsViewWithModel_AndErrorAddedToModelState()
+        public async Task HttpPost_ResetPassword_ModelIsValid_PasswordResetThrowsApiBadRequestExceptionWithModelErrors_ReturnsViewWithModel_AndErrorAddedToModelState()
         {
             // Arrange
             Dictionary<string, ICollection<string>> modelState = new Dictionary<string, ICollection<string>>
@@ -443,7 +443,7 @@
         }
 
         [Fact]
-        public async void HttpPost_ResetPassword_ModelIsValid_AndAuthorizationSuccessful_ReturnsPasswordResetCompleteView()
+        public async Task HttpPost_ResetPassword_ModelIsValid_AndAuthorizationSuccessful_ReturnsPasswordResetCompleteView()
         {
             // Arrange
             IUnauthenticatedUser unauthenticatedUserClient = A.Fake<IUnauthenticatedUser>();

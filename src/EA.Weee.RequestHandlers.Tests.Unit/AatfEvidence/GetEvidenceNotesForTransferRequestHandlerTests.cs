@@ -109,7 +109,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequest_OrganisationDataAccessShouldBeCalledOnce()
+        public async Task HandleAsync_GivenRequest_OrganisationDataAccessShouldBeCalledOnce()
         {
             // act
             await handler.HandleAsync(request);
@@ -119,7 +119,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequestWithCategories_DataAccessGetNotesToTransferShouldBeCalled()
+        public async Task HandleAsync_GivenRequestWithCategories_DataAccessGetNotesToTransferShouldBeCalled()
         {
             //act
             await handler.HandleAsync(request);
@@ -138,7 +138,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequestWithCriteria_DataAccessGetNotesToTransferShouldBeCalled()
+        public async Task HandleAsync_GivenRequestWithCriteria_DataAccessGetNotesToTransferShouldBeCalled()
         {
             //arrange
             var organisationId = TestFixture.Create<Guid>();
@@ -160,7 +160,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenNotesData_ReturnedNotesDataShouldBeMapped()
+        public async Task HandleAsync_GivenNotesData_ReturnedNotesDataShouldBeMapped()
         {
             // arrange
             var note1 = A.Fake<Note>();
@@ -211,7 +211,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenTransferNoteId_ReturnedNotesDataShouldBeMapped()
+        public async Task HandleAsync_GivenTransferNoteId_ReturnedNotesDataShouldBeMapped()
         {
             // arrange
             var noteList = TestFixture.CreateMany<Note>(2).ToList();
@@ -242,7 +242,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenMappedEvidenceNoteData_ListEvidenceNoteDataShouldBeReturn()
+        public async Task HandleAsync_GivenMappedEvidenceNoteData_ListEvidenceNoteDataShouldBeReturn()
         {
             // arrange
             var noteList = TestFixture.CreateMany<Note>(2).ToList();

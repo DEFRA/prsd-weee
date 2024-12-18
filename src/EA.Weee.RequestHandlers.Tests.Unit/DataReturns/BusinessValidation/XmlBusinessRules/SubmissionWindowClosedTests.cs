@@ -9,6 +9,7 @@
     using RequestHandlers.Factories;
     using System;
     using System.Linq;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class SubmissionWindowClosedTests
@@ -23,7 +24,7 @@
         }
 
         [Fact]
-        public async void UsingFixedDate_AndDateIsWithinWindow_NoValidationError()
+        public async Task UsingFixedDate_AndDateIsWithinWindow_NoValidationError()
         {
             var systemData = new TestSystemData();
             systemData.UpdateFixedCurrentDate(new DateTime(2016, 01, 01, 0, 0, 0));
@@ -45,7 +46,7 @@
         }
 
         [Fact]
-        public async void NotUsingFixedDate_TimeNowIsWithinQuarterWindow_NoValidationError()
+        public async Task NotUsingFixedDate_TimeNowIsWithinQuarterWindow_NoValidationError()
         {
             var systemData = new TestSystemData();
             systemData.ToggleFixedCurrentDateUsage(false);
@@ -73,7 +74,7 @@
         }
 
         [Fact]
-        public async void NotUsingFixedDate_TimeNowBeforeQuarterWindow_ValidationError_StatingWindowNotYetOpened()
+        public async Task NotUsingFixedDate_TimeNowBeforeQuarterWindow_ValidationError_StatingWindowNotYetOpened()
         {
             var systemData = new TestSystemData();
             systemData.ToggleFixedCurrentDateUsage(false);
@@ -107,7 +108,7 @@
         }
 
         [Fact]
-        public async void NotUsingFixedComplianceYearAndQuarter_TimeAfterQuarterWindow_ValidationError_StatingWindowHasClosed()
+        public async Task NotUsingFixedComplianceYearAndQuarter_TimeAfterQuarterWindow_ValidationError_StatingWindowHasClosed()
         {
             var systemData = new TestSystemData();
             systemData.ToggleFixedCurrentDateUsage(false);

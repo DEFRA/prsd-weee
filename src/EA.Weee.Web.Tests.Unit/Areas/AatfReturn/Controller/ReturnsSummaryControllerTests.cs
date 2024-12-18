@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
     using AutoFixture;
+    using Core.Admin;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -15,8 +16,8 @@
     using FluentAssertions;
     using System;
     using System.Text;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Core.Admin;
     using Weee.Requests.AatfReturn.Reports;
     using Weee.Tests.Core;
     using Xunit;
@@ -46,7 +47,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
+        public async Task IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
         {
             var @return = fixture.Build<ReturnData>()
                 .With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1))
@@ -61,7 +62,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_ApiShouldBeCalledWithReturnRequest()
+        public async Task IndexGet_GivenReturn_ApiShouldBeCalledWithReturnRequest()
         {
             var returnId = Guid.NewGuid();
             var @return = fixture.Build<ReturnData>()
@@ -78,7 +79,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_ReturnsSummaryViewModelShouldBeBuilt()
+        public async Task IndexGet_GivenReturn_ReturnsSummaryViewModelShouldBeBuilt()
         {
             var @return = fixture.Build<ReturnData>()
                 .With(r => r.Quarter, new Quarter(DateTime.Now.Year, QuarterType.Q1))
@@ -93,7 +94,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var returnId = Guid.NewGuid();
             var @return = fixture.Build<ReturnData>()
@@ -109,7 +110,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_ReturnsSummaryViewModelShouldBeReturned()
+        public async Task IndexGet_GivenReturn_ReturnsSummaryViewModelShouldBeReturned()
         {
             var model = A.Fake<ReturnViewModel>();
             var @return = fixture.Build<ReturnData>()
@@ -127,7 +128,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturnWithoutSubmittedDate_ShouldBeRedirectedToSummaryScreen()
+        public async Task IndexGet_GivenReturnWithoutSubmittedDate_ShouldBeRedirectedToSummaryScreen()
         {
             var model = A.Fake<ReturnViewModel>();
             var @return = fixture.Build<ReturnData>()
@@ -150,7 +151,7 @@
         }
 
         [Fact]
-        public async void DownloadGet_GivenReturnIdAndObligatedRequest_RequestShouldBeSent()
+        public async Task DownloadGet_GivenReturnIdAndObligatedRequest_RequestShouldBeSent()
         {
             var returnId = fixture.Create<Guid>();
 
@@ -162,7 +163,7 @@
         }
 
         [Fact]
-        public async void DownloadGet_GivenReturnIdAndObligatedRequest_FileContentShouldBeReturned()
+        public async Task DownloadGet_GivenReturnIdAndObligatedRequest_FileContentShouldBeReturned()
         {
             var returnId = fixture.Create<Guid>();
             var file = fixture.Create<CSVFileData>();
@@ -176,7 +177,7 @@
         }
 
         [Fact]
-        public async void DownloadGet_GivenReturnIdAndNonObligatedRequest_RequestShouldBeSent()
+        public async Task DownloadGet_GivenReturnIdAndNonObligatedRequest_RequestShouldBeSent()
         {
             var returnId = fixture.Create<Guid>();
 
@@ -188,7 +189,7 @@
         }
 
         [Fact]
-        public async void DownloadGet_GivenReturnIdAndNonObligatedRequest_FileContentShouldBeReturned()
+        public async Task DownloadGet_GivenReturnIdAndNonObligatedRequest_FileContentShouldBeReturned()
         {
             var returnId = fixture.Create<Guid>();
             var file = fixture.Create<CSVFileData>();

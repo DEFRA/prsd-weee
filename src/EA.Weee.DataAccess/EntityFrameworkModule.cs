@@ -27,19 +27,21 @@
 
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterTypeByEnvironment(typeof(WeeeContext), environment);
+            builder.RegisterTypeAsByEnvironmentInstancePerLifetimeScope(typeof(WeeeContext), environment);
             builder.RegisterTypeByEnvironment<EvidenceDataAccess, IEvidenceDataAccess>(environment);
             builder.RegisterTypeByEnvironment<GenericDataAccess, IGenericDataAccess>(environment);
-            builder.RegisterTypeByEnvironment<WeeeTransactionAdapter, IWeeeTransactionAdapter>(environment);
+            builder.RegisterTypeByEnvironmentInstancePerLifetimeScope<WeeeTransactionAdapter, IWeeeTransactionAdapter>(environment);
             builder.RegisterTypeByEnvironment<SystemDataDataAccess, ISystemDataDataAccess>(environment);
             builder.RegisterTypeByEnvironment<ObligationDataAccess, IObligationDataAccess>(environment);
             builder.RegisterTypeByEnvironment<OrganisationDataAccess, IOrganisationDataAccess>(environment);
+            builder.RegisterTypeByEnvironment<OrganisationTransactionDataAccess, IOrganisationTransactionDataAccess>(environment);
+            builder.RegisterTypeByEnvironmentInstancePerLifetimeScope<PaymentSessionDataAccess, IPaymentSessionDataAccess>(environment);
+            builder.RegisterTypeByEnvironment<SmallProducerDataAccess, ISmallProducerDataAccess>(environment);
+            builder.RegisterTypeByEnvironment<GetDirectProducerSubmissionActiveComplianceYearsDataAccess, IGetDirectProducerSubmissionActiveComplianceYearsDataAccess>(environment);
 
             builder.RegisterAssemblyTypes(ThisAssembly).AsClosedTypesOf(typeof(IEventHandler<>));
 
-            builder.RegisterType<RegisteredProducerDataAccess>().As<IRegisteredProducerDataAccess>()
-                .InstancePerRequest();
-
+            builder.RegisterTypeByEnvironment<RegisteredProducerDataAccess, IRegisteredProducerDataAccess>(environment);
             builder.RegisterTypeByEnvironment<QuarterWindowTemplateDataAccess, IQuarterWindowTemplateDataAccess>(environment);
 
             builder.RegisterType<ProducerSubmissionDataAccess>().As<IProducerSubmissionDataAccess>()

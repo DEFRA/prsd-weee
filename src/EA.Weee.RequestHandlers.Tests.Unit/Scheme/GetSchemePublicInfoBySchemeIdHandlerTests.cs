@@ -15,7 +15,7 @@
     public class GetSchemePublicInfoBySchemeIdHandlerTests
     {
         [Fact]
-        public async void GetSchemeByIdHandler_HappyPath_ReturnsSchemeData()
+        public async Task GetSchemeByIdHandler_HappyPath_ReturnsSchemeData()
         {
             // Arrange
             var dataAccess = A.Fake<ISchemeDataAccess>();
@@ -43,7 +43,7 @@
         }
 
         [Fact]
-        public async void GetSchemeByIdHandler_WithUnknownId_ThrowsArgumentException()
+        public async Task GetSchemeByIdHandler_WithUnknownId_ThrowsArgumentException()
         {
             var badSchemeId = Guid.NewGuid();
 

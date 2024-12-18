@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
+    using AutoFixture;
     using EA.Prsd.Core;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -19,10 +20,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
-
-    using AutoFixture;
-
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Tests.Core;
     using Xunit;
@@ -66,7 +65,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GiveActionExecutes_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GiveActionExecutes_BreadcrumbShouldBeSet()
         {
             var returnId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
@@ -90,7 +89,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenModel_RedirectShouldBeCorrect()
+        public async Task IndexPost_GivenModel_RedirectShouldBeCorrect()
         {
             var returnId = Guid.NewGuid();
 
@@ -107,7 +106,7 @@
         }
 
         [Fact]
-        public async void IndexGet_ReselectIsTrue_ReselectActionCalledAndViewReturned()
+        public async Task IndexGet_ReselectIsTrue_ReselectActionCalledAndViewReturned()
         {
             var returnId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
@@ -123,7 +122,7 @@
         }
 
         [Fact]
-        public async void IndexGet_CopyPreviousIsTrue_ViewModelSelectedPcsSelectedAndViewReturned()
+        public async Task IndexGet_CopyPreviousIsTrue_ViewModelSelectedPcsSelectedAndViewReturned()
         {
             var returnId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
@@ -160,7 +159,7 @@
         }
 
         [Fact]
-        public async void IndexGet_ClearSelectionsIsTrue_ViewModelSelectedPcsIsEmptyAndViewReturned()
+        public async Task IndexGet_ClearSelectionsIsTrue_ViewModelSelectedPcsIsEmptyAndViewReturned()
         {
             var returnId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
@@ -178,7 +177,7 @@
         }
 
         [Fact]
-        public async void IndexGet_ReselectIsTrue_BreadcrumbShouldBeSet()
+        public async Task IndexGet_ReselectIsTrue_BreadcrumbShouldBeSet()
         {
             var returnId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
@@ -202,7 +201,7 @@
         }
 
         [Fact]
-        public async void IndexGet_ReselectIsTrue_CallsToGetExistingSelectedSchemesMustHaveBeenCalledAndViewModelListPopulatedWithGuids()
+        public async Task IndexGet_ReselectIsTrue_CallsToGetExistingSelectedSchemesMustHaveBeenCalledAndViewModelListPopulatedWithGuids()
         {
             var returnId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
@@ -237,7 +236,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenSchemesRemoved_ShouldRedirectToRemovedPcsRoute()
+        public async Task IndexPost_GivenSchemesRemoved_ShouldRedirectToRemovedPcsRoute()
         {
             var existingSchemes = A.CollectionOfDummy<SchemeData>(3).ToList();
             var reselectedSchemes = new List<Guid>();
@@ -286,7 +285,7 @@
         }
 
         [Fact]
-        public async void IndexPost_NoSchemeRemoved_RedirectToTaskListAndAddSchemeRequestSentForEachScheme()
+        public async Task IndexPost_NoSchemeRemoved_RedirectToTaskListAndAddSchemeRequestSentForEachScheme()
         {
             var returnId = Guid.NewGuid();
 
@@ -309,7 +308,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenInvalidModelState_PreviousQuarterSelectionShouldBeRetrieved()
+        public async Task IndexPost_GivenInvalidModelState_PreviousQuarterSelectionShouldBeRetrieved()
         {
             var model = new SelectYourPcsViewModel()
             {
@@ -335,7 +334,7 @@
         }
 
         [Fact]
-        public async void PcsRemovedGet_GiveActionExecutes_DefaultViewShouldBeReturned()
+        public async Task PcsRemovedGet_GiveActionExecutes_DefaultViewShouldBeReturned()
         {
             var result = await this.controller.PcsRemoved(this.fixture.Create<Guid>(), this.fixture.Create<Guid>()) as ViewResult;
 
@@ -343,7 +342,7 @@
         }
 
         [Fact]
-        public async void PcsRemovedGet_GiveActionExecutes_ModelShouldBeReturned()
+        public async Task PcsRemovedGet_GiveActionExecutes_ModelShouldBeReturned()
         {
             var organisationId = this.fixture.Create<Guid>();
             var returnId = this.fixture.Create<Guid>();
@@ -366,7 +365,7 @@
         }
 
         [Fact]
-        public async void PcsRemovedGet_GiveActionExecutes_BreadCrumbShouldBeSet()
+        public async Task PcsRemovedGet_GiveActionExecutes_BreadCrumbShouldBeSet()
         {
             var returnId = this.fixture.Create<Guid>();
             var organisationId = this.fixture.Create<Guid>();
@@ -388,7 +387,7 @@
         }
 
         [Fact]
-        public async void PcsRemovedPost_ModelStateNotValid_ReturnsViewWithViewModel()
+        public async Task PcsRemovedPost_ModelStateNotValid_ReturnsViewWithViewModel()
         {
             var viewModel = A.Dummy<PcsRemovedViewModel>();
 
@@ -404,7 +403,7 @@
         }
 
         [Fact]
-        public async void PcsRemovedPost_YesSelectedValue_ReturnsUserToTaskListCallsToSaveSchemesMade()
+        public async Task PcsRemovedPost_YesSelectedValue_ReturnsUserToTaskListCallsToSaveSchemesMade()
         {
             var returnId = Guid.NewGuid();
 
@@ -433,7 +432,7 @@
         }
 
         [Fact]
-        public async void PcsRemovedPost_NoSelectedValue_ReturnsToSelectPcs()
+        public async Task PcsRemovedPost_NoSelectedValue_ReturnsToSelectPcs()
         {
             var returnId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();

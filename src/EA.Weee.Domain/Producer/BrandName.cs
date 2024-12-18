@@ -44,9 +44,21 @@
             return Name.CompareTo(other.Name);
         }
 
+        public BrandName OverwriteWhereNull(BrandName otherBrandName)
+        {
+            if (otherBrandName == null)
+            {
+                return this;
+            }
+
+            otherBrandName.Name = Name;
+            
+            return otherBrandName;
+        }
+
         public string Name { get; private set; }
 
-        public virtual Guid ProducerSubmissionId { get; private set; }
+        public virtual Guid? ProducerSubmissionId { get; private set; }
 
         public virtual ProducerSubmission ProducerSubmission { get; private set; }
     }

@@ -342,7 +342,7 @@
         }
 
         [Fact]
-        public async void GetAuthorisationRequired_ChecksStatusOfScheme()
+        public async Task GetAuthorisationRequired_ChecksStatusOfScheme()
         {
             await DataReturnsController().AuthorisationRequired(A.Dummy<Guid>());
 
@@ -351,7 +351,7 @@
         }
 
         [Fact]
-        public async void GetAuthorizationRequired_SchemeIsPendingApproval_ReturnsViewWithPendingStatus()
+        public async Task GetAuthorizationRequired_SchemeIsPendingApproval_ReturnsViewWithPendingStatus()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .Returns(SchemeStatus.Pending);
@@ -366,7 +366,7 @@
         }
 
         [Fact]
-        public async void GetAuthorizationRequired_SchemeIsRejected_ReturnsViewWithRejectedStatus()
+        public async Task GetAuthorizationRequired_SchemeIsRejected_ReturnsViewWithRejectedStatus()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .Returns(SchemeStatus.Rejected);
@@ -381,7 +381,7 @@
         }
 
         [Fact]
-        public async void GetAuthorizationRequired_SchemeIsWithdrawn_ReturnsViewWithWithdrawnStatus()
+        public async Task GetAuthorizationRequired_SchemeIsWithdrawn_ReturnsViewWithWithdrawnStatus()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .Returns(SchemeStatus.Withdrawn);
@@ -396,7 +396,7 @@
         }
 
         [Fact]
-        public async void GetAuthorizationRequired_SchemeIsApproved_RedirectsToIndex()
+        public async Task GetAuthorizationRequired_SchemeIsApproved_RedirectsToIndex()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeStatus>._))
                 .Returns(SchemeStatus.Approved);
@@ -481,7 +481,7 @@
         }
 
         [Fact]
-        public async void GetUpload_IdDoesBelongToAnExistingOrganisationAndSubmissionWindowIsClose_RedirectToCannotSubmitDataReturn()
+        public async Task GetUpload_IdDoesBelongToAnExistingOrganisationAndSubmissionWindowIsClose_RedirectToCannotSubmitDataReturn()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsSubmissionWindowOpen>._))
                 .Returns(false);
@@ -496,7 +496,7 @@
         }
 
         [Fact]
-        public async void GetUpload_IdDoesBelongToAnExistingOrganisationAndSubmissionWindowIsOpen_ReturnsView()
+        public async Task GetUpload_IdDoesBelongToAnExistingOrganisationAndSubmissionWindowIsOpen_ReturnsView()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IsSubmissionWindowOpen>._))
             .Returns(true);
@@ -513,7 +513,7 @@
         /// following the upload of a data return that generates no errors during processing.
         /// </summary>
         [Fact]
-        public async void PostUpload_WithDataReturnWithNoErrors_RedirectsToSubmit()
+        public async Task PostUpload_WithDataReturnWithNoErrors_RedirectsToSubmit()
         {
             // Arrange   
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessDataReturnXmlFile>._))
@@ -554,7 +554,7 @@
         }
 
         [Fact]
-        public async void PostUpload_AjaxRequest_ModelIsInvalid_ReturnsError()
+        public async Task PostUpload_AjaxRequest_ModelIsInvalid_ReturnsError()
         {
             var controller = GetRealDataReturnsControllerWithAjaxRequest();
 
@@ -570,7 +570,7 @@
         /// following the upload of a data return that generates errors during processing.
         /// </summary>
         [Fact]
-        public async void PostUpload_WithDataReturnWithErrors_RedirectsToReview()
+        public async Task PostUpload_WithDataReturnWithErrors_RedirectsToReview()
         {
             // Arrange   
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessDataReturnXmlFile>._))
@@ -613,7 +613,7 @@
         }
 
         [Fact]
-        public async void PostUpload_AjaxRequest_ValidateRequestIsProcessedSuccessfully_RedirectsToResults()
+        public async Task PostUpload_AjaxRequest_ValidateRequestIsProcessedSuccessfully_RedirectsToResults()
         {
             var dataReturnId = Guid.NewGuid();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<ProcessDataReturnXmlFile>._))
@@ -631,7 +631,7 @@
         /// to the controller action does not match the organisation ID of the specified data return.
         /// </summary>
         [Fact]
-        public async void GetReview_WithDataReturnWithDifferentOrganisationId_ThrowsAnException()
+        public async Task GetReview_WithDataReturnWithDifferentOrganisationId_ThrowsAnException()
         {
             // Arrange
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
@@ -664,7 +664,7 @@
         /// if they use the GET Review action for a data return with no errors.
         /// </summary>
         [Fact]
-        public async void GetReview_WithDataReturnWithNoErrors_RedirectsToSubmit()
+        public async Task GetReview_WithDataReturnWithNoErrors_RedirectsToSubmit()
         {
             // Arrange
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
@@ -701,7 +701,7 @@
         /// GET Review action for a data return with errors.
         /// </summary>
         [Fact]
-        public async void GetReview_HappyPath_ReturnsSubmitViewWithPopulatedViewModel()
+        public async Task GetReview_HappyPath_ReturnsSubmitViewWithPopulatedViewModel()
         {
             // Arrange           
             DataReturnError error = new DataReturnError("Test Error");
@@ -744,7 +744,7 @@
         /// to the controller action does not match the organisation ID of the specified data return.
         /// </summary>
         [Fact]
-        public async void GetSubmit_WithDataReturnWithDifferentOrganisationId_ThrowsAnException()
+        public async Task GetSubmit_WithDataReturnWithDifferentOrganisationId_ThrowsAnException()
         {
             // Arrange           
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
@@ -776,7 +776,7 @@
         /// if they use the GET Submit action for a data return with one or more errors.
         /// </summary>
         [Fact]
-        public async void GetSubmit_WithDataReturnWithErrors_RedirectsToReview()
+        public async Task GetSubmit_WithDataReturnWithErrors_RedirectsToReview()
         {
             // Arrange            
             DataReturnError error = new DataReturnError("Test Error");
@@ -811,7 +811,7 @@
         }
 
         [Fact]
-        public async void GetSuccessfulSubmission_HappyPath_ReturnsSuccessfulSubmissionView()
+        public async Task GetSuccessfulSubmission_HappyPath_ReturnsSuccessfulSubmissionView()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUploadInfoByDataReturnUploadId>._))
                 .Returns(new DataReturnUploadInfo
@@ -837,7 +837,7 @@
         /// view model when a data return is sucessfully requested.
         /// </summary>
         [Fact]
-        public async void GetSubmit_HappyPath_ReturnsSubmitViewWithPopulatedViewModel()
+        public async Task GetSubmit_HappyPath_ReturnsSubmitViewWithPopulatedViewModel()
         {
             // Arrange          
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
@@ -878,7 +878,7 @@
         /// view model when the model state is invalid.
         /// </summary>
         [Fact]
-        public async void PostSubmit_WithInvalidModelState_ReturnsSubmitViewWithPopulatedViewModel()
+        public async Task PostSubmit_WithInvalidModelState_ReturnsSubmitViewWithPopulatedViewModel()
         {
             // Arrange
             DataReturnForSubmission dataReturnForSubmission = new DataReturnForSubmission(
@@ -938,7 +938,7 @@
         /// action after a successful submission.
         /// </summary>
         [Fact]
-        public async void PostSubmit_HappyPath_RedirectsToSuccessfulSubmission()
+        public async Task PostSubmit_HappyPath_RedirectsToSuccessfulSubmission()
         {
             // Arrange
             DataReturnsController controller = GetDummyDataReturnsController(weeeClient);

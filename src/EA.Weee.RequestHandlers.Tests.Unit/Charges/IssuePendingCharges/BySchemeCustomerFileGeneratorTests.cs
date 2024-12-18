@@ -140,7 +140,7 @@
 
             // Assert
             Assert.NotNull(customerFile);
-            Assert.Equal(1, customerFile.Customers.Count);
+            Assert.Single(customerFile.Customers);
 
             var customer = customerFile.Customers[0];
 
@@ -230,7 +230,7 @@
 
             // Assert
             Assert.NotNull(customerFile);
-            Assert.Equal(1, customerFile.Customers.Count);
+            Assert.Single(customerFile.Customers);
 
             var customer = customerFile.Customers[0];
             Assert.NotNull(customer);
@@ -446,7 +446,7 @@
 
             // Assert
             Assert.NotNull(customerFile);
-            Assert.Equal(1, customerFile.Customers.Count);
+            Assert.Single(customerFile.Customers);
 
             var customer = customerFile.Customers[0];
             Assert.Equal("AABB  Netherlands", customer.Address.PostCode);

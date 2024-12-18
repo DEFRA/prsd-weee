@@ -65,7 +65,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequest_EvidenceDataAccessShouldBeCalledOnce()
+        public async Task HandleAsync_GivenRequest_EvidenceDataAccessShouldBeCalledOnce()
         {
             // act
             await handler.HandleAsync(request);
@@ -76,7 +76,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenNullListOfAatfs_ArgumentExceptionShouldBeThrown()
+        public async Task HandleAsync_GivenNullListOfAatfs_ArgumentExceptionShouldBeThrown()
         {
             // arrange
             A.CallTo(() => evidenceNoteDataAccess.GetAatfForAllNotesForComplianceYear(request.ComplianceYear, A<List<NoteStatus>>._)).Returns<List<AatfDomain>>(null);
@@ -89,7 +89,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequest_MapperShouldBeCalled()
+        public async Task HandleAsync_GivenRequest_MapperShouldBeCalled()
         {
             // arrange
             var aatf1 = TestFixture.Create<AatfDomain>();
@@ -109,7 +109,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequest_ReturnedResultShouldBeOrdered()
+        public async Task HandleAsync_GivenRequest_ReturnedResultShouldBeOrdered()
         {
             // arrange
             var aatf1 = TestFixture.Create<AatfDomain>();

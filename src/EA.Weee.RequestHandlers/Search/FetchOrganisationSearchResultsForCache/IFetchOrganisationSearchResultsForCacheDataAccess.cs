@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Search.FetchOrganisationSearchResultsForCache
 {
     using EA.Weee.Core.Search;
+    using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
@@ -12,6 +13,6 @@
         /// any scheme that has a status of rejected.
         /// </summary>
         /// <returns></returns>
-        Task<IList<OrganisationSearchResult>> FetchCompleteOrganisations();
+        Task<IList<OrganisationSearchResult>> FetchCompleteOrganisations(DateTime smallProducerEnabledFrom);
     }
 }

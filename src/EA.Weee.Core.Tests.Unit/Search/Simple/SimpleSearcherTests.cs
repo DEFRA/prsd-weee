@@ -76,7 +76,7 @@
 
             //Assert
             Assert.NotNull(results);
-            Assert.Equal(1, results.Count);
+            Assert.Single(results);
         }
 
         [Fact]

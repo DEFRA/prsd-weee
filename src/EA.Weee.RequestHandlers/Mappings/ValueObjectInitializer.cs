@@ -25,7 +25,21 @@
                 address.Postcode,
                 country,
                 address.Telephone,
-                address.Email);
+                address.Email,
+                address.WebAddress);
+        }
+
+        public static Address CreateAddress(ExternalAddressData address, Country country)
+        {
+            return new Address(address.Address1,
+                address.Address2,
+                address.TownOrCity,
+                address.CountyOrRegion,
+                address.Postcode,
+                country,
+                null,
+                null,
+                address.WebsiteAddress);
         }
 
         public static AddressType GetAddressType(Core.Shared.AddressType addressType)

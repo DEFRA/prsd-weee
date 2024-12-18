@@ -6,6 +6,7 @@
     using EA.Weee.Domain.Scheme;
     using EA.Weee.Xml.MemberRegistration;
     using FakeItEasy;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class EnvironmentAgencyProducerChargeBandCalculatorTests
@@ -23,7 +24,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_Lessthanorequalto5TEEEplacedonmarket_ProducerChargeForChargeBandShouldBeReturned()
+        public async Task GetProducerChargeBand_Lessthanorequalto5TEEEplacedonmarket_ProducerChargeForChargeBandShouldBeReturned()
         {
             //Arrange
             var countryType = new countryType();
@@ -43,7 +44,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_Lessthanorequalto5TEEEplacedonmarket_ChargeBandEShouldBeRetrieved()
+        public async Task GetProducerChargeBand_Lessthanorequalto5TEEEplacedonmarket_ChargeBandEShouldBeRetrieved()
         {
             //Arrange
             var countryType = new countryType();
@@ -61,7 +62,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_UKEngland_Morethanorequalto5TEEEplacedonmarket_VATRegistered__ProducerChargeForChargeBandShouldBeReturned()
+        public async Task GetProducerChargeBand_UKEngland_Morethanorequalto5TEEEplacedonmarket_VATRegistered__ProducerChargeForChargeBandShouldBeReturned()
         {
             //Arrange
             var countryType = new countryType();
@@ -80,7 +81,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_UKEngland_Morethanorequalto5TEEEplacedonmarket_VATRegistered_ChargeBandA2ShouldBeRetrieved()
+        public async Task GetProducerChargeBand_UKEngland_Morethanorequalto5TEEEplacedonmarket_VATRegistered_ChargeBandA2ShouldBeRetrieved()
         {
             //Arrange
             var countryType = new countryType();
@@ -97,7 +98,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_NonUKCountry_Morethanorequalto5TEEEplacedonmarket_VATRegistered__ProducerChargeForChargeBandShouldBeReturned()
+        public async Task GetProducerChargeBand_NonUKCountry_Morethanorequalto5TEEEplacedonmarket_VATRegistered__ProducerChargeForChargeBandShouldBeReturned()
         {
             var countryType = new countryType();
             var eeePlacedOnMarketBandType = new eeePlacedOnMarketBandType();
@@ -116,7 +117,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_NonUKCountry_Morethanorequalto5TEEEplacedonmarket_VATRegistered_ChargeBandD3ShouldBeRetrieved()
+        public async Task GetProducerChargeBand_NonUKCountry_Morethanorequalto5TEEEplacedonmarket_VATRegistered_ChargeBandD3ShouldBeRetrieved()
         {
             var countryType = new countryType();
             var eeePlacedOnMarketBandType = new eeePlacedOnMarketBandType();
@@ -133,7 +134,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_UKWales_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_VATRegistered__ProducerChargeForChargeBandShouldBeReturned()
+        public async Task GetProducerChargeBand_UKWales_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_VATRegistered__ProducerChargeForChargeBandShouldBeReturned()
         {
             //Arrange
             var countryType = new countryType();
@@ -154,7 +155,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_UKWales_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_VATRegistered_ChargeBandAShouldBeRetrieved()
+        public async Task GetProducerChargeBand_UKWales_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_VATRegistered_ChargeBandAShouldBeRetrieved()
         {
             //Arrange
             var countryType = new countryType();
@@ -173,7 +174,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_UKScotland_Morethanorequalto5TEEEplacedonmarket_LessthanonemillionpoundsTurnover_VATRegistered__ProducerChargeForChargeBandShouldBeReturned()
+        public async Task GetProducerChargeBand_UKScotland_Morethanorequalto5TEEEplacedonmarket_LessthanonemillionpoundsTurnover_VATRegistered__ProducerChargeForChargeBandShouldBeReturned()
         {
             //Arrange
             var countryType = new countryType();
@@ -193,7 +194,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_UKScotland_Morethanorequalto5TEEEplacedonmarket_LessthanonemillionpoundsTurnover_VATRegistered_ChargeBandBShouldBeRetrieved()
+        public async Task GetProducerChargeBand_UKScotland_Morethanorequalto5TEEEplacedonmarket_LessthanonemillionpoundsTurnover_VATRegistered_ChargeBandBShouldBeRetrieved()
         {
             //Arrange
             var countryType = new countryType();
@@ -211,7 +212,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_UKEngland_Morethanorequalto5TEEEplacedonmarket_NotVATRegistered__ProducerChargeForChargeBandShouldBeReturned()
+        public async Task GetProducerChargeBand_UKEngland_Morethanorequalto5TEEEplacedonmarket_NotVATRegistered__ProducerChargeForChargeBandShouldBeReturned()
         {
             //Arrange
             var countryType = new countryType();
@@ -230,7 +231,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_UKEngland_Morethanorequalto5TEEEplacedonmarket_NotVATRegistered_ChargeBandC2ShouldBeRetrieved()
+        public async Task GetProducerChargeBand_UKEngland_Morethanorequalto5TEEEplacedonmarket_NotVATRegistered_ChargeBandC2ShouldBeRetrieved()
         {
             //Arrange
             var countryType = new countryType();
@@ -247,7 +248,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_NonUKCountry_Morethanorequalto5TEEEplacedonmarket_NotVATRegistered__ProducerChargeForChargeBandShouldBeReturned()
+        public async Task GetProducerChargeBand_NonUKCountry_Morethanorequalto5TEEEplacedonmarket_NotVATRegistered__ProducerChargeForChargeBandShouldBeReturned()
         {
             var countryType = new countryType();
             var eeePlacedOnMarketBandType = new eeePlacedOnMarketBandType();
@@ -266,7 +267,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_NonUKCountry_Morethanorequalto5TEEEplacedonmarket_NotVATRegistered_ChargeBandD2ShouldBeRetrieved()
+        public async Task GetProducerChargeBand_NonUKCountry_Morethanorequalto5TEEEplacedonmarket_NotVATRegistered_ChargeBandD2ShouldBeRetrieved()
         {
             var countryType = new countryType();
             var eeePlacedOnMarketBandType = new eeePlacedOnMarketBandType();
@@ -283,7 +284,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_UKNorthernIreland_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_NotVATRegistered__ProducerChargeForChargeBandShouldBeReturned()
+        public async Task GetProducerChargeBand_UKNorthernIreland_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_NotVATRegistered__ProducerChargeForChargeBandShouldBeReturned()
         {
             //Arrange
             var countryType = new countryType();
@@ -304,7 +305,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_UKNorthernIreland_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_NotVATRegistered_ChargeBandDShouldBeRetrieved()
+        public async Task GetProducerChargeBand_UKNorthernIreland_Morethanorequalto5TEEEplacedonmarket_GreaterthanonemillionpoundsTurnover_NotVATRegistered_ChargeBandDShouldBeRetrieved()
         {
             //Arrange
             var countryType = new countryType();
@@ -323,7 +324,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_UKScotland_Morethanorequalto5TEEEplacedonmarket_LessthanonemillionpoundsTurnover_NotVATRegistered__ProducerChargeForChargeBandShouldBeReturned()
+        public async Task GetProducerChargeBand_UKScotland_Morethanorequalto5TEEEplacedonmarket_LessthanonemillionpoundsTurnover_NotVATRegistered__ProducerChargeForChargeBandShouldBeReturned()
         {
             //Arrange
             var countryType = new countryType();
@@ -343,7 +344,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_UKScotland_Morethanorequalto5TEEEplacedonmarket_LessthanonemillionpoundsTurnover_NotVATRegistered_ChargeBandCShouldBeRetrieved()
+        public async Task GetProducerChargeBand_UKScotland_Morethanorequalto5TEEEplacedonmarket_LessthanonemillionpoundsTurnover_NotVATRegistered_ChargeBandCShouldBeRetrieved()
         {
             //Arrange
             var countryType = new countryType();

@@ -13,7 +13,7 @@
     {
         [Fact]
         [Trait("Area", "PCS Member Upload Testing")]
-        public async void CreateProducerList_WithUnknownOrganisation_ThrowsArgumentException()
+        public async Task CreateProducerList_WithUnknownOrganisation_ThrowsArgumentException()
         {
             // Arrange
             var dataAccess = A.Fake<IProducerListFactoryDataAccess>();
@@ -30,7 +30,7 @@
 
         [Fact]
         [Trait("Area", "PCS Member Upload Testing")]
-        public async void CreateProducerList_WithOrganisationHavingMoreThanOneScheme_ThrowsArgumentException()
+        public async Task CreateProducerList_WithOrganisationHavingMoreThanOneScheme_ThrowsArgumentException()
         {
             // Arrange
             var dataAccess = A.Fake<IProducerListFactoryDataAccess>();
@@ -51,7 +51,7 @@
 
         [Fact]
         [Trait("Area", "PCS Member Upload Testing")]
-        public async void CreateProducerList_WithComplianceYear2015_SetsComplianceYear()
+        public async Task CreateProducerList_WithComplianceYear2015_SetsComplianceYear()
         {
             // Arrange
             var dataAccess = A.Fake<IProducerListFactoryDataAccess>();
@@ -77,7 +77,7 @@
 
         [Fact]
         [Trait("Area", "PCS Member Upload Testing")]
-        public async void CreateProducerList_WithSchemaVersion306_SetsSchemaVersion()
+        public async Task CreateProducerList_WithSchemaVersion306_SetsSchemaVersion()
         {
             // Arrange
             var dataAccess = A.Fake<IProducerListFactoryDataAccess>();
@@ -103,7 +103,7 @@
 
         [Fact]
         [Trait("Area", "PCS Member Upload Testing")]
-        public async void CreateProducerList_With5NewProducers_Creates5Producers()
+        public async Task CreateProducerList_With5NewProducers_Creates5Producers()
         {
             // Arrange
             var dataAccess = A.Fake<IProducerListFactoryDataAccess>();
@@ -129,7 +129,7 @@
 
         [Fact]
         [Trait("Area", "PCS Member Upload Testing")]
-        public async void CreateProducerList_With3ExistingProducers_Creates3Producers()
+        public async Task CreateProducerList_With3ExistingProducers_Creates3Producers()
         {
             // Arrange
             var dataAccess = A.Fake<IProducerListFactoryDataAccess>();
@@ -163,7 +163,7 @@
 
         [Fact]
         [Trait("Area", "PCS Member Upload Testing")]
-        public async void CreateProducerList_With5ExistingProducers_AndDatabaseHas4SubmittedProducers_Creates4Producers()
+        public async Task CreateProducerList_With5ExistingProducers_AndDatabaseHas4SubmittedProducers_Creates4Producers()
         {
             // Arrange
             var dataAccess = A.Fake<IProducerListFactoryDataAccess>();
@@ -198,7 +198,7 @@
 
         [Fact]
         [Trait("Area", "PCS Member Upload Testing")]
-        public async void CreateProducerList_With1NewProducer_And1ExistingProducer_Creates2Producers()
+        public async Task CreateProducerList_With1NewProducer_And1ExistingProducer_Creates2Producers()
         {
             // Arrange
             var dataAccess = A.Fake<IProducerListFactoryDataAccess>();

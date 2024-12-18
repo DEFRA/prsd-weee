@@ -39,7 +39,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_NoOrganisationOrInternalAccess_ThrowsSecurityException()
+        public async Task HandleAsync_NoOrganisationOrInternalAccess_ThrowsSecurityException()
         {
             var authorization = new AuthorizationBuilder().DenyInternalOrOrganisationAccess().Build();
 
@@ -51,7 +51,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequest_DataAccessShouldBeCalled()
+        public async Task HandleAsync_GivenRequest_DataAccessShouldBeCalled()
         {
             var id = Guid.NewGuid();
 
@@ -61,7 +61,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequest_SystemSettingsShouldBeRetrieved()
+        public async Task HandleAsync_GivenRequest_SystemSettingsShouldBeRetrieved()
         {
             //arrange
             var id = Guid.NewGuid();
@@ -74,7 +74,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenAatfDataWithUseFixedDate_AatfDataShouldBeMapped()
+        public async Task HandleAsync_GivenAatfDataWithUseFixedDate_AatfDataShouldBeMapped()
         {
             var aatfs = Aatfs();
             var systemData = A.Fake<SystemData>();
@@ -96,7 +96,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenAatfDataWithUseCurrentDate_AatfDataShouldBeMapped()
+        public async Task HandleAsync_GivenAatfDataWithUseCurrentDate_AatfDataShouldBeMapped()
         {
             var date = new DateTime(2020, 1, 1);
             SystemTime.Freeze(date);
@@ -119,7 +119,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenMappedAatfData_AatfDataShouldBeReturn()
+        public async Task HandleAsync_GivenMappedAatfData_AatfDataShouldBeReturn()
         {
             var aatfDatas = new List<AatfData>()
             {

@@ -1,0 +1,24 @@
+﻿@using System.Web.Mvc.Html
+@using EA.Weee.Web.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Producer.ViewModels.RegisteredResultModel
+@{
+    var title = "You have successfully submitted your producer registration";
+    ViewBag.Title = @title + " - GOV.UK";
+}
+
+@section full_main_content{
+    <div class="govuk-!-padding-bottom-5"></div>
+    <div class="govuk-panel govuk-panel--confirmation govuk-!-width-two-thirds">
+        <h1 class="govuk-panel__title">
+            You are now registered as a small producer for @Model.ComplianceYear
+        </h1>
+    </div>
+    <div class="govuk-!-width-two-thirds">
+        <p class="govuk-body">Your registration has been resubmitted and you are now registered as a small producer.</p>
+        @Html.Partial("_ContactPartial")
+    </div>
+
+    @Html.ActionLink("Perform other activities", "ChooseActivity", "Home", new { area = "Scheme", pcsId = Model.OrganisationId }, new { @class = "govuk-button" })
+}

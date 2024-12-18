@@ -62,7 +62,7 @@
         }
 
         [Fact]
-        public async void GetEditRegisteredCompanyOrganisationDetails_CanEditOrganisationIsTrue_ReturnsView()
+        public async Task GetEditRegisteredCompanyOrganisationDetails_CanEditOrganisationIsTrue_ReturnsView()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
                 .Returns(new List<CountryData>());
@@ -85,7 +85,7 @@
         }
 
         [Fact]
-        public async void EditSoleTraderOrganisationDetails_CanEditOrganisationIsTrue_ReturnsView()
+        public async Task EditSoleTraderOrganisationDetails_CanEditOrganisationIsTrue_ReturnsView()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
                 .Returns(new List<CountryData>());
@@ -106,7 +106,7 @@
         }
 
         [Fact]
-        public async void EditPartnershipOrganisationDetails_CanEditOrganisationIsTrue_ReturnsView()
+        public async Task EditPartnershipOrganisationDetails_CanEditOrganisationIsTrue_ReturnsView()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetCountries>._))
                 .Returns(new List<CountryData>());
@@ -127,7 +127,7 @@
         }
 
         [Fact]
-        public async void GetEditRegisteredCompanyOrganisationDetails_CanEditOrganisationIsFalse_ReturnsHttpForbiddenResult()
+        public async Task GetEditRegisteredCompanyOrganisationDetails_CanEditOrganisationIsFalse_ReturnsHttpForbiddenResult()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationBySchemeId>._))
                 .Returns(new OrganisationData
@@ -147,7 +147,7 @@
         }
 
         [Fact]
-        public async void PostEditRegisteredCompanyOrganisationDetails_ModelIsInvalid_GetsCountriesAndReturnsDefaultView()
+        public async Task PostEditRegisteredCompanyOrganisationDetails_ModelIsInvalid_GetsCountriesAndReturnsDefaultView()
         {
             var countries = new List<CountryData>();
 
@@ -216,7 +216,7 @@
         }
 
         [Fact]
-        public async void EditPartnershipOrganisationDetails_CanEditOrganisationIsFalse_ReturnsHttpForbiddenResult()
+        public async Task EditPartnershipOrganisationDetails_CanEditOrganisationIsFalse_ReturnsHttpForbiddenResult()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationBySchemeId>._))
                 .Returns(new OrganisationData
@@ -234,7 +234,7 @@
         }
 
         [Fact]
-        public async void EditPartnershipOrganisationDetails_ModelIsInvalid_GetsCountriesAndReturnsDefaultView()
+        public async Task EditPartnershipOrganisationDetails_ModelIsInvalid_GetsCountriesAndReturnsDefaultView()
         {
             var countries = new List<CountryData>();
 
@@ -299,7 +299,7 @@
         }
 
         [Fact]
-        public async void EditSoleTraderOrganisationDetails_CanEditOrganisationIsFalse_ReturnsHttpForbiddenResult()
+        public async Task EditSoleTraderOrganisationDetails_CanEditOrganisationIsFalse_ReturnsHttpForbiddenResult()
         {
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<OrganisationBySchemeId>._))
                 .Returns(new OrganisationData
@@ -317,7 +317,7 @@
         }
 
         [Fact]
-        public async void EditSoleTraderOrganisationDetails_ModelIsInvalid_GetsCountriesAndReturnsDefaultView()
+        public async Task EditSoleTraderOrganisationDetails_ModelIsInvalid_GetsCountriesAndReturnsDefaultView()
         {
             var countries = new List<CountryData>();
 

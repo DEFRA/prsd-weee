@@ -62,7 +62,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_WithValidOrganisationId_SetsStatusToComplete()
+        public async Task HandleAsync_WithValidOrganisationId_SetsStatusToComplete()
         {
             Guid organisationId = Guid.NewGuid();
 
@@ -92,7 +92,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_InvalidOrganisationId_ThrowsException()
+        public async Task HandleAsync_InvalidOrganisationId_ThrowsException()
         {
             Guid organisationId = Guid.NewGuid();
             string errorMessage = $"No organisation was found with an ID of \"{organisationId}\".";

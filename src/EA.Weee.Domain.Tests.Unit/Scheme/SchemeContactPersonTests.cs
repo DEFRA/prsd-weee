@@ -81,13 +81,6 @@
             Assert.Throws<InvalidOperationException>(createContact);
         }
 
-        [Fact]
-        public void SetPositionforContact_ToNull_ThrowException()
-        {
-            Action createContact = () => new Contact("Firstname", "lastName", null);
-            Assert.Throws<ArgumentNullException>(createContact);
-        }
-
         private static Contact GetTestContact()
         {
             return new Contact("firstName", "LastName", "Position");
