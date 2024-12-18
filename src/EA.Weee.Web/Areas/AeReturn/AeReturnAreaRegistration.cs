@@ -6,13 +6,7 @@
 
     public class AeReturnAreaRegistration : AreaRegistration
     {
-        public override string AreaName
-        {
-            get
-            {
-                return "AeReturn";
-            }
-        }
+        public override string AreaName => "AeReturn";
 
         public override void RegisterArea(AreaRegistrationContext context)
         {

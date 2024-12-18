@@ -95,10 +95,7 @@
                 return new SICCode(name);
             }
 
-            public static SICCode NewSICCode
-            {
-                get { return new SICCodeBuilder().Build(); }
-            }
+            public static SICCode NewSICCode => new SICCodeBuilder().Build();
 
             public static SICCode WithName(string name)
             {

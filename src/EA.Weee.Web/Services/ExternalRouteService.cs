@@ -10,13 +10,7 @@
     /// </summary>
     public class ExternalRouteService : IExternalRouteService
     {
-        private UrlHelper UrlHelper
-        {
-            get
-            {
-                return new UrlHelper(HttpContext.Current.Request.RequestContext);
-            }
-        }
+        private UrlHelper UrlHelper => new(HttpContext.Current.Request.RequestContext);
 
         public string ActivateInternalUserAccountUrl
         {

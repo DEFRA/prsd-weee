@@ -127,7 +127,7 @@
                     return RedirectToAction("AddScheme", "Scheme", new { organisationId = viewModel.SelectedOrganisationId });
                 }
 
-                return RedirectToAction("OrgAlreadyHasScheme", "AddOrganisation", new {searchTerm = viewModel.SearchTerm});
+                return RedirectToAction("OrgAlreadyHasScheme", "AddOrganisation", new {searchTerm = viewModel.SearchTerm });
             }
 
             return RedirectToAction("Add", "AddAatf", new { organisationId = viewModel.SelectedOrganisationId, facilityType = viewModel.EntityType });

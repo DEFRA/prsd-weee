@@ -14,10 +14,7 @@
         /// </summary>
         public decimal AmountExcludingVAT
         {
-            get
-            {
-                return mAmountExcludingVAT;
-            }
+            get => mAmountExcludingVAT;
             private set
             {
                 // Note that limits are asymmetric to ensure that when formatted as a string to 2 
@@ -39,7 +36,7 @@
         private string mVatCode;
         public string VatCode
         {
-            get { return mVatCode; }
+            get => mVatCode;
             set
             {
                 if (value != null && value.Length > 10)
@@ -59,10 +56,7 @@
         /// </summary>
         public string AreaCode
         {
-            get
-            {
-                return mAreaCode;
-            }
+            get => mAreaCode;
             set
             {
                 if (value != null && value.Length > 10)
@@ -81,10 +75,7 @@
         /// </summary>
         public string Description
         {
-            get
-            {
-                return mDescription;
-            }
+            get => mDescription;
             private set
             {
                 if (string.IsNullOrEmpty(value))
@@ -108,10 +99,7 @@
         /// </summary>
         public string IncomeStreamCode
         {
-            get
-            {
-                return mIncomeStreamCode;
-            }
+            get => mIncomeStreamCode;
             set
             {
                 if (string.IsNullOrEmpty(value))
@@ -135,10 +123,7 @@
         /// </summary>
         public string ContextCode
         {
-            get
-            {
-                return mContextCode;
-            }
+            get => mContextCode;
             set
             {
                 if (string.IsNullOrEmpty(value))
@@ -162,10 +147,7 @@
         /// </summary>
         public UInt64 Quantity
         {
-            get
-            {
-                return mQuantity;
-            }
+            get => mQuantity;
             set
             {
                 if (value < 1)

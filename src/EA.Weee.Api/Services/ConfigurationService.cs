@@ -17,8 +17,8 @@
 
         public AppConfiguration CurrentConfiguration
         {
-            get { return currentConfiguration ?? ResolveSettings(); }
-            set { currentConfiguration = value; }
+            get => currentConfiguration ?? ResolveSettings();
+            set => currentConfiguration = value;
         }
 
         private AppConfiguration ResolveSettings()

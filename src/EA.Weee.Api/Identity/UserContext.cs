@@ -35,10 +35,7 @@
             }
         }
 
-        public ClaimsPrincipal Principal
-        {
-            get { return HttpContext.Current.User as ClaimsPrincipal; }
-        }
+        public ClaimsPrincipal Principal => HttpContext.Current.User as ClaimsPrincipal;
 
         private static Guid GetUserId(ClaimsIdentity identity, string claimType)
         {

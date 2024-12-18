@@ -1,13 +1,12 @@
 ﻿namespace EA.Weee.DataAccess.StoredProcedure
 {
-    using System;
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Helpers;
-    using EA.Weee.Domain.Obligation;
     using EA.Weee.Domain.Organisation;
+    using System;
 
     /// <summary>
-    /// This class maps to the results of [AATF].[getAatfAeDetailsDataCsvData]
+    /// This class maps to the results of [AATF].[getAatfAeDetailsDataCsvData].
     /// </summary>
     public class AatfAeDetailsData
     {
@@ -38,13 +37,7 @@
 
         public DateTime? ApprovalDate { get; set; }
 
-        public string ApprovalDateString
-        {
-            get
-            {
-                return ApprovalDate != null ? ApprovalDate.Value.ToShortDateString() : string.Empty;
-            }
-        }
+        public string ApprovalDateString => ApprovalDate != null ? ApprovalDate.Value.ToShortDateString() : string.Empty;
 
         public string Size { get; set; }
 
@@ -96,13 +89,7 @@
 
         public int OrganisationType { get; set; }
 
-        public string OrganisationTypeString
-        {
-            get
-            {
-                return EnumHelper.GetDisplayName(Enumeration.FromValue<OrganisationType>(OrganisationType));
-            }
-        }
+        public string OrganisationTypeString => EnumHelper.GetDisplayName(Enumeration.FromValue<OrganisationType>(OrganisationType));
         public string CompanyRegistrationNumber { get; set; }
 
         public string OrganisationTelephone { get; set; }

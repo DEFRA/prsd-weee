@@ -3,9 +3,9 @@
     using EA.Weee.Domain.Organisation;
     using System.Data.Entity.ModelConfiguration;
 
-    public class AdditionalCompanyDetailsConfiguration : EntityTypeConfiguration<AdditionalCompanyDetails>
+    public class AdditionalCompanyDetailsMapping : EntityTypeConfiguration<AdditionalCompanyDetails>
     {
-        public AdditionalCompanyDetailsConfiguration()
+        public AdditionalCompanyDetailsMapping()
         {
             ToTable("AdditionalCompanyDetails", "Organisation");
 

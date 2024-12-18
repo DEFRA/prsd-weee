@@ -1,15 +1,15 @@
 ﻿namespace EA.Weee.DataAccess.DataAccess
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Domain;
     using Domain.Evidence;
     using Domain.Obligation;
     using Domain.Scheme;
     using Prsd.Core.Domain;
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Z.EntityFramework.Plus;
 
     public class ObligationDataAccess : IObligationDataAccess
@@ -18,8 +18,9 @@
         private readonly IGenericDataAccess genericDataAccess;
         private readonly WeeeContext weeeContext;
 
-        public ObligationDataAccess(IUserContext userContext, 
-            IGenericDataAccess genericDataAccess, 
+        public ObligationDataAccess(
+            IUserContext userContext,
+            IGenericDataAccess genericDataAccess,
             WeeeContext weeeContext)
         {
             this.userContext = userContext;
@@ -47,7 +48,7 @@
         {
             var schemes = weeeContext.Schemes
                 .IncludeFilter(s => s.ObligationSchemes.Where(s1 => s1.ComplianceYear == complianceYear && s1.SchemeId == s.Id))
-                .Where(s => s.ObligationSchemes.Any(o => o.ComplianceYear == complianceYear && o.SchemeId == s.Id)  || s.SchemeStatus.Value == SchemeStatus.Approved.Value);
+                .Where(s => s.ObligationSchemes.Any(o => o.ComplianceYear == complianceYear && o.SchemeId == s.Id) || s.SchemeStatus.Value == SchemeStatus.Approved.Value);
 
             if (authority != null)
             {
@@ -57,8 +58,9 @@
             return await schemes.ToListAsync();
         }
 
-        public async Task<Guid> AddObligationUpload(UKCompetentAuthority ukCompetentAuthority,
-            string data, 
+        public async Task<Guid> AddObligationUpload(
+            UKCompetentAuthority ukCompetentAuthority,
+            string data,
             string fileName,
             IList<ObligationUploadError> errors,
             IList<ObligationScheme> obligations)

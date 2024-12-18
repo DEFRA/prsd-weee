@@ -67,7 +67,7 @@
         public void OnActionExecuting_GivenInvalidComplianceYearParameter_ArgumentExceptionExpected()
         {
             //arrange
-            var actionParameters = new Dictionary<string, object>() { { "complianceYear", TestFixture.Create<string>() }};
+            var actionParameters = new Dictionary<string, object>() { { "complianceYear", TestFixture.Create<string>() } };
             A.CallTo(() => context.ActionParameters).Returns(actionParameters);
 
             //act

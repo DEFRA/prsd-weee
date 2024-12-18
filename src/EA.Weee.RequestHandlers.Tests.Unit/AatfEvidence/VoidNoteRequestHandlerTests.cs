@@ -49,7 +49,7 @@
             var recipientOrganisation = A.Fake<Organisation>();
             var recipientScheme = A.Fake<Scheme>();
 
-            A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() {recipientScheme});
+            A.CallTo(() => recipientOrganisation.Schemes).Returns(new List<Scheme>() { recipientScheme });
             A.CallTo(() => recipientScheme.SchemeStatus).Returns(SchemeStatus.Approved);
             A.CallTo(() => recipientScheme.Id).Returns(TestFixture.Create<Guid>());
             A.CallTo(() => note.Recipient).Returns(recipientOrganisation);

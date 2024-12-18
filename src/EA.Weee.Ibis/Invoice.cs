@@ -24,10 +24,7 @@
         /// </summary>
         public string CustomerReference
         {
-            get
-            {
-                return mCustomerReference;
-            }
+            get => mCustomerReference;
             private set
             {
                 if (string.IsNullOrEmpty(value))
@@ -63,10 +60,7 @@
         /// </summary>
         public string TransactionReference
         {
-            get
-            {
-                return mTransactionReference;
-            }
+            get => mTransactionReference;
             private set
             {
                 if (string.IsNullOrEmpty(value))
@@ -91,10 +85,7 @@
         /// </summary>
         public string RelatedTransactionReference
         {
-            get
-            {
-                return mRelatedTransactionReference;
-            }
+            get => mRelatedTransactionReference;
             set
             {
                 if (value != null && value.Length > 18)
@@ -119,10 +110,7 @@
         /// </summary>
         public string TransactionHeaderNarrative
         {
-            get
-            {
-                return mTransactionHeaderNarrative;
-            }
+            get => mTransactionHeaderNarrative;
             set
             {
                 if (value != null && value.Length > 240)

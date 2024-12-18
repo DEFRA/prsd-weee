@@ -1410,7 +1410,7 @@
         public async Task ManageContactDetailsPost_GivenInvalidViewModel_BreadcrumbShouldBeSet(FacilityType type)
         {
             var aatfId = Guid.NewGuid();
-            var model = new AatfEditContactAddressViewModel() { Id = aatfId, ContactData = new AatfContactData(), AatfData = new AatfData() { FacilityType = type }};
+            var model = new AatfEditContactAddressViewModel() { Id = aatfId, ContactData = new AatfContactData(), AatfData = new AatfData() { FacilityType = type } };
             controller.ModelState.AddModelError("error", "error");
 
             await controller.ManageContactDetails(model);

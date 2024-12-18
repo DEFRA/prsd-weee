@@ -13,27 +13,15 @@
         [ConfigurationProperty("userTestModeEnabled", IsRequired = true)]
         public bool UserTestModeEnabled
         {
-            get
-            {
-                return (bool)this["userTestModeEnabled"];
-            }
-            set
-            {
-                this["userTestModeEnabled"] = value;
-            }
+            get => (bool)this["userTestModeEnabled"];
+            set => this["userTestModeEnabled"] = value;
         }
 
         [ConfigurationProperty("", IsRequired = true, IsDefaultCollection = true)]
         public TestUserEmailDomainElementCollection Domains
         {
-            get
-            {
-                return (TestUserEmailDomainElementCollection)this[string.Empty];
-            }
-            set
-            {
-                this[string.Empty] = value;
-            }
+            get => (TestUserEmailDomainElementCollection)this[string.Empty];
+            set => this[string.Empty] = value;
         }
 
         IEnumerable<string> ITestUserEmailDomains.Domains

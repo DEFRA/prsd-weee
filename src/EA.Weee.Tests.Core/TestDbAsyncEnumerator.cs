@@ -24,14 +24,8 @@ namespace EA.Weee.Tests.Core
             return Task.FromResult(this.inner.MoveNext());
         }
 
-        public T Current
-        {
-            get { return this.inner.Current; }
-        }
+        public T Current => this.inner.Current;
 
-        object IDbAsyncEnumerator.Current
-        {
-            get { return Current; }
-        }
+        object IDbAsyncEnumerator.Current => Current;
     }
 }

@@ -101,10 +101,7 @@
                 return new ReturnItem(obligationType, weeeCategory, tonnage);
             }
 
-            public static ReturnItem NewReturnItem
-            {
-                get { return new ReturnItemBuilder().Build(); }
-            }
+            public static ReturnItem NewReturnItem => new ReturnItemBuilder().Build();
 
             public static ReturnItem WithObligationType(ObligationType obligationType)
             {

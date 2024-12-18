@@ -96,10 +96,7 @@
                 return new WeeeCollectedAmount(sourceType, obligationType, weeeCategory, tonnage);
             }
 
-            public static WeeeCollectedAmount NewWeeeCollectedAmount
-            {
-                get { return new WeeeCollectedAmountBuilder().Build(); }
-            }
+            public static WeeeCollectedAmount NewWeeeCollectedAmount => new WeeeCollectedAmountBuilder().Build();
 
             public static WeeeCollectedAmount WithObligationType(ObligationType obligationType)
             {
