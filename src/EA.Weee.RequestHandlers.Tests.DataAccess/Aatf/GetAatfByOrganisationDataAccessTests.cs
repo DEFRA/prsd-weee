@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Aatf
 {
-    using System.Linq;
     using AutoFixture;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.AatfReturn;
@@ -9,6 +8,8 @@
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
+    using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core.Model;
     using Xunit;
     using Organisation = Domain.Organisation.Organisation;
@@ -25,7 +26,7 @@
         }
 
         [Fact]
-        public async void GetAatfsForOrganisation_GivenOrganisationAatfsShouldBeReturned()
+        public async Task GetAatfsForOrganisation_GivenOrganisationAatfsShouldBeReturned()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {

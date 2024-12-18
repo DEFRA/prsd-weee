@@ -2,6 +2,8 @@
 {
     using Shared;
     using System;
+    using System.Collections.Generic;
+    using System.Linq;
 
     [Serializable]
     public class OrganisationData
@@ -34,6 +36,10 @@
 
         public bool HasAatfs { get; set; }
 
+        public bool HasDirectRegistrant => DirectRegistrants != null && DirectRegistrants.Any();
+
+        public Guid? DirectRegistrantId { get; set; }
+
         public bool HasAes { get; set; }
 
         /// <summary>
@@ -48,5 +54,13 @@
         public bool IsRegisteredCompany => OrganisationType == OrganisationType.RegisteredCompany;
 
         public bool IsBalancingScheme { get; set; }
+
+        public List<DirectRegistrantInfo> DirectRegistrants { get; set; } = new List<DirectRegistrantInfo>();
+
+        public bool IsRepresentingCompany {get; set; }
+
+        public bool NpwdMigrated { get; set; }
+
+        public bool NpwdMigratedComplete { get; set; }
     }
 }

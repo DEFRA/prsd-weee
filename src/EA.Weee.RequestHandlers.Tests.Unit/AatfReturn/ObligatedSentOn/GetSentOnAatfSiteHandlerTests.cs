@@ -53,7 +53,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenGetSentOnAatfSiteRequest_AddressDataShouldBeMapped()
+        public async Task HandleAsync_GivenGetSentOnAatfSiteRequest_AddressDataShouldBeMapped()
         {
             var address = A.Fake<AatfAddress>();
 

@@ -10,6 +10,7 @@
     using Requests.DataReturns;
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class IsSubmissionWindowOpenHandlerTests
@@ -24,7 +25,7 @@
         }
 
         [Fact]
-        public async void UsingFixedDate_DateIsWithinOneOfTheQuarterWindow_ReturnTrue()
+        public async Task UsingFixedDate_DateIsWithinOneOfTheQuarterWindow_ReturnTrue()
         {
             var systemData = new SubmissionWindowClosedTests.TestSystemData();
             systemData.UpdateFixedCurrentDate(new DateTime(2016, 4, 10, 0, 0, 0));
@@ -50,7 +51,7 @@
         }
 
         [Fact]
-        public async void NotUsingFixedDate_TimeNowIsWithinOneOfTheQuarterWindow_ReturnTrue()
+        public async Task NotUsingFixedDate_TimeNowIsWithinOneOfTheQuarterWindow_ReturnTrue()
         {
             var systemData = new SubmissionWindowClosedTests.TestSystemData();
             systemData.ToggleFixedCurrentDateUsage(false);
@@ -81,7 +82,7 @@
         }
 
         [Fact]
-        public async void NotUsingFixedDate_TimeNowIsNotWithinOneOfTheQuarterWindow_ReturnFalse()
+        public async Task NotUsingFixedDate_TimeNowIsNotWithinOneOfTheQuarterWindow_ReturnFalse()
         {
             var systemData = new SubmissionWindowClosedTests.TestSystemData();
             systemData.ToggleFixedCurrentDateUsage(false);

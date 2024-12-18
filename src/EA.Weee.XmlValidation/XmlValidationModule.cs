@@ -7,111 +7,62 @@
     using BusinessValidation.MemberRegistration.QuerySets.Queries.Producer;
     using BusinessValidation.MemberRegistration.Rules.Producer;
     using BusinessValidation.MemberRegistration.Rules.Scheme;
+    using EA.Prsd.Core.Autofac;
+    using EA.Weee.Xml.MemberRegistration;
     using Errors;
     using SchemaValidation;
 
     public class XmlValidationModule : Module
     {
+        private readonly EnvironmentResolver environment;
+
+        public XmlValidationModule(EnvironmentResolver environment)
+        {
+            this.environment = environment;
+        }
+
+        public XmlValidationModule()
+        {
+            this.environment = new EnvironmentResolver()
+            {
+                HostEnvironment = HostEnvironmentType.Owin,
+                IocApplication = IocApplication.RequestHandler,
+                IsTestRun = false
+            };
+        }
+
         protected override void Load(ContainerBuilder builder)
         {
             // TODO: Autoscan
-
-            builder.RegisterType<MemberRegistrationBusinessValidator>()
-                .As<IMemberRegistrationBusinessValidator>()
-                .InstancePerRequest();
-
-            builder.RegisterType<MigratedProducerQuerySet>()
-                .As<IMigratedProducerQuerySet>()
-                .InstancePerRequest();
-
-            builder.RegisterType<ProducerQuerySet>()
-                .As<IProducerQuerySet>()
-                .InstancePerRequest();
-
-            builder.RegisterType<SchemeQuerySet>()
-                .As<ISchemeQuerySet>()
-                .InstancePerRequest();
-
-            builder.RegisterType<SchemeEeeDataQuerySet>()
-                .As<ISchemeEeeDataQuerySet>()
-                .InstancePerRequest();
-
-            builder.RegisterType<AmendmentHasNoProducerRegistrationNumber>()
-                .As<IAmendmentHasNoProducerRegistrationNumber>()
-                .InstancePerRequest();
-
-            builder.RegisterType<AnnualTurnoverMismatch>()
-                .As<IAnnualTurnoverMismatch>()
-                .InstancePerRequest();
-
-            builder.RegisterType<InsertHasProducerRegistrationNumber>()
-                .As<IInsertHasProducerRegistrationNumber>()
-                .InstancePerRequest();
-
-            builder.RegisterType<ProducerAlreadyRegistered>()
-                .As<IProducerAlreadyRegistered>()
-                .InstancePerRequest();
-
-            builder.RegisterType<ProducerNameAlreadyRegistered>()
-                .As<IProducerNameAlreadyRegistered>()
-                .InstancePerRequest();
-
-            builder.RegisterType<ProducerNameChange>()
-                .As<IProducerNameChange>()
-                .InstancePerRequest();
-
-            builder.RegisterType<ProducerRegistrationNumberValidity>()
-                .As<IProducerRegistrationNumberValidity>()
-                .InstancePerRequest();
-
-            builder.RegisterType<UkBasedAuthorisedRepresentative>()
-                .As<IUkBasedAuthorisedRepresentative>()
-                .InstancePerRequest();
-
-            builder.RegisterType<CorrectSchemeApprovalNumber>()
-                .As<ICorrectSchemeApprovalNumber>()
-                .InstancePerRequest();
-
-            builder.RegisterType<DuplicateProducerNames>()
-                .As<IDuplicateProducerNames>()
-                .InstancePerRequest();
-
-            builder.RegisterType<DuplicateProducerRegistrationNumbers>()
-                .As<IDuplicateProducerRegistrationNumbers>()
-                .InstancePerRequest();
-
-            builder.RegisterType<SearchMatcher>()
-                .As<ISearchMatcher>()
-                .InstancePerRequest();
-
-            builder.RegisterType<EnsureAnOverseasProducerIsNotBasedInTheUK>()
-                .As<IEnsureAnOverseasProducerIsNotBasedInTheUK>()
-                .InstancePerRequest();
-
-            builder.RegisterType<ProducerChargeBandChange>()
-                .As<IProducerChargeBandChange>()
-                .InstancePerRequest();
-
-            builder.RegisterType<CompanyAlreadyRegistered>()
-                .As<ICompanyAlreadyRegistered>()
-                .InstancePerRequest();
-
-            builder.RegisterType<CompanyRegistrationNumberChange>()
-                .As<ICompanyRegistrationNumberChange>()
-                .InstancePerRequest();
-
-            builder.RegisterType<ProducerObligationTypeChange>()
-                .As<IProducerObligationTypeChange>()
-                .InstancePerRequest();
-
-            builder.RegisterType<ExistingProducerNames>().As<IExistingProducerNames>().InstancePerRequest();
-            builder.RegisterType<CurrentCompanyProducers>().As<ICurrentCompanyProducers>().InstancePerRequest();
-            builder.RegisterType<ExistingProducerRegistrationNumbers>().As<IExistingProducerRegistrationNumbers>().InstancePerRequest();
-            builder.RegisterType<CurrentProducersByRegistrationNumber>().As<ICurrentProducersByRegistrationNumber>().InstancePerRequest();
-
-            builder.RegisterType<XmlErrorTranslator>().As<IXmlErrorTranslator>().InstancePerRequest();
-            builder.RegisterType<SchemaValidator>().As<ISchemaValidator>().InstancePerRequest();
-            builder.RegisterType<NamespaceValidator>().As<INamespaceValidator>().InstancePerRequest();
+            builder.RegisterTypeByEnvironment<MemberRegistrationBusinessValidator, IMemberRegistrationBusinessValidator>(environment);
+            builder.RegisterTypeByEnvironment<MigratedProducerQuerySet, IMigratedProducerQuerySet>(environment);
+            builder.RegisterTypeByEnvironment<ProducerQuerySet, IProducerQuerySet>(environment);
+            builder.RegisterTypeByEnvironment<SchemeQuerySet, ISchemeQuerySet>(environment);
+            builder.RegisterTypeByEnvironment<SchemeEeeDataQuerySet, ISchemeEeeDataQuerySet>(environment);
+            builder.RegisterTypeByEnvironment<AmendmentHasNoProducerRegistrationNumber, IAmendmentHasNoProducerRegistrationNumber>(environment);
+            builder.RegisterTypeByEnvironment<AnnualTurnoverMismatch, IAnnualTurnoverMismatch>(environment);
+            builder.RegisterTypeByEnvironment<InsertHasProducerRegistrationNumber, IInsertHasProducerRegistrationNumber>(environment);
+            builder.RegisterTypeByEnvironment<ProducerAlreadyRegistered, IProducerAlreadyRegistered>(environment);
+            builder.RegisterTypeByEnvironment<ProducerNameAlreadyRegistered, IProducerNameAlreadyRegistered>(environment);
+            builder.RegisterTypeByEnvironment<ProducerNameChange, IProducerNameChange>(environment);
+            builder.RegisterTypeByEnvironment<ProducerRegistrationNumberValidity, IProducerRegistrationNumberValidity>(environment);
+            builder.RegisterTypeByEnvironment<UkBasedAuthorisedRepresentative, IUkBasedAuthorisedRepresentative>(environment);
+            builder.RegisterTypeByEnvironment<CorrectSchemeApprovalNumber, ICorrectSchemeApprovalNumber>(environment);
+            builder.RegisterTypeByEnvironment<DuplicateProducerNames, IDuplicateProducerNames>(environment);
+            builder.RegisterTypeByEnvironment<DuplicateProducerRegistrationNumbers, IDuplicateProducerRegistrationNumbers>(environment);
+            builder.RegisterTypeByEnvironment<SearchMatcher, ISearchMatcher>(environment);
+            builder.RegisterTypeByEnvironment<EnsureAnOverseasProducerIsNotBasedInTheUK, IEnsureAnOverseasProducerIsNotBasedInTheUK>(environment);
+            builder.RegisterTypeByEnvironment<ProducerChargeBandChange, IProducerChargeBandChange>(environment);
+            builder.RegisterTypeByEnvironment<CompanyAlreadyRegistered, ICompanyAlreadyRegistered>(environment);
+            builder.RegisterTypeByEnvironment<CompanyRegistrationNumberChange, ICompanyRegistrationNumberChange>(environment);
+            builder.RegisterTypeByEnvironment<ProducerObligationTypeChange, IProducerObligationTypeChange>(environment);
+            builder.RegisterTypeByEnvironment<ExistingProducerNames, IExistingProducerNames>(environment);
+            builder.RegisterTypeByEnvironment<CurrentCompanyProducers, ICurrentCompanyProducers>(environment);
+            builder.RegisterTypeByEnvironment<ExistingProducerRegistrationNumbers, IExistingProducerRegistrationNumbers>(environment);
+            builder.RegisterTypeByEnvironment<CurrentProducersByRegistrationNumber, ICurrentProducersByRegistrationNumber>(environment);
+            builder.RegisterTypeByEnvironment<XmlErrorTranslator, IXmlErrorTranslator>(environment);
+            builder.RegisterTypeByEnvironment<SchemaValidator, ISchemaValidator>(environment);
+            builder.RegisterTypeByEnvironment<NamespaceValidator, INamespaceValidator>(environment);
         }
     }
 }

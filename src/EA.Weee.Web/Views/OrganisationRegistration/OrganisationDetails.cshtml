@@ -1,0 +1,47 @@
+﻿@using EA.Weee.Core.DataStandards
+@using MvcNavigationHelpers
+@using EA.Weee.Web.Controllers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Core.Organisations.Base.OrganisationViewModel
+@{
+    const string title = "Organisation details";
+    ViewBag.Title = title + " - GOV.UK";
+}
+@section full_main_content
+{
+    @(this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.PreviousPage(Model.OrganisationType))))
+
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">@title</h1>
+    </header>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.IsPreviousSchemeMember)
+        @Html.HiddenFor(m => m.HasAuthorisedRepresentitive)
+        @Html.HiddenFor(m => m.NpwdMigrated)
+
+        @Html.Partial("_OrganisationHeadingAndCountryPartial", Model)
+
+        @Html.EditorFor(model => model)
+
+        @Html.Partial("_OrganisationDetailsPartial", Model)
+
+        <div class="govuk-form-group">
+            @(this.WeeeGds().Submit("Continue", new {id ="organisation-continue"}))
+        </div>
+
+        @(this.WeeeGds().BackToTopLink())
+    }
+}
+
+
+@section scripts {
+    @Scripts.Render("~/bundles/org-details-company-lookup")
+
+    <script>
+        window.orgDetailsCompanyLookup("@Url.Action("FindCompany")?companiesRegistrationNumber=");
+    </script>
+}

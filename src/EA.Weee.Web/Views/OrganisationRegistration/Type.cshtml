@@ -1,0 +1,42 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@using EA.Weee.Web.Controllers
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.Type.OrganisationTypeViewModel
+@{
+    const string title = "Organisation type";
+    ViewBag.Title = title + " - GOV.UK";
+}
+
+
+@section full_main_content
+{
+    @(this.WeeeGds().BackLink(@Url.UrlFor<OrganisationRegistrationController>(a => a.ContactDetails())))
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <header class="hgroup">
+            <h1 class="govuk-heading-l">
+                @title
+            </h1>
+        </header>
+
+        @Html.Gds().ValidationSummary()
+
+        <p class="govuk-hint">
+            Indicate legal status of the applicant.
+        </p>
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "Select the legal status of the applicant",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
+        </div>
+
+        <div class="govuk-form-group">
+            @(this.WeeeGds().Submit("Continue"))
+        </div>
+    }
+}

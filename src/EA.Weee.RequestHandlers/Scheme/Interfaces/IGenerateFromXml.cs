@@ -13,5 +13,7 @@
 
         MemberUpload GenerateMemberUpload(ProcessXmlFile messageXmlFile, List<MemberUploadError> errors,
             decimal totalCharges, Scheme scheme, bool hasAnnualCharge);
+
+        Task EnsureProducerRegistrationNumberExists(string producerRegistrationNumber);
     }
 }

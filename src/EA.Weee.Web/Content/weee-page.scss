@@ -1051,3 +1051,32 @@ input[type='radio']:checked:before {
 .prsd-long-address span {
     display: block;
 }
+
+.back-to-top {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+}
+
+.back-to-top i {
+    margin-right: 5px;
+}
+
+.border-divider {
+    border-bottom: 1px solid $govuk-border-colour;
+}
+
+.back-to-top span {
+    text-decoration: underline;
+}
+
+.flex-container {
+    display: flex;
+    align-items: center;
+    padding-left: 15px;
+}
+
+.label-width {
+    width: 30%;
+    flex-shrink: 0;
+}

@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
+    using AutoFixture;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
@@ -18,8 +19,8 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
-    using AutoFixture;
     using Web.Infrastructure;
     using Weee.Tests.Core;
     using Xunit;
@@ -66,7 +67,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
+        public async Task IndexGet_GivenActionExecutes_DefaultViewShouldBeReturned()
         {
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
 
@@ -74,7 +75,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var returnId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
@@ -95,7 +96,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmitYesSelectedAndWeeeReceivedReSelected_PageRedirectsToPcsSelection()
+        public async Task IndexPost_OnSubmitYesSelectedAndWeeeReceivedReSelected_PageRedirectsToPcsSelection()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -132,7 +133,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmitYesSelectedAndWeeeReceivedNotReSelected_PageRedirectsToAatfTaskList()
+        public async Task IndexPost_OnSubmitYesSelectedAndWeeeReceivedNotReSelected_PageRedirectsToAatfTaskList()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -162,7 +163,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmitWithNoSelected_PageRedirectsToSelectReportOptions()
+        public async Task IndexPost_OnSubmitWithNoSelected_PageRedirectsToSelectReportOptions()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -189,7 +190,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
+        public async Task IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
             var model = CreateSubmittedViewModel();
             model.SelectedOptions.Add(1);
@@ -206,7 +207,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenInvalidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexPost_GivenInvalidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();

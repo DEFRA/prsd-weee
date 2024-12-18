@@ -9,6 +9,7 @@
     using FakeItEasy;
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using Xml.MemberRegistration;
     using Xunit;
 
@@ -31,7 +32,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_GivenProducerSubmission_RegisteredProducerShouldBeRetrieved()
+        public async Task GetProducerChargeBand_GivenProducerSubmission_RegisteredProducerShouldBeRetrieved()
         {
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
             var producerType = new producerType() { registrationNo = "no" };
@@ -43,7 +44,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_GivenProducerSubmission_PreviousAmendmentChargeShouldBeRetrieved()
+        public async Task GetProducerChargeBand_GivenProducerSubmission_PreviousAmendmentChargeShouldBeRetrieved()
         {
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
             var producerType = new producerType() { registrationNo = "no" };
@@ -55,7 +56,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_GivenProducerSubmission_EnvironmentAgencyCalculatorChargeBandShouldBeRetrieved()
+        public async Task GetProducerChargeBand_GivenProducerSubmission_EnvironmentAgencyCalculatorChargeBandShouldBeRetrieved()
         {
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
             var producerType = new producerType() { registrationNo = "no" };
@@ -67,7 +68,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_GivenCurrentSubmissionsIsMoreThanFiveTonnesAndPreviousProducerSubmissionWasLessThanFiveTonnes_ProducerChargeShouldBeEnvironmentAgencyCharge()
+        public async Task GetProducerChargeBand_GivenCurrentSubmissionsIsMoreThanFiveTonnesAndPreviousProducerSubmissionWasLessThanFiveTonnes_ProducerChargeShouldBeEnvironmentAgencyCharge()
         {
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
             var producerType = new producerType() { registrationNo = "no", eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket };
@@ -83,7 +84,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_GivenCurrentSubmissionsIsNotMoreThanFiveTonnes_EnvironmentAgencyProducerChargeWithZeroAmountShouldBeReturned()
+        public async Task GetProducerChargeBand_GivenCurrentSubmissionsIsNotMoreThanFiveTonnes_EnvironmentAgencyProducerChargeWithZeroAmountShouldBeReturned()
         {
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
             var producerType = new producerType() { registrationNo = "no", eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket };
@@ -98,7 +99,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_GivenPreviousAmendmentChargeAndChargeQualifies_EnvironmentAgencyProducerChargeWithZeroAmountShouldBeReturned()
+        public async Task GetProducerChargeBand_GivenPreviousAmendmentChargeAndChargeQualifies_EnvironmentAgencyProducerChargeWithZeroAmountShouldBeReturned()
         {
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
             var producerType = new producerType() { registrationNo = "no", eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket };
@@ -116,7 +117,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_GivenNoPreviousAmendmentCharge_EnvironmentAgencyProducerChargeWithZeroAmountShouldBeReturned()
+        public async Task GetProducerChargeBand_GivenNoPreviousAmendmentCharge_EnvironmentAgencyProducerChargeWithZeroAmountShouldBeReturned()
         {
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
             var producerType = new producerType() { registrationNo = "no", eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket };
@@ -132,7 +133,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_GivenAmendmentCannotFindPreviousSubmission_EnvironmentAgencyProducerChargeWithZeroAmountShouldBeReturned()
+        public async Task GetProducerChargeBand_GivenAmendmentCannotFindPreviousSubmission_EnvironmentAgencyProducerChargeWithZeroAmountShouldBeReturned()
         {
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
             var producerType = new producerType() { registrationNo = "no", eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket };
@@ -148,7 +149,7 @@
         }
 
         [Fact]
-        public async void GetProducerChargeBand_GivenAmendmentAndPreviousSubmissionCurrentSubmissionIsNull_EnvironmentAgencyProducerChargeWithZeroAmountShouldBeReturned()
+        public async Task GetProducerChargeBand_GivenAmendmentAndPreviousSubmissionCurrentSubmissionIsNull_EnvironmentAgencyProducerChargeWithZeroAmountShouldBeReturned()
         {
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
             var producerType = new producerType() { registrationNo = "no", eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket };

@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
     using Api.Client;
+    using AutoFixture;
     using Constant;
     using Core.AatfReturn;
     using Core.DataReturns;
@@ -13,9 +14,8 @@
     using Services.Caching;
     using System;
     using System.Collections.Generic;
-    using System.Linq;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
-    using AutoFixture;
     using Web.Areas.AatfReturn.Attributes;
     using Web.Areas.AatfReturn.Controllers;
     using Web.ViewModels.Returns.Mappings.ToViewModel;
@@ -54,7 +54,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenOrganisation_DefaultViewShouldBeReturned()
+        public async Task IndexGet_GivenOrganisation_DefaultViewShouldBeReturned()
         {
             var returns = new ReturnsData(A.Fake<List<ReturnData>>(), new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now);
 
@@ -66,7 +66,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenOrganisation_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenOrganisation_BreadcrumbShouldBeSet()
         {
             var returns = new ReturnsData(A.Fake<List<ReturnData>>(), new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now);
 
@@ -78,7 +78,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenOrganisation_ReturnsShouldBeRetrieved()
+        public async Task IndexGet_GivenOrganisation_ReturnsShouldBeRetrieved()
         {
             var returns = new ReturnsData(A.Fake<List<ReturnData>>(), new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now);
 
@@ -93,7 +93,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenOrganisation_ReturnsViewModelShouldBeBuilt()
+        public async Task IndexGet_GivenOrganisation_ReturnsViewModelShouldBeBuilt()
         {
             var returns = new ReturnsData(A.Fake<List<ReturnData>>(), new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now);
 
@@ -105,7 +105,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenOrganisationComplianceYearAndQuarterActionParameters_ReturnsViewModelShouldBeBuiltWithPassedParameters()
+        public async Task IndexGet_GivenOrganisationComplianceYearAndQuarterActionParameters_ReturnsViewModelShouldBeBuiltWithPassedParameters()
         {
             var returns = new ReturnsData(A.Fake<List<ReturnData>>(), new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now);
 
@@ -122,7 +122,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenOrganisation_ReturnsViewModelShouldBeReturnedWithAllReturns()
+        public async Task IndexGet_GivenOrganisation_ReturnsViewModelShouldBeReturnedWithAllReturns()
         {
             var returns = new ReturnsData(A.Fake<List<ReturnData>>(), new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now);
 
@@ -147,7 +147,7 @@
         [InlineData(QuarterType.Q2)]
         [InlineData(QuarterType.Q3)]
         [InlineData(QuarterType.Q4)]
-        public async void IndexPost_GivenOrganisationId_ReturnShouldBeCreated(QuarterType quarterType)
+        public async Task IndexPost_GivenOrganisationId_ReturnShouldBeCreated(QuarterType quarterType)
         {
             var model = new ReturnsViewModel() { OrganisationId = Guid.NewGuid(), ComplianceYear = 2019, Quarter = quarterType };
 
@@ -160,7 +160,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenOrganisationId_UserShouldBeRedirectedToOptions()
+        public async Task IndexPost_GivenOrganisationId_UserShouldBeRedirectedToOptions()
         {
             var model = new ReturnsViewModel() { OrganisationId = Guid.NewGuid() };
             var returnId = Guid.NewGuid();
@@ -176,7 +176,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenFilterParameter_ViewShouldBeReturned()
+        public async Task IndexPost_GivenFilterParameter_ViewShouldBeReturned()
         {
             var returns = new ReturnsData(A.Fake<List<ReturnData>>(), new Quarter(2019, QuarterType.Q1), A.Fake<List<Quarter>>(), QuarterWindowTestHelper.GetDefaultQuarterWindow(), DateTime.Now);
 
@@ -211,7 +211,7 @@
         }
 
         [Fact]
-        public async void CopyPost_UserShouldBeRedirectedToTaskList()
+        public async Task CopyPost_UserShouldBeRedirectedToTaskList()
         {
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
@@ -234,7 +234,7 @@
         }
 
         [Fact]
-        public async void CopyPost_UserShouldBeRedirectedToReportOptionsForNilReturn()
+        public async Task CopyPost_UserShouldBeRedirectedToReportOptionsForNilReturn()
         {
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();

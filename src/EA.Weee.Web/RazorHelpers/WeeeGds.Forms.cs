@@ -60,6 +60,8 @@
             return new MvcHtmlString(html);
         }
 
+        public MvcHtmlString GetSpinnerHtml() => new MvcHtmlString(SpinnerHtml(true));
+
         private string SpinnerHtml(bool withSpinner)
         {
             if (!withSpinner)

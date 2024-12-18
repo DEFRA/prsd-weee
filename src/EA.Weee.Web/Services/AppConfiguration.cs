@@ -95,5 +95,54 @@
 
         [DefaultValue("10")]
         public int DefaultExternalPagingPageSize { get; set; }
+
+        [DefaultValue(false)]
+        public bool ProxyEnabled { get; set; }
+
+        [DefaultValue(false)]
+        public bool ByPassProxyOnLocal { get; set; }
+
+        public string ProxyWebAddress { get; set; }
+
+        [DefaultValue(false)]
+        public bool ProxyUseDefaultCredentials { get; set; }
+
+        public string CompaniesHouseReferencePath { get; set; }
+
+        public string CompaniesHouseBaseUrl { get; set; }
+
+        public string AddressLookupReferencePath { get; set; }
+
+        public string AddressLookupBaseUrl { get; set; }
+
+        public string GovUkPayBaseUrl { get; set; }
+
+        public string GovUkPayApiKey { get; set; }
+
+        public string GovUkPayReturnBaseUrl { get; set; }
+
+        public string GovUkPayDescription { get; set; }
+
+        [DefaultValue(3000)]
+        public int GovUkPayAmountInPence { get; set; }
+
+        public string GovUkPayTokenSecret { get; set; }
+
+        public string GovUkPayTokenSalt { get; set; }
+
+        public TimeSpan GovUkPayTokenLifeTime { get; set; }
+
+        public string OAuthTokenEndpoint { get; set; }
+
+        public string OAuthTokenClientId { get; set; }
+
+        public string OAuthTokenClientSecret { get; set; }
+
+        public string CompaniesHouseScope { get; set; }
+
+        public string AddressLookupScope { get; set; }
+
+        [DefaultValue("2025/01/01")]
+        public DateTime SmallProducerFeatureEnabledFrom { get; set; }
     }
 }

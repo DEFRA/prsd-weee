@@ -141,7 +141,7 @@
         [InlineData(false, true, false, true)]
         [InlineData(false, false, true, true)]
         [InlineData(true, true, true, true)]
-        public async void HasAatfData_GivenId_ReturnsBasedOnData(bool hasReceived, bool hasReused, bool hasSentOn, bool expectedResult)
+        public async Task HasAatfData_GivenId_ReturnsBasedOnData(bool hasReceived, bool hasReused, bool hasSentOn, bool expectedResult)
         {
             var weeeReceived = new List<WeeeReceived>();
             var weeeReused = new List<WeeeReused>();
@@ -183,7 +183,7 @@
         }
 
         [Fact]
-        public async void HasAatfData_GiveAatfHasNilReturn_TrueShouldBeReturned()
+        public async Task HasAatfData_GiveAatfHasNilReturn_TrueShouldBeReturned()
         {
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
@@ -210,7 +210,7 @@
         }
 
         [Fact]
-        public async void HasAatfData_GiveAatfDoesNotHaveNilReturnAndNoOtherWeeeData_FalseShouldBeReturned()
+        public async Task HasAatfData_GiveAatfDoesNotHaveNilReturnAndNoOtherWeeeData_FalseShouldBeReturned()
         {
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
@@ -239,7 +239,7 @@
         [Theory]
         [InlineData(true)]
         [InlineData(false)]
-        public async void HasAatfOrganisationOtherAeOrAatf_HasAatf_ShouldBeExpectedResult(bool hasOtherAatfs)
+        public async Task HasAatfOrganisationOtherAeOrAatf_HasAatf_ShouldBeExpectedResult(bool hasOtherAatfs)
         {
             const short complianceYear = 2019;
             var aatfId = Guid.NewGuid();
@@ -274,7 +274,7 @@
         }
 
         [Fact]
-        public async void HasAatfOrganisationOtherAeOrAatf_GivenNoMatchingComplianceYear_ShouldBeFalse()
+        public async Task HasAatfOrganisationOtherAeOrAatf_GivenNoMatchingComplianceYear_ShouldBeFalse()
         {
             const short complianceYear = 2019;
             const short nonMatchComplianceYear = 2020;
@@ -306,7 +306,7 @@
         }
 
         [Fact]
-        public async void HasAatfOrganisationOtherAeOrAatf_GivenNoMatchingFacilityType_ShouldBeFalse()
+        public async Task HasAatfOrganisationOtherAeOrAatf_GivenNoMatchingFacilityType_ShouldBeFalse()
         {
             const short complianceYear = 2019;
             var nonMatchingFacilityType = FacilityType.Ae;
@@ -338,7 +338,7 @@
         }
 
         [Fact]
-        public async void DeleteAatf_DeletesAatf()
+        public async Task DeleteAatf_DeletesAatf()
         {
             var aatfId = Guid.NewGuid();
             var aatf = A.Fake<Aatf>();

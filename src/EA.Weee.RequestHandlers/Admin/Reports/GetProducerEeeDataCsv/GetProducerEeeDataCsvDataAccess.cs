@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Reports.GetProducerEeeDataCsv
 {
+    using EA.Weee.Core.Constants;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.StoredProcedure;
     using System;
@@ -23,10 +24,26 @@
 
         public async Task<List<ProducerEeeCsvData>> GetItemsAsync(int complianceYear, Guid? schemeId, string obligationType)
         {
+            var filterByDirectRegistrant = false;
+            var filterByAllSchemes = false;
+
+            if (schemeId == ReportsFixedIdConstant.AllDirectRegistrantFixedId)
+            {
+                schemeId = null;
+                filterByDirectRegistrant = true;
+            }
+            else if (schemeId == ReportsFixedIdConstant.AllSchemeFixedId)
+            {
+                schemeId = null;
+                filterByAllSchemes = true;
+            }
+
             return await context.StoredProcedures.SpgProducerEeeCsvData(
                 complianceYear,
                 schemeId,
-                obligationType);
+                obligationType,
+                filterByDirectRegistrant,
+                filterByAllSchemes);
         }
     }
 }

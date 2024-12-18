@@ -71,7 +71,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
                 Assert.Equal(new Guid("CE7A2617-AE16-403E-A7BF-BF01AD223872"), results[0].Id);
             }
         }
@@ -188,7 +188,7 @@
 
                 // Assert
                 Assert.NotNull(results);
-                Assert.Equal(1, results.Count);
+                Assert.Single(results);
                 Assert.NotNull(results[0].IssuedByUser);
             }
         }

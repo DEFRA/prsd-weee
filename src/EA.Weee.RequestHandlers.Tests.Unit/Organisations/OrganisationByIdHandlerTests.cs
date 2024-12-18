@@ -2,9 +2,9 @@
 {
     using Core.Organisations;
     using DataAccess;
-    using Domain.Lookup;
-    using EA.Weee.Domain;
+    using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.AatfReturn;
+    using EA.Weee.Domain.Producer;
     using EA.Weee.Security;
     using FakeItEasy;
     using FluentAssertions;
@@ -13,6 +13,7 @@
     using Requests.Organisations;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Security;
     using System.Threading.Tasks;
     using Weee.Tests.Core;
@@ -26,12 +27,14 @@
         private readonly DbContextHelper dbHelper = new DbContextHelper();
         private readonly OrganisationByIdHandler handler;
         private readonly Guid organisationId;
+        private readonly ISystemDataDataAccess systemDataDataAccess;
 
         public OrganisationByIdHandlerTests()
         {
             map = A.Fake<IMap<Organisation, OrganisationData>>();
             context = A.Fake<WeeeContext>();
             organisationId = Guid.NewGuid();
+            systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
 
             A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Organisation>
             {
@@ -40,10 +43,12 @@
 
             A.CallTo(() => context.Schemes).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Domain.Scheme.Scheme>()));
             A.CallTo(() => context.Aatfs).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Aatf>()));
+            A.CallTo(() => context.DirectRegistrants).Returns(dbHelper.GetAsyncEnabledDbSet(new List<DirectRegistrant>()));
 
             handler = new OrganisationByIdHandler(AuthorizationBuilder.CreateUserAllowedToAccessOrganisation(),
                 context,
-                map);
+                map,
+                systemDataDataAccess);
         }
 
         [Fact]
@@ -51,7 +56,7 @@
         {
             var authorization = AuthorizationBuilder.CreateUserDeniedFromAccessingOrganisation();
 
-            var handler = new OrganisationByIdHandler(authorization, context, map);
+            var handler = new OrganisationByIdHandler(authorization, context, map, systemDataDataAccess);
             var message = new GetOrganisationInfo(Guid.NewGuid());
 
             await Assert.ThrowsAsync<SecurityException>(async () => await handler.HandleAsync(message));
@@ -64,7 +69,7 @@
 
             A.CallTo(() => context.Organisations).Returns(dbHelper.GetAsyncEnabledDbSet(new List<Organisation>()));
 
-            var handler = new OrganisationByIdHandler(authorization, context, map);
+            var handler = new OrganisationByIdHandler(authorization, context, map, systemDataDataAccess);
             var message = new GetOrganisationInfo(organisationId);
 
             var exception = await Assert.ThrowsAsync<ArgumentException>(async () => await handler.HandleAsync(message));
@@ -217,7 +222,7 @@
                 .DenyRole(Roles.InternalAdmin)
                 .Build();
 
-            var handler = new OrganisationByIdHandler(weeeAuthorization, context, map);
+            var handler = new OrganisationByIdHandler(weeeAuthorization, context, map, systemDataDataAccess);
 
             var message = new GetOrganisationInfo(organisationId);
 
@@ -239,16 +244,64 @@
             result.Should().Be(expectedReturnValue);
         }
 
+        [Fact]
+        public async Task HandleAsync_GivenOrganisationHasNoDirectRegistrant_OrganisationShouldHaveNoDirectRegistrant()
+        {
+            var expectedReturnValue = new OrganisationData();
+
+            A.CallTo(() => map.Map(A<Organisation>._)).Returns(expectedReturnValue);
+            A.CallTo(() => context.DirectRegistrants).Returns(dbHelper.GetAsyncEnabledDbSet(new List<DirectRegistrant>()));
+
+            var message = new GetOrganisationInfo(organisationId);
+
+            var result = await handler.HandleAsync(message);
+
+            result.HasDirectRegistrant.Should().BeFalse();
+            result.DirectRegistrantId.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task HandleAsync_GivenOrganisationHasDirectRegistrant_OrganisationShouldHaveDirectRegistrant()
+        {
+            // Arrange
+            var organisation = GetOrganisationWithId(organisationId);
+            var expectedReturnValue = new OrganisationData();
+            A.CallTo(() => map.Map(A<Organisation>._)).Returns(expectedReturnValue);
+
+            var directRegistrant = A.Fake<DirectRegistrant>();
+            var directRegistrantId = Guid.NewGuid();
+
+            A.CallTo(() => directRegistrant.Id).Returns(directRegistrantId);
+            A.CallTo(() => directRegistrant.OrganisationId).Returns(organisation.Id);
+
+            var knownComplianceDate = new DateTime(2024, 1, 1);
+
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(knownComplianceDate);
+
+            A.CallTo(() => directRegistrant.DirectProducerSubmissions).Returns(new List<DirectProducerSubmission>
+            {
+                new DirectProducerSubmission { ComplianceYear = knownComplianceDate.Year }
+            });
+
+            var directRegistrants = new List<DirectRegistrant> { directRegistrant };
+            A.CallTo(() => context.DirectRegistrants).Returns(dbHelper.GetAsyncEnabledDbSet(directRegistrants));
+
+            var message = new GetOrganisationInfo(organisationId);
+
+            // Act
+            var result = await handler.HandleAsync(message);
+
+            // Assert
+            result.HasDirectRegistrant.Should().BeTrue();
+            result.DirectRegistrants.Should().ContainSingle(dr => dr.DirectRegistrantId == directRegistrantId);
+            result.DirectRegistrants.First().YearSubmissionStarted.Should().BeTrue();
+        }
+
         private Organisation GetOrganisationWithId(Guid id)
         {
             var organisation = A.Fake<Organisation>();
             A.CallTo(() => organisation.Id).Returns(id);
             return organisation;
-        }
-
-        private Aatf CreateAatf(Organisation organisation)
-        {
-            return new Aatf("name", A.Dummy<UKCompetentAuthority>(), "number", A.Dummy<AatfStatus>(), organisation, A.Dummy<AatfAddress>(), A.Dummy<AatfSize>(), DateTime.Now, A.Dummy<AatfContact>(), A.Dummy<FacilityType>(), (Int16)2019, A.Fake<LocalArea>(), A.Fake<PanArea>());
         }
     }
 }

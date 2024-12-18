@@ -9,6 +9,8 @@
 
         public string Name { get; set; }
 
+        public string CompanyRegistrationNumber { get; set; }
+
         public AddressData Address { get; set; }
 
         public int AatfCount { get; set; }
@@ -17,7 +19,13 @@
 
         public int PcsCount { get; set; }
 
+        public int DirectRegistrantCount {get; set; }
+
         public bool IsBalancingScheme { get; set; }
+
+        public bool NpwdMigrated { get; set; }
+
+        public bool NpwdMigratedComplete { get; set; }
 
         public string AddressString
         {
@@ -48,12 +56,6 @@
             }
         }
 
-        public string NameWithAddress
-        {
-            get
-            {
-                return string.Format("{0} ({1})", this.Name, this.AddressString.Replace("<br/>", " "));
-            }
-        }
+        public string NameWithAddress => $"{this.Name} ({this.AddressString.Replace("<br/>", " ")})";
     }
 }

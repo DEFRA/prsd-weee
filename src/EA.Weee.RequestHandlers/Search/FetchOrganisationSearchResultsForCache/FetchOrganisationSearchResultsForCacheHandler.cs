@@ -16,7 +16,7 @@
 
         public Task<IList<OrganisationSearchResult>> HandleAsync(Requests.Search.FetchOrganisationSearchResultsForCache request)
         {
-            return dataAccess.FetchCompleteOrganisations();
+            return dataAccess.FetchCompleteOrganisations(request.SmallProducerEnabledFrom);
         }
     }
 }

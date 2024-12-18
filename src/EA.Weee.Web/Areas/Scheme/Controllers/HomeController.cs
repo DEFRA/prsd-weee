@@ -4,9 +4,14 @@
     using Core.Organisations;
     using Core.Scheme;
     using Core.Shared.Paging;
+    using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Scheme;
     using EA.Weee.Requests.Shared;
+    using EA.Weee.Web.Areas.Producer.Controllers;
+    using EA.Weee.Web.Constant;
+    using EA.Weee.Web.Controllers;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
     using Infrastructure;
@@ -17,9 +22,6 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using System.Web.Routing;
-    using EA.Weee.Core.AatfReturn;
-
     using ViewModels;
     using Web.Controllers.Base;
     using Web.ViewModels.Shared;
@@ -51,99 +53,132 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ChooseActivity(Guid pcsId)
+        public async Task<ActionResult> ChooseActivity(Guid pcsId, Guid? directRegistrantId = null)
         {
             using (var client = apiClient())
             {
                 var organisationExists = await client.SendAsync(User.GetAccessToken(), new VerifyOrganisationExists(pcsId));
-
                 if (!organisationExists)
                 {
                     throw new ArgumentException("No organisation found for supplied organisation Id", "organisationId");
                 }
 
-                var activities = await GetActivities(pcsId);
+                var systemTime = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
 
-                var model = new ChooseActivityViewModel(activities) { OrganisationId = pcsId };
+                var organisationDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(pcsId));
+                var activities = await GetActivities(pcsId, organisationDetails, directRegistrantId, systemTime);
+
+                // Updated condition to check for specific activities
+                if (organisationDetails.IsRepresentingCompany && HasOnlySmallProducerActivities(activities) && !directRegistrantId.HasValue)
+                {
+                    return this.RedirectToAction(nameof(OrganisationController.RepresentingCompanies),
+                        typeof(OrganisationController).GetControllerName(),
+                        new { organisationId = pcsId, area = string.Empty });
+                }
+
+                var defaultDirectRegistrant = organisationDetails.DirectRegistrants.FirstOrDefault();
+                var model = new ChooseActivityViewModel(activities)
+                {
+                    IsRepresentingCompany = organisationDetails.IsRepresentingCompany,
+                    OrganisationId = pcsId,
+                    DirectRegistrantId = directRegistrantId ?? defaultDirectRegistrant?.DirectRegistrantId
+                };
 
                 await SetBreadcrumb(pcsId, null, false);
-
                 await SetShowLinkToCreateOrJoinOrganisation(model);
-
                 return View(model);
             }
         }
 
-        internal async Task<List<string>> GetActivities(Guid pcsId)
+        internal async Task<List<string>> GetActivities(Guid pcsId, OrganisationData organisationDetails, Guid? directRegistrantId, DateTime systemTime)
         {
-            using (var client = apiClient())
+            var organisationOverview = await GetOrganisationOverview(pcsId);
+
+            var isBalancingScheme = organisationDetails.IsBalancingScheme;
+
+            var activities = new List<string>();
+
+            if (isBalancingScheme && configurationService.CurrentConfiguration.EnablePBSEvidenceNotes)
             {
-                var organisationDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(pcsId));
-
-                var organisationOverview = await GetOrganisationOverview(pcsId);
-
-                var isBalancingScheme = organisationDetails.IsBalancingScheme;
-
-                var activities = new List<string>();
-
-                if (isBalancingScheme && configurationService.CurrentConfiguration.EnablePBSEvidenceNotes)
-                {
-                    activities.Add(PcsAction.ManagePBSEvidenceNotes);
-                }
-                else
-                {
-                    if (organisationDetails.SchemeId != null)
-                    {
-                        if (configurationService.CurrentConfiguration.EnablePCSEvidenceNotes)
-                        {
-                            activities.Add(PcsAction.ManagePcsEvidenceNotes);
-                        }
-
-                        activities.Add(PcsAction.ManagePcsMembers);
-
-                        if (configurationService.CurrentConfiguration.EnableDataReturns)
-                        {
-                            activities.Add(PcsAction.ManageEeeWeeeData);
-                        }
-
-                        activities.Add(PcsAction.ManagePcsContactDetails);
-                    }
-
-                    var canDisplayDataReturnsHistory = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
-                    if (organisationOverview.HasMemberSubmissions || canDisplayDataReturnsHistory)
-                    {
-                        activities.Add(PcsAction.ViewSubmissionHistory);
-                    }
-
-                    if (configurationService.CurrentConfiguration.EnableAATFEvidenceNotes && organisationDetails.HasAatfs)
-                    {
-                        activities.Add(PcsAction.ManageAatfEvidenceNotes);
-                    }
-                    if (configurationService.CurrentConfiguration.EnableAATFReturns && organisationDetails.HasAatfs)
-                    {
-                        activities.Add(PcsAction.ManageAatfReturns);
-                        activities.Add(PcsAction.ManageAatfContactDetails);
-                    }
-
-                    if (configurationService.CurrentConfiguration.EnableAATFReturns && organisationDetails.HasAes)
-                    {
-                        activities.Add(PcsAction.ManageAeReturns);
-                        activities.Add(PcsAction.ManageAeContactDetails);
-                    }
-
-                    if (!isBalancingScheme)
-                    {
-                        activities.Add(PcsAction.ViewOrganisationDetails);
-                    }
-                }
-
-                if (organisationOverview.HasMultipleOrganisationUsers)
-                {
-                    activities.Add(PcsAction.ManageOrganisationUsers);
-                }
-
-                return activities;
+                activities.Add(PcsAction.ManagePBSEvidenceNotes);
             }
+            else
+            {
+                if (organisationDetails.SchemeId != null)
+                {
+                    if (configurationService.CurrentConfiguration.EnablePCSEvidenceNotes)
+                    {
+                        activities.Add(PcsAction.ManagePcsEvidenceNotes);
+                    }
+
+                    activities.Add(PcsAction.ManagePcsMembers);
+
+                    if (configurationService.CurrentConfiguration.EnableDataReturns)
+                    {
+                        activities.Add(PcsAction.ManageEeeWeeeData);
+                    }
+
+                    activities.Add(PcsAction.ManagePcsContactDetails);
+                }
+
+                var canDisplayDataReturnsHistory = organisationOverview.HasDataReturnSubmissions && configurationService.CurrentConfiguration.EnableDataReturns;
+                if (organisationOverview.HasMemberSubmissions || canDisplayDataReturnsHistory)
+                {
+                    activities.Add(PcsAction.ViewSubmissionHistory);
+                }
+
+                if (configurationService.CurrentConfiguration.EnableAATFEvidenceNotes && organisationDetails.HasAatfs)
+                {
+                    activities.Add(PcsAction.ManageAatfEvidenceNotes);
+                }
+                if (configurationService.CurrentConfiguration.EnableAATFReturns && organisationDetails.HasAatfs)
+                {
+                    activities.Add(PcsAction.ManageAatfReturns);
+                    activities.Add(PcsAction.ManageAatfContactDetails);
+                }
+
+                if (configurationService.CurrentConfiguration.EnableAATFReturns && organisationDetails.HasAes)
+                {
+                    activities.Add(PcsAction.ManageAeReturns);
+                    activities.Add(PcsAction.ManageAeContactDetails);
+                }
+
+                if (!isBalancingScheme && !organisationDetails.HasDirectRegistrant)
+                {
+                    activities.Add(PcsAction.ViewOrganisationDetails);
+                }
+
+                if (organisationDetails.HasDirectRegistrant && systemTime.Date >= configurationService.CurrentConfiguration.SmallProducerFeatureEnabledFrom)
+                {
+                    activities.Add(ProducerSubmissionConstant.HistoricProducerRegistrationSubmission);
+
+                    var firstRegistrant = directRegistrantId.HasValue ? organisationDetails.DirectRegistrants.FirstOrDefault(d => d.DirectRegistrantId == directRegistrantId) : organisationDetails.DirectRegistrants.FirstOrDefault();
+
+                    if (firstRegistrant != null)
+                    {
+                        activities.Add(firstRegistrant.YearSubmissionStarted
+                            ? ProducerSubmissionConstant.ContinueProducerRegistrationSubmission
+                            : ProducerSubmissionConstant.NewProducerRegistrationSubmission);
+                    }
+
+                    activities.Add(ProducerSubmissionConstant.ViewOrganisation);
+
+                    // This organisation represents companies add the manage option.
+                    // If in ChooseActivity the organisation only has direct registrant activities and its represents companies go directly to
+                    // the select company screen
+                    if (organisationDetails.IsRepresentingCompany && !directRegistrantId.HasValue)
+                    {
+                        activities.Add(ProducerSubmissionConstant.ManageRepresentingCompany);
+                    }
+                }
+            }
+
+            if (organisationOverview.HasMultipleOrganisationUsers)
+            {
+                activities.Add(PcsAction.ManageOrganisationUsers);
+            }
+
+            return activities;
         }
 
         private async Task<OrganisationOverview> GetOrganisationOverview(Guid organisationId)
@@ -255,7 +290,7 @@
                 // 7. Manage Organisation Users
                 if (viewModel.SelectedValue == PcsAction.ManageOrganisationUsers)
                 {
-                    return RedirectToAction("ManageOrganisationUsers", new { pcsId = viewModel.OrganisationId });
+                    return RedirectToAction("ManageOrganisationUsers", new { pcsId = viewModel.OrganisationId, directRegistrantId = viewModel.DirectRegistrantId });
                 }
 
                 // 8. Manage PBS Evidence Notes
@@ -263,12 +298,47 @@
                 {
                     return this.RedirectToAction("Index", "ManageEvidenceNotes", new { pcsId = viewModel.OrganisationId});
                 }
+
+                if (viewModel.SelectedValue == ProducerSubmissionConstant.NewProducerRegistrationSubmission)
+                {
+                    return this.RedirectToAction(nameof(ProducerController.TaskList), typeof(ProducerController).GetControllerName(), new { area = "Producer", organisationId = viewModel.OrganisationId, directRegistrantId = viewModel.DirectRegistrantId });
+                }
+
+                if (viewModel.SelectedValue == ProducerSubmissionConstant.ContinueProducerRegistrationSubmission)
+                {
+                    return this.RedirectToAction(nameof(ProducerController.TaskList), typeof(ProducerController).GetControllerName(), new { area = "Producer", organisationId = viewModel.OrganisationId, directRegistrantId = viewModel.DirectRegistrantId });
+                }
+
+                if (viewModel.SelectedValue == ProducerSubmissionConstant.HistoricProducerRegistrationSubmission)
+                {
+                    return this.RedirectToAction(
+                        nameof(ProducerController.Submissions),
+                        typeof(ProducerController).GetControllerName(),
+                        new
+                        {
+                            area = "Producer",
+                            organisationId = viewModel.OrganisationId,
+                            directRegistrantId = viewModel.DirectRegistrantId,
+                            year = -1
+                        });
+                }
+
+                if (viewModel.SelectedValue == ProducerSubmissionConstant.ViewOrganisation)
+                {
+                    return this.RedirectToAction(nameof(ProducerController.OrganisationDetails), typeof(ProducerController).GetControllerName(), new { area = "Producer", organisationId = viewModel.OrganisationId, directRegistrantId = viewModel.DirectRegistrantId });
+                }
             }
 
             await SetBreadcrumb(viewModel.OrganisationId, null, false);
-            viewModel.PossibleValues = await GetActivities(viewModel.OrganisationId);
-            await this.SetShowLinkToCreateOrJoinOrganisation(viewModel);
-            return this.View(viewModel);
+            using (var client = apiClient())
+            {
+                var organisationDetails = await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(viewModel.OrganisationId));
+                var systemTime = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
+
+                viewModel.PossibleValues = await GetActivities(viewModel.OrganisationId, organisationDetails, viewModel.DirectRegistrantId, systemTime);
+                await this.SetShowLinkToCreateOrJoinOrganisation(viewModel);
+                return this.View(viewModel);
+            }
         }
 
         [HttpGet]
@@ -356,7 +426,7 @@
         }
 
         [HttpGet]
-        public async Task<ActionResult> ManageOrganisationUsers(Guid pcsId)
+        public async Task<ActionResult> ManageOrganisationUsers(Guid pcsId, Guid? directRegistrantId)
         {
             using (var client = apiClient())
             {
@@ -385,7 +455,8 @@
 
                 var model = new OrganisationUsersViewModel
                 {
-                    OrganisationUsers = orgUsersKeyValuePairs.ToList()
+                    OrganisationUsers = orgUsersKeyValuePairs.ToList(),
+                    DirectRegistrantId = directRegistrantId
                 };
 
                 return View("ManageOrganisationUsers", model);
@@ -415,11 +486,11 @@
             }
 
             return RedirectToAction("ManageOrganisationUser", "Home",
-                   new { area = "Scheme", pcsId, organisationUserId = model.SelectedOrganisationUser });
+                   new { area = "Scheme", pcsId, organisationUserId = model.SelectedOrganisationUser, directRegistrantId = model.DirectRegistrantId });
         }
 
         [HttpGet]
-        public async Task<ActionResult> ManageOrganisationUser(Guid pcsId, Guid? organisationUserId)
+        public async Task<ActionResult> ManageOrganisationUser(Guid pcsId, Guid? organisationUserId, Guid? directRegistrantId)
         {
             if (organisationUserId.HasValue)
             {
@@ -682,6 +753,54 @@
             {
                 breadcrumb.SchemeInfo = await cache.FetchSchemePublicInfo(organisationId);
             }
+        }
+
+        private static readonly HashSet<string> ProducerRegistrationSubmissionTypes = new HashSet<string>
+        {
+            ProducerSubmissionConstant.NewProducerRegistrationSubmission,
+            ProducerSubmissionConstant.ContinueProducerRegistrationSubmission
+        };
+
+        private static readonly HashSet<string> StandardActivitiesBase = new HashSet<string>
+        {
+            ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
+            ProducerSubmissionConstant.ViewOrganisation,
+            PcsAction.ManageOrganisationUsers,
+            ProducerSubmissionConstant.ManageRepresentingCompany
+        };
+
+        private static readonly HashSet<string> AlternativeActivitiesBase = new HashSet<string>
+        {
+            ProducerSubmissionConstant.HistoricProducerRegistrationSubmission,
+            ProducerSubmissionConstant.ViewOrganisation,
+            ProducerSubmissionConstant.ManageRepresentingCompany
+        };
+
+        public bool HasOnlySmallProducerActivities(IEnumerable<string> activities)
+        {
+            if (activities == null)
+            {
+                return false;
+            }
+
+            var activityList = activities.ToList();
+
+            var registrationTypeCount = activityList.Count(a => ProducerRegistrationSubmissionTypes.Contains(a));
+            if (registrationTypeCount != 1)
+            {
+                return false;
+            }
+
+            var remainingActivities = new HashSet<string>(activityList.Where(a => !ProducerRegistrationSubmissionTypes.Contains(a)));
+
+            return IsExactMatch(remainingActivities, StandardActivitiesBase) ||
+                   IsExactMatch(remainingActivities, AlternativeActivitiesBase);
+        }
+
+        private static bool IsExactMatch(ICollection<string> activities, ICollection<string> expectedActivities)
+        {
+            return activities.Count == expectedActivities.Count &&
+                   activities.All(expectedActivities.Contains);
         }
     }
 }

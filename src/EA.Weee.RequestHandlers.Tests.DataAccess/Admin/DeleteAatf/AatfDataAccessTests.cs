@@ -14,6 +14,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Xunit;
     using Organisation = EA.Weee.Domain.Organisation.Organisation;
     using Return = EA.Weee.Domain.AatfReturn.Return;
@@ -37,7 +38,7 @@
         }
 
         [Fact]
-        public async void RemoveAatf_GivenAatf_AatfShouldShouldBeRemoved()
+        public async Task RemoveAatf_GivenAatf_AatfShouldShouldBeRemoved()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -62,7 +63,7 @@
         }
 
         [Fact]
-        public async void RemoveAatf_GivenAatfWithReturnAatfEntries_AatfShouldShouldBeRemoved()
+        public async Task RemoveAatf_GivenAatfWithReturnAatfEntries_AatfShouldShouldBeRemoved()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -101,7 +102,7 @@
         }
 
         [Fact]
-        public async void RemoveAatf_GivenAatfWithSentOnData_ExceptionExpected()
+        public async Task RemoveAatf_GivenAatfWithSentOnData_ExceptionExpected()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -121,7 +122,7 @@
         }
 
         [Fact]
-        public async void RemoveAatf_GivenAatfWithReusedData_ExceptionExpected()
+        public async Task RemoveAatf_GivenAatfWithReusedData_ExceptionExpected()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -141,7 +142,7 @@
         }
 
         [Fact]
-        public async void RemoveAatf_GivenAatfWithReceivedData_ExceptionExpected()
+        public async Task RemoveAatf_GivenAatfWithReceivedData_ExceptionExpected()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -161,7 +162,7 @@
         }
 
         [Fact]
-        public async void RemoveAatfData_GivenSingleAatfAndSingleQuarterWithNonObligatedData_AatfDataAndStartedReturnShouldBeRemoved()
+        public async Task RemoveAatfData_GivenSingleAatfAndSingleQuarterWithNonObligatedData_AatfDataAndStartedReturnShouldBeRemoved()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -198,7 +199,7 @@
         }
 
         [Fact]
-        public async void RemoveAatfData_GivenSingleAeAndSingleQuarter_AeReturnShouldBeRemoved()
+        public async Task RemoveAatfData_GivenSingleAeAndSingleQuarter_AeReturnShouldBeRemoved()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -226,7 +227,7 @@
         }
 
         [Fact]
-        public async void RemoveAatfData_GivenSingleAeAndReturnInDifferentQuarter_OtherAeReturnShouldNotBeRemoved()
+        public async Task RemoveAatfData_GivenSingleAeAndReturnInDifferentQuarter_OtherAeReturnShouldNotBeRemoved()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -261,7 +262,7 @@
         }
 
         [Fact]
-        public async void RemoveAatfData_GivenSingleAatfAndSingleQuarterAndOrganisationHasAeReturn_AeReturnShouldNotBeRemoved()
+        public async Task RemoveAatfData_GivenSingleAatfAndSingleQuarterAndOrganisationHasAeReturn_AeReturnShouldNotBeRemoved()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -297,7 +298,7 @@
         }
 
         [Fact]
-        public async void RemoveAatfData_GivenSingleAatfAndSingleQuarter_AatfDataAndStartedReturnShouldBeRemoved()
+        public async Task RemoveAatfData_GivenSingleAatfAndSingleQuarter_AatfDataAndStartedReturnShouldBeRemoved()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -337,7 +338,7 @@
         }
 
         [Fact]
-        public async void RemoveAatfData_GivenSingleAatfAndSingleQuarterWithReturnInSameQuarterButDifferentYear_OtherYearReturnsShouldNotBeRemoved()
+        public async Task RemoveAatfData_GivenSingleAatfAndSingleQuarterWithReturnInSameQuarterButDifferentYear_OtherYearReturnsShouldNotBeRemoved()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -393,7 +394,7 @@
         }
 
         [Fact]
-        public async void RemoveAatfData_GivenSingleAatfAndSingleQuarterWithReturnInSameYearButDifferentQuarter_OtherYearReturnsShouldNotBeRemoved()
+        public async Task RemoveAatfData_GivenSingleAatfAndSingleQuarterWithReturnInSameYearButDifferentQuarter_OtherYearReturnsShouldNotBeRemoved()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -449,7 +450,7 @@
         }
 
         [Fact]
-        public async void RemoveAatfData_GivenSingleAatfAndSingleQuarterWithResubmissions_ReturnAndResubmissionsShouldBeRemoved()
+        public async Task RemoveAatfData_GivenSingleAatfAndSingleQuarterWithResubmissions_ReturnAndResubmissionsShouldBeRemoved()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -504,7 +505,7 @@
         }
 
         [Fact]
-        public async void RemoveAatfData_GivenSingleAatfAndMultipleQuarter_AatfDataAndStartedReturnShouldBeRemoved()
+        public async Task RemoveAatfData_GivenSingleAatfAndMultipleQuarter_AatfDataAndStartedReturnShouldBeRemoved()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -559,7 +560,7 @@
         }
 
         [Fact]
-        public async void RemoveAatfData_GivenMultipleAatfAndSingleQuarter_AatfDataShouldBeRemovedAndReturnNotRemoved()
+        public async Task RemoveAatfData_GivenMultipleAatfAndSingleQuarter_AatfDataShouldBeRemovedAndReturnNotRemoved()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -620,7 +621,7 @@
         }
 
         [Fact]
-        public async void RemoveAatfData_GivenMultipleAatfAndReturnsInDifferentQuarter_AatfDataShouldBeRemovedAndOtherReturnDataNotRemoved()
+        public async Task RemoveAatfData_GivenMultipleAatfAndReturnsInDifferentQuarter_AatfDataShouldBeRemovedAndOtherReturnDataNotRemoved()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -709,7 +710,7 @@
         }
 
         [Fact]
-        public async void RemoveAatfData_GivenSingleAatfInFirstQuarterAndMultipleAatfInSecondQuarter_FirstQuarterReturnShouldBeRemovedAndSecondQuarterReturnNotRemoved()
+        public async Task RemoveAatfData_GivenSingleAatfInFirstQuarterAndMultipleAatfInSecondQuarter_FirstQuarterReturnShouldBeRemovedAndSecondQuarterReturnNotRemoved()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -782,7 +783,7 @@
         }
 
         [Fact]
-        public async void RemoveAatfData_GivenMultipleAeAndReturnsInDifferentQuarter_ReturnDataShouldNotBeRemoved()
+        public async Task RemoveAatfData_GivenMultipleAeAndReturnsInDifferentQuarter_ReturnDataShouldNotBeRemoved()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -823,7 +824,7 @@
         }
 
         [Fact]
-        public async void RemoveAatfData_GivenMultipleAatfAndSingleQuarterAndReturnInDifferentYear_AatfDataShouldBeRemovedAndOtherReturnDataNotRemoved()
+        public async Task RemoveAatfData_GivenMultipleAatfAndSingleQuarterAndReturnInDifferentYear_AatfDataShouldBeRemovedAndOtherReturnDataNotRemoved()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -912,7 +913,7 @@
         }
 
         [Fact]
-        public async void HasEvidenceNotes_ReturnsTrue_IfNotePresent()
+        public async Task HasEvidenceNotes_ReturnsTrue_IfNotePresent()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -940,7 +941,7 @@
         }
 
         [Fact]
-        public async void HasEvidenceNotes_ReturnsFalse_IfNoNotePresent()
+        public async Task HasEvidenceNotes_ReturnsFalse_IfNoNotePresent()
         {
             var aatfId = Guid.NewGuid();
             using (var databaseWrapper = new DatabaseWrapper())

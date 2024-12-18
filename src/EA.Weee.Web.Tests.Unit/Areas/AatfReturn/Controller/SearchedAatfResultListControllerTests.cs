@@ -15,6 +15,7 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Xunit;
@@ -51,7 +52,7 @@
         }        
 
         [Fact]
-        public async void IndexGet_GivenAction_ShouldBeReturned_CanNotFoundTreatmentFacility()
+        public async Task IndexGet_GivenAction_ShouldBeReturned_CanNotFoundTreatmentFacility()
         {
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
@@ -81,7 +82,7 @@
         }        
 
         [Fact]
-        public async void IndexGet_GivenActionAndParameters_SentOnSiteSummaryListViewModelShouldBeReturned()
+        public async Task IndexGet_GivenActionAndParameters_SentOnSiteSummaryListViewModelShouldBeReturned()
         {
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
@@ -112,7 +113,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmit_PageRedirectsToObligatedReceived()
+        public async Task IndexPost_OnSubmit_PageRedirectsToObligatedReceived()
         {
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();

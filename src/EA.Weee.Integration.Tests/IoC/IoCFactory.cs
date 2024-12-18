@@ -1,23 +1,23 @@
 ﻿namespace EA.Weee.Integration.Tests.IoC
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Configuration;
     using Api.Identity;
     using Api.Modules;
     using Api.Services;
     using Autofac;
-    using Autofac.Core;
     using Core;
-    using DataAccess.DataAccess;
     using DataAccess.Identity;
     using EA.Weee.DataAccess;
+    using EA.Weee.Xml;
+    using EA.Weee.XmlValidation;
     using Microsoft.AspNet.Identity;
     using Microsoft.Owin.Security.DataProtection;
     using Prsd.Core.Autofac;
     using Prsd.Core.Domain;
     using RequestHandlers;
     using RequestHandlers.Charges.IssuePendingCharges;
+    using System;
+    using System.Collections.Generic;
+    using System.Configuration;
     using IContainer = Autofac.IContainer;
 
     public class IoCFactory
@@ -94,6 +94,8 @@
                     container.Register(context => testUserContext).As<IUserContext>();
                     container.Register<Action<TestUserContext>>(context => newInstance => testUserContext = newInstance);
                     container.RegisterModule(new MappingModule());
+                    container.RegisterModule(new XmlValidationModule(environment));
+                    container.RegisterModule(new XmlModule(environment));
                     container.RegisterType<WeeeIdentityContext>().AsSelf().SingleInstance();
                     container.RegisterType<ApplicationUserManager>().AsSelf().SingleInstance();
                     container.RegisterType<ApplicationUserStore>().As<IUserStore<ApplicationUser>>();

@@ -21,7 +21,7 @@
         /// if they provide a valid scheme ID.
         /// </summary>
         [Fact]
-        public async void GetSchemesHandlerTest_HappyPath_ReturnsSchemeDatasOrderedByName()
+        public async Task GetSchemesHandlerTest_HappyPath_ReturnsSchemeDatasOrderedByName()
         {
             // Arrage
             IGetSchemesDataAccess dataAccess = CreateFakeDataAccess();
@@ -54,7 +54,7 @@
         [Trait("Authorization", "Internal")]
         [InlineData(AuthorizationBuilder.UserType.Unauthenticated)]
         [InlineData(AuthorizationBuilder.UserType.External)]
-        public async void GetSchemesHandler_WithNonInternalUser_ThrowsSecurityException(AuthorizationBuilder.UserType userType)
+        public async Task GetSchemesHandler_WithNonInternalUser_ThrowsSecurityException(AuthorizationBuilder.UserType userType)
         {
             IGetSchemesDataAccess dataAccess = CreateFakeDataAccess();
 

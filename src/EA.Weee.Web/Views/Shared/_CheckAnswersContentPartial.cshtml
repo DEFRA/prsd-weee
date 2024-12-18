@@ -1,0 +1,222 @@
+﻿@using EA.Prsd.Core.Helpers
+@using EA.Weee.Core.DirectRegistrant
+@using EA.Weee.Core.Organisations
+@using MvcNavigationHelpers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Producer.ViewModels.CheckAnswersViewModel
+
+@{
+    var representingOrg = @Model.HasAuthorisedRepresentitive;
+}
+
+@{
+    var organisationDetails = new Dictionary<string, object>();
+
+    if (Model.OrganisationDetails.ProducerRegistrationNumber != null)
+    {
+        organisationDetails.Add("Producer registration number", Model.OrganisationDetails.ProducerRegistrationNumber);
+    }
+
+    organisationDetails.Add("Organisation type", Model.OrganisationDetails.OrganisationType.GetDisplayName());
+    organisationDetails.Add("Company registration number", Model.OrganisationDetails.CompaniesRegistrationNumber);
+    organisationDetails.Add("Company name", Model.OrganisationDetails.CompanyName);
+    organisationDetails.Add("Trading name", Model.OrganisationDetails.BusinessTradingName);
+    organisationDetails.Add("Website address", Model.OrganisationDetails.Address.WebsiteAddress);
+    organisationDetails.Add("Address line 1", Model.OrganisationDetails.Address.Address1);
+    organisationDetails.Add("Address line 2", Model.OrganisationDetails.Address.Address2);
+    organisationDetails.Add("Town or city", Model.OrganisationDetails.Address.TownOrCity);
+    organisationDetails.Add("County or region", Model.OrganisationDetails.Address.CountyOrRegion);
+    organisationDetails.Add("Postcode", Model.OrganisationDetails.Address.Postcode);
+    organisationDetails.Add("Country", Model.OrganisationDetails.Address.CountryName);
+    organisationDetails.Add("EEE brand names", Model.OrganisationDetails.EEEBrandNames);
+
+    if (Model.OrganisationDetails.OrganisationType != ExternalOrganisationType.RegisteredCompany)
+    {
+        string displayText = Model.OrganisationDetails.OrganisationType == ExternalOrganisationType.Partnership ? "Partner" : "Sole trader";
+
+        var sortedContacts = Model.OrganisationDetails.AdditionalContactModels.OrderBy(c => c.Order).ToList();
+
+        for (var i = 0; i < sortedContacts.Count; i++)
+        {
+            var contact = sortedContacts[i];
+            var index = Model.OrganisationDetails.AdditionalContactModels.IndexOf(contact);
+
+            @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].FirstName)
+            @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].LastName)
+            @Html.HiddenFor(m => m.OrganisationDetails.AdditionalContactModels[index].Order)
+
+            var additionalIndex = (i + 1).ToString();
+            organisationDetails.Add($"{displayText} " + additionalIndex + " First name", contact.FirstName);
+            organisationDetails.Add($"{displayText} " + additionalIndex + " Last name", contact.LastName);
+        }
+    }
+
+    if (Model.DisplayRegistrationDetails)
+    {
+        string registrationStatus;
+        if ((Model.OrganisationDetails.Status == SubmissionStatus.Submitted || Model.OrganisationDetails.Status == SubmissionStatus.Returned) && Model.OrganisationDetails.HasPaid)
+        {
+            registrationStatus = "Registered";
+        }
+        else
+        {
+            registrationStatus = @Model.OrganisationDetails.Status.GetDisplayName();
+        }
+
+        organisationDetails.Add("Registration status", registrationStatus);
+
+        var registrationDate = string.Empty;
+        if (Model.OrganisationDetails.RegistrationDate.HasValue)
+        {
+            registrationDate = Model.OrganisationDetails.RegistrationDate.Value.ToString("dd MMMM yyyy");
+        }
+
+        organisationDetails.Add("Registration date", registrationDate);
+
+        var paymentStatus = Model.OrganisationDetails.HasPaid ? "Paid" : "Not paid";
+        organisationDetails.Add("Payment status", paymentStatus);
+
+        organisationDetails.Add("Payment reference", Model.OrganisationDetails.PaymentReference);
+
+        var submittedDate = string.Empty;
+        if (Model.OrganisationDetails.SubmittedDate.HasValue)
+        {
+            submittedDate = Model.OrganisationDetails.SubmittedDate.Value.ToString("dd MMMM yyyy");
+        }
+
+        organisationDetails.Add("Submission date", submittedDate);
+    }
+
+    var contactDetails = new Dictionary<string, object>
+    {
+            { "First name", Model.ContactDetails.FirstName },
+            { "Last name", Model.ContactDetails.LastName },
+            { "Position", Model.ContactDetails.Position },
+            { "Email address", Model.ContactDetails.AddressData.Email },
+            { "Phone number", Model.ContactDetails.AddressData.Telephone },
+            { "Address line 1", Model.ContactDetails.AddressData.Address1 },
+            { "Address line 2", Model.ContactDetails.AddressData.Address2 },
+            { "Town or city", Model.ContactDetails.AddressData.TownOrCity },
+            { "County or region", Model.ContactDetails.AddressData.CountyOrRegion },
+            { "Postcode", Model.ContactDetails.AddressData.Postcode },
+            { "Country", Model.ContactDetails.AddressData.CountryName }
+    };
+
+    var serviceOfNoticeData = new Dictionary<string, object>
+    {
+            { "Address line 1", Model.ServiceOfNoticeData.Address.Address1 },
+            { "Address line 2", Model.ServiceOfNoticeData.Address.Address2 },
+            { "Town or city", Model.ServiceOfNoticeData.Address.TownOrCity },
+            { "County or region", Model.ServiceOfNoticeData.Address.CountyOrRegion },
+            { "Postcode", Model.ServiceOfNoticeData.Address.Postcode },
+            { "Country", Model.ServiceOfNoticeData.Address.CountryName},
+            { "Phone number", Model.ServiceOfNoticeData.Address.Telephone },
+    };
+
+    var representingCompanyDetails = new Dictionary<string, object>();
+    if (representingOrg)
+    {
+        representingCompanyDetails = new Dictionary<string, object>
+        {
+                { "Producer name", Model.RepresentingCompanyDetails.CompanyName },
+                { "Trading name", Model.RepresentingCompanyDetails.BusinessTradingName },
+                { "Address line 1", Model.RepresentingCompanyDetails.Address.Address1 },
+                { "Address line 2", Model.RepresentingCompanyDetails.Address.Address2 },
+                { "Town or city", Model.RepresentingCompanyDetails.Address.TownOrCity },
+                { "County or region", Model.RepresentingCompanyDetails.Address.CountyOrRegion },
+                { "Postcode", Model.RepresentingCompanyDetails.Address.Postcode },
+                { "Country", Model.RepresentingCompanyDetails.Address.CountryName },
+                { "Phone number", Model.RepresentingCompanyDetails.Address.Telephone },
+                { "Email address", Model.RepresentingCompanyDetails.Address.Email },
+        };
+    }
+}
+
+<div>
+    @this.WeeeGds().TableSummary("Organisation details", organisationDetails, "", "", displayCaption: true)
+    @if (!(Model.IsPdfDownload ?? false))
+    {
+        <div style="margin-bottom: 40px;">
+            <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="@Url.Action("EditOrganisationDetails", "ProducerSubmission", new { redirectToCheckAnswers = true})">Change organisation details</a>
+        </div>
+    }
+</div>
+
+<div>
+    @this.WeeeGds().TableSummary("Contact details", contactDetails, "", "", displayCaption: true)
+    @if (!(Model.IsPdfDownload ?? false))
+    {
+        <div style="margin-bottom: 40px;">
+            <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="@Url.Action("EditContactDetails", "ProducerSubmission", new { redirectToCheckAnswers = true })">Change contact details</a>
+        </div>
+    }
+</div>
+
+<div>
+    @this.WeeeGds().TableSummary("Service of notice details", serviceOfNoticeData, "", "", displayCaption: true)
+    @if (!(Model.IsPdfDownload ?? false))
+    {
+        <div style="margin-bottom: 40px;">
+            <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="@Url.Action("ServiceOfNotice", "ProducerSubmission", new { redirectToCheckAnswers = true })">Change service of notice details</a>
+        </div>
+    }
+</div>
+
+@if (representingOrg)
+{
+    <div>
+        @(this.WeeeGds().TableSummary("Represented organisation details", representingCompanyDetails, "", "", displayCaption: true))
+        @if (!(Model.IsPdfDownload ?? false))
+        {
+            <div style="margin-bottom: 40px;">
+                <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="@Url.Action("EditRepresentedOrganisationDetails", "ProducerSubmission", new { redirectToCheckAnswers = true })">Change represented organisation details</a>
+            </div>
+        }
+    </div>
+}
+
+<table class="govuk-table category-row-no-break">
+    <caption class="govuk-table__caption" style="font-size: 24px;">EEE details</caption>
+    <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-!-text-align-left" style="width: 28%;">Category</th>
+            <th scope="col" class="govuk-table__header govuk-table__header--numeric" style="width: 18%; ">B2C Tonnes</th>
+            <th scope="col" class="govuk-table__header govuk-table__header--numeric" style="width: 19%; ">B2B Tonnes</th>
+        </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+
+        @for (var i = 0; i < Model.EeeData.CategoryValues.Count; i++)
+        {
+            var category = Model.EeeData.CategoryValues[i];
+
+            <tr class="govuk-table__row category-row-no-break" id="category-row-@category.CategoryId">
+                <td class="govuk-table__cell govuk-!-text-align-left govuk-!-padding-right-1 category-cell-no-break">
+                    <div class="category">
+                        <span class="category-id" id="@category.CategoryId-label">@(@category.CategoryId).&nbsp;</span><span class="category-description">@category.CategoryDisplay</span>
+                    </div>
+                </td>
+                <td class="govuk-table__cell govuk-table__cell--numeric printable-word-break category-cell-no-break">
+                    @category.HouseHold
+                </td>
+                <td class="govuk-table__cell govuk-table__cell--numeric printable-word-break category-cell-no-break">
+                    @category.NonHouseHold
+                </td>
+            </tr>
+        }
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header govuk-!-text-align-left" style="width: 28%;">Selling technique(s) that you use</th>
+            <td class="govuk-table__cell" colspan="2">
+                @(Model.EeeData.SellingTechnique.IsDirectSelling || Model.EeeData.SellingTechnique.IsIndirectSelling
+                ? Model.EeeData.SellingTechnique.ToSellingTechniqueType().GetDisplayName()
+                : string.Empty)
+            </td>
+        </tr>
+    </tbody>
+</table>
+@if (!(Model.IsPdfDownload ?? false))
+{
+    <div style="margin-bottom: 40px;">
+        <a class="govuk-link govuk-link--no-visited-state govuk-!-font-size-19" href="@Url.Action("EditEeeeData", "ProducerSubmission", new { redirectToCheckAnswers = true })">Change EEE details</a>
+    </div>
+}

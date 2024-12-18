@@ -1,5 +1,6 @@
 ﻿@using EA.Weee.Web.Areas.Admin.Controllers
 @using EA.Weee.Web.Areas.Admin.ViewModels.Home
+@using EA.Weee.Web.Areas.Admin.ViewModels.Producers
 @using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Admin.ViewModels.Producers.DetailsViewModel
 @{
@@ -36,7 +37,7 @@
             @Html.ActionLink("Perform another activity", "ChooseActivity", "Home", null, new { @class = "govuk-button" })
         </p>
         <p>
-            <a href="@(Url.UrlFor<ProducersController>(a => a.Search()))">Back</a>
+            <a href="@(Url.UrlFor<ProducersController>(a => a.Search(SearchTypeEnum.Producer)))">Back</a>
         </p>
     
     </section>

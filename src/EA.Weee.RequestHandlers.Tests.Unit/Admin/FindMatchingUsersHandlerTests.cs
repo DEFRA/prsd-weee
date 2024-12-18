@@ -31,7 +31,7 @@
         [Trait("Authorization", "Internal")]
         [InlineData(AuthorizationBuilder.UserType.Unauthenticated)]
         [InlineData(AuthorizationBuilder.UserType.External)]
-        public async void FindMatchingUsersHandler_WithNonInternalUser_ThrowSecurityException(AuthorizationBuilder.UserType userType)
+        public async Task FindMatchingUsersHandler_WithNonInternalUser_ThrowSecurityException(AuthorizationBuilder.UserType userType)
         {
             // Arrage
             IFindMatchingUsersDataAccess dataAccess = A.Fake<IFindMatchingUsersDataAccess>();
@@ -57,7 +57,7 @@
         /// </summary>
         [Fact]
         [Trait("Authorization", "Internal")]
-        public async void FindMatchingUsersHandler_WithInternalUser_DoesntThrowException()
+        public async Task FindMatchingUsersHandler_WithInternalUser_DoesntThrowException()
         {
             // Arrage
             var filter = fixture.Create<UserFilter>();
@@ -82,7 +82,7 @@
         /// This test ensures that the results are correctly paged.
         /// </summary>
         [Fact]
-        public async void FindMatchingUsersHandler_RequestingSpecificPage_ReturnsCorrectNumberOfResults()
+        public async Task FindMatchingUsersHandler_RequestingSpecificPage_ReturnsCorrectNumberOfResults()
         {
             // Arrage
             var filter = fixture.Create<UserFilter>();
@@ -110,7 +110,7 @@
         /// This test ensures that the results are correctly sorted before being returned.
         /// </summary>
         [Fact]
-        public async void FindMatchingUsersHandler_WithFullNameAscendingOrdering_ReturnsResultsSortedByFullName()
+        public async Task FindMatchingUsersHandler_WithFullNameAscendingOrdering_ReturnsResultsSortedByFullName()
         {
             // Arrage
             var filter = fixture.Create<UserFilter>();
@@ -137,7 +137,7 @@
         /// then by user ID.
         /// </summary>
         [Fact]
-        public async void HandleAsync_WithOrderByRoleDescending_ReturnsSortedResults()
+        public async Task HandleAsync_WithOrderByRoleDescending_ReturnsSortedResults()
         {
             // Arrage
             var filter = fixture.Create<UserFilter>();
@@ -175,7 +175,7 @@
         /// then by user ID.
         /// </summary>
         [Fact]
-        public async void HandleAsync_WithOrderByRoleAscending_ReturnsSortedResults()
+        public async Task HandleAsync_WithOrderByRoleAscending_ReturnsSortedResults()
         {
             // Arrage
             var filter = fixture.Create<UserFilter>();

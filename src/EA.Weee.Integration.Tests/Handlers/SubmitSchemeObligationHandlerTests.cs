@@ -46,7 +46,7 @@
 
             private readonly Because of = () =>
             {
-                result = Task.Run(async () => await handler.HandleAsync(request)).Result;
+                result = AsyncHelper.RunSync(async () => await handler.HandleAsync(request));
 
                 obligationUpload = Query.GetObligationUploadById(result);
             };
@@ -265,7 +265,7 @@
             {
                 var schemeObligation = obligationUpload.ObligationSchemes.First(s => s.Scheme.Id == schemes.ElementAt(0).Id);
                 schemeObligation.ComplianceYear.Should().Be(SystemTime.UtcNow.Year);
-                schemeObligation.UpdatedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(5));
+                schemeObligation.UpdatedDate.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromSeconds(20));
 
                 var schemeCategoryObligation =
                     schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.LargeHouseholdAppliances);

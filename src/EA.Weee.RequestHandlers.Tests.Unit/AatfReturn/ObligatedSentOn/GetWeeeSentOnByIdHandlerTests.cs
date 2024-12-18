@@ -60,7 +60,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenWeeeSentOnByIdRequest_AddressDataShouldBeMapped()
+        public async Task HandleAsync_GivenWeeeSentOnByIdRequest_AddressDataShouldBeMapped()
         {
             var operatorAddress = new AatfAddress("OpName", "OpAdd1", "OpAdd2", "OpTown", "OpCounty", "PostOp", A.Fake<Country>());
             var siteAddress = new AatfAddress("SiteName", "SiteAdd1", "SiteAdd2", "SiteTown", "SiteCounty", "PostSite", A.Fake<Country>());

@@ -9,6 +9,7 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Threading.Tasks;
     using Weee.DataAccess;
     using Weee.Tests.Core;
     using Xunit;
@@ -41,7 +42,7 @@
         [InlineData("a", "A company name")] // First letter matches
         [InlineData("a", "THE company")] // Company starts with "THE"
         [InlineData("a", "the company")] // Company starts with "THE"
-        public async void GetOrganisationsBySimpleSearchTerm_SearchIsValid_AndNoExistingOrganisationUsers_ReturnsOrganisation(string searchTerm, string organisationName)
+        public async Task GetOrganisationsBySimpleSearchTerm_SearchIsValid_AndNoExistingOrganisationUsers_ReturnsOrganisation(string searchTerm, string organisationName)
         {
             var organisation = A.Fake<Organisation>();
             A.CallTo(() => organisation.TradingName).Returns(organisationName);
@@ -59,7 +60,7 @@
         [Theory]
         [InlineData("a", "b company")]
         [InlineData("b", "a company")]
-        public async void GetOrganisationBySimpleSearchTerm_SearchIsNotValid_AndNoExistingOrganisationUsers_DoesNotReturnOrganisation(string searchTerm, string organisationName)
+        public async Task GetOrganisationBySimpleSearchTerm_SearchIsNotValid_AndNoExistingOrganisationUsers_DoesNotReturnOrganisation(string searchTerm, string organisationName)
         {
             var organisation = A.Fake<Organisation>();
             A.CallTo(() => organisation.TradingName).Returns(organisationName);
@@ -78,7 +79,7 @@
         [InlineData("7CE63EB0-0D7D-46AA-9385-EA2DC6D9B2F1", "00000000-0000-0000-0000-000000000000", Core.Shared.UserStatus.Active, Core.Shared.OrganisationStatus.Complete)] // Active status & complete org, but non-matching guids
         [InlineData("7CE63EB0-0D7D-46AA-9385-EA2DC6D9B2F1", "00000000-0000-0000-0000-000000000000", Core.Shared.UserStatus.Pending, Core.Shared.OrganisationStatus.Complete)] // Pending status & complete org, but non-matching guids
         [InlineData("7CE63EB0-0D7D-46AA-9385-EA2DC6D9B2F1", "00000000-0000-0000-0000-000000000000", Core.Shared.UserStatus.Inactive, Core.Shared.OrganisationStatus.Complete)] // Inactive status & complete org, but non-matching guids
-        public async void
+        public async Task
             GetOrganisationBySimpleSearchTerm_SearchIsValid_AndNoConflictingOrganisationUserExists_ReturnsOrganisation(
             string existingUserId, string userId, Core.Shared.UserStatus userStatus, Core.Shared.OrganisationStatus organisationStatus)
         {
@@ -110,7 +111,7 @@
         [InlineData("00000000-0000-0000-0000-000000000000", "AE05ADBD-F954-48FB-B7FA-57041CA8145A", Core.Shared.UserStatus.Pending, Core.Shared.OrganisationStatus.Complete)] // Pending status & complete org, but non-matching guids
         [InlineData("00000000-0000-0000-0000-000000000000", "AE05ADBD-F954-48FB-B7FA-57041CA8145A", Core.Shared.UserStatus.Inactive, Core.Shared.OrganisationStatus.Complete)] // Inactive status & complete org, but non-matching guids
         [InlineData("00000000-0000-0000-0000-000000000000", "00000000-0000-0000-0000-000000000000", Core.Shared.UserStatus.Rejected, Core.Shared.OrganisationStatus.Incomplete)] // Rejected status & matching guids, but incomplete org
-        public async void
+        public async Task
             GetOrganisationBySimpleSearchTerm_SearchIsValid_ButConflictingOrganisationUserExists_DoesNotReturnOrganisation(
             string existingUserId, string userId, Core.Shared.UserStatus userStatus, Core.Shared.OrganisationStatus organisationStatus)
         {
@@ -134,7 +135,7 @@
         }
 
         [Fact]
-        public async void GetOrganisationsByPartialSearchAsync_TradeName_PartialMatch_ReturnsResult()
+        public async Task GetOrganisationsByPartialSearchAsync_TradeName_PartialMatch_ReturnsResult()
         {
             var organisation = A.Fake<Organisation>();
             A.CallTo(() => organisation.TradingName).Returns("Test Partnership");
@@ -152,7 +153,7 @@
         }
 
         [Fact]
-        public async void GetOrganisationsByPartialSearchAsync_Name_PartialMatch_ReturnsResult()
+        public async Task GetOrganisationsByPartialSearchAsync_Name_PartialMatch_ReturnsResult()
         {
             var organisation = orgHelper.GetOrganisationWithName("Test Organisation");
             var userId = Guid.NewGuid();
@@ -167,7 +168,7 @@
         }
 
         [Fact]
-        public async void GetOrganisationsByPartialSearchAsync_TradeName_NoMatch_ReturnsNoResult()
+        public async Task GetOrganisationsByPartialSearchAsync_TradeName_NoMatch_ReturnsNoResult()
         {
             var organisation = A.Fake<Organisation>();
             A.CallTo(() => organisation.TradingName).Returns("Test Partnership");
@@ -184,7 +185,7 @@
         }
 
         [Fact]
-        public async void GetOrganisationsByPartialSearchAsync_Name_NoMatch_ReturnsNoResult()
+        public async Task GetOrganisationsByPartialSearchAsync_Name_NoMatch_ReturnsNoResult()
         {
             var organisation = orgHelper.GetOrganisationWithName("Test Organisation");
             var userId = Guid.NewGuid();
@@ -206,7 +207,7 @@
         }
 
         [Fact]
-        public async void GetOrganisationsByPartialSearchAsync_Match_ReturnsOnlyConpleteStatusResult()
+        public async Task GetOrganisationsByPartialSearchAsync_Match_ReturnsOnlyConpleteStatusResult()
         {
             var organisation = orgHelper.GetOrganisationWithName("Test Organisation");
             var org2 = orgHelper.GetOrganisationWithName("Test Organisation 2");

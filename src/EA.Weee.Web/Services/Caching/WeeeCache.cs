@@ -40,6 +40,8 @@
         public SingleItemCache<IList<ProducerSearchResult>> ProducerSearchResultList { get; private set; }
         public SingleItemCache<IList<OrganisationSearchResult>> OrganisationSearchResultList { get; private set; }
 
+        public SingleItemCache<IList<SmallProducerSearchResult>> SmallProducerSearchResultList { get; private set; }
+
         public SingleItemCache<DateTime> CurrentDate { get; private set; }
 
         private readonly string accessToken;
@@ -61,21 +63,21 @@
                 "UserName",
                 TimeSpan.FromMinutes(5),
                 (key) => key.ToString(),
-                (key) => FetchUserNameFromApi(key));
+                FetchUserNameFromApi);
 
             OrganisationNames = new Cache<Guid, string>(
                 provider,
                 "AatfName",
                 TimeSpan.FromMinutes(configurationService.CurrentConfiguration.OrganisationCacheDurationMins),
                 (key) => key.ToString(),
-                (key) => FetchOrganisationNameFromApi(key));
+                FetchOrganisationNameFromApi);
 
             SchemeNames = new Cache<Guid, string>(
                 provider,
                 "SchemeName",
                 TimeSpan.FromMinutes(15),
                 (key) => key.ToString(),
-                (key) => FetchSchemeNameFromApi(key));
+                FetchSchemeNameFromApi);
 
             UserActiveCompleteOrganisationCount = new Cache<Guid, int>(
                 provider,
@@ -89,26 +91,32 @@
                 "SchemeInfos",
                 TimeSpan.FromMinutes(15),
                 (key) => key.ToString(),
-                (key) => FetchSchemePublicInfoFromApi(key));
+                FetchSchemePublicInfoFromApi);
 
             SchemePublicInfosBySchemeId = new Cache<Guid, SchemePublicInfo>(
                 provider,
                 "SchemeInfos",
                 TimeSpan.FromMinutes(15),
                 (key) => key.ToString(),
-                (key) => FetchSchemePublicInfoByIdFromApi(key));
+                FetchSchemePublicInfoByIdFromApi);
 
             ProducerSearchResultList = new SingleItemCache<IList<ProducerSearchResult>>(
                 provider,
                 "ProducerPublicInfoList",
                 TimeSpan.FromDays(1),
-                () => FetchProducerSearchResultListFromApi());
+                FetchProducerSearchResultListFromApi);
+
+            SmallProducerSearchResultList = new SingleItemCache<IList<SmallProducerSearchResult>>(
+                provider,
+                "SmallProducerPublicInfoList",
+                TimeSpan.FromDays(1),
+                FetchSmallProducerSearchResultListFromApi);
 
             OrganisationSearchResultList = new SingleItemCache<IList<OrganisationSearchResult>>(
                 provider,
                 "OrganisationPublicInfoList",
                 TimeSpan.FromMinutes(configurationService.CurrentConfiguration.OrganisationCacheDurationMins),
-                () => FetchOrganisationSearchResultListFromApi());
+                FetchOrganisationSearchResultListFromApi);
 
             AatfPublicInfo = new Cache<Guid, IList<AatfData>>(
                 provider,
@@ -221,11 +229,22 @@
             }
         }
 
+        private async Task<IList<SmallProducerSearchResult>> FetchSmallProducerSearchResultListFromApi()
+        {
+            using (var client = apiClient())
+            {
+                var request = new FetchSmallProducerSearchResultsForCache();
+                var result = await client.SendAsync(accessToken, request);
+
+                return result;
+            }
+        }
+
         private async Task<IList<OrganisationSearchResult>> FetchOrganisationSearchResultListFromApi()
         {
             using (var client = apiClient())
             {
-                var request = new FetchOrganisationSearchResultsForCache();
+                var request = new FetchOrganisationSearchResultsForCache(configurationService.CurrentConfiguration.SmallProducerFeatureEnabledFrom);
                 var result = await client.SendAsync(accessToken, request);
 
                 return result;
@@ -284,6 +303,11 @@
             return ProducerSearchResultList.Fetch();
         }
 
+        public Task<IList<SmallProducerSearchResult>> FetchSmallProducerSearchResultList()
+        {
+            return SmallProducerSearchResultList.Fetch();
+        }
+
         Task<IList<ProducerSearchResult>> ISearchResultProvider<ProducerSearchResult>.FetchAll()
         {
             return FetchProducerSearchResultList();
@@ -302,6 +326,11 @@
         Task<IList<OrganisationSearchResult>> ISearchResultProvider<OrganisationSearchResult>.FetchAll()
         {
             return FetchOrganisationSearchResultList();
+        }
+
+        Task<IList<SmallProducerSearchResult>> ISearchResultProvider<SmallProducerSearchResult>.FetchAll()
+        {
+            return FetchSmallProducerSearchResultList();
         }
 
         public async Task InvalidateOrganisationSearch()
@@ -350,6 +379,11 @@
         public async Task InvalidateOrganisationNameCache(Guid organisationId)
         {
             await OrganisationNames.InvalidateCache(organisationId);
+        }
+
+        public async Task InvalidateSmallProducerSearch()
+        {
+            await SmallProducerSearchResultList.InvalidateCache();
         }
 
         public void Clear()

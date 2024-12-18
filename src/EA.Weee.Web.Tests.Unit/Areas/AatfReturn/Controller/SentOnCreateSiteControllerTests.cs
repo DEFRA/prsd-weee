@@ -20,6 +20,7 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Requests.Shared;
@@ -59,7 +60,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
@@ -96,7 +97,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
+        public async Task IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), null) as ViewResult;
 
@@ -104,7 +105,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenWeeeSentOnId_ApiShouldBeCalled()
+        public async Task IndexGet_GivenWeeeSentOnId_ApiShouldBeCalled()
         {
             var weeeSentOnId = Guid.NewGuid();
 
@@ -114,7 +115,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturnId_ApiShouldBeCalled()
+        public async Task IndexGet_GivenReturnId_ApiShouldBeCalled()
         {
             var returnId = Guid.NewGuid();
 
@@ -124,7 +125,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenWeenSentOn_MapperShouldBeCalled()
+        public async Task IndexGet_GivenWeenSentOn_MapperShouldBeCalled()
         {
             var weeeSentOn = A.Fake<WeeeSentOnData>();
             var returnData = A.Fake<ReturnData>();
@@ -142,7 +143,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenMappedViewModel_ViewModelShouldBeReturned()
+        public async Task IndexGet_GivenMappedViewModel_ViewModelShouldBeReturned()
         {
             var model = A.Fake<SentOnCreateSiteViewModel>();
 
@@ -154,7 +155,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenInvalidViewModel_ApiShouldNotBeCalled()
+        public async Task IndexPost_GivenInvalidViewModel_ApiShouldNotBeCalled()
         {
             controller.ModelState.AddModelError("error", "error");
             var model = new SentOnCreateSiteViewModel
@@ -168,7 +169,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
+        public async Task IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
             var model = new SentOnCreateSiteViewModel
             {
@@ -184,7 +185,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenNoJavascriptCopyIsTrue_SideAddressShouldBeMappedToOperatorAddress()
+        public async Task IndexPost_GivenNoJavascriptCopyIsTrue_SideAddressShouldBeMappedToOperatorAddress()
         {
             var model = new SentOnCreateSiteViewModel
             {
@@ -207,7 +208,7 @@
         [Theory]
         [InlineData(false)]
         [InlineData(null)]
-        public async void IndexPost_GivenNoJavascriptCopyIsFalseOrNull_SentOnAatfSiteShouldBeSent(bool? javascript)
+        public async Task IndexPost_GivenNoJavascriptCopyIsFalseOrNull_SentOnAatfSiteShouldBeSent(bool? javascript)
         {
             var model = new SentOnCreateSiteViewModel
             {

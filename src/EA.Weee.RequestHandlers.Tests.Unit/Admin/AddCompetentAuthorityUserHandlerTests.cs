@@ -12,6 +12,7 @@
     using System;
     using System.Collections.Generic;
     using System.Data.Entity;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -70,7 +71,7 @@
         }
 
         [Fact]
-        public async void AddCompetentAuthorityUserHandler_ReturnsCompetentAuthorityId()
+        public async Task AddCompetentAuthorityUserHandler_ReturnsCompetentAuthorityId()
         {
             AddCompetentAuthorityUser message = new AddCompetentAuthorityUser(InternalUserId.ToString());
             var id = await handler.HandleAsync(message);
@@ -79,7 +80,7 @@
         }
 
         [Fact]
-        public async void AddCompetentAuthorityUserHandler_FakeUser_ThrowsException()
+        public async Task AddCompetentAuthorityUserHandler_FakeUser_ThrowsException()
         {
             AddCompetentAuthorityUser message = new AddCompetentAuthorityUser(FakeUserId.ToString());
             A.CallTo(() => configurationManagerWrapper.HasKey("Weee.InternalUsersTestMode")).Returns(true);
@@ -88,7 +89,7 @@
         }
 
         [Fact]
-        public async void AddCompetentAuthorityUserHandler_InternalUsersModeSet_ReturnsSuccess()
+        public async Task AddCompetentAuthorityUserHandler_InternalUsersModeSet_ReturnsSuccess()
         {
             A.CallTo(() => testInternalUserEmailDomains.UserTestModeEnabled).Returns(true);
             A.CallTo(() => testInternalUserEmailDomains.Domains).Returns(new List<string>() { "co.uk" });

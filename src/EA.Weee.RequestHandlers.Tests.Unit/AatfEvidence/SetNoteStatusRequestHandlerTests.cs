@@ -645,7 +645,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_Calls_DeleteZeroTonnageFromSubmittedTransferNote_InTheCorrectOrder()
+        public async Task HandleAsync_Calls_DeleteZeroTonnageFromSubmittedTransferNote_InTheCorrectOrder()
         {
             // Arrange
             var authorization = new AuthorizationBuilder().AllowOrganisationAccess().Build();

@@ -9,6 +9,7 @@
     using Requests.Scheme.MemberRegistration;
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using System.Xml.Linq;
     using Xml.Converter;
     using Xml.MemberRegistration;
@@ -112,7 +113,7 @@
         }
 
         [Fact]
-        public async void GetProducerContact_ReturnsContactWithCorrectAddressDetails()
+        public async Task GetProducerContact_ReturnsContactWithCorrectAddressDetails()
         {
             string primary = "Primary";
             string secondary = "Secondary";
@@ -153,7 +154,7 @@
         }
 
         [Fact]
-        public async void GetProducerContact_ReturnsContactWithIndividualDetails()
+        public async Task GetProducerContact_ReturnsContactWithIndividualDetails()
         {
             string title = "title";
             string forename = "forename";
@@ -190,7 +191,7 @@
         }
 
         [Fact]
-        public async void SetProducerBusiness_WithCompanyBusiness_ReturnsBusinessWithCompanyDetails()
+        public async Task SetProducerBusiness_WithCompanyBusiness_ReturnsBusinessWithCompanyDetails()
         {
             string companyName = "Company name";
             string companyRegistration = "CRN1234";
@@ -230,7 +231,7 @@
         }
 
         [Fact]
-        public async void SetProducerBusiness_WithPartnership_ReturnsBusinessWithPartnershipDetails()
+        public async Task SetProducerBusiness_WithPartnership_ReturnsBusinessWithPartnershipDetails()
         {
             var partnershipName = "Company name";
             var partners = new[] { "P1" };
@@ -269,7 +270,7 @@
         }
 
         [Fact]
-        public async void SetProducerBusiness_WithPartnership_ReturnsPartnershipWithPartnersDetails()
+        public async Task SetProducerBusiness_WithPartnership_ReturnsPartnershipWithPartnersDetails()
         {
             var partners = new[] { "P1", "P3" };
 
@@ -303,7 +304,7 @@
         }
 
         [Fact]
-        public async void SetProducerBusiness_WithCorrespondentForNotices_ReturnsCorrespondentForNoticesDetails()
+        public async Task SetProducerBusiness_WithCorrespondentForNotices_ReturnsCorrespondentForNoticesDetails()
         {
             string forename = "forename";
             string surname = "surname";
@@ -335,7 +336,7 @@
         }
 
         [Fact]
-        public async void SetAuthorisedRepresentative_WithNullRepresentative_ReturnsNull()
+        public async Task SetAuthorisedRepresentative_WithNullRepresentative_ReturnsNull()
         {
             var builder = new GenerateFromXmlBuilder();
 
@@ -345,7 +346,7 @@
         }
 
         [Fact]
-        public async void SetAuthorisedRepresentative_WithNullRepresentativeOverseasProducer_ReturnsNull()
+        public async Task SetAuthorisedRepresentative_WithNullRepresentativeOverseasProducer_ReturnsNull()
         {
             var builder = new GenerateFromXmlBuilder();
 
@@ -355,7 +356,7 @@
         }
 
         [Fact]
-        public async void SetAuthorisedRepresentative_WithRepresentativeOverseasProducer_ReturnsOverseasProducerWithName()
+        public async Task SetAuthorisedRepresentative_WithRepresentativeOverseasProducer_ReturnsOverseasProducerWithName()
         {
             var authorisedRepresentative = new authorisedRepresentativeType()
             {
@@ -373,7 +374,7 @@
         }
 
         [Fact]
-        public async void SetAuthorisedRepresentative_WithRepresentativeOverseasProducer_WithContact_ReturnsOverseasProducerWithContact()
+        public async Task SetAuthorisedRepresentative_WithRepresentativeOverseasProducer_WithContact_ReturnsOverseasProducerWithContact()
         {
             string forename = "forename";
             string surname = "surname";

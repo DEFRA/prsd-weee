@@ -1,0 +1,150 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@using EA.Prsd.Core.Helpers
+@using EA.Weee.Web.Areas.Producer.ViewModels
+
+@model OrganisationDetailsTabsViewModel
+
+@{
+    var @title = "Organisation details";
+    ViewBag.Title = @title + " - GOV.UK";
+    var width = "35%";
+}
+@section full_main_content{
+    <div class="govuk-tabs">
+        @Html.Partial("Producer/ViewOrganisation/_OrganisationDetailsTabs", Model)
+
+        <div class="govuk-tabs__panel" id="organisationDetails">
+            <h1 class="govuk-heading-m">
+                @title
+            </h1>
+            <table id="pcs-details-table" class="govuk-table">
+                <tbody class="govuk-table__body">
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: @width;" scope="row">Producer registration number (PRN)</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.ProducerRegistrationNumber</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: @width;" scope="row">Organisation type</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.OrganisationType.GetDisplayName()</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: @width;" scope="row">Company name</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.CompanyName</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: @width;" scope="row">Company registration number</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.CompaniesRegistrationNumber</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: @width;" scope="row">Trading name</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.BusinessTradingName</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: @width;" scope="row">Address line 1</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.Address.Address1</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" scope="row" style="width: @width;">Address line 2</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.Address.Address2</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: @width;" scope="row">Town</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.Address.TownOrCity</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: @width;" scope="row">County</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.Address.CountyOrRegion</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: @width;" scope="row">Postcode</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.Address.Postcode</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: @width;" scope="row">Country</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.Address.CountryName</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: @width;" scope="row">Website address</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.Address.WebsiteAddress</td>
+                    </tr>
+                    
+                    @if (Model.Year.HasValue)
+                    {
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="width: @width;" scope="row">Registration status</th>
+
+                            @if (Model.IsRegistered)
+                            {
+                                <td class="govuk-table__cell">Registered</td>
+                            }
+                            else
+                            {
+                                <td class="govuk-table__cell">@Model.OrganisationViewModel.Status.GetDisplayName()</td>
+                            }
+                        </tr>
+
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="width: @width;" scope="row">Registration date</th>
+                            <td class="govuk-table__cell">
+                                @if (Model.OrganisationViewModel.RegistrationDate.HasValue)
+                                {
+                                    @Model.OrganisationViewModel.RegistrationDate.Value.ToString("dd MMMM yyyy")
+                                }
+                            </td>
+                        </tr>
+
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="width: @width;" scope="row">Payment status</th>
+                            <td class="govuk-table__cell">
+                                @(Model.OrganisationViewModel.HasPaid ? "Paid" : "Not paid")
+
+                                @if (Model.ShowPaymentLink)
+                                {
+                                    <div style="float: right">
+                                        @Html.ActionLink("Add payment details", "AddPaymentDetails", "ProducerSubmission",
+                                            new
+                                            {
+                                                directProducerSubmissionId = Model.OrganisationViewModel.DirectProducerSubmissionId,
+                                                RegistrationNumber = Model.OrganisationViewModel.ProducerRegistrationNumber,
+                                                year = Model.Year
+                                            }, new { @class = "govuk-link" })
+                                    </div>
+                                }
+                            </td>
+                        </tr>
+
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="width: @width;" scope="row">Payment reference</th>
+                            <td class="govuk-table__cell">@Model.OrganisationViewModel.PaymentReference</td>
+                        </tr>
+
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="width: @width;" scope="row">Submission date</th>
+                            <td class="govuk-table__cell">
+                                @if (Model.OrganisationViewModel.SubmittedDate.HasValue)
+                                {
+                                    @Model.OrganisationViewModel.SubmittedDate.Value.ToString("dd MMMM yyyy")
+                                }
+                            </td>
+                        </tr>
+                    }
+
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+    @Html.Partial("Producer/ViewOrganisation/_OrganisationDetailsTabsBottomButtons", Model)
+}

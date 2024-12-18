@@ -1,0 +1,23 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.Producers.RemovedViewModel
+@{
+    var title = "Removed producer registration";
+    ViewBag.Title = @title + " - GOV.UK";
+}
+
+@section full_main_content {
+
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">@title</h1>
+    </header>
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.RegistrationNumber)
+
+        <p>You have successfully removed the producer registration for '@Model.ProducerName', for @Model.ComplianceYear.</p>
+
+        @(this.WeeeGds().Submit("Continue"))
+    }
+}
+

@@ -30,6 +30,15 @@
             return fieldNames;
         }
 
+        public static string GetDisplayName(this Enum enumValue)
+        {
+            return enumValue.GetType()
+                .GetMember(enumValue.ToString())
+                .First()
+                .GetCustomAttribute<DisplayAttribute>()
+                ?.GetName() ?? enumValue.ToString();
+        }
+
         public static Dictionary<int, string> GetOrderedValues(Type enumType)
         {
             var values = GetValues(enumType).ToList();

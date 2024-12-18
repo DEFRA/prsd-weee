@@ -47,7 +47,7 @@
 
             DbContext.SaveChanges(); // N.B. may only work if we have a connected db context
 
-            Console.WriteLine("Created test " + typeof(T) + ": " + instance);
+            //Console.WriteLine("Created test " + typeof(T) + ": " + instance);
 
             DbContext.Dispose();
 

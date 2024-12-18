@@ -73,27 +73,30 @@ namespace EA.Prsd.Core.Tests
         }
 
         [Fact]
-        public void WhenSpecifyingAmbientValue_ThenDoesNotOverridesOtherCallContextGlobalDefault()
+        public async Task WhenSpecifyingAmbientValue_ThenDoesNotOverrideOtherThreadsGlobalDefault()
         {
-            var singleton = new AmbientSingleton<string>("foo");
+            // Arrange
+            var singleton = new AmbientSingleton<string>("defaultValue");
+            string threadSpecificValue = null;
+            string defaultValue = null;
 
-            var value1 = string.Empty;
-            var value2 = string.Empty;
-
-            void action1()
+            // Act
+            var threadSpecificTask = Task.Run(() =>
             {
-                singleton.Value = "bar";
-                value1 = singleton.Value;
-            }
+                singleton.Value = "threadSpecificValue";
+                threadSpecificValue = singleton.Value;
+            });
 
-            void action2() => value2 = singleton.Value;
+            var defaultValueTask = Task.Run(() =>
+            {
+                defaultValue = singleton.Value;
+            });
 
-            var tasks = new[] { Task.Factory.StartNew(action1), Task.Factory.StartNew(action2) };
+            await Task.WhenAll(threadSpecificTask, defaultValueTask);
 
-            Task.WaitAll(tasks);
-
-            Assert.Equal("bar", value1);
-            Assert.Equal("foo", value2);
+            // Assert
+            Assert.Equal("threadSpecificValue", threadSpecificValue);
+            Assert.Equal("defaultValue", defaultValue);
         }
 
         [Fact]

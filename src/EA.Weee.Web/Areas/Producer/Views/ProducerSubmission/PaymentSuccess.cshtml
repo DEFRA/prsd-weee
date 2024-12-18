@@ -1,0 +1,43 @@
+﻿@using System.Web.Mvc.Html
+@using EA.Weee.Web.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Producer.ViewModels.RegisteredResultModel
+@{
+    var title = "You have successfully submitted your producer registration";
+    ViewBag.Title = @title + " - GOV.UK";
+}
+
+@section full_main_content{
+    <div class="govuk-!-padding-bottom-5"></div>
+    <div class="govuk-panel govuk-panel--confirmation govuk-!-width-two-thirds">
+        <h1 class="govuk-panel__title">
+            You are now registered as a small producer for @Model.ComplianceYear
+        </h1>
+        <div class="govuk-panel__body">
+            Payment reference number:<br><strong>@Model.PaymentReference</strong>
+        </div>
+    </div>
+    <p class="govuk-body">You have been emailed a receipt to the email address provided during the payment.</p>
+    <div class="govuk-!-width-two-thirds">
+        <h2 class="govuk-heading-m govuk-!-margin-bottom-0">Payment summary</h2>
+        <table id="payment-summary-table prsd-table-small-collapse" class="govuk-table">
+            <thead class="govuk-table__head prsd-table-small-collapse prsd-table-small-collapse-header">
+                <tr class="govuk-table__row govuk-table__cell--thick prsd-table-small-collapse prsd-table-small-collapse-header">
+                    <th scope="col" class="govuk-table__header prsd-table-small-collapse" style="width: 30%;"><span class="govuk-visually-hidden">amount</span></th>
+                    <th scope="col" class="govuk-table__header prsd-table-small-collapse"><span class="govuk-visually-hidden">value</span></th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row task-list-row govuk-table__cell--thick prsd-table-small-collapse">
+                    <th class="govuk-table__header" style="width: 30%;" scope="row">Total amount</th>
+                    <td class="govuk-table__cell">£@Model.TotalAmount.ToString("0.00")</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="govuk-body"></p>
+        @Html.Partial("_ContactPartial")
+    </div>
+
+    @Html.ActionLink("Perform other activities", "ChooseActivity", "Home", new { area = "Scheme", pcsId = Model.OrganisationId }, new { @class = "govuk-button" })
+}

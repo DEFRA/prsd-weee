@@ -28,7 +28,7 @@
         public MvcHtmlString CreateLinkButtonWithEventTracking(string buttonText, string eventCategory, string eventAction, string eventLabel)
         {
             return new MvcHtmlString(
-                $@"<button class=""link-submit"" data-module=""govuk-button"" onclick=""{EventTrackingFunction(eventCategory, eventAction, eventLabel)}"" type=""submit"" data-prevent-double-click=""true"" >{buttonText}</button>");
+                $@"<input class=""link-submit"" data-module=""govuk-button"" onclick=""{EventTrackingFunction(eventCategory, eventAction, eventLabel)}"" type=""submit"" data-prevent-double-click=""true"" role=""link"" value=""{buttonText}"" />");
         }
 
         public MvcHtmlString ActionLinkWithEventTracking(string linkText,

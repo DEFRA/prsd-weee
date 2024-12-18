@@ -32,9 +32,7 @@
                     (OrganisationStatus)
                         Enum.Parse(typeof(OrganisationStatus), source.OrganisationStatus.Value.ToString()),
                 OrganisationType =
-                    (OrganisationType)
-                        Enum.Parse(typeof(OrganisationType),
-                            source.OrganisationType.Value.ToString()),
+                    MapOrganisationType(source.OrganisationType),
                 // Use existing mappers to map addresses
                 BusinessAddress = source.BusinessAddress != null
                     ? addressMap.Map(source.BusinessAddress)
@@ -45,8 +43,21 @@
                 HasBusinessAddress = source.HasBusinessAddress,
                 HasNotificationAddress = source.HasNotificationAddress,
                 OrganisationName = source.OrganisationName,
-                IsBalancingScheme = source.ProducerBalancingScheme != null
+                IsBalancingScheme = source.ProducerBalancingScheme != null,
+                IsRepresentingCompany = source.IsRepresentingCompany,
+                NpwdMigrated = source.NpwdMigrated,
+                NpwdMigratedComplete = source.NpwdMigratedComplete
             };
+        }
+
+        private OrganisationType MapOrganisationType(Domain.Organisation.OrganisationType organisationType)
+        {
+            if (organisationType == Domain.Organisation.OrganisationType.DirectRegistrantPartnership)
+            {
+                return OrganisationType.Partnership;
+            }
+
+            return (OrganisationType)Enum.Parse(typeof(OrganisationType), organisationType.Value.ToString());
         }
     }
 }

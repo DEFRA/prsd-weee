@@ -436,7 +436,7 @@
         }
 
         [Fact]
-        public async void SpgProducerEeeDataHistoryCsvTests_EEEDataHistory_SubmissionWithNoEeeOutputAmounts_ReturnsPreviousProducerDataAsRemoved()
+        public async Task SpgProducerEeeDataHistoryCsvTests_EEEDataHistory_SubmissionWithNoEeeOutputAmounts_ReturnsPreviousProducerDataAsRemoved()
         {
             using (DatabaseWrapper db = new DatabaseWrapper())
             {
@@ -646,7 +646,7 @@
         }
 
         [Fact]
-        public async void SpgProducerEeeDataHistoryCsvTests_EEEDataHistory_ProducerHasExistingEeeAndThenOneCategoryRemoved_ReturnsRowsWithAndWithoutRemovedCategory()
+        public async Task SpgProducerEeeDataHistoryCsvTests_EEEDataHistory_ProducerHasExistingEeeAndThenOneCategoryRemoved_ReturnsRowsWithAndWithoutRemovedCategory()
         {
             var complianceYear = 2995;
             var producerRegistrationNumber = "WEE/AW0101AW";
@@ -713,7 +713,7 @@
         }
 
         [Fact]
-        public async void SpgProducerEeeDataHistoryCsvTests_EEEDataHistory_SecondSubmissionAffectsOtherProducerWhileCurrentProducerRemainsUnchanged_ReturnsOnlyOneRowForProducer()
+        public async Task SpgProducerEeeDataHistoryCsvTests_EEEDataHistory_SecondSubmissionAffectsOtherProducerWhileCurrentProducerRemainsUnchanged_ReturnsOnlyOneRowForProducer()
         {
             var complianceYear = 2995;
             var producerRegistrationNumber1 = "WEE/AW0101AW";

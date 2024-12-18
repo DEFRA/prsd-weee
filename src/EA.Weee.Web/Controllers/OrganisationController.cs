@@ -4,6 +4,11 @@
     using Base;
     using Core.Organisations;
     using Core.Shared;
+    using EA.Prsd.Core.Mapper;
+    using EA.Weee.Core.Helpers;
+    using EA.Weee.Requests.Organisations.DirectRegistrant;
+    using EA.Weee.Requests.Shared;
+    using EA.Weee.Web.ViewModels.Organisation.Mapping.ToViewModel;
     using Infrastructure;
     using System;
     using System.Collections.Generic;
@@ -16,10 +21,12 @@
     public class OrganisationController : ExternalSiteController
     {
         private readonly Func<IWeeeClient> apiClient;
+        private readonly IMapper mapper;
 
-        public OrganisationController(Func<IWeeeClient> apiClient)
+        public OrganisationController(Func<IWeeeClient> apiClient, IMapper mapper)
         {
             this.apiClient = apiClient;
+            this.mapper = mapper;
         }
 
         [HttpGet]
@@ -37,7 +44,8 @@
                 return await ShowOrganisations();
             }
 
-            return RedirectToAction("ChooseActivity", "Home", new { area = "Scheme", pcsId = model.SelectedOrganisationId.Value });
+            return RedirectToAction("ChooseActivity", "Home",
+                new { area = "Scheme", pcsId = model.SelectedOrganisationId.Value });
         }
 
         private async Task<ActionResult> ShowOrganisations()
@@ -63,7 +71,8 @@
                 YourOrganisationsViewModel model = new YourOrganisationsViewModel();
                 model.Organisations = accessibleOrganisations;
 
-                ViewBag.InaccessibleOrganisations = inaccessibleOrganisations.Where(o => o.UserStatus == UserStatus.Pending);
+                ViewBag.InaccessibleOrganisations =
+                    inaccessibleOrganisations.Where(o => o.UserStatus == UserStatus.Pending);
                 return View("YourOrganisations", model);
             }
 
@@ -110,9 +119,9 @@
             using (var client = apiClient())
             {
                 organisations = await
-                 client.SendAsync(
-                     User.GetAccessToken(),
-                     new GetUserOrganisationsByStatus(new int[0]));
+                    client.SendAsync(
+                        User.GetAccessToken(),
+                        new GetUserOrganisationsByStatus(new int[0]));
             }
 
             return organisations
@@ -126,7 +135,8 @@
         /// </summary>
         /// <param name="organisations"></param>
         /// <returns></returns>
-        private IEnumerable<OrganisationUserData> FilterOutDuplicateOrganisations(IEnumerable<OrganisationUserData> organisations)
+        private IEnumerable<OrganisationUserData> FilterOutDuplicateOrganisations(
+            IEnumerable<OrganisationUserData> organisations)
         {
             List<UserStatus> userStatuesInOrderOfPreference = new List<UserStatus>()
             {
@@ -144,10 +154,9 @@
 
                 foreach (OrganisationUserData organistion in organisationsWithMatchingUserStatus)
                 {
-                    bool alreadyAdded = results
+                    var alreadyAdded = results
                         .Where(r => r.OrganisationId == organistion.OrganisationId)
-                        .Where(r => r.UserId == organistion.UserId)
-                        .Any();
+                        .Any(r => r.UserId == organistion.UserId);
 
                     if (!alreadyAdded)
                     {
@@ -164,6 +173,79 @@
                     yield return organisation;
                 }
             }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> RepresentingOrganisation(Guid organisationId)
+        {
+            using (var client = apiClient())
+            {
+                var model = new RepresentingCompanyDetailsViewModel()
+                {
+                    OrganisationId = organisationId
+                };
+
+                var countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                model.Address.Countries = countries;
+
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RepresentingOrganisation(RepresentingCompanyDetailsViewModel model)
+        {
+            using (var client = apiClient())
+            {
+                if (ModelState.IsValid)
+                {
+                    var result = await client.SendAsync(User.GetAccessToken(),
+                        new AddRepresentingCompany(model.OrganisationId, model));
+
+                    return RedirectToAction(nameof(Areas.Scheme.Controllers.HomeController.ChooseActivity),
+                        typeof(Areas.Scheme.Controllers.HomeController).GetControllerName(),
+                        new { pcsId = model.OrganisationId, directRegistrantId = result, area = "Scheme" });
+                }
+
+                var countries = await client.SendAsync(User.GetAccessToken(), new GetCountries(false));
+                model.Address.Countries = countries;
+
+                return View(model);
+            }
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> RepresentingCompanies(Guid organisationId)
+        {
+            using (var client = apiClient())
+            {
+                var organisationInfo =
+                    await client.SendAsync(User.GetAccessToken(), new GetOrganisationInfo(organisationId));
+
+                var organisations = await GetOrganisations();
+
+                var model = mapper.Map<RepresentingCompaniesViewModelMapSource, RepresentingCompaniesViewModel>(new RepresentingCompaniesViewModelMapSource(organisations.ToList(), organisationInfo));
+
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult RepresentingCompanies(RepresentingCompaniesViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                if (model.SelectedDirectRegistrant != null)
+                {
+                    return RedirectToAction(nameof(Areas.Scheme.Controllers.HomeController.ChooseActivity),
+                        typeof(Areas.Scheme.Controllers.HomeController).GetControllerName(),
+                        new { area = "Scheme", pcsId = model.OrganisationId, directRegistrantId = model.SelectedDirectRegistrant.Value });
+                }
+            }
+
+            return View(model);
         }
     }
 }

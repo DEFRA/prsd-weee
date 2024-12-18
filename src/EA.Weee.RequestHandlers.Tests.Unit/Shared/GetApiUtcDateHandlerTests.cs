@@ -7,6 +7,7 @@
     using RequestHandlers.Shared;
     using Requests.Shared;
     using System;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class GetApiUtcDateHandlerTests
@@ -19,7 +20,7 @@
         }
 
         [Fact]
-        public async void GetApiUtcDate_UseFixedCurrentDateIsTrue_ReturnFixedDate()
+        public async Task GetApiUtcDate_UseFixedCurrentDateIsTrue_ReturnFixedDate()
         {
             var systemData = new SubmissionWindowClosedTests.TestSystemData();
             var fixedDate = new DateTime(2018, 4, 10, 0, 0, 0);
@@ -37,7 +38,7 @@
         }
 
         [Fact]
-        public async void GetApiUtcDate_UseFixedCurrentDateIsFalse_ReturnCurrentDate()
+        public async Task GetApiUtcDate_UseFixedCurrentDateIsFalse_ReturnCurrentDate()
         {
             var systemData = new SubmissionWindowClosedTests.TestSystemData();
             systemData.ToggleFixedCurrentDateUsage(false);

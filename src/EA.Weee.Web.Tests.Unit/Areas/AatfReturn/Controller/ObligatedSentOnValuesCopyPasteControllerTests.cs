@@ -14,6 +14,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Tests.Core;
@@ -48,7 +49,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionExecutes_ApiShouldBeCalled()
+        public async Task IndexGet_GivenActionExecutes_ApiShouldBeCalled()
         {
             Guid returnId = Guid.NewGuid();
 
@@ -59,7 +60,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_ViewModelShouldBeBuilt()
+        public async Task IndexGet_GivenReturn_ViewModelShouldBeBuilt()
         {
             Guid returnId = Guid.NewGuid();
             Guid aatfId = Guid.NewGuid();
@@ -81,7 +82,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             Guid organisationId = Guid.NewGuid();
             ReturnData returnData = A.Fake<ReturnData>();
@@ -119,7 +120,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmit_PageRedirectsToObligatedReceived()
+        public async Task IndexPost_OnSubmit_PageRedirectsToObligatedReceived()
         {
             HttpContextMocker httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -151,7 +152,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmitWithBothPastedValues_TempDataShouldBeAttached()
+        public async Task IndexPost_OnSubmitWithBothPastedValues_TempDataShouldBeAttached()
         {
             HttpContextMocker httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -178,7 +179,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmitWithOnePastedValues_TempDataShouldBeAttached()
+        public async Task IndexPost_OnSubmitWithOnePastedValues_TempDataShouldBeAttached()
         {
             HttpContextMocker httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -204,7 +205,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmitWithNoPastedValues_TempDataShouldNotBeAttached()
+        public async Task IndexPost_OnSubmitWithNoPastedValues_TempDataShouldNotBeAttached()
         {
             HttpContextMocker httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
