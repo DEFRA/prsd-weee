@@ -6,6 +6,7 @@
     using System;
     using Xml.MemberRegistration;
     using Xunit;
+    using System.Threading.Tasks;
 
     public class FetchProducerChargeTests
     {
@@ -29,7 +30,7 @@
         [InlineData(ChargeBand.C2)]
         [InlineData(ChargeBand.D2)]
         [InlineData(ChargeBand.D3)]
-        public async void GetCharge_GivenChargeBand_ChargeBandAmountShouldBeRetrieved(ChargeBand band)
+        public async Task GetCharge_GivenChargeBand_ChargeBandAmountShouldBeRetrieved(ChargeBand band)
         {
             await fetchProducerCharge.GetCharge(band);
 
@@ -46,7 +47,7 @@
         [InlineData(ChargeBand.C2)]
         [InlineData(ChargeBand.D2)]
         [InlineData(ChargeBand.D3)]
-        public async void GetCharge_GivenChargeBandAmount_ProducerChargeShouldBeReturned(ChargeBand band)
+        public async Task GetCharge_GivenChargeBandAmount_ProducerChargeShouldBeReturned(ChargeBand band)
         {
             var chargeBandAmount = new ChargeBandAmount(Guid.NewGuid(), band, 1);
 

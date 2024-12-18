@@ -9,7 +9,10 @@
     {
         public Guid OrganisationId { get; set; }
 
+        public Guid? DirectRegistrantId { get; set; }
+
         public Guid? SchemeId { get; set; }
+
         public bool ShowLinkToCreateOrJoinOrganisation { get; set; }
 
         [Required(ErrorMessage = "Select the activity you would like to do")]
@@ -22,5 +25,7 @@
         public ChooseActivityViewModel(List<string> activites) : base(activites)
         {
         }
+
+        public bool IsRepresentingCompany { get; set; }
     }
 }

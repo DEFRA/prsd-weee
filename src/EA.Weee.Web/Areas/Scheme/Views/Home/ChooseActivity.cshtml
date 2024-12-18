@@ -1,5 +1,6 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
 @using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
 @model EA.Weee.Web.Areas.Scheme.ViewModels.ChooseActivityViewModel
 @{
     ViewBag.Title = "Choose Activity - GOV.UK";
@@ -7,31 +8,54 @@
 
 @section main_content
 {
-    @using (Html.BeginForm(actionName: "ChooseActivity", controllerName: "Home", method: FormMethod.Post))
+
+    @if (Model.IsRepresentingCompany)
     {
-        @Html.Gds().ValidationSummary()
-        <header class="hgroup">
-            <h1 class="govuk-heading-l">
-                What activity would you like to do?
-            </h1>
-        </header>
-
-        @Html.AntiForgeryToken()
-        @Html.HiddenFor(m => m.OrganisationId)
-        @Html.HiddenFor(m => m.SchemeId)
-
-        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ActivityOptions">
-            @Html.Gds().ValidationMessageFor(m => m.SelectedValue)
-            @this.WeeeGds().RadioButtonsFor(
-                     m => m.SelectedValue,
-                     Model.PossibleValues,
-                     "What activity would you like to do?",
-                     RadioButtonLegend.VisuallyHidden,
-                     RadioButtonLayout.Stacked)
-        </div>
-
-        @(this.WeeeGds().Submit("Continue"))
+        @(this.WeeeGds().BackLink(@Url.Action("RepresentingCompanies", "Organisation", new { organisationId = Model.OrganisationId, area = "" })))
     }
+    else
+    {
+        if (!Model.ShowLinkToCreateOrJoinOrganisation)
+        {
+            @(this.WeeeGds().BackLink(@Url.Action("Index", "Organisation", new { @area = "" })))
+        }
+    }
+    
+    @if (Model.PossibleValues != null && Model.PossibleValues.Count > 0)
+    {
+        using (Html.BeginForm(actionName: "ChooseActivity", controllerName: "Home", method: FormMethod.Post))
+        {
+            @Html.Gds().ValidationSummary()
+            <header class="hgroup">
+                <h1 class="govuk-heading-l">
+                    What activity would you like to do?
+                </h1>
+            </header>
+
+            @Html.AntiForgeryToken()
+            @Html.HiddenFor(m => m.OrganisationId)
+            @Html.HiddenFor(m => m.DirectRegistrantId)
+            @Html.HiddenFor(m => m.SchemeId)
+            @Html.HiddenFor(m => m.IsRepresentingCompany)
+
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ActivityOptions">
+                @Html.Gds().ValidationMessageFor(m => m.SelectedValue)
+                @this.WeeeGds().RadioButtonsFor(
+                    m => m.SelectedValue,
+                    Model.PossibleValues,
+                    "What activity would you like to do?",
+                    RadioButtonLegend.VisuallyHidden,
+                    RadioButtonLayout.Stacked)
+            </div>
+
+            @(this.WeeeGds().Submit("Continue"))
+        }
+    }
+    else
+    {
+        <p class="govuk-body">No activity options are available</p>
+    }
+   
 
     @if (Model.ShowLinkToCreateOrJoinOrganisation)
     {

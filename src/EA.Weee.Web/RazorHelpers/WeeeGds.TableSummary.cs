@@ -6,31 +6,43 @@ namespace EA.Weee.Web.RazorHelpers
 
     public partial class WeeeGds<TModel>
     {
-        public MvcHtmlString TableSummary(string caption, Dictionary<string, object> data, string columnHeading = null, string columnDescription = null)
+        public MvcHtmlString TableSummary(string caption, Dictionary<string, object> data, string columnHeading = null, string columnDescription = null, bool displayCaption = false)
         {
             Guard.ArgumentNotNullOrEmpty(() => caption, caption);
 
-            var html = "<div class=\"govuk-form-group\"><table class=\"govuk-table\">" +
-                       $"<caption class=\"govuk-table__caption\"><span class=\"govuk-visually-hidden\">{caption}</span></caption>";
+            var html = "<div class=\"govuk-form-group\"><table class=\"govuk-table\">";
 
-            html += "<thead class=\"govuk-table__head\">";
-
-            if (columnDescription != null && columnHeading != null)
+            if (displayCaption)
             {
-                html += $"<tr class=\"govuk-table__row govuk-visually-hidden\"><th class=\"govuk-table__header govuk-visually-hidden\" scope=\"col\">{columnHeading}</th>" +
-                        $"<th class=\"govuk-table__header govuk-visually-hidden\" scope=\"col\">{columnDescription}</th></tr>";
+                html += $"<caption class=\"govuk-table__caption\" style=\"font-size: 24px;\">{caption}</caption>";
+                // Add column widths only when displayCaption is true
+                html += "<thead class=\"govuk-table__head\"><tr class=\"govuk-table__row\">" +
+                        "<th class=\"govuk-table__header\" scope=\"col\" style=\"width: 50%;\"><span class=\"govuk-visually-hidden\">name</span></th>" +
+                        "<th class=\"govuk-table__header\" scope=\"col\" style=\"width: 50%;\"><span class=\"govuk-visually-hidden\">value</span></th>" +
+                        "</tr></thead>";
             }
             else
             {
-                html += "<tr class=\"govuk-table__row govuk-visually-hidden\"><th class=\"govuk-table__header\" scope=\"col\" colspan=\"2\"></th></tr>";
+                html += $"<caption class=\"govuk-table__caption govuk-visually-hidden\">{caption}</caption>";
+                html += "<thead class=\"govuk-table__head\"><tr class=\"govuk-table__row\">" +
+                        "<th class=\"govuk-table__header\" scope=\"col\"><span class=\"govuk-visually-hidden\">name</span></th>" +
+                        "<th class=\"govuk-table__header\" scope=\"col\"><span class=\"govuk-visually-hidden\">value</span></th></tr></thead>";
             }
 
-            html += "</thead><tbody class=\"govuk-table__body\">";
+            html += "<tbody class=\"govuk-table__body\">";
 
             foreach (var key in data.Keys)
             {
-                html += $"<tr class=\"govuk-table__row\"><th scope=\"row\" class=\"govuk-table__header\">{key}</th>";
-                html += $"<td class=\"govuk-table__cell\">{data[key]}</td></tr>";
+                if (displayCaption)
+                {
+                    html += $"<tr class=\"govuk-table__row\"><th scope=\"row\" class=\"govuk-table__header\" style=\"width: 50%;\">{key}</th>";
+                    html += $"<td class=\"govuk-table__cell\" style=\"width: 50%;\">{data[key]}</td></tr>";
+                }
+                else
+                {
+                    html += $"<tr class=\"govuk-table__row\"><th scope=\"row\" class=\"govuk-table__header\">{key}</th>";
+                    html += $"<td class=\"govuk-table__cell\">{data[key]}</td></tr>";
+                }
             }
 
             html += "</tbody></table></div>";

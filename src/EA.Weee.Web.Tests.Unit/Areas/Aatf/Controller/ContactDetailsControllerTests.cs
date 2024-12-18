@@ -63,7 +63,7 @@
         [Theory]
         [InlineData(FacilityType.Aatf, "AATF")]
         [InlineData(FacilityType.Ae, "AE")]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet(FacilityType facilityType, string expected)
+        public async Task IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet(FacilityType facilityType, string expected)
         {
             var organisationName = "Organisation";
             var aatfDataExternal = this.fixture.Build<AatfData>().With(a => a.FacilityType, facilityType).Create();
@@ -79,7 +79,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionParameters_ApiShouldBeCalled()
+        public async Task IndexGet_GivenActionParameters_ApiShouldBeCalled()
         {
             var aatfId = this.fixture.Create<Guid>();
 

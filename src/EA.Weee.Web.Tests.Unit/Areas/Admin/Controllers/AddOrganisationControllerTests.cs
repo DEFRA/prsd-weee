@@ -170,7 +170,7 @@
 
             var result = await controller.PartnershipDetails(organisationType, entityType, searchText) as ViewResult;
 
-            var resultViewModel = result.Model as PartnershipDetailsViewModel;
+            var resultViewModel = result.Model as Web.Areas.Admin.ViewModels.AddOrganisation.Details.PartnershipDetailsViewModel;
 
             Assert.Equal(searchText, resultViewModel.BusinessTradingName);
             Assert.Equal(organisationType, resultViewModel.OrganisationType);
@@ -183,7 +183,7 @@
         [Fact]
         public async Task PartnershipDetailsPost_ModelNotValid_ReturnsView()
         {
-            var viewModel = new PartnershipDetailsViewModel
+            var viewModel = new Web.Areas.Admin.ViewModels.AddOrganisation.Details.PartnershipDetailsViewModel
             {
                 BusinessTradingName = "Company", OrganisationType = "Sole trader or individual", Address = {Countries = countries}
             };
@@ -191,7 +191,7 @@
             controller.ModelState.AddModelError("error", "error");
 
             var result = await controller.PartnershipDetails(viewModel) as ViewResult;
-            var resultViewModel = result.Model as PartnershipDetailsViewModel;
+            var resultViewModel = result.Model as Web.Areas.Admin.ViewModels.AddOrganisation.Details.PartnershipDetailsViewModel;
 
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "SoleTraderOrPartnershipDetails");
             Assert.Equal(viewModel.BusinessTradingName, resultViewModel.BusinessTradingName);
@@ -205,7 +205,7 @@
         [InlineData(EntityType.Pcs, "Scheme", "AddScheme")]
         public async Task PartnershipDetailsPost_ValidViewModel_ReturnsCorrectRedirect(EntityType type, string expectedController, string expectedAction)
         {
-            var viewModel = new PartnershipDetailsViewModel
+            var viewModel = new Web.Areas.Admin.ViewModels.AddOrganisation.Details.PartnershipDetailsViewModel
             {
                 BusinessTradingName = "Company",
                 OrganisationType = "Sole trader or individual",
@@ -229,7 +229,7 @@
         [Fact]
         public async Task PartnershipDetailsPost_ValidViewModel_RequestWithCorrectParametersCreated()
         {
-            var viewModel = new PartnershipDetailsViewModel()
+            var viewModel = new Web.Areas.Admin.ViewModels.AddOrganisation.Details.PartnershipDetailsViewModel()
             {
                 BusinessTradingName = "Company",
                 OrganisationType = "Sole trader or individual",
@@ -255,7 +255,7 @@
 
             var result = await controller.SoleTraderDetails(organisationType, entityType, searchText) as ViewResult;
 
-            var resultViewModel = result.Model as SoleTraderDetailsViewModel;
+            var resultViewModel = result.Model as Web.Areas.Admin.ViewModels.AddOrganisation.Details.SoleTraderDetailsViewModel;
 
             Assert.Equal(searchText, resultViewModel.CompanyName);
             Assert.Equal(organisationType, resultViewModel.OrganisationType);
@@ -268,7 +268,7 @@
         [Fact]
         public async Task SoleTraderDetailsPost_ModelNotValid_ReturnsView()
         {
-            var viewModel = new SoleTraderDetailsViewModel
+            var viewModel = new Web.Areas.Admin.ViewModels.AddOrganisation.Details.SoleTraderDetailsViewModel
             {
                 BusinessTradingName = "Company", OrganisationType = "Sole trader or individual", Address = {Countries = countries}
             };
@@ -276,7 +276,7 @@
             controller.ModelState.AddModelError("error", "error");
 
             var result = await controller.SoleTraderDetails(viewModel) as ViewResult;
-            var resultViewModel = result.Model as SoleTraderDetailsViewModel;
+            var resultViewModel = result.Model as Web.Areas.Admin.ViewModels.AddOrganisation.Details.SoleTraderDetailsViewModel;
 
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "SoleTraderOrPartnershipDetails");
             Assert.Equal(viewModel.BusinessTradingName, resultViewModel.BusinessTradingName);
@@ -290,7 +290,7 @@
         [InlineData(EntityType.Pcs, "Scheme", "AddScheme")]
         public async Task SoleTraderDetailsPost_ValidViewModel_ReturnsCorrectRedirect(EntityType type, string expectedController, string expectedAction)
         {
-            var viewModel = new SoleTraderDetailsViewModel
+            var viewModel = new Web.Areas.Admin.ViewModels.AddOrganisation.Details.SoleTraderDetailsViewModel
             {
                 BusinessTradingName = "Company",
                 OrganisationType = "Sole trader or individual",
@@ -314,7 +314,7 @@
         [Fact]
         public async Task SoleTraderDetailsPost_ValidViewModel_RequestWithCorrectParametersCreated()
         {
-            var viewModel = new SoleTraderDetailsViewModel()
+            var viewModel = new Web.Areas.Admin.ViewModels.AddOrganisation.Details.SoleTraderDetailsViewModel()
             {
                 CompanyName = "Company",
                 OrganisationType = "Sole trader or individual",
@@ -340,7 +340,7 @@
 
             var result = await controller.RegisteredCompanyDetails(organisationType, entityType, searchText) as ViewResult;
 
-            var resultViewModel = result.Model as RegisteredCompanyDetailsViewModel;
+            var resultViewModel = result.Model as Web.Areas.Admin.ViewModels.AddOrganisation.Details.RegisteredCompanyDetailsViewModel;
 
             Assert.Equal(searchText, resultViewModel.CompanyName);
             Assert.Equal(organisationType, resultViewModel.OrganisationType);
@@ -353,7 +353,7 @@
         [Fact]
         public async Task RegisteredCompanyDetailsPost_InvalidateCacheMustBeRun()
         {
-            var viewModel = new RegisteredCompanyDetailsViewModel
+            var viewModel = new Web.Areas.Admin.ViewModels.AddOrganisation.Details.RegisteredCompanyDetailsViewModel
             {
                 BusinessTradingName = "Company",
                 OrganisationType = "Registered company",
@@ -370,7 +370,7 @@
         [Fact]
         public async Task RegisteredCompanyDetailsPost_ModelNotValid_ReturnsView()
         {
-            var viewModel = new RegisteredCompanyDetailsViewModel()
+            var viewModel = new Web.Areas.Admin.ViewModels.AddOrganisation.Details.RegisteredCompanyDetailsViewModel()
             {
                 BusinessTradingName = "Company",
                 OrganisationType = "Registered company",
@@ -382,7 +382,7 @@
             controller.ModelState.AddModelError("error", "error");
 
             var result = await controller.RegisteredCompanyDetails(viewModel) as ViewResult;
-            var resultViewModel = result.Model as RegisteredCompanyDetailsViewModel;
+            var resultViewModel = result.Model as Web.Areas.Admin.ViewModels.AddOrganisation.Details.RegisteredCompanyDetailsViewModel;
 
             Assert.True(string.IsNullOrEmpty(result.ViewName) || result.ViewName == "SoleTraderOrPartnershipDetails");
             Assert.Equal(viewModel.BusinessTradingName, resultViewModel.BusinessTradingName);
@@ -398,7 +398,7 @@
         [InlineData(EntityType.Pcs, "Scheme", "AddScheme")]
         public async Task RegisteredCompanyDetailsPost_ValidViewModel_ReturnsCorrectRedirect(EntityType type, string expectedController, string expectedAction)
         {
-            var viewModel = new RegisteredCompanyDetailsViewModel()
+            var viewModel = new Web.Areas.Admin.ViewModels.AddOrganisation.Details.RegisteredCompanyDetailsViewModel()
             {
                 BusinessTradingName = "name",
                 OrganisationType = "Registered company",
@@ -504,7 +504,7 @@
         [Fact]
         public async Task PartnershipDetailsPost_Always_SetsInternalBreadcrumb()
         {
-            var viewModel = new PartnershipDetailsViewModel()
+            var viewModel = new Web.Areas.Admin.ViewModels.AddOrganisation.Details.PartnershipDetailsViewModel()
             {
                 BusinessTradingName = "Company",
                 OrganisationType = "Sole trader or individual",
@@ -527,7 +527,7 @@
         [Fact]
         public async Task SoleTraderDetailsPost_Always_SetsInternalBreadcrumb()
         {
-            var viewModel = new SoleTraderDetailsViewModel()
+            var viewModel = new Web.Areas.Admin.ViewModels.AddOrganisation.Details.SoleTraderDetailsViewModel()
             {
                 BusinessTradingName = "Company",
                 OrganisationType = "Sole trader or individual",
@@ -550,7 +550,7 @@
         [Fact]
         public async Task RegisteredCompanyDetailsPost_Always_SetsInternalBreadcrumb()
         {
-            var viewModel = new RegisteredCompanyDetailsViewModel
+            var viewModel = new Web.Areas.Admin.ViewModels.AddOrganisation.Details.RegisteredCompanyDetailsViewModel
             {
                 BusinessTradingName = "name",
                 OrganisationType = "Registered company",

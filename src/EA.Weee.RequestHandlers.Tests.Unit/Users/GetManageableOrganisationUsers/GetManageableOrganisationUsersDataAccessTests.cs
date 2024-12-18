@@ -11,6 +11,7 @@
     using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
+    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -27,7 +28,7 @@
         }
 
         [Fact]
-        public async void ShouldNotReturnUsersWhereOrganisationIdDoesNotMatch()
+        public async Task ShouldNotReturnUsersWhereOrganisationIdDoesNotMatch()
         {
             var userOrganisationId = Guid.NewGuid();
             var searchOrganisationId = Guid.NewGuid();
@@ -48,7 +49,7 @@
         [InlineData(Core.Shared.UserStatus.Active)]
         [InlineData(Core.Shared.UserStatus.Pending)]
         [InlineData(Core.Shared.UserStatus.Rejected)]
-        public async void SingleOrganisationUserForUser_ShouldGetRequest(Core.Shared.UserStatus userStatus)
+        public async Task SingleOrganisationUserForUser_ShouldGetRequest(Core.Shared.UserStatus userStatus)
         {
             var organisationId = Guid.NewGuid();
             var userId = Guid.NewGuid();
@@ -71,7 +72,7 @@
         [InlineData(Core.Shared.UserStatus.Rejected, Core.Shared.UserStatus.Pending)]
         [InlineData(Core.Shared.UserStatus.Rejected, Core.Shared.UserStatus.Active)]
         [InlineData(Core.Shared.UserStatus.Rejected, Core.Shared.UserStatus.Inactive)]
-        public async void MultipleOrganisationUsersForOneUser_ShouldNotRetrieveAnyRejectedOrganisationUsers_WhenNonRejectedOrganisationUserAlsoExists(Core.Shared.UserStatus previousUserStatus, Core.Shared.UserStatus currentUserStatus)
+        public async Task MultipleOrganisationUsersForOneUser_ShouldNotRetrieveAnyRejectedOrganisationUsers_WhenNonRejectedOrganisationUserAlsoExists(Core.Shared.UserStatus previousUserStatus, Core.Shared.UserStatus currentUserStatus)
         {
             var organisationId = Guid.NewGuid();
             var userId = Guid.NewGuid();
@@ -92,7 +93,7 @@
         }
 
         [Fact]
-        public async void MultipleOrganisationUsersForOneUser_WithRejectedStatus_RetrievesSingleRejectedOrganisationUser()
+        public async Task MultipleOrganisationUsersForOneUser_WithRejectedStatus_RetrievesSingleRejectedOrganisationUser()
         {
             var organisationId = Guid.NewGuid();
             var userId = Guid.NewGuid();

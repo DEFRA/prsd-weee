@@ -7,6 +7,7 @@
     using FluentAssertions;
     using RequestHandlers.Factories;
     using System;
+    using System.Threading.Tasks;
     using Xunit;
 
     public class QuarterWindowFactoryTests
@@ -22,7 +23,7 @@
         }
 
         [Fact]
-        public async void GetQuarter_GivenFirstQuarter_ValidQuarterStartAndEndDatesShouldBeCalculated()
+        public async Task GetQuarter_GivenFirstQuarter_ValidQuarterStartAndEndDatesShouldBeCalculated()
         {
             var quarter = new Quarter(2019, QuarterType.Q1);
             var quarterWindowTemplate = QuarterWindowTemplate(4, 1, 0, 1);
@@ -40,7 +41,7 @@
         }
 
         [Fact]
-        public async void GetQuarter_GivenSecondQuarter_ValidQuarterStartAndEndDatesShouldBeCalculated()
+        public async Task GetQuarter_GivenSecondQuarter_ValidQuarterStartAndEndDatesShouldBeCalculated()
         {
             var quarter = new Quarter(2019, QuarterType.Q2);
             var quarterWindowTemplate = QuarterWindowTemplate(7, 1, 0, 1);
@@ -58,7 +59,7 @@
         }
 
         [Fact]
-        public async void GetQuarter_GivenThirdQuarter_ValidQuarterStartAndEndDatesShouldBeCalculated()
+        public async Task GetQuarter_GivenThirdQuarter_ValidQuarterStartAndEndDatesShouldBeCalculated()
         {
             var quarter = new Quarter(2019, QuarterType.Q3);
             var quarterWindowTemplate = QuarterWindowTemplate(10, 1, 0, 1);
@@ -76,7 +77,7 @@
         }
 
         [Fact]
-        public async void GetQuarter_GivenFourthQuarter_ValidQuarterStartAndEndDatesShouldBeCalculated()
+        public async Task GetQuarter_GivenFourthQuarter_ValidQuarterStartAndEndDatesShouldBeCalculated()
         {
             var quarter = new Quarter(2019, QuarterType.Q4);
             var quarterWindowTemplate = QuarterWindowTemplate(1, 1, 1, 1);
@@ -94,7 +95,7 @@
         }
 
         [Fact]
-        public async void GetNextQuarterWindow_CurrentIsQ1_ReturnsQ2()
+        public async Task GetNextQuarterWindow_CurrentIsQ1_ReturnsQ2()
         {
             Quarter quarter = new Quarter(2019, QuarterType.Q1);
             QuarterWindowTemplate quarterWindowTemplate = QuarterWindowTemplate(7, 1, 0, 1);
@@ -113,7 +114,7 @@
         }
 
         [Fact]
-        public async void GetNextQuarterWindow_CurrentIsQ2_ReturnsQ3()
+        public async Task GetNextQuarterWindow_CurrentIsQ2_ReturnsQ3()
         {
             Quarter quarter = new Quarter(2019, QuarterType.Q2);
             QuarterWindowTemplate quarterWindowTemplate = QuarterWindowTemplate(10, 1, 0, 1);
@@ -132,7 +133,7 @@
         }
 
         [Fact]
-        public async void GetNextQuarterWindow_CurrentIsQ3_ReturnsQ4()
+        public async Task GetNextQuarterWindow_CurrentIsQ3_ReturnsQ4()
         {
             Quarter quarter = new Quarter(2019, QuarterType.Q3);
             QuarterWindowTemplate quarterWindowTemplate = QuarterWindowTemplate(1, 1, 1, 1);
@@ -151,7 +152,7 @@
         }
 
         [Fact]
-        public async void GetNextQuarterWindow_CurrentIsQ4_ReturnsQ1()
+        public async Task GetNextQuarterWindow_CurrentIsQ4_ReturnsQ1()
         {
             Quarter quarter = new Quarter(2019, QuarterType.Q4);
             QuarterWindowTemplate quarterWindowTemplate = QuarterWindowTemplate(4, 1, 0, 1);
@@ -172,7 +173,7 @@
         [Theory]
         [InlineData("2019/01/01")]
         [InlineData("2019/03/31")]
-        public async void GetAnnualQuarterForDate_GivenDateInFirstQuarter_QuarterShouldBeCorrect(DateTime date)
+        public async Task GetAnnualQuarterForDate_GivenDateInFirstQuarter_QuarterShouldBeCorrect(DateTime date)
         {
             SetupQuarterWindowTemplates();
 
@@ -184,7 +185,7 @@
         [Theory]
         [InlineData("2019/04/01")]
         [InlineData("2019/06/30")]
-        public async void GetAnnualQuarterForDate_GivenDateInSecondQuarter_QuarterShouldBeCorrect(DateTime date)
+        public async Task GetAnnualQuarterForDate_GivenDateInSecondQuarter_QuarterShouldBeCorrect(DateTime date)
         {
             SetupQuarterWindowTemplates();
 
@@ -196,7 +197,7 @@
         [Theory]
         [InlineData("2019/07/01")]
         [InlineData("2019/09/30")]
-        public async void GetAnnualQuarterForDate_GivenDateInThirdQuarter_QuarterShouldBeCorrect(DateTime date)
+        public async Task GetAnnualQuarterForDate_GivenDateInThirdQuarter_QuarterShouldBeCorrect(DateTime date)
         {
             SetupQuarterWindowTemplates();
 
@@ -208,7 +209,7 @@
         [Theory]
         [InlineData("2019/10/01")]
         [InlineData("2019/12/31")]
-        public async void GetAnnualQuarterForDate_GivenDateInFourthQuarter_QuarterShouldBeCorrect(DateTime date)
+        public async Task GetAnnualQuarterForDate_GivenDateInFourthQuarter_QuarterShouldBeCorrect(DateTime date)
         {
             SetupQuarterWindowTemplates();
 

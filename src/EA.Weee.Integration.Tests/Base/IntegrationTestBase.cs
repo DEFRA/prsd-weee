@@ -18,7 +18,6 @@
     using Domain.Scheme;
     using IoC;
     using Microsoft.AspNet.Identity;
-    using netDumbster.smtp;
     using NUnit.Framework;
     using Prsd.Core.Autofac;
     using Prsd.Core.Domain;
@@ -36,9 +35,6 @@
         private static IContainer requestHandlerContainer;
         public static CommonTestQueryProcessor Query => commonTestQueryProcessor.Value;
         protected static Lazy<CommonTestQueryProcessor> commonTestQueryProcessor = new Lazy<CommonTestQueryProcessor>(() => new CommonTestQueryProcessor());
-        private static SimpleSmtpServer smtpServer;
-        private static SmtpMessage emailSent;
-        private static readonly List<SmtpMessage> EmailsSent = new List<SmtpMessage>();
 
         public static Organisation DefaultIntegrationOrganisation { get; set; }
 
@@ -299,47 +295,6 @@
                 {
                     new DatabaseSeeder().UpdateDatabase();
                 }
-            }
-        }
-
-        public static SmtpMessage GetEmailFromMailCatcher()
-        {
-            return emailSent;
-        }
-
-        public static SmtpMessage[] GetEmailsFromMailCatcher()
-        {
-            return EmailsSent.ToArray();
-        }
-
-        public static void UseMailCatcher()
-        {
-            smtpServer?.Stop();
-            smtpServer = SimpleSmtpServer.Start(5124);
-            smtpServer.MessageReceived += SmtpServer_MessageReceived;
-            smtpServer.ClearReceivedEmail();
-            emailSent = null;
-            EmailsSent.Clear();
-        }
-
-        private static void SmtpServer_MessageReceived(object sender, MessageReceivedArgs e)
-        {
-            emailSent = e.Message;
-            EmailsSent.Add(e.Message);
-        }
-
-        protected static void Act(Action action)
-        {
-            emailSent = null;
-            EmailsSent.Clear();
-
-            smtpServer?.ClearReceivedEmail();
-
-            CatchException(action);
-
-            if (emailSent != null)
-            {
-                Console.WriteLine("Email content: " + GetEmailFromMailCatcher().MessageParts.FirstOrDefault()?.BodyData);
             }
         }
 

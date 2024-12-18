@@ -281,7 +281,7 @@
 
             // Assert
             Assert.NotNull(transactionFile);
-            Assert.Equal(1, transactionFile.Invoices.Count);
+            Assert.Single(transactionFile.Invoices);
 
             Invoice invoice = transactionFile.Invoices[0];
             Assert.NotNull(invoice);
@@ -296,7 +296,7 @@
             Assert.Equal("WEE00000001", invoice.CustomerReference);
 
             Assert.NotNull(invoice.LineItems);
-            Assert.Equal(1, invoice.LineItems.Count);
+            Assert.Single(invoice.LineItems);
 
             InvoiceLineItem lineItem = invoice.LineItems[0];
             Assert.NotNull(lineItem);
@@ -407,7 +407,7 @@
 
             // Assert
             Assert.NotNull(transactionFile);
-            Assert.Equal(1, transactionFile.Invoices.Count);
+            Assert.Single(transactionFile.Invoices);
 
             Invoice invoice = transactionFile.Invoices[0];
             Assert.NotNull(invoice);
@@ -523,14 +523,14 @@
 
             // Assert
             Assert.NotNull(transactionFile);
-            Assert.Equal(1, transactionFile.Invoices.Count);
+            Assert.Single(transactionFile.Invoices);
 
             Invoice invoice = transactionFile.Invoices[0];
             Assert.NotNull(invoice);
             Assert.Equal(200m, invoice.TransactionTotal);
 
             Assert.NotNull(invoice.LineItems);
-            Assert.Equal(1, invoice.LineItems.Count);
+            Assert.Single(invoice.LineItems);
 
             InvoiceLineItem lineItem = invoice.LineItems[0];
             Assert.NotNull(lineItem);

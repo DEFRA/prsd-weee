@@ -30,7 +30,7 @@
         }
 
         public MvcHtmlString CheckBoxFrontEnd(Expression<Func<TModel, bool>> expression,
-    IDictionary<string, object> htmlAttributes)
+            IDictionary<string, object> htmlAttributes)
         {
             var checkbox = htmlHelper.CheckBoxFor(expression, htmlAttributes).ToHtmlString().Trim();
             var pureCheckBox = checkbox.Substring(0, checkbox.IndexOf("<input", 1));
@@ -59,11 +59,17 @@
         }
 
         public MvcHtmlString CheckBoxFrontEndFor(Expression<Func<TModel, bool>> expression,
-            IDictionary<string, object> htmlAttributes)
+            IDictionary<string, object> htmlAttributes,
+            string hiddenLegendText = null)
         {
+            // Generate the checkbox
             var checkbox = htmlHelper.CheckBoxFor(expression, htmlAttributes).ToHtmlString().Trim();
-            var pureCheckBox = checkbox.Substring(0, checkbox.IndexOf("<input", 1));
 
+            // Extract the ID from the generated checkbox
+            var idMatch = System.Text.RegularExpressions.Regex.Match(checkbox, @"id=['""]([^'""]+)['""]");
+            var checkboxId = idMatch.Success ? idMatch.Groups[1].Value : string.Empty;
+
+            var pureCheckBox = checkbox.Substring(0, checkbox.IndexOf("<input", 1));
             var labelTag = new TagBuilder("label");
             var fieldSetTag = new TagBuilder("fieldset");
             var checkboxName = ExpressionHelper.GetExpressionText(expression);
@@ -71,13 +77,28 @@
             fieldSetTag.AddCssClass("govuk-fieldset");
             labelTag.AddCssClass("govuk-label govuk-checkboxes__label");
             labelTag.MergeAttributes(System.Web.Mvc.HtmlHelper.AnonymousObjectToHtmlAttributes(htmlAttributes));
-            labelTag.Attributes.Add("for",
-                htmlHelper.ViewContext.ViewData.TemplateInfo.GetFullHtmlFieldId(checkboxName));
-            fieldSetTag.InnerHtml = "<div class='govuk-checkboxes'><div class='govuk-checkboxes__item'>" + pureCheckBox + "</div></div>";
+
+            // Set the label's "for" attribute to match the checkbox's ID
+            if (!string.IsNullOrEmpty(checkboxId))
+            {
+                labelTag.Attributes.Add("for", checkboxId);
+            }
 
             labelTag.InnerHtml = LabelHelper(ModelMetadata.FromLambdaExpression(expression, htmlHelper.ViewData), checkboxName).ToString();
 
-            fieldSetTag.InnerHtml = "<div class='govuk-checkboxes'><div class='govuk-checkboxes__item'>" + pureCheckBox + labelTag + "</div></div>";
+            // Create hidden legend
+            var legendHtml = string.Empty;
+            if (!string.IsNullOrEmpty(hiddenLegendText))
+            {
+                var legendTag = new TagBuilder("legend");
+                legendTag.AddCssClass("govuk-fieldset__legend govuk-visually-hidden");
+                legendTag.InnerHtml = hiddenLegendText;
+                legendHtml = legendTag.ToString();
+            }
+
+            fieldSetTag.InnerHtml = legendHtml +
+                                    "<div class='govuk-checkboxes'><div class='govuk-checkboxes__item'>" +
+                                    pureCheckBox + labelTag + "</div></div>";
 
             return new MvcHtmlString(fieldSetTag.ToString());
         }

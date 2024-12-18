@@ -1,0 +1,44 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.Type.TonnageTypeViewModel
+@{
+    const string title = "How many tonnes of Electrical or Electronic Equipment (EEE) did you place on the UK market in the previous year?";
+    ViewBag.Title = title + " - GOV.UK";
+}
+
+
+@section full_main_content{
+
+    @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Controllers.OrganisationRegistrationController>(a => a.SearchResults(Model.SearchedText))))
+
+    @using (Html.BeginForm())
+    {
+        @Html.Gds().ValidationSummary()
+        @Html.HiddenFor(m => m.SearchedText)
+        @Html.HiddenFor(m => m.NpwdMigrated)
+
+        @Html.AntiForgeryToken()
+
+        if (Model.NpwdMigrated)
+        {
+            <p class="govuk-body">Your organisation has been migrated from the legacy NPWD system. Before you are able to complete a new producer registration, we require you to provide us some more information.</p>
+        }
+
+        <header class="hgroup">
+            <h1 class="govuk-heading-l">
+                @title
+            </h1>
+        </header>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "Select tonnage type",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
+        </div>
+
+        @(this.WeeeGds().Submit("Continue"))
+    }
+}

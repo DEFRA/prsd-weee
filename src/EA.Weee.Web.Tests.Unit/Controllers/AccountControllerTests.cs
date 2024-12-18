@@ -68,7 +68,7 @@
         }
 
         [Fact]
-        public async void HttpPost_ResetPassword_ModelIsInvalid_ReturnsViewWithModel()
+        public async Task HttpPost_ResetPassword_ModelIsInvalid_ReturnsViewWithModel()
         {
             var passwordResetModel = new ResetPasswordModel();
 
@@ -82,7 +82,7 @@
         }
 
         [Fact]
-        public async void HttpPost_ResetPassword_ModelIsValid_CallsApiToResetPassword()
+        public async Task HttpPost_ResetPassword_ModelIsValid_CallsApiToResetPassword()
         {
             var passwordResetModel = new ResetPasswordModel();
 
@@ -102,7 +102,7 @@
         }
 
         [Fact]
-        public async void HttpPost_ResetPassword_ModelIsValid_PasswordResetThrowsApiBadRequestExceptionWithModelErrors_ReturnsViewWithModel_AndErrorAddedToModelState()
+        public async Task HttpPost_ResetPassword_ModelIsValid_PasswordResetThrowsApiBadRequestExceptionWithModelErrors_ReturnsViewWithModel_AndErrorAddedToModelState()
         {
             var passwordResetModel = new ResetPasswordModel();
             const string errorMessage = "Something wen't wrong";
@@ -140,7 +140,7 @@
         }
 
         [Fact]
-        public async void HttpPost_ResetPassword_ModelIsValid_AndAuthorizationSuccessful_ReturnsResetPasswordCompleteView()
+        public async Task HttpPost_ResetPassword_ModelIsValid_AndAuthorizationSuccessful_ReturnsResetPasswordCompleteView()
         {
             // Arrange
             A.CallTo(() => unauthenticatedUserClient.ResetPasswordAsync(A<PasswordResetData>._, A<string>._))

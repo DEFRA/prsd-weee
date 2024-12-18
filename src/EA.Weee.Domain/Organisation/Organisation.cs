@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.Domain.Organisation
 {
+    using CuttingEdge.Conditions;
     using EA.Prsd.Core;
     using EA.Prsd.Core.Domain;
+    using Scheme;
     using System;
     using System.Collections.Generic;
-    using System.ComponentModel.DataAnnotations.Schema;
     using System.Linq;
-    using Scheme;
 
     public partial class Organisation : Entity
     {
@@ -42,6 +42,11 @@
 
         public virtual OrganisationType OrganisationType { get; private set; }
 
+        public void UpdateMigratedOrganisationType(OrganisationType newMigratedOrganisationType)
+        {
+            OrganisationType = newMigratedOrganisationType;
+        }
+
         public virtual OrganisationStatus OrganisationStatus { get; set; }
 
         public virtual string TradingName { get; private set; }
@@ -51,9 +56,9 @@
             get { return companyRegistrationNumber; }
             private set
             {
-                if (value != null && (value.Length < 7 || value.Length > 15))
+                if (value != null && (value.Length < 5 || value.Length > 30))
                 {
-                    throw new InvalidOperationException("Company registration number must be 7 to 15 characters long");
+                    throw new InvalidOperationException("Company registration number must be 5 to 30 characters long");
                 }
 
                 companyRegistrationNumber = value;
@@ -68,9 +73,13 @@
 
         public virtual ProducerBalancingScheme ProducerBalancingScheme { get; private set; }
 
-        public static Organisation CreateSoleTrader(string companyName, string tradingName = null)
+        public virtual bool NpwdMigrated { get; set; }
+
+        public virtual bool NpwdMigratedComplete { get; set; }
+
+        public static Organisation CreateSoleTrader(string companyName, string tradingName = null, string companyRegistrationNumber = null)
         {
-            return new Organisation(OrganisationType.SoleTraderOrIndividual, companyName, null, tradingName);
+            return new Organisation(OrganisationType.SoleTraderOrIndividual, companyName, companyRegistrationNumber, tradingName);
         }
 
         public static Organisation CreatePartnership(string tradingName)
@@ -81,6 +90,11 @@
         public static Organisation CreateRegisteredCompany(string companyName, string companyRegistrationNumber, string tradingName = null)
         {
             return new Organisation(OrganisationType.RegisteredCompany, companyName, companyRegistrationNumber, tradingName);
+        }
+
+        public static Organisation CreateDirectRegistrantCompany(OrganisationType organisationType, string companyName, string tradingName, string companyRegistrationNumber = null)
+        {
+            return new Organisation(organisationType, companyName, companyRegistrationNumber, tradingName);
         }
 
         public void UpdateOrganisationTypeDetails(string companyName, string companyRegNumber,
@@ -96,6 +110,10 @@
             {
                 Guard.ArgumentNotNullOrEmpty(() => tradingName, tradingName);
             }
+            else if (organisationType == OrganisationType.DirectRegistrantPartnership)
+            {
+                Guard.ArgumentNotNullOrEmpty(() => companyName, companyName);
+            }
             else if (organisationType == OrganisationType.RegisteredCompany)
             {
                 Guard.ArgumentNotNullOrEmpty(() => companyName, companyName);
@@ -106,6 +124,15 @@
 
             OrganisationType = organisationType;
             TradingName = tradingName;
+        }
+
+        public void UpdateDirectRegistrantDetails(string companyName, string tradingName, string companyNumber)
+        {
+            Condition.Requires(companyName).IsNotNullOrWhiteSpace();
+
+            Name = companyName;
+            TradingName = tradingName;
+            CompanyRegistrationNumber = companyNumber;
         }
 
         public void UpdateSoleTraderDetails(string companyName, string tradingName)
@@ -145,6 +172,16 @@
             OrganisationStatus = OrganisationStatus.Complete;
         }
 
+        public void ToMigrated()
+        {
+            if (NpwdMigratedComplete)
+            {
+                throw new InvalidOperationException("Organisation migrated must be not complete");
+            }
+
+            NpwdMigratedComplete = true;
+        }
+
         public bool HasBusinessAddress
         {
             get { return BusinessAddress != null; }
@@ -164,7 +201,9 @@
         {
             get
             {
-                if (OrganisationType.Value == OrganisationType.RegisteredCompany.Value || OrganisationType.Value == OrganisationType.SoleTraderOrIndividual.Value)
+                if (OrganisationType.Value == OrganisationType.RegisteredCompany.Value 
+                    || OrganisationType.Value == OrganisationType.SoleTraderOrIndividual.Value 
+                    || OrganisationType.Value == OrganisationType.DirectRegistrantPartnership.Value)
                 {
                     return Name;
                 }
@@ -191,5 +230,12 @@
         }
 
         public bool IsBalancingScheme => this.ProducerBalancingScheme != null;
+
+        public bool IsRepresentingCompany { get; set; }
+
+        public void SetNpwdMigrated(bool npwdMigrated)
+        {
+            NpwdMigrated = npwdMigrated;
+        }
     }
 }

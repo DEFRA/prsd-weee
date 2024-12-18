@@ -58,7 +58,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
@@ -95,7 +95,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
+        public async Task IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
 
@@ -103,7 +103,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionAndParameters_SearchAnAatfViewModelShouldBeReturned()
+        public async Task IndexGet_GivenActionAndParameters_SearchAnAatfViewModelShouldBeReturned()
         {
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
@@ -124,7 +124,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_SearchAnAatfViewModelShouldBeBuilt()
+        public async Task IndexGet_GivenReturn_SearchAnAatfViewModelShouldBeBuilt()
         {
             var weeeSentOnList = A.Fake<List<WeeeSentOnData>>();
             A.CallTo(() => apiClient.SendAsync(A<string>._, A<GetWeeeSentOn>._)).Returns(weeeSentOnList);
@@ -134,7 +134,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmit_PageRedirectsToSearchedAatfList()
+        public async Task IndexPost_OnSubmit_PageRedirectsToSearchedAatfList()
         {
             var model = new SearchAnAatfViewModel()
             {

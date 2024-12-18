@@ -18,6 +18,7 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Tests.Core;
@@ -54,7 +55,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
@@ -93,7 +94,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
+        public async Task IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<string>()) as ViewResult;
 
@@ -101,7 +102,7 @@
         }        
 
         [Fact]
-        public async void IndexGet_GivenActionAndParameters_CanNotFoundTreatmentFacilityViewModelShouldBeReturned()
+        public async Task IndexGet_GivenActionAndParameters_CanNotFoundTreatmentFacilityViewModelShouldBeReturned()
         {
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
@@ -124,7 +125,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_CanNotFoundTreatmentFacilityViewModelShouldBeBuilt()
+        public async Task IndexGet_GivenReturn_CanNotFoundTreatmentFacilityViewModelShouldBeBuilt()
         {
             var weeeSentOnList = A.Fake<List<WeeeSentOnData>>();
 

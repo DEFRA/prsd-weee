@@ -7,7 +7,7 @@
     using System.Collections.Generic;
     using System.Threading.Tasks;
 
-    public interface IWeeeCache : ISearchResultProvider<ProducerSearchResult>, ISearchResultProvider<OrganisationSearchResult>
+    public interface IWeeeCache : ISearchResultProvider<ProducerSearchResult>, ISearchResultProvider<OrganisationSearchResult>, ISearchResultProvider<SmallProducerSearchResult>
     {
         Task<string> FetchOrganisationName(Guid organisationId);
 
@@ -30,6 +30,8 @@
         Task InvalidateAatfCache(Guid id);
 
         Task InvalidateSchemeCache(Guid id);
+
+        Task InvalidateSmallProducerSearch();
 
         Task<AatfData> FetchAatfData(Guid organisationId, Guid aatfId);
 

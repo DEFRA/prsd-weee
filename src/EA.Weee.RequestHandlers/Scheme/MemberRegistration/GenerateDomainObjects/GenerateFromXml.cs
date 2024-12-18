@@ -190,7 +190,7 @@
             return producers;
         }
 
-        private async Task EnsureProducerRegistrationNumberExists(string producerRegistrationNumber)
+        public async Task EnsureProducerRegistrationNumberExists(string producerRegistrationNumber)
         {
             bool producerRegistrationExists = await dataAccess.ProducerRegistrationExists(producerRegistrationNumber);
 

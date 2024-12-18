@@ -18,6 +18,7 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Tests.Core;
@@ -53,7 +54,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
@@ -90,7 +91,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
+        public async Task IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
             var @return = A.Fake<ReturnData>();
             var quarterData = new Quarter(2019, QuarterType.Q1);
@@ -107,7 +108,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturnIdAndAatfId_ApiShouldBeCalledWithReturnRequest()
+        public async Task IndexGet_GivenReturnIdAndAatfId_ApiShouldBeCalledWithReturnRequest()
         {
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
@@ -127,7 +128,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionAndParameters_SentOnSiteSummaryListViewModelShouldBeReturned()
+        public async Task IndexGet_GivenActionAndParameters_SentOnSiteSummaryListViewModelShouldBeReturned()
         {
             var organisationId = Guid.NewGuid();
             var aatfId = Guid.NewGuid();
@@ -158,7 +159,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_SentOnSiteSummaryListViewModelShouldBeBuilt()
+        public async Task IndexGet_GivenReturn_SentOnSiteSummaryListViewModelShouldBeBuilt()
         {
             var weeeSentOnList = A.Fake<List<WeeeSentOnData>>();
             var @return = A.Fake<ReturnData>();
@@ -177,7 +178,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmit_CopyPreviousQuarterData_And_PageRedirectsToSentOnSiteSummaryList()
+        public async Task IndexPost_OnSubmit_CopyPreviousQuarterData_And_PageRedirectsToSentOnSiteSummaryList()
         {
             var returnId = new Guid();
             var organisationId = new Guid();

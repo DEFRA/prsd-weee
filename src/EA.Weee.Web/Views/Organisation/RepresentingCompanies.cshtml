@@ -1,0 +1,56 @@
+﻿@using EA.Prsd.Core.Helpers
+@using MvcNavigationHelpers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.ViewModels.Organisation.RepresentingCompaniesViewModel
+
+@{
+    const string title = "Which of your represented organisations would you like to perform activities for?";
+    ViewBag.Title = title + " - GOV.UK";
+}
+
+@section full_main_content
+{
+    @if (Model.ShowBackButton)
+    {
+        @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Controllers.OrganisationController>(a => a.Index())))
+    }
+
+    @if (Model.Organisations.Count > 0)
+    {
+        using (Html.BeginForm())
+        {
+            @Html.Gds().ValidationSummary()
+            @Html.HiddenFor(m => m.OrganisationId)
+            for (var i = 0; i < Model.Organisations.Count; i++)
+            {
+                @Html.HiddenFor(m => m.Organisations[i].Name)
+                @Html.HiddenFor(m => m.Organisations[i].DirectRegistrantId)
+            }
+            @Html.AntiForgeryToken()
+            <header class="hgroup">
+                <h1 class="govuk-heading-l">
+                    @title
+                </h1>
+            </header>
+
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedDirectRegistrant)">
+                @Html.Gds().ValidationMessageFor(m => m.SelectedDirectRegistrant)
+                @this.WeeeGds().RadioButtonsFor(
+                    m => m.SelectedDirectRegistrant,
+                    Model.Organisations,
+                    m => m.DirectRegistrantId,
+                    m => m.Name,
+                    RadioButtonLegend.VisuallyHidden,
+                    RadioButtonLayout.Stacked)
+            </div>
+
+            @(this.WeeeGds().Submit("Continue"))
+        }
+    }
+    else
+    {
+        <p class="govuk-body">There are currently no represented organisations</p>
+    }
+
+    @Html.ActionLink("Add new represented organisation", "RepresentingOrganisation", new { organisationId = Model.OrganisationId })
+}

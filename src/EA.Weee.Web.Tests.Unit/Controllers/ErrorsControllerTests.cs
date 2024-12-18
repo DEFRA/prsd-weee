@@ -2,6 +2,7 @@
 {
     using Authorization;
     using FakeItEasy;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using System.Web.Routing;
     using Web.Controllers;
@@ -17,7 +18,7 @@
         }
 
         [Fact]
-        public async void HttpGet_ErrorRedirect_UserIsNotLoggedIn_RedirectsToExternalSignIn()
+        public async Task HttpGet_ErrorRedirect_UserIsNotLoggedIn_RedirectsToExternalSignIn()
         {
             A.CallTo(() => weeeAuthorization.GetAuthorizationState())
                 .Returns(AuthorizationState.NotLoggedIn());
@@ -34,7 +35,7 @@
         }
 
         [Fact]
-        public async void HttpGet_ErrorRedirect_UserIsLoggedIn_RedirectsToDefaultLoginAction()
+        public async Task HttpGet_ErrorRedirect_UserIsLoggedIn_RedirectsToDefaultLoginAction()
         {
             var accessToken = "letmein";
             var defaultLoginAction = new RedirectToRouteResult(new RouteValueDictionary(new { action = "gosomewhere " }));

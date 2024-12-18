@@ -4,16 +4,15 @@
     using Core.Shared;
     using Domain.Scheme;
     using EA.Prsd.Core.Mapper;
-    using EA.Weee.Core.Scheme;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.RequestHandlers.Mappings;
     using EA.Weee.RequestHandlers.Scheme;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Scheme;
     using FakeItEasy;
-    using System;
-    using System.Collections.Generic;
     using FluentAssertions;
+    using System;
+    using System.Threading.Tasks;
     using Xunit;
     using DatabaseWrapper = Weee.Tests.Core.Model.DatabaseWrapper;
     using Organisation = Domain.Organisation.Organisation;
@@ -23,7 +22,7 @@
     public class GetSchemesExternalDataAccessTests
     {
         [Fact]
-        public async void GetSchemesExternalHandlerHandleAsync_GivenGetSchemeExternalRequest_ToIncludeWithdrawnSchemes_ReturnListOfSchemesThatAreApprovedOrWithdrawn()
+        public async Task GetSchemesExternalHandlerHandleAsync_GivenGetSchemeExternalRequest_ToIncludeWithdrawnSchemes_ReturnListOfSchemesThatAreApprovedOrWithdrawn()
         {
             using (var database = new DatabaseWrapper())
             {

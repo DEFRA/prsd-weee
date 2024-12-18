@@ -67,9 +67,11 @@
         /// <param name="includeBrandNames"></param>
         /// <param name="schemeId"></param>
         /// <param name="competentAuthorityId"></param>
+        /// <param name="directRegistrantFilter"></param>
+        /// <param name="schemesFilter"></param>
         /// <returns></returns>
         public async Task<List<MembersDetailsCsvData>> SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(int complianceYear, bool includeRemovedProducer,
-            bool includeBrandNames, Guid? schemeId, Guid? competentAuthorityId)
+            bool includeBrandNames, Guid? schemeId, Guid? competentAuthorityId, bool directRegistrantFilter, bool schemesFilter)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
 
@@ -77,15 +79,20 @@
             var competentAuthorityIdParameter = new SqlParameter("@CompetentAuthorityId", (object)competentAuthorityId ?? DBNull.Value);
             var includeRemovedProducerParameter = new SqlParameter("@IncludeRemovedProducer", includeRemovedProducer);
             var includeBrandNamesParameter = new SqlParameter("@IncludeBrandNames", includeBrandNames);
+            var filterByDirectRegistrant = new SqlParameter("@FilterByDirectRegistrant", directRegistrantFilter);
+            var filterBySchemes = new SqlParameter("@FilterBySchemes", schemesFilter);
 
             return await context.Database
                 .SqlQuery<MembersDetailsCsvData>(
-                    "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @IncludeRemovedProducer, @IncludeBrandNames, @SchemeId, @CompetentAuthorityId",
+                    "[Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority] @ComplianceYear, @IncludeRemovedProducer, @IncludeBrandNames, @SchemeId, @CompetentAuthorityId, " +
+                    "@FilterByDirectRegistrant, @FilterBySchemes",
                     complianceYearParameter,
                     includeRemovedProducerParameter,
                     includeBrandNamesParameter,
                     schemeIdParameter,
-                    competentAuthorityIdParameter)
+                    competentAuthorityIdParameter,
+                    filterByDirectRegistrant,
+                    filterBySchemes)
                 .ToListAsync();
         }
 
@@ -233,17 +240,22 @@
             return result;
         }
 
-        public async Task<List<ProducerEeeCsvData>> SpgProducerEeeCsvData(int complianceYear, Guid? schemeId, string obligationtype)
+        public async Task<List<ProducerEeeCsvData>> SpgProducerEeeCsvData(int complianceYear, Guid? schemeId, string obligationType, 
+            bool directRegistrantFilter, bool filterBySchemes)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
             var schemeIdParameter = new SqlParameter("@SchemeId", (object)schemeId ?? DBNull.Value);
-            var obligationTypeParameter = new SqlParameter("@ObligationType", obligationtype);
+            var obligationTypeParameter = new SqlParameter("@ObligationType", obligationType);
+            var filterByDirectRegistrant = new SqlParameter("@FilterByDirectRegistrant", directRegistrantFilter);
+            var filterByScheme = new SqlParameter("@FilterBySchemes", filterBySchemes);
 
             return await context.Database
-                .SqlQuery<ProducerEeeCsvData>("[Producer].[spgProducerEeeCsvData] @ComplianceYear, @SchemeId, @ObligationType",
+                .SqlQuery<ProducerEeeCsvData>("[Producer].[spgProducerEeeCsvData] @ComplianceYear, @SchemeId, @ObligationType, @FilterByDirectRegistrant, @FilterBySchemes",
                     complianceYearParameter,
                     schemeIdParameter,
-                    obligationTypeParameter)
+                    obligationTypeParameter,
+                    filterByDirectRegistrant,
+                    filterByScheme)
                 .ToListAsync();
         }
 

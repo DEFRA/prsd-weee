@@ -19,6 +19,7 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Requests.AatfReturn;
@@ -59,7 +60,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
+        public async Task IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
             var model = new ObligatedViewModel(calculator);
             var request = new AddObligatedReused();
@@ -72,7 +73,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenInvalidViewModel_ApiShouldNotBeCalled()
+        public async Task IndexPost_GivenInvalidViewModel_ApiShouldNotBeCalled()
         {
             controller.ModelState.AddModelError("error", "error");
 
@@ -82,7 +83,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
@@ -119,7 +120,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenNewObligatedReusedValuesAreSubmitted_PageRedirectsToAatfTaskList()
+        public async Task IndexPost_GivenNewObligatedReusedValuesAreSubmitted_PageRedirectsToAatfTaskList()
         {
             var model = new ObligatedViewModel(calculator) { ReturnId = Guid.NewGuid() };
 
@@ -131,7 +132,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenEditedObligatedReusedValuesAreSubmitted_PageRedirectsToSiteSummaryList()
+        public async Task IndexPost_GivenEditedObligatedReusedValuesAreSubmitted_PageRedirectsToSiteSummaryList()
         {
             var categoryValues = new List<ObligatedCategoryValue>() { new ObligatedCategoryValue() { Id = Guid.NewGuid() } };
             var model = new ObligatedViewModel(calculator) { ReturnId = Guid.NewGuid(), CategoryValues = categoryValues };
@@ -144,7 +145,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
+        public async Task IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>()) as ViewResult;
 

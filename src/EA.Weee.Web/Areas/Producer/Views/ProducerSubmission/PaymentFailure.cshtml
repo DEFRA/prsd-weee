@@ -1,0 +1,28 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Producer.ViewModels.RegisteredResultModel
+@{
+    var title = "Your payment has failed";
+    ViewBag.Title = @title + " - GOV.UK";
+}
+
+@section full_main_content{
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">@title</h1>
+    </header>
+
+    <p class="govuk-body">
+        Your payment has failed. You can either retry your payment or contact us at <a class="govuk-link govuk-link--no-visited-state" href="mailto:weee@environment-agency.gov.uk">weee@environment-agency.gov.uk</a>.
+    </p>
+
+    @using (Html.BeginForm())
+    {
+        @Html.AntiForgeryToken()
+        <div class="govuk-button-group govuk-!-padding-top-3">
+            @this.WeeeGds().Button("Retry payment")
+        </div>
+
+        <p class="govuk-body">
+            @Html.ActionLink("Perform other activities", "ChooseActivity", "Home", new { area = "Scheme", pcsId = Model.OrganisationId }, new { @class = "govuk-link" })
+        </p>
+    }
+}

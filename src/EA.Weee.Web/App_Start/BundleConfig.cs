@@ -7,21 +7,12 @@
         // For more information on bundling, visit http://go.microsoft.com/fwlink/?LinkId=301862
         public static void RegisterBundles(BundleCollection bundles)
         {
-            // JQuery 1.x.x is used for IE 8 and earlier.
-            bundles.Add(new ScriptBundle("~/bundles/jquery-1").Include(
-                    "~/Scripts/jquery-1*",
-                    "~/Scripts/jquery.unobtrusive-ajax.js",
-                    "~/Scripts/jquery-ui-1.13.1.js",
-                    "~/Scripts/jquery.select-to-autocomplete.js",
-                    "~/Scripts/jquery.validate*",
-                    "~/Scripts/custom-validation.js"));
-
             // JQuery 3.x.x is used for all other browsers.
             bundles.Add(new ScriptBundle("~/bundles/jquery-3").Include(
                     "~/Scripts/jquery-3.6.0.js",
                     "~/Scripts/jquery-migrate-3.0.0.js",
                     "~/Scripts/jquery.unobtrusive-ajax.js",
-                    "~/Scripts/jquery-ui-1.13.1.js",
+                    "~/Scripts/jquery-ui-1-13.3.js",
                     "~/Scripts/jquery.select-to-autocomplete.js",
                     "~/Scripts/jquery.validate*",
                     "~/Scripts/custom-validation.js"));
@@ -42,8 +33,16 @@
             bundles.Add(new ScriptBundle("~/bundles/weee_tonnage_totals").Include(
                 "~/Scripts/weee-tonnage-totals.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/sent-on-operator-address").Include(
-                "~/Scripts/sent-on-operator-address.js"));
+            bundles.Add(new ScriptBundle("~/bundles/contact-details-address-lookup")
+                .Include("~/Scripts/lookup/lookup-search.js")
+                .Include("~/Scripts/lookup/contact-details-address-lookup.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/org-details-company-lookup")
+               .Include("~/Scripts/lookup/lookup-search.js")
+               .Include("~/Scripts/lookup/org-details-company-lookup.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/sent-on-operator-address")
+                .Include("~/Scripts/sent-on-operator-address.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/weee-collapsible-link").Include(
                 "~/Scripts/weee-collapsible-link.js"));

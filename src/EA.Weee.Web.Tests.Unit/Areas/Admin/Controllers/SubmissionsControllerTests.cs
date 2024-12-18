@@ -37,7 +37,7 @@
         }
 
         [Fact]
-        public async void GetChooseSubmissionType_ReturnsView()
+        public async Task GetChooseSubmissionType_ReturnsView()
         {
             var result = await SubmissionsController().ChooseSubmissionType();
 
@@ -45,7 +45,7 @@
         }
 
         [Fact]
-        public async void PostChooseSubmissionType_ModelIsInvalid_ShouldRedirectViewWithModel()
+        public async Task PostChooseSubmissionType_ModelIsInvalid_ShouldRedirectViewWithModel()
         {
             var controller = SubmissionsController();
             controller.ModelState.AddModelError("Key", "Any error");
@@ -62,7 +62,7 @@
         }
 
         [Fact]
-        public async void PostChooseSubmissionType_MemberRegistrationsSelected_RedirectsToMemberRegistrationSubmissionHistory()
+        public async Task PostChooseSubmissionType_MemberRegistrationsSelected_RedirectsToMemberRegistrationSubmissionHistory()
         {
             var result = await SubmissionsController().ChooseSubmissionType(new ChooseSubmissionTypeViewModel
             {
@@ -77,7 +77,7 @@
         }
 
         [Fact]
-        public async void PostChooseSubmissionType_DataReturnsSelected_RedirectsToDataReturnsSubmissionHistory()
+        public async Task PostChooseSubmissionType_DataReturnsSelected_RedirectsToDataReturnsSubmissionHistory()
         {
             var result = await SubmissionsController().ChooseSubmissionType(new ChooseSubmissionTypeViewModel
             {

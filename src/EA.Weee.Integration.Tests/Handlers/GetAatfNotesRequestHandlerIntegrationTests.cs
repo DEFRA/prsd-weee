@@ -480,7 +480,7 @@
                     .WithExternalUserAccess();
 
                 fixture = new Fixture();
-                complianceYear = fixture.Create<int>();
+                complianceYear = 1980;
                 notesSet = new List<Note>();
                 allowedStatuses = new List<NoteStatus> { NoteStatus.Approved };
                 handler = Container.Resolve<IRequestHandler<GetAatfNotesRequest, EvidenceNoteSearchDataResult>>();

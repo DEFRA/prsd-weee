@@ -10,7 +10,6 @@
         {
             Guard.ArgumentNotNullOrEmpty(() => firstName, firstName);
             Guard.ArgumentNotNullOrEmpty(() => lastName, lastName);
-            Guard.ArgumentNotNullOrEmpty(() => position, position);
 
             FirstName = firstName;
             LastName = lastName;

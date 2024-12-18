@@ -43,7 +43,7 @@
         }
 
         [Fact]
-        public async void WhenUserIsUnauthorised_DoesNotGetProducer_OrSaveChanges()
+        public async Task WhenUserIsUnauthorised_DoesNotGetProducer_OrSaveChanges()
         {
             // Arrange
             var builder = new RemoveProducerHandlerBuilder();
@@ -65,7 +65,7 @@
         }
 
         [Fact]
-        public async void WhenUserIsAuthorised_GetsProducer_AndProducerSubmissions_AndSaveChanges()
+        public async Task WhenUserIsAuthorised_GetsProducer_AndProducerSubmissions_AndSaveChanges()
         {
             // Arrange
             var builder = new RemoveProducerHandlerBuilder();
@@ -86,7 +86,7 @@
         }
 
         [Fact]
-        public async void DoesNotDeductChargeFromMemberUpload_WhenAlreadyInvoiced()
+        public async Task DoesNotDeductChargeFromMemberUpload_WhenAlreadyInvoiced()
         {
             // Arrange
             var builder = new RemoveProducerHandlerBuilder();
@@ -115,7 +115,7 @@
         }
 
         [Fact]
-        public async void DeductsChargeFromMemberUpload_WhenNotInvoiced()
+        public async Task DeductsChargeFromMemberUpload_WhenNotInvoiced()
         {
             // Arrange
             var builder = new RemoveProducerHandlerBuilder();

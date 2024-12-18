@@ -2,6 +2,7 @@
 {
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Admin;
+    using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Search;
     using EA.Weee.Requests.Admin;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
@@ -21,6 +22,7 @@
     {
         private readonly BreadcrumbService breadcrumb;
         private readonly ISearcher<ProducerSearchResult> producerSearcher;
+        private readonly ISearcher<SmallProducerSearchResult> smallProducerSearcher;
         private readonly Func<IWeeeClient> apiClient;
         private readonly IWeeeCache cache;
         private readonly int maximumSearchResults;
@@ -29,12 +31,13 @@
             ISearcher<ProducerSearchResult> producerSearcher,
             Func<IWeeeClient> apiClient,
             IWeeeCache cache,
-            ConfigurationService configurationService)
+            ConfigurationService configurationService, ISearcher<SmallProducerSearchResult> smallProducerSearcher)
         {
             this.breadcrumb = breadcrumb;
             this.producerSearcher = producerSearcher;
             this.apiClient = apiClient;
             this.cache = cache;
+            this.smallProducerSearcher = smallProducerSearcher;
 
             maximumSearchResults = configurationService.CurrentConfiguration.MaximumProducerOrganisationSearchResults;
         }
@@ -44,10 +47,10 @@
         /// </summary>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult> Search()
+        public async Task<ActionResult> Search(SearchTypeEnum searchType)
         {
-            await SetBreadcrumb();
-            return View();
+            await SetBreadcrumb(searchType);
+            return View(new SearchViewModel() { SearchType = searchType });
         }
 
         /// <summary>
@@ -59,7 +62,7 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Search(SearchViewModel viewModel)
         {
-            await SetBreadcrumb();
+            await SetBreadcrumb(viewModel.SearchType);
 
             if (!ModelState.IsValid)
             {
@@ -69,13 +72,10 @@
             // Check to see if a registration number was selected.
             if (!string.IsNullOrEmpty(viewModel.SelectedRegistrationNumber))
             {
-                return RedirectToAction("Details", new
-                {
-                    RegistrationNumber = viewModel.SelectedRegistrationNumber
-                });
+                return RedirectBySearchType(viewModel.SearchType, viewModel.SelectedRegistrationNumber);
             }
 
-            return RedirectToAction("SearchResults", new { viewModel.SearchTerm });
+            return RedirectToAction("SearchResults", new { viewModel.SearchTerm, searchType = viewModel.SearchType });
         }
 
         /// <summary>
@@ -85,15 +85,43 @@
         /// <param name="viewModel"></param>
         /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult> SearchResults(string searchTerm)
+        public async Task<ActionResult> SearchResults(string searchTerm, SearchTypeEnum searchType)
         {
-            await SetBreadcrumb();
+            await SetBreadcrumb(searchType);
 
-            SearchResultsViewModel viewModel = new SearchResultsViewModel();
-            viewModel.SearchTerm = searchTerm;
-            viewModel.Results = await producerSearcher.Search(searchTerm, maximumSearchResults, false);
+            SearchResultsViewModel viewModel = new SearchResultsViewModel
+            {
+                SearchTerm = searchTerm,
+                SearchType = searchType
+            };
+
+            var resultsList = await GetSearchResults(searchTerm, searchType);
+
+            viewModel.Results = resultsList;
 
             return View(viewModel);
+        }
+
+        private async Task<List<RegisteredProducerSearchResult>> GetSearchResults(string searchTerm, SearchTypeEnum searchType)
+        {
+            var resultsList = new List<RegisteredProducerSearchResult>();
+
+            if (searchType == SearchTypeEnum.SmallProducer)
+            {
+                var smallProducerResults = await smallProducerSearcher.Search(searchTerm, maximumSearchResults, false);
+                var res = smallProducerResults.ToList().ConvertAll<RegisteredProducerSearchResult>(x => x);
+
+                resultsList.AddRange(res);
+            }
+            else
+            {
+                var producerResults = await producerSearcher.Search(searchTerm, maximumSearchResults, false);
+                var res = producerResults.ToList().ConvertAll<RegisteredProducerSearchResult>(x => x);
+
+                resultsList.AddRange(res);
+            }
+
+            return resultsList;
         }
 
         /// <summary>
@@ -105,19 +133,18 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> SearchResults(SearchResultsViewModel viewModel)
         {
-            await SetBreadcrumb();
+            await SetBreadcrumb(viewModel.SearchType);
 
             if (!ModelState.IsValid)
             {
-                viewModel.Results = await producerSearcher.Search(viewModel.SearchTerm, maximumSearchResults, false);
+                var resultsList = await GetSearchResults(viewModel.SearchTerm, viewModel.SearchType);
+
+                viewModel.Results = resultsList;
 
                 return View(viewModel);
             }
 
-            return RedirectToAction("Details", new
-            {
-                RegistrationNumber = viewModel.SelectedRegistrationNumber
-            });
+            return RedirectBySearchType(viewModel.SearchType, viewModel.SelectedRegistrationNumber);
         }
 
         /// <summary>
@@ -127,7 +154,7 @@
         /// <returns></returns>
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<JsonResult> FetchSearchResultsJson(string searchTerm)
+        public async Task<JsonResult> FetchSearchResultsJson(string searchTerm, SearchTypeEnum searchType)
         {
             if (!Request.IsAjaxRequest())
             {
@@ -139,9 +166,9 @@
                 return Json(null, JsonRequestBehavior.AllowGet);
             }
 
-            IList<ProducerSearchResult> searchResults = await producerSearcher.Search(searchTerm, maximumSearchResults, true);
+            var resultsList = await GetSearchResults(searchTerm, searchType);
 
-            return Json(searchResults, JsonRequestBehavior.AllowGet);
+            return Json(resultsList, JsonRequestBehavior.AllowGet);
         }
 
         /// <summary>
@@ -318,7 +345,7 @@
                     return RedirectToAction("Details", new { model.RegistrationNumber });
                 }
 
-                return RedirectToAction("Search");
+                return RedirectToAction("Search", new { searchType = SearchTypeEnum.Producer });
             }
         }
 
@@ -335,11 +362,27 @@
             }
         }
 
-        private async Task SetBreadcrumb()
+        private async Task SetBreadcrumb(SearchTypeEnum? searchType = null)
         {
-            breadcrumb.InternalActivity = InternalUserActivity.ProducerDetails;
+            breadcrumb.InternalActivity = searchType == SearchTypeEnum.SmallProducer ? InternalUserActivity.DirectRegistrantDetails : InternalUserActivity.ProducerDetails;
 
             await Task.Yield();
+        }
+
+        private ActionResult RedirectBySearchType(SearchTypeEnum searchType, string registrationNumber)
+        {
+            if (searchType == SearchTypeEnum.SmallProducer)
+            {
+                return RedirectToAction(nameof(ProducerSubmissionController.Submissions), typeof(ProducerSubmissionController).GetControllerName(), new
+                {
+                    RegistrationNumber = registrationNumber
+                });
+            }
+
+            return RedirectToAction(nameof(Details), typeof(ProducersController).GetControllerName(), new
+            {
+                RegistrationNumber = registrationNumber
+            });
         }
     }
 }

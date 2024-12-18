@@ -1,0 +1,31 @@
+﻿@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.Areas.Producer.ViewModels
+
+@model OrganisationDetailsTabsViewModel
+
+@if (Model.IsInternalAdmin)
+{
+    <div>
+        <p class="govuk-body">
+            @Html.ActionLink("Download as PDF", "DownloadSubmission", "ProducerSubmission", new { registrationNumber = Model.RegistrationNumber, complianceYear = Model.Year }, new { @class = "govuk-link" })
+        </p>
+    </div>
+}
+@if (!Model.IsInternalAdmin && Model.Year != null)
+{
+    <div>
+        <p class="govuk-body">
+            @Html.ActionLink("Download as PDF", "DownloadSubmission", "Producer", new { registrationNumber = Model.RegistrationNumber, complianceYear = Model.Year, displayRegistrationDetails = true }, new { @class = "govuk-link" })
+        </p>
+    </div>
+}
+@if (Model.ShowReturnRegistrationToUser)
+{
+    <div class="govuk-button-group govuk-!-padding-top-3">
+        <a href="@Url.Action("ReturnProducerRegistration", new { registrationNumber = Model.RegistrationNumber, year = Model.Year })" class="govuk-button">
+            Return submission to user
+        </a>
+    </div>
+}
+
+@(this.WeeeGds().BackToTopLink())

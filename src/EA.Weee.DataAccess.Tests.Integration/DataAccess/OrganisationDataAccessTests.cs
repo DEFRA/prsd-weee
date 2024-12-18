@@ -3,6 +3,7 @@
     using AutoFixture;
     using Domain.AatfReturn;
     using Domain.DataReturns;
+    using Domain.Organisation;
     using Domain.User;
     using FluentAssertions;
     using System;
@@ -16,15 +17,10 @@
 
     public class OrganisationDataAccessTests
     {
-        private readonly Fixture fixture;
-
-        public OrganisationDataAccessTests()
-        {
-            fixture = new Fixture();
-        }
+        private readonly Fixture fixture = new Fixture();
 
         [Fact]
-        public async void DeleteOrganisation_GivenOrganisation_OrganisationShouldBeRemoved()
+        public async Task DeleteOrganisation_GivenOrganisation_OrganisationShouldBeRemoved()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -48,7 +44,7 @@
         }
 
         [Fact]
-        public async void DeleteOrganisation_GivenOrganisationWithOrganisationUsers_OrganisationAndOrganisationUsersShouldBeRemoved()
+        public async Task DeleteOrganisation_GivenOrganisationWithOrganisationUsers_OrganisationAndOrganisationUsersShouldBeRemoved()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -75,7 +71,7 @@
         }
 
         [Fact]
-        public async void DeleteOrganisation_GivenInvalidOrganisation_ArgumentExceptionExpected()
+        public async Task DeleteOrganisation_GivenInvalidOrganisation_ArgumentExceptionExpected()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -88,7 +84,7 @@
         }
 
         [Fact]
-        public async void HasActiveUsers_GivenOrganisationWithNoUsers_FalseShouldBeReturned()
+        public async Task HasActiveUsers_GivenOrganisationWithNoUsers_FalseShouldBeReturned()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -107,7 +103,7 @@
         }
 
         [Fact]
-        public async void HasActiveUsers_GivenOrganisationWithActiveUser_TrueShouldBeReturned()
+        public async Task HasActiveUsers_GivenOrganisationWithActiveUser_TrueShouldBeReturned()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -139,7 +135,7 @@
 
         [Theory]
         [MemberData(nameof(InactiveUserStatusData))]
-        public async void HasActiveUsers_GivenOrganisationWithInactiveUser_FalseShouldBeReturned(UserStatus status)
+        public async Task HasActiveUsers_GivenOrganisationWithInactiveUser_FalseShouldBeReturned(UserStatus status)
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -162,7 +158,7 @@
         }
 
         [Fact]
-        public async void HasReturns_GivenOrganisationHasReturnsForComplianceYear_TrueShouldBeReturned()
+        public async Task HasReturns_GivenOrganisationHasReturnsForComplianceYear_TrueShouldBeReturned()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -182,7 +178,7 @@
         }
 
         [Fact]
-        public async void HasReturns_GivenOrganisationDoesNotHaveReturnsForComplianceYear_FalseShouldBeReturned()
+        public async Task HasReturns_GivenOrganisationDoesNotHaveReturnsForComplianceYear_FalseShouldBeReturned()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -202,7 +198,7 @@
         }
 
         [Fact]
-        public async void HasFacility_GivenOrganisationDoesNotHaveAatf_FalseShouldBeReturned()
+        public async Task HasFacility_GivenOrganisationDoesNotHaveAatf_FalseShouldBeReturned()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -223,7 +219,7 @@
         }
 
         [Fact]
-        public async void HasFacility_GivenOrganisationHasAatf_TrueShouldBeReturned()
+        public async Task HasFacility_GivenOrganisationHasAatf_TrueShouldBeReturned()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -244,7 +240,7 @@
         }
 
         [Fact]
-        public async void HasFacility_GivenOrganisationHasAe_TrueShouldBeReturned()
+        public async Task HasFacility_GivenOrganisationHasAe_TrueShouldBeReturned()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -265,7 +261,7 @@
         }
 
         [Fact]
-        public async void HasFacility_GivenOrganisationDoesNotHavAe_FalseShouldBeReturned()
+        public async Task HasFacility_GivenOrganisationDoesNotHavAe_FalseShouldBeReturned()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -286,7 +282,7 @@
         }
 
         [Fact]
-        public async void HasScheme_GivenOrganisationDoesNotHaveScheme_FalseShouldBeReturned()
+        public async Task HasScheme_GivenOrganisationDoesNotHaveScheme_FalseShouldBeReturned()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -304,7 +300,7 @@
         }
 
         [Fact]
-        public async void HasScheme_GivenOrganisationDoesHasScheme_TrueShouldBeReturned()
+        public async Task HasScheme_GivenOrganisationDoesHasScheme_TrueShouldBeReturned()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -323,7 +319,7 @@
         }
 
         [Fact]
-        public async void HasMultipleFacility_GivenOrganisationDoesNotHaveMultipleFacilityOfAatf_FalseShouldBeReturned()
+        public async Task HasMultipleFacility_GivenOrganisationDoesNotHaveMultipleFacilityOfAatf_FalseShouldBeReturned()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -342,7 +338,7 @@
         }
 
         [Fact]
-        public async void HasMultipleFacility_GivenOrganisationDoesNotHaveMultipleFacilityOfAe_FalseShouldBeReturned()
+        public async Task HasMultipleFacility_GivenOrganisationDoesNotHaveMultipleFacilityOfAe_FalseShouldBeReturned()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -361,7 +357,7 @@
         }
 
         [Fact]
-        public async void HasMultipleFacility_GivenOrganisationDoesFacilityTypeDoesNotMatch_FalseShouldBeReturned()
+        public async Task HasMultipleFacility_GivenOrganisationDoesFacilityTypeDoesNotMatch_FalseShouldBeReturned()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -380,7 +376,7 @@
         }
 
         [Fact]
-        public async void HasMultipleFacility_GivenOrganisationDoesHaveMultipleFacilityOfAatf_TrueShouldBeReturned()
+        public async Task HasMultipleFacility_GivenOrganisationDoesHaveMultipleFacilityOfAatf_TrueShouldBeReturned()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -400,7 +396,7 @@
         }
 
         [Fact]
-        public async void HasMultipleFacility_GivenOrganisationDoesHaveMultipleFacilityOfAe_TrueShouldBeReturned()
+        public async Task HasMultipleFacility_GivenOrganisationDoesHaveMultipleFacilityOfAe_TrueShouldBeReturned()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -527,6 +523,46 @@
                 await databaseWrapper.WeeeContext.SaveChangesAsync();
 
                 var result = await organisationDataAccess.GetReturnsByComplianceYear(Guid.NewGuid(), 2020, FacilityType.Ae);
+
+                result.Should().BeEmpty();
+            }
+        }
+
+        [Fact]
+        public async Task GetByRegistrationNumber_GivenOrganisationNumberExists_ReturnsOrganisationNumber()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                var organisationDataAccess = new OrganisationDataAccess(databaseWrapper.WeeeContext);
+                var companyRegistrationNumber = "12345678A";
+                var organisation = Domain.Organisation.Organisation.CreateDirectRegistrantCompany(OrganisationType.RegisteredCompany, fixture.Create<string>(),
+                    fixture.Create<string>(), companyRegistrationNumber);
+
+                databaseWrapper.WeeeContext.Organisations.Add(organisation);
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                var result = await organisationDataAccess.GetByRegistrationNumber(organisation.CompanyRegistrationNumber);
+
+                result.ElementAt(0).CompanyRegistrationNumber.Should().Be(organisation.CompanyRegistrationNumber);
+            }
+        }
+
+        [Fact]
+        public async Task GetByRegistrationNumber_GivenOrganisationNumberDoesNotExist_ReturnsOrganisationNumber()
+        {
+            using (var databaseWrapper = new DatabaseWrapper())
+            {
+                var organisationDataAccess = new OrganisationDataAccess(databaseWrapper.WeeeContext);
+                var companyRegistrationNumber = "12345678B";
+                var organisation = Domain.Organisation.Organisation.CreateDirectRegistrantCompany(OrganisationType.RegisteredCompany, fixture.Create<string>(),
+                    fixture.Create<string>(), companyRegistrationNumber);
+
+                databaseWrapper.WeeeContext.Organisations.Add(organisation);
+
+                await databaseWrapper.WeeeContext.SaveChangesAsync();
+
+                var result = await organisationDataAccess.GetByRegistrationNumber("ZZZZZZZZZZ");
 
                 result.Should().BeEmpty();
             }

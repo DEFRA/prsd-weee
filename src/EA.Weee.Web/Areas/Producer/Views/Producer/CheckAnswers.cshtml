@@ -1,0 +1,43 @@
+﻿@using EA.Prsd.Core.Helpers
+@using MvcNavigationHelpers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Producer.ViewModels.CheckAnswersViewModel
+
+
+@{
+    ViewBag.Title = "Check answers - GOV.UK";
+}
+@{
+    const string title = "Check your answers before submitting your application";
+    ViewBag.Title = title + " - GOV.UK";
+}
+@section full_main_content
+{
+    @(this.WeeeGds().BackLink(@Url.UrlFor<EA.Weee.Web.Areas.Producer.Controllers.ProducerController>(a => a.TaskList())))
+
+    @{
+        var representingOrg = @Model.HasAuthorisedRepresentitive;
+    }
+
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">@title</h1>
+    </header>
+
+    @Html.Partial("_CheckAnswersContentPartial", Model)
+
+    <p class="govuk-body">Pressing confirm answers will take you to the application submission page.</p>
+
+    <div class="govuk-form-group">
+        <a href="@Url.Action("AppropriateSignatory", "ProducerSubmission")" class="govuk-button" role="button">
+            Confirm answers
+        </a>
+    </div>
+
+    <p class="govuk-body">
+        @Html.ActionLink("Download as PDF", "DownloadSubmission", new { displayRegistrationDetails = false }, new { @class = "govuk-link" })
+    </p>
+
+    <div class="govuk-!-padding-top-6">
+        @(this.WeeeGds().BackToTopLink())
+    </div>
+}

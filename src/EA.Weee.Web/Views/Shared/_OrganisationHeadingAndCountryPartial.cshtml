@@ -1,0 +1,109 @@
+﻿@using EA.Weee.Core.DataStandards
+@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataStandards
+@using EA.Weee.Core.Organisations
+@using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Web.Controllers
+@using MvcNavigationHelpers
+@model EA.Weee.Core.Organisations.Base.OrganisationViewModel
+
+<h2 class="govuk-heading-s">Enter the country your organisation or business is based in.</h2>
+<div class="govuk-form-group countries govuk-!-margin-bottom-8 @Html.Gds().FormGroupClass(m => m.Address.CountryId)" id="operator-country-dropdown-list">
+    @Html.Gds().LabelFor(m => m.Address.CountryId, new { id = "country-dropdown-list" })
+    @Html.Gds().ValidationMessageFor(m => m.Address.CountryId)
+    @Html.DropDownListFor(m => m.Address.CountryId, new SelectList(Model.Address.Countries, "Id", "Name"), string.Empty, new { @class = "govuk-!-width-one-half govuk-input", aria_labelledby = "country-dropdown-list" })
+</div>
+
+@{
+    var showOptional = Model.OrganisationType != ExternalOrganisationType.RegisteredCompany;
+}
+
+<h2 class="govuk-heading-s">Enter the details of the organisation or business applying to register.</h2>
+@if (showOptional)
+{
+    @Html.Gds().HintParagraph("If you don't have a company registration number, leave this field blank")
+}
+
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompaniesRegistrationNumber) @(!Model.LookupFound && Model.Action == "Find Company" ? "govuk-form-group--error" : "")">
+
+    @Html.Gds().LabelFor(m => m.CompaniesRegistrationNumber, showOptionalLabel: showOptional)
+    @Html.Gds().ValidationMessageFor(m => m.CompaniesRegistrationNumber)
+    @if (Model.LookupFound == false && Model.Action == "Find Company")
+    {
+        <div class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> Company details could not be found
+        </div>
+    }
+
+    <div class="govuk-error-message companies-house-search-error only-js-enabled" style="display: none">
+        <span class="govuk-visually-hidden">Error:</span> Company details could not be found
+    </div>
+
+    <div>
+        @Html.Gds().TextBoxFor(m => m.CompaniesRegistrationNumber, new { @maxlength = EnvironmentAgencyMaxFieldLengths.ExternallyCapturedCompanyNumber, style = "width: 250px;" })
+    </div>
+
+    <div class="left-cleared govuk-!-margin-top-5">
+        <noscript>
+            <input type="submit"
+                   value="Find Company"
+                   name="action"
+                   class="govuk-button govuk-button--secondary"
+                   data-prevent-double-click="true" />
+        </noscript>
+
+        <button type="button"
+                name="Find Company"
+                class="govuk-button govuk-button--secondary only-js-enabled"
+                id="find-company"
+                data-module="govuk-button"
+                data-prevent-double-click="true">
+            Find company
+        </button>
+        @(this.WeeeGds().GetSpinnerHtml())
+    </div>
+</div>
+
+@if (Model.IsPreviousSchemeMember || Model.NpwdMigrated)
+{
+    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ProducerRegistrationNumber)">
+        @Html.Gds().LabelFor(m => m.ProducerRegistrationNumber, showOptionalLabel: false)
+        @Html.Gds().HintParagraph("Please provide your producer registration number (PRN). If you do not know this, then you can find it in the producer public register on gov.uk. Alternatively, you can contact us")
+        @Html.Gds().ValidationMessageFor(m => m.ProducerRegistrationNumber)
+
+        @if (Model.IsPreviousSchemeMember)
+        {
+            @Html.Gds().TextBoxFor(m => m.ProducerRegistrationNumber, new
+            {
+                @maxlength = CommonMaxFieldLengths.ProducerRegistrationNumber
+            })
+        }
+        else if (Model.NpwdMigrated)
+        {
+            @Html.Gds().TextBoxFor(m => m.ProducerRegistrationNumber, new
+            {
+                @maxlength = CommonMaxFieldLengths.ProducerRegistrationNumber,
+                @readonly = "readonly"
+            })
+        }
+    </div>
+}
+
+<noscript>
+    <style>
+        .only-js-enabled {
+            display: none;
+        }
+    </style>
+</noscript>
+
+<style>
+    .spinner-image {
+        margin-top: 2px;
+    }
+    .govuk-input[readonly] {
+        background-color: #f3f2f1; /* GDS grey background */
+        border: 2px solid #505a5f; /* Darker border for contrast */
+        cursor: not-allowed;
+    }
+</style>

@@ -7,6 +7,7 @@
         public static readonly OrganisationType RegisteredCompany = new OrganisationType(1, "Registered company");
         public static readonly OrganisationType Partnership = new OrganisationType(2, "Partnership");
         public static readonly OrganisationType SoleTraderOrIndividual = new OrganisationType(3, "Sole trader or individual");
+        public static readonly OrganisationType DirectRegistrantPartnership = new OrganisationType(4, "Partnership");
 
         protected OrganisationType()
         {

@@ -5,6 +5,7 @@
     using DataAccess;
     using DataAccess.StoredProcedure;
     using EA.Prsd.Core;
+    using EA.Weee.Core.Constants;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
@@ -33,14 +34,29 @@
             authorization.EnsureCanAccessInternalArea();
             if (request.ComplianceYear == 0)
             {
-                string message = string.Format("Compliance year cannot be \"{0}\".", request.ComplianceYear);
+                var message = $"Compliance year cannot be \"{request.ComplianceYear}\".";
                 throw new ArgumentException(message);
             }
 
-            var result = await context.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(
-                       request.ComplianceYear, request.IncludeRemovedProducer, request.IncludeBrandNames, request.SchemeId, request.CompetentAuthorityId);
+            var filterByDirectRegistrant = false;
+            var filterBySchemes = false;
 
-            csvWriter.DefineColumn(@"PCS name", i => i.SchemeName);
+            var schemeId = request.SchemeId;
+            if (request.SchemeId == ReportsFixedIdConstant.AllDirectRegistrantFixedId)
+            {
+                schemeId = null;
+                filterByDirectRegistrant = true;
+            }
+            else if (request.SchemeId == ReportsFixedIdConstant.AllSchemeFixedId)
+            {
+                schemeId = null;
+                filterBySchemes = true;
+            }
+
+            var result = await context.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(
+                       request.ComplianceYear, request.IncludeRemovedProducer, request.IncludeBrandNames, schemeId, request.CompetentAuthorityId, filterByDirectRegistrant, filterBySchemes);
+
+            csvWriter.DefineColumn(@"PCS name or direct registrant", i => i.SchemeName);
             csvWriter.DefineColumn(@"PCS approval number", i => i.ApprovalNumber);
             csvWriter.DefineColumn(@"Producer name", i => i.ProducerName);
             csvWriter.DefineColumn(@"Producer type", i => i.ProducerType);
@@ -51,7 +67,7 @@
             csvWriter.DefineColumn(@"Date & time (GMT) registered", i => i.DateRegistered.ToString("dd/MM/yyyy HH:mm:ss"));
             csvWriter.DefineColumn(@"Date & time (GMT) last updated", i => (i.DateRegistered.ToString("dd/MM/yyyy HH:mm:ss").Equals(i.DateAmended.ToString("dd/MM/yyyy HH:mm:ss")) ? string.Empty : i.DateAmended.ToString("dd/MM/yyyy HH:mm:ss")));
             csvWriter.DefineColumn(@"Charge band", i => i.ChargeBandType);
-            csvWriter.DefineColumn(@"VAT registered", (i => i.VATRegistered ? "Yes" : "No"));
+            csvWriter.DefineColumn(@"VAT registered", (i => i.VATRegistered.HasValue ? (i.VATRegistered.Value ? "Yes" : "No") : string.Empty));
             csvWriter.DefineColumn(@"Annual turnover", i => i.AnnualTurnover.HasValue ? i.AnnualTurnover.Value.ToString(CultureInfo.InvariantCulture) : string.Empty);
             csvWriter.DefineColumn(@"Annual turnover band", i => i.AnnualTurnoverBandType);
             csvWriter.DefineColumn(@"EEE placed on market", i => i.EEEPlacedOnMarketBandType);
@@ -131,22 +147,20 @@
             {
                 var outOfRangeProducerBrandNames = result
                     .Where(r => r.BrandNames.Length > MaxBrandNamesLength)
-                    .Select(r => r.ProducerName);
+                    .Select(r => r.ProducerName).ToList();
 
                 if (outOfRangeProducerBrandNames.Any())
                 {
                     throw new Exception(
-                       string.Format("The following producers have brand names exceeding the maximum allowed length: {0}.", string.Join(", ", outOfRangeProducerBrandNames)));
+                        $"The following producers have brand names exceeding the maximum allowed length: {string.Join(", ", outOfRangeProducerBrandNames)}.");
                 }
 
                 csvWriter.DefineColumn("Brand names", i => i.BrandNames);
             }
 
-            string fileContent = csvWriter.Write(result);
+            var fileContent = csvWriter.Write(result);
 
-            var fileName = string.Format("{0} - producerdetails_{1:ddMMyyyy_HHmm}.csv",
-                request.ComplianceYear,
-                SystemTime.UtcNow);
+            var fileName = $"{request.ComplianceYear} - producerdetails_{SystemTime.UtcNow:ddMMyyyy_HHmm}.csv";
 
             return new CSVFileData
             {

@@ -21,6 +21,7 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Weee.Tests.Core;
@@ -58,7 +59,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
             const string orgName = "orgName";
@@ -93,7 +94,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
+        public async Task IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid?>()) as ViewResult;
 
@@ -101,7 +102,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenAatfAndReturn_SitesShouldBeRetrieved()
+        public async Task IndexGet_GivenAatfAndReturn_SitesShouldBeRetrieved()
         {
             var aatfId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
@@ -113,7 +114,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionExecutes_CountriesShouldBeRetrieved()
+        public async Task IndexGet_GivenActionExecutes_CountriesShouldBeRetrieved()
         {
             var result = await controller.Index(A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid>(), A.Dummy<Guid?>());
 
@@ -121,7 +122,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionAndParameters_ViewModelShouldBeMapped()
+        public async Task IndexGet_GivenActionAndParameters_ViewModelShouldBeMapped()
         {
             var organisationId = Guid.NewGuid();
             var returnId = Guid.NewGuid();
@@ -146,7 +147,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionAndParameters_ReusedOffSiteCreateSiteViewModelShouldBeReturned()
+        public async Task IndexGet_GivenActionAndParameters_ReusedOffSiteCreateSiteViewModelShouldBeReturned()
         {
             var model = new ReusedOffSiteCreateSiteViewModel();
 
@@ -158,7 +159,7 @@
         }
 
         [Fact]
-        public async void IndexPost_OnSubmit_PageRedirectsToSiteList()
+        public async Task IndexPost_OnSubmit_PageRedirectsToSiteList()
         {
             var httpContext = new HttpContextMocker();
             httpContext.AttachToController(controller);
@@ -188,7 +189,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
+        public async Task IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
             var model = new ReusedOffSiteCreateSiteViewModel();
             var request = new AddAatfSite();
@@ -201,7 +202,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenInvalidViewModel_ApiShouldBeCalled()
+        public async Task IndexPost_GivenInvalidViewModel_ApiShouldBeCalled()
         {
             var model = new ReusedOffSiteCreateSiteViewModel() { AddressData = new SiteAddressData() };
             controller.ModelState.AddModelError("error", "error");
@@ -212,7 +213,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenInvalidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexPost_GivenInvalidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
             const string orgName = "orgName";

@@ -8,6 +8,7 @@
     using FluentAssertions;
     using Services;
     using System;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using System.Web.Routing;
     using Web.Areas.AatfReturn.Attributes;
@@ -34,7 +35,7 @@
         }
 
         [Fact]
-        public async void OnActionExecuting_GivenReturnStatusIsNotCreated_ShouldBeRedirectedToTaskList()
+        public async Task OnActionExecuting_GivenReturnStatusIsNotCreated_ShouldBeRedirectedToTaskList()
         {
             var returnData = new ReturnData()
             {
@@ -58,7 +59,7 @@
         }
 
         [Fact]
-        public async void OnActionExecuting_GivenReturnStatusIsCreated_ContextResultShouldBeNull()
+        public async Task OnActionExecuting_GivenReturnStatusIsCreated_ContextResultShouldBeNull()
         {
             var returnData = new ReturnData()
             {
@@ -76,7 +77,7 @@
         }
 
         [Fact]
-        public async void OnActionExecuting_GivenReturnStatusIsCreatedAndQuarterWindowForReturnIsClosed_ContextResultReturnsErrorPage()
+        public async Task OnActionExecuting_GivenReturnStatusIsCreatedAndQuarterWindowForReturnIsClosed_ContextResultReturnsErrorPage()
         {
             var returnStatusData = new ReturnStatusData()
             {
@@ -107,7 +108,7 @@
         }
 
         [Fact]
-        public async void OnActionExecuting_GivenReturnStatusIsCreatedAndQuarterWindowForReturnIsOpen_ContextResultShouldBeNull()
+        public async Task OnActionExecuting_GivenReturnStatusIsCreatedAndQuarterWindowForReturnIsOpen_ContextResultShouldBeNull()
         {
             var returnData = new ReturnData()
             {

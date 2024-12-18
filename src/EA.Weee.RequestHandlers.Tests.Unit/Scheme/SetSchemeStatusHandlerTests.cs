@@ -53,7 +53,7 @@
         }
 
         [Fact]
-        public async void SchemeDoesNotExist_ThrowsInvalidOperationException_AndDoesNotSaveAnyChanges()
+        public async Task SchemeDoesNotExist_ThrowsInvalidOperationException_AndDoesNotSaveAnyChanges()
         {
             var schemeId = Guid.NewGuid();
 
@@ -68,7 +68,7 @@
         [InlineData(SchemeStatus.Approved)]
         [InlineData(SchemeStatus.Pending)]
         [InlineData(SchemeStatus.Rejected)]
-        public async void SchemeDoesExist_SetsSchemeStatus_AndSavesChanges(SchemeStatus status)
+        public async Task SchemeDoesExist_SetsSchemeStatus_AndSavesChanges(SchemeStatus status)
         {
             var scheme = new Scheme(Guid.NewGuid());
 

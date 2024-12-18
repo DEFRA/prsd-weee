@@ -1,0 +1,41 @@
+﻿@using EA.Weee.Web.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.PreviousRegistrationViewModel
+@{
+    ViewBag.Title = "Have you previously been registered as a producer?";
+}
+
+
+@section full_main_content{
+
+    @(this.WeeeGds().BackLink(@Url.Action("TonnageType")))
+
+    @using (Html.BeginForm())
+    {
+        @Html.Gds().ValidationSummary()
+
+        @Html.AntiForgeryToken()
+        <header class="hgroup">
+            <h1 class="govuk-heading-l">
+                @ViewBag.Title
+            </h1>
+        </header>
+
+        <p class="govuk-body">Please indicate if you have previously been a member of a producer compliance scheme (PCS) or have previously been registered directly 
+            as a small producer. If you have previously been registered as a small producer, you will be asked to find your organisation.  
+            If you have never previously been registered, click 'No'.
+        </p>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "Select if you have previously registered as a producer",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
+        </div>
+
+        @(this.WeeeGds().Submit("Continue"))
+    }
+}

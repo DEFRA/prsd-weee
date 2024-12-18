@@ -15,6 +15,7 @@
     using Services.Caching;
     using System;
     using System.Collections.Generic;
+    using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
     using Web.Areas.AatfReturn.Controllers;
@@ -59,7 +60,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
+        public async Task IndexPost_GivenValidViewModel_ApiSendShouldBeCalled()
         {
             var model = new NonObligatedValuesViewModel(calculator);
             var request = new AddNonObligated();
@@ -72,7 +73,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenInvalidViewModel_ApiShouldNotBeCalled()
+        public async Task IndexPost_GivenInvalidViewModel_ApiShouldNotBeCalled()
         {
             controller.ModelState.AddModelError("error", "error");
 
@@ -82,7 +83,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
+        public async Task IndexGet_GivenValidViewModel_BreadcrumbShouldBeSet()
         {
             var organisationId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
@@ -110,7 +111,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenNonObligatedValuesAreSubmitted_PageRedirectShouldBeCorrect()
+        public async Task IndexPost_GivenNonObligatedValuesAreSubmitted_PageRedirectShouldBeCorrect()
         {
             var model = new NonObligatedValuesViewModel(calculator) { Dcf = false };
 
@@ -122,7 +123,7 @@
         }
 
         [Fact]
-        public async void IndexPost_GivenNonObligatedDcfValuesAreSubmitted_PageRedirectShouldBeCorrect()
+        public async Task IndexPost_GivenNonObligatedDcfValuesAreSubmitted_PageRedirectShouldBeCorrect()
         {
             var model = new NonObligatedValuesViewModel(calculator) { Dcf = true };
 
@@ -134,7 +135,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenAction_DefaultViewShouldBeReturned()
+        public async Task IndexGet_GivenAction_DefaultViewShouldBeReturned()
         {
             var @return = A.Fake<ReturnData>();
             A.CallTo(() => @return.OrganisationData).Returns(A.Fake<OrganisationData>());
@@ -145,7 +146,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenActionExecutes_ApiShouldBeCalled()
+        public async Task IndexGet_GivenActionExecutes_ApiShouldBeCalled()
         {
             var returnId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
@@ -158,7 +159,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturn_ViewModelShouldBeBuilt()
+        public async Task IndexGet_GivenReturn_ViewModelShouldBeBuilt()
         {
             var returnId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
@@ -174,7 +175,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenBuiltViewModel_ViewModelShouldBeReturned()
+        public async Task IndexGet_GivenBuiltViewModel_ViewModelShouldBeReturned()
         {
             var model = A.Fake<NonObligatedValuesViewModel>();
             var @return = A.Fake<ReturnData>();
@@ -188,7 +189,7 @@
         }
 
         [Fact]
-        public async void IndexGet_GivenReturnAndPastedValues_CategoryValuesShouldNotBeTheSame()
+        public async Task IndexGet_GivenReturnAndPastedValues_CategoryValuesShouldNotBeTheSame()
         {
             var returnId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();

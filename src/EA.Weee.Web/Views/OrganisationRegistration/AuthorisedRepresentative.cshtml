@@ -1,0 +1,57 @@
+﻿@using EA.Weee.Web.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.ViewModels.OrganisationRegistration.AuthorisedRepresentativeViewModel
+@{
+    const string title = "Are you taking on the legal responsibilities of a non-UK organisation under the WEEE regulations?";
+    ViewBag.Title = title + " - GOV.UK";
+}
+
+
+@section full_main_content{
+
+    @{
+        var backLinkUrl = Model.NpwdMigrated
+            ? Url.Action("TonnageType")
+            : Url.Action("PreviousRegistration");
+    }
+
+    @(this.WeeeGds().BackLink(backLinkUrl))
+
+
+    @using (Html.BeginForm())
+    {
+        @Html.Gds().ValidationSummary()
+
+        @Html.AntiForgeryToken()
+        <header class="hgroup">
+            <h1 class="govuk-heading-l">
+                @title
+            </h1>
+        </header>
+
+        <p class="govuk-body">
+            If you are taking on the legal responsibilities of a non - UK based EEE producer under the WEEE regulations you will be registering yourself as their authorised representative and will need to provide information on their behalf.
+        </p>
+
+        <p class="govuk-body">
+            An authorised representative of a non-UK EEE producer must be established in the UK and be appointed by way of a written mandate as required by the WEEE regulations.
+        </p>
+        <p class="govuk-body">
+            If this situation does not apply, select 'no'.
+        </p>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)">
+            @this.WeeeGds().RadioButtonsFor(
+                m => m.SelectedValue,
+                Model.PossibleValues,
+                "Select if you are taking on the legal responsibilities of a non-UK organisation under the WEEE regulations",
+                RadioButtonLegend.VisuallyHidden,
+                RadioButtonLayout.Stacked)
+        </div>
+
+
+
+        @(this.WeeeGds().Submit("Continue"))
+    }
+}

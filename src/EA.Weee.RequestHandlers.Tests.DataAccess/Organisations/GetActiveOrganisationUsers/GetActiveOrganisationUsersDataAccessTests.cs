@@ -4,6 +4,7 @@
     using EA.Weee.RequestHandlers.Organisations.GetActiveOrganisationUsers.DataAccess;
     using FakeItEasy;
     using FluentAssertions;
+    using System.Threading.Tasks;
     using Xunit;
     using DatabaseWrapper = Weee.Tests.Core.Model.DatabaseWrapper;
     using DomainHelper = Weee.Tests.Core.DomainHelper;
@@ -19,7 +20,7 @@
         }
 
         [Fact]
-        public async void FetchActiveOrganisationUsers_GivenOrganisationId_ReturnsActiveUsersLinkedToOrganisations()
+        public async Task FetchActiveOrganisationUsers_GivenOrganisationId_ReturnsActiveUsersLinkedToOrganisations()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {
@@ -48,7 +49,7 @@
         }
 
         [Fact]
-        public async void FetchActiveOrganisationUsers_GivenOrganisationId_UsersShouldBeOrganisedByEmails()
+        public async Task FetchActiveOrganisationUsers_GivenOrganisationId_UsersShouldBeOrganisedByEmails()
         {
             using (DatabaseWrapper database = new DatabaseWrapper())
             {

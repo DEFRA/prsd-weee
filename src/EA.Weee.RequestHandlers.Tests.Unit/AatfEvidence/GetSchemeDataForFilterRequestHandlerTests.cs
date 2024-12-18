@@ -106,7 +106,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequestWithRecipient_EvidenceDataAccessShouldBeCalledOnce()
+        public async Task HandleAsync_GivenRequestWithRecipient_EvidenceDataAccessShouldBeCalledOnce()
         {
             //arrange
             var request = new GetSchemeDataForFilterRequest(RecipientOrTransfer.Recipient, TestFixture.Create<Guid?>(),
@@ -127,7 +127,7 @@
         }
 
         [Fact]
-        public async void HandleAsync_GivenRequestWithTransfer_EvidenceDataAccessShouldBeCalledOnce()
+        public async Task HandleAsync_GivenRequestWithTransfer_EvidenceDataAccessShouldBeCalledOnce()
         {
             //arrange
             var request = new GetSchemeDataForFilterRequest(RecipientOrTransfer.Transfer, 

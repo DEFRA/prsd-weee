@@ -19,21 +19,6 @@ GO
 CREATE SYNONYM [dbo].[ELMAH_LogError] FOR [Logging].[ELMAH_LogError]
 GO
 
-GRANT Execute  ON SCHEMA :: [Logging]
-    TO weee_application
-GO
-GRANT EXECUTE ON OBJECT::ELMAH_GetErrorsXml
-    TO weee_application;
-GO 
- 
-GRANT EXECUTE ON OBJECT::ELMAH_GetErrorXml
-    TO weee_application;
-GO 
- 
-GRANT EXECUTE ON OBJECT::ELMAH_LogError
-    TO weee_application;
-GO
-
 /****** Object:  Table [Logging].[ELMAH_Error]    Script Date: 03/02/2022 15:05:26 ******/
 SET ANSI_NULLS ON
 GO
@@ -253,15 +238,4 @@ GO
 IF NOT EXISTS (SELECT [Name] FROM sys.synonyms WHERE [Name] = 'ELMAH_LogError')
     CREATE SYNONYM [ELMAH_LogError] FOR [Logging].[ELMAH_LogError];
 
-GO
-GRANT EXECUTE ON OBJECT::ELMAH_GetErrorsXml
-    TO weee_application;
-GO 
- 
-GRANT EXECUTE ON OBJECT::ELMAH_GetErrorXml
-    TO weee_application;
-GO 
- 
-GRANT EXECUTE ON OBJECT::ELMAH_LogError
-    TO weee_application;
 GO

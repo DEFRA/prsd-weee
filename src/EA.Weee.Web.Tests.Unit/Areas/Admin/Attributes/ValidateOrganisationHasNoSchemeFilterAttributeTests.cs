@@ -33,7 +33,7 @@
         }
 
         [Fact]
-        public async void OnActionExecuting_GivenOrganisationHasAScheme_ShouldBeRedirectedToManageSchemes()
+        public async Task OnActionExecuting_GivenOrganisationHasAScheme_ShouldBeRedirectedToManageSchemes()
         {
             SchemeData schemeData = new SchemeData();
 
@@ -50,7 +50,7 @@
         }
 
         [Fact]
-        public async void OnActionExecuting_GivenOrganisationHasNoScheme_ContextResultShouldBeNull()
+        public async Task OnActionExecuting_GivenOrganisationHasNoScheme_ContextResultShouldBeNull()
         {
             SchemeData schemeData = null;
 

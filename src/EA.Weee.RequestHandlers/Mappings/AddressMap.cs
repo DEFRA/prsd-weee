@@ -22,7 +22,8 @@
                     CountryId = source.Country.Id,
                     CountryName = source.Country.Name,
                     Telephone = source.Telephone,
-                    Email = source.Email
+                    Email = source.Email,
+                    WebAddress = source.WebAddress
                 };
             }
             else

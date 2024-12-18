@@ -1,8 +1,9 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration.DataAccess
 {
+    using FluentAssertions;
     using System;
     using System.Linq;
-    using FluentAssertions;
+    using System.Threading.Tasks;
     using Weee.DataAccess.DataAccess;
     using Weee.Tests.Core.Model;
     using Xunit;
@@ -10,7 +11,7 @@
     public class SchemeDataAccessTests
     {
         [Fact]
-        public async void GetSchemeOrDefaultByApprovalNumber_GivenMatchApprovalNumberShouldReturnScheme()
+        public async Task GetSchemeOrDefaultByApprovalNumber_GivenMatchApprovalNumberShouldReturnScheme()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -33,7 +34,7 @@
         }
 
         [Fact]
-        public async void GetSchemeOrDefaultByApprovalNumber_GivenMatchNonApprovalNumberShouldReturnScheme()
+        public async Task GetSchemeOrDefaultByApprovalNumber_GivenMatchNonApprovalNumberShouldReturnScheme()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -56,7 +57,7 @@
         }
 
         [Fact]
-        public async void GetComplianceYearsWithSubmittedMemberUploads_SchemeHasNoMemberUploads_ReturnsNoYears()
+        public async Task GetComplianceYearsWithSubmittedMemberUploads_SchemeHasNoMemberUploads_ReturnsNoYears()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -78,7 +79,7 @@
         }
 
         [Fact]
-        public async void GetComplianceYearsWithSubmittedMemberUploads_SchemeHasUnsubmittedMemberUpload_ReturnsNoYears()
+        public async Task GetComplianceYearsWithSubmittedMemberUploads_SchemeHasUnsubmittedMemberUpload_ReturnsNoYears()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -103,7 +104,7 @@
         }
 
         [Fact]
-        public async void GetComplianceYearsWithSubmittedMemberUploads_SchemeHasSubmittedMemberUpload_ReturnsCorrespondingComplianceYear()
+        public async Task GetComplianceYearsWithSubmittedMemberUploads_SchemeHasSubmittedMemberUpload_ReturnsCorrespondingComplianceYear()
         {
             const int complianceYear = 1923;
 
@@ -132,7 +133,7 @@
         }
 
         [Fact]
-        public async void GetComplianceYearsWithSubmittedMemberUploads_SchemeWithTwoSubmittedMemberUploadsInSameYear_ReturnsYearOnce()
+        public async Task GetComplianceYearsWithSubmittedMemberUploads_SchemeWithTwoSubmittedMemberUploadsInSameYear_ReturnsYearOnce()
         {
             const int complianceYear = 1956;
 
@@ -165,7 +166,7 @@
         }
 
         [Fact]
-        public async void GetComplianceYearsWithSubmittedMemberUploads_SchemeWithTwoSubmittedMemberUploadsInDifferentYears_ReturnsBothYears()
+        public async Task GetComplianceYearsWithSubmittedMemberUploads_SchemeWithTwoSubmittedMemberUploadsInDifferentYears_ReturnsBothYears()
         {
             const int firstComplianceYear = 1921;
             const int secondComplianceYear = 1922;
@@ -200,7 +201,7 @@
         }
 
         [Fact]
-        public async void GetMemberRegistrationSchemesByComplianceYear_For_The_SubmittedMemberUploads()
+        public async Task GetMemberRegistrationSchemesByComplianceYear_For_The_SubmittedMemberUploads()
         {
             const int firstComplianceYear = 1921;
             const int secondComplianceYear = 1922;
@@ -234,7 +235,7 @@
         }
 
         [Fact]
-        public async void GetComplianceYearsWithSubmittedDataReturns_SchemeHasNoDataReturns_ReturnsNoYears()
+        public async Task GetComplianceYearsWithSubmittedDataReturns_SchemeHasNoDataReturns_ReturnsNoYears()
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
@@ -256,7 +257,7 @@
         }
 
         [Fact]
-        public async void GetComplianceYearsWithSubmittedDataReturns_SchemeHasSubmittedDataReturn_ReturnsCorrespondingComplianceYear()
+        public async Task GetComplianceYearsWithSubmittedDataReturns_SchemeHasSubmittedDataReturn_ReturnsCorrespondingComplianceYear()
         {
             const int complianceYear = 1666;
             const int quarter = 4;
@@ -285,7 +286,7 @@
         }
 
         [Fact]
-        public async void GetComplianceYearsWithSubmittedDataReturns_SchemeWithTwoSubmittedDataReturnsUploadsInSameYear_ReturnsYearOnce()
+        public async Task GetComplianceYearsWithSubmittedDataReturns_SchemeWithTwoSubmittedDataReturnsUploadsInSameYear_ReturnsYearOnce()
         {
             const int complianceYear = 1888;
             const int firstDataReturnQuarter = 1;
@@ -320,7 +321,7 @@
         }
 
         [Fact]
-        public async void GetComplianceYearsWithSubmittedMemberUploads_SchemeWithTwoSubmittedDataReturnsInDifferentYears_ReturnsBothYears()
+        public async Task GetComplianceYearsWithSubmittedMemberUploads_SchemeWithTwoSubmittedDataReturnsInDifferentYears_ReturnsBothYears()
         {
             const int firstComplianceYear = 1765;
             const int secondComplianceYear = 1766;
@@ -356,7 +357,7 @@
         }
 
         [Fact]
-        public async void GetEEEWEEEDataReturnSchemesByComplianceYear_For_The_SubmittedMemberUploads()
+        public async Task GetEEEWEEEDataReturnSchemesByComplianceYear_For_The_SubmittedMemberUploads()
         {
             const int firstComplianceYear = 1765;
             const int secondComplianceYear = 1766;
