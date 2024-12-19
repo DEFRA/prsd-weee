@@ -65,7 +65,18 @@
             csvWriter.DefineColumn(@"Trading name", i => i.TradingName);
             csvWriter.DefineColumn(@"PRN", i => i.PRN);
             csvWriter.DefineColumn(@"Date & time (GMT) registered", i => i.DateRegistered.HasValue ? i.DateRegistered.Value.ToString("dd/MM/yyyy HH:mm:ss") : string.Empty);
-            csvWriter.DefineColumn(@"Date & time (GMT) last updated", i => (i.DateRegistered.HasValue ? i.DateRegistered.Value.ToString("dd/MM/yyyy HH:mm:ss").Equals(i.DateAmended.ToString("dd/MM/yyyy HH:mm:ss")) ? string.Empty : i.DateAmended.ToString("dd/MM/yyyy HH:mm:ss") : string.Empty));
+            csvWriter.DefineColumn(@"Date & time (GMT) last updated", i => 
+            {
+                if (i.DateRegistered.HasValue)
+                {
+                    if (i.DateRegistered.Value.ToString("dd/MM/yyyy HH:mm:ss").Equals(i.DateAmended.ToString("dd/MM/yyyy HH:mm:ss")))
+                    {
+                        return string.Empty;
+                    }
+                }
+                
+                return i.DateAmended.ToString("dd/MM/yyyy HH:mm:ss");
+            }); 
             csvWriter.DefineColumn(@"Charge band", i => i.ChargeBandType);
             csvWriter.DefineColumn(@"VAT registered", (i => i.VATRegistered.HasValue ? (i.VATRegistered.Value ? "Yes" : "No") : string.Empty));
             csvWriter.DefineColumn(@"Annual turnover", i => i.AnnualTurnover.HasValue ? i.AnnualTurnover.Value.ToString(CultureInfo.InvariantCulture) : string.Empty);
