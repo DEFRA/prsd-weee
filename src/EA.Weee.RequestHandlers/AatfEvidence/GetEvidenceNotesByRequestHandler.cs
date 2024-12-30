@@ -51,7 +51,7 @@
             }
             else
             {
-                hasApprovedEvidenceNotes = await noteDataAccess.HasApprovedWasteHouseHoldEvidence(recipientId.Value, request.ComplianceYear);
+                hasApprovedEvidenceNotes = await noteDataAccess.HasApprovedWasteHouseHoldEvidenceWithTonnageAvailable(recipientId.Value, request.ComplianceYear);
             }
 
             var wasteTypeFilter = new List<Domain.Evidence.WasteType>();

@@ -486,6 +486,37 @@
                                n.NoteType.Value == NoteType.EvidenceNote.Value);
         }
 
+        public async Task<bool> HasApprovedWasteHouseHoldEvidenceWithTonnageAvailable(Guid recipientId, int complianceYear)
+        {
+            var notesData = await context.Notes.Where(n => n.ComplianceYear == complianceYear &&
+                                                      n.RecipientId == recipientId &&
+                                                      n.Status.Value == NoteStatus.Approved.Value &&
+                                                      n.WasteType == WasteType.HouseHold &&
+                                                      n.NoteType.Value == NoteType.EvidenceNote.Value)
+                                              .OrderByDescending(n => n.Reference)
+                                              .ToListAsync();
+
+            if (notesData.Any())
+            {
+                foreach (var noteData in notesData)
+                {
+                    var noteTonnageIds = new List<Guid>();
+                    noteTonnageIds = noteData.NoteTonnage.Select(nt => nt.Id).ToList();
+                    var noteTransferTonnage = await context.NoteTransferTonnage.Where(ntt => noteTonnageIds.Contains(ntt.NoteTonnageId)).ToListAsync();
+
+                    var totalAvailable = ((noteData.NoteTonnage.Select(n => (n.Received.HasValue ? n.Received.Value : 0)).Sum()) -
+                                          (noteTransferTonnage.Select(nt => nt.Received.HasValue ? nt.Received : 0).Sum()));
+
+                    if (totalAvailable > 0)
+                    {
+                        return true;
+                    }
+                }
+                return false;
+            }
+            return false;
+        }
+
         public Note DeleteZeroTonnageFromSubmittedTransferNote(Note note, NoteStatus status, NoteType type)
         {
             if (status.Equals(NoteStatus.Submitted) && type.Equals(NoteType.TransferNote))
