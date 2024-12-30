@@ -192,7 +192,7 @@
 
             // assert
             A.CallTo(() =>
-                    evidenceDataAccess.HasApprovedWasteHouseHoldEvidence(request.OrganisationId,
+                    evidenceDataAccess.HasApprovedWasteHouseHoldEvidenceWithTonnageAvailable(request.OrganisationId,
                         request.ComplianceYear))
                 .MustHaveHappenedOnceExactly();
         }
@@ -208,7 +208,7 @@
                 new List<NoteType>() { NoteType.Transfer }, false, 1, 25, null, null, null, null, new List<WasteType>() { WasteType.Household }, null);
 
             A.CallTo(() => organisationDataAccess.GetById(A<Guid>._)).Returns(organisation);
-            A.CallTo(() => evidenceDataAccess.HasApprovedWasteHouseHoldEvidence(A<Guid>._, A<int>._))
+            A.CallTo(() => evidenceDataAccess.HasApprovedWasteHouseHoldEvidenceWithTonnageAvailable(A<Guid>._, A<int>._))
                 .Returns(hasApprovedEvidence);
             // act
 
