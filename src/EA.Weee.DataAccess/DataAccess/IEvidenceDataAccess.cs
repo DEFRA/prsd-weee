@@ -61,6 +61,8 @@
 
         Task<bool> HasApprovedWasteHouseHoldEvidence(Guid recipientId, int complianceYear);
 
+        Task<bool> HasApprovedWasteHouseHoldEvidenceWithTonnageAvailable(Guid recipientId, int complianceYear);
+
         Task<List<Aatf>> GetAatfForAllNotesForComplianceYear(int complianceYear, List<NoteStatus> allowedStatus);
 
         Note DeleteZeroTonnageFromSubmittedTransferNote(Note note, NoteStatus status, NoteType type);
