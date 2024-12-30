@@ -493,8 +493,8 @@
                                                       n.Status.Value == NoteStatus.Approved.Value &&
                                                       n.WasteType == WasteType.HouseHold &&
                                                       n.NoteType.Value == NoteType.EvidenceNote.Value)
-                                              .OrderByDescending(n => n.Reference)
-                                              .ToListAsync();
+                                               .OrderByDescending(n => n.Reference)
+                                               .ToListAsync();
 
             if (notesData.Any())
             {
@@ -504,15 +504,14 @@
                     noteTonnageIds = noteData.NoteTonnage.Select(nt => nt.Id).ToList();
                     var noteTransferTonnage = await context.NoteTransferTonnage.Where(ntt => noteTonnageIds.Contains(ntt.NoteTonnageId)).ToListAsync();
 
-                    var totalAvailable = ((noteData.NoteTonnage.Select(n => (n.Received.HasValue ? n.Received.Value : 0)).Sum()) -
-                                          (noteTransferTonnage.Select(nt => nt.Received.HasValue ? nt.Received : 0).Sum()));
+                    var totalAvailable = ((noteData.NoteTonnage.Select(n => ((n.Received != null && n.Received.HasValue) ? n.Received.Value : 0)).Sum()) -
+                                          (noteTransferTonnage.Select(nt => (nt.Received != null && nt.Received.HasValue) ? nt.Received.Value : 0).Sum()));
 
                     if (totalAvailable > 0)
                     {
                         return true;
                     }
                 }
-                return false;
             }
             return false;
         }
