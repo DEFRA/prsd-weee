@@ -476,14 +476,34 @@
                 .ToListAsync();
         }
 
-        public Task<bool> HasApprovedWasteHouseHoldEvidence(Guid recipientId, int complianceYear)
+        public async Task<bool> HasApprovedWasteHouseHoldEvidence(Guid recipientId, int complianceYear)
         {
-            return context.Notes
-                .AnyAsync(n => n.ComplianceYear == complianceYear &&
-                               n.RecipientId == recipientId &&
-                               n.Status.Value == NoteStatus.Approved.Value &&
-                               n.WasteType == WasteType.HouseHold &&
-                               n.NoteType.Value == NoteType.EvidenceNote.Value);
+            var evidenceNotes = await context.Notes.Where(n => n.ComplianceYear == complianceYear &&
+                                                      n.RecipientId == recipientId &&
+                                                      n.Status.Value == NoteStatus.Approved.Value &&
+                                                      n.WasteType == WasteType.HouseHold &&
+                                                      n.NoteType.Value == NoteType.EvidenceNote.Value)
+                                                   .OrderByDescending(n => n.Reference)
+                                                   .ToListAsync();
+
+            if (evidenceNotes.Any())
+            {
+                foreach (var noteData in evidenceNotes)
+                {
+                    var noteTonnageIds = new List<Guid>();
+                    noteTonnageIds = noteData.NoteTonnage.Select(nt => nt.Id).ToList();
+                    var noteTransferTonnage = await context.NoteTransferTonnage.Where(ntt => noteTonnageIds.Contains(ntt.NoteTonnageId)).ToListAsync();
+
+                    var totalAvailable = (noteData.NoteTonnage.Select(n => (n.Received != null && n.Received.HasValue) ? n.Received.Value : 0).Sum() -
+                                          noteTransferTonnage.Select(nt => (nt.Received != null && nt.Received.HasValue) ? nt.Received.Value : 0).Sum());
+
+                    if (totalAvailable > 0)
+                    {
+                        return true;
+                    }
+                }
+            }
+            return false;
         }
 
         public Note DeleteZeroTonnageFromSubmittedTransferNote(Note note, NoteStatus status, NoteType type)
