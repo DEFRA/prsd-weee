@@ -542,7 +542,13 @@
                     new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C }
                 };
 
-                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear, amounts1, DirectProducerSubmissionStatus.Complete, SellingTechniqueType.Both.Value);
+                var submission = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear, amounts1, DirectProducerSubmissionStatus.Complete, SellingTechniqueType.Both.Value);
+
+                var paidDate = new DateTime(2020, 1, 1);
+                var payment = await DirectRegistrantHelper.CreatePaymentSession(wrapper, submission, paidDate);
+                
+                submission.FinalPaymentSession = payment;
+                submission.PaymentFinished = true;
 
                 var authorisedRep = new Domain.Producer.AuthorisedRepresentative("authed rep name",
                     new ProducerContact("rep title", "rep first name", "rep surname",
@@ -558,6 +564,7 @@
                     new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.MedicalDevices, Amount = 4.456m, ObligationType = Domain.Obligation.ObligationType.B2B }
                 };
 
+                // not paid so should have null registered date
                 await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant2, registeredProducer2, complianceYear, amounts2, DirectProducerSubmissionStatus.Complete, SellingTechniqueType.IndirectSellingtoEndUser.Value);
 
                 // should include removed
@@ -737,7 +744,7 @@
                 result1.OverseasContactCountry.Should().BeNull();
                 result1.RemovedFromScheme.Should().Be("No");
                 result1.DateAmended.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
-                result1.DateRegistered.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
+                result1.DateRegistered.Should().Be(paidDate);
                 result1.BrandNames.Should().BeNullOrWhiteSpace();
 
                 var result2 = results.ElementAt(assertionSmallProducerStartIndex + 1);
@@ -820,7 +827,7 @@
                 result2.OverseasContactCountry.Should().Be("Azerbaijan");
                 result2.RemovedFromScheme.Should().Be("Yes");
                 result2.DateAmended.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
-                result2.DateRegistered.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
+                result2.DateRegistered.Should().BeNull();
                 result2.BrandNames.Should().Be("brand name");
             }
         }
@@ -1084,6 +1091,12 @@
                 // initially no EEE and selling technique type of both
                 var submission1 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete, SellingTechniqueType.Both.Value);
 
+                var paidDate = new DateTime(2020, 1, 1);
+                var payment = await DirectRegistrantHelper.CreatePaymentSession(wrapper, submission1, paidDate);
+
+                submission1.FinalPaymentSession = payment;
+                submission1.PaymentFinished = true;
+
                 // return the submission 
                 await DirectRegistrantHelper.ReturnSubmission(wrapper, submission1);
 
@@ -1184,7 +1197,7 @@
                 result1.OverseasContactCountry.Should().BeNull();
                 result1.RemovedFromScheme.Should().Be("No");
                 result1.DateAmended.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
-                result1.DateRegistered.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
+                result1.DateRegistered.Should().Be(paidDate);
                 result1.BrandNames.Should().BeNullOrWhiteSpace();
             }
         }
@@ -1208,6 +1221,9 @@
                     new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 123.456m, ObligationType = Domain.Obligation.ObligationType.B2C },
                     new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C }
                 };
+
+                var paidDate = new DateTime(2023, 1, 1);
+                await DirectRegistrantHelper.SetSubmissionAsPaid(wrapper, submission1, paidDate);
 
                 await DirectRegistrantHelper.ReturnSubmission(wrapper, submission1);
 
@@ -1299,7 +1315,7 @@
                 result1.OverseasContactCountry.Should().BeNull();
                 result1.RemovedFromScheme.Should().Be("No");
                 result1.DateAmended.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
-                result1.DateRegistered.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
+                result1.DateRegistered.Should().Be(paidDate);
                 result1.BrandNames.Should().BeNullOrWhiteSpace();
             }
         }
