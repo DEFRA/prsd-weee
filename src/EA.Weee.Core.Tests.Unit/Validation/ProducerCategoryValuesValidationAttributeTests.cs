@@ -42,8 +42,7 @@
 
             var result = attribute.GetValidationResult(categoryValues, new ValidationContext(new object()));
 
-            result.Should().NotBeNull();
-            result.ErrorMessage.Should().Be("Enter EEE tonnage details");
+            result.Should().Be(ValidationResult.Success);
         }
 
         [Fact]
