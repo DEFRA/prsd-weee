@@ -479,12 +479,12 @@
         public async Task<bool> HasApprovedWasteHouseHoldEvidence(Guid recipientId, int complianceYear)
         {
             var evidenceNotes = await context.Notes.Where(n => n.ComplianceYear == complianceYear &&
-                                                      n.RecipientId == recipientId &&
-                                                      n.Status.Value == NoteStatus.Approved.Value &&
-                                                      n.WasteType == WasteType.HouseHold &&
-                                                      n.NoteType.Value == NoteType.EvidenceNote.Value)
-                                                   .OrderByDescending(n => n.Reference)
-                                                   .ToListAsync();
+                                                               n.RecipientId == recipientId &&
+                                                               n.Status.Value == NoteStatus.Approved.Value &&
+                                                               n.WasteType == WasteType.HouseHold &&
+                                                               n.NoteType.Value == NoteType.EvidenceNote.Value)
+                .OrderByDescending(n => n.Reference).Include(note => note.NoteTonnage)
+                .ToListAsync();
 
             if (evidenceNotes.Any())
             {
