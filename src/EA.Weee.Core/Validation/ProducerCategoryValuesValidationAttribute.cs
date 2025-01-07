@@ -34,8 +34,8 @@
             }
 
             var hasValues = categoryValues.Any(cv =>
-                (cv.HouseHold != null && decimal.TryParse(cv.HouseHold, out decimal householdValue) && householdValue > 0) ||
-                (cv.NonHouseHold != null && decimal.TryParse(cv.NonHouseHold, out decimal nonHouseholdValue) && nonHouseholdValue > 0));
+                (cv.HouseHold != null && decimal.TryParse(cv.HouseHold, out decimal householdValue) && householdValue >= 0) ||
+                (cv.NonHouseHold != null && decimal.TryParse(cv.NonHouseHold, out decimal nonHouseholdValue) && nonHouseholdValue >= 0));
 
             if (!hasValues)
             {
