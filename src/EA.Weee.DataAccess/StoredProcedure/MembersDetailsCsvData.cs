@@ -21,7 +21,7 @@
 
         public string PRN { get; set; }
 
-        public DateTime DateRegistered { get; set; }
+        public DateTime? DateRegistered { get; set; }
 
         public DateTime DateAmended { get; set; }
 

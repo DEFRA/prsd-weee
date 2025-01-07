@@ -122,11 +122,37 @@
             return submission;
         }
 
+        public static async Task<PaymentSession> CreatePaymentSession(
+            DatabaseWrapper wrapper,
+            DirectProducerSubmission submission,
+            DateTime? updatedDate = null)
+        {
+            var paymentSession = new PaymentSession(wrapper.WeeeContext.GetCurrentUser(), 10, DateTime.UtcNow,
+                submission, submission.DirectRegistrant, "token", "paymentid", "ref");
+
+            if (updatedDate.HasValue)
+            {
+                paymentSession.UpdatedAt = updatedDate;
+            }
+
+            wrapper.WeeeContext.PaymentSessions.Add(paymentSession);
+
+            await wrapper.WeeeContext.SaveChangesAsync();
+
+            return paymentSession;
+        }
+
         public static async Task<DirectProducerSubmission> SetSubmissionAsPaid(
             DatabaseWrapper wrapper,
-            DirectProducerSubmission submission)
+            DirectProducerSubmission submission,
+            DateTime? manualPaymentDate = null)
         {
             submission.PaymentFinished = true;
+
+            if (manualPaymentDate.HasValue)
+            {
+                submission.ManualPaymentReceivedDate = manualPaymentDate;
+            }
 
             await wrapper.WeeeContext.SaveChangesAsync();
 

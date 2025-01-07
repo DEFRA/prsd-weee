@@ -47,7 +47,7 @@
             var systemDataAccess = A.Fake<ISystemDataDataAccess>();
             paymentSessionDataAccess = A.Fake<IPaymentSessionDataAccess>();
 
-            year = 2024;
+            year = DateTime.Now.Year;
 
             A.CallTo(() => systemDataAccess.GetSystemDateTime()).Returns(new DateTime(year, 1, 1));
 
