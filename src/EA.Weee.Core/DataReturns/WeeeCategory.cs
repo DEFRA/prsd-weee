@@ -44,6 +44,9 @@
         GasDischargeLampsAndLedLightSources = 13,
 
         [Display(Name = "Photovoltaic panels")]
-        PhotovoltaicPanels = 14
+        PhotovoltaicPanels = 14,
+
+        [Display(Name = "Vaping devices")]
+        VapingDevices = 15
     }
 }
