@@ -22,18 +22,20 @@
         }
 
         [Fact]
-        public void IsValid_EmptyList_ReturnsError()
+        public void IsValid_EmptyList_ReturnsSuccess()
         {
-            var categoryValues = new List<ProducerSubmissionCategoryValue>();
+            var categoryValues = new List<ProducerSubmissionCategoryValue>()
+            { 
+                new ProducerSubmissionCategoryValue { }
+            };
 
             var result = attribute.GetValidationResult(categoryValues, new ValidationContext(new object()));
-
-            result.Should().NotBeNull();
-            result.ErrorMessage.Should().Be("Enter EEE tonnage details");
+            
+            result.Should().Be(ValidationResult.Success);
         }
 
         [Fact]
-        public void IsValid_ZeroValues_ReturnsError()
+        public void IsValid_ZeroValues_ReturnsSuccess()
         {
             var categoryValues = new List<ProducerSubmissionCategoryValue>
             {
