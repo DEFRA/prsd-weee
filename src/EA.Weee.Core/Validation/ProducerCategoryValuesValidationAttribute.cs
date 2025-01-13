@@ -33,15 +33,6 @@
                 }
             }
 
-            var hasValues = categoryValues.Any(cv =>
-                (cv.HouseHold != null && decimal.TryParse(cv.HouseHold, out decimal householdValue) && householdValue >= 0) ||
-                (cv.NonHouseHold != null && decimal.TryParse(cv.NonHouseHold, out decimal nonHouseholdValue) && nonHouseholdValue >= 0));
-
-            if (!hasValues)
-            {
-                return new ValidationResult("Enter EEE tonnage details", new[] { validationContext.MemberName });
-            }
-
             var calculator = new CategoryValueTotalCalculator();
             var totalHouseHold = calculator.Total(categoryValues.Select(t => t.HouseHold).Where(v => v != null).ToList());
             var totalNonHouseHold = calculator.Total(categoryValues.Select(t => t.NonHouseHold).Where(v => v != null).ToList());
