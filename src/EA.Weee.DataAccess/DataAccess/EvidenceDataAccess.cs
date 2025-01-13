@@ -478,13 +478,15 @@
 
         public async Task<bool> HasApprovedWasteHouseHoldEvidence(Guid recipientId, int complianceYear)
         {
+            List<NoteStatus> includedStatus = new List<NoteStatus>() { NoteStatus.Submitted, NoteStatus.Approved, NoteStatus.Draft, NoteStatus.Returned };
             var evidenceNotes = await context.Notes.Where(n => n.ComplianceYear == complianceYear &&
                                                                n.RecipientId == recipientId &&
                                                                n.Status.Value == NoteStatus.Approved.Value &&
                                                                n.WasteType == WasteType.HouseHold &&
                                                                n.NoteType.Value == NoteType.EvidenceNote.Value)
-                .OrderByDescending(n => n.Reference).Include(note => note.NoteTonnage)
-                .ToListAsync();
+                                                   .OrderByDescending(n => n.Reference)
+                                                   .Include(nt => nt.NoteTonnage)
+                                                   .ToListAsync();
 
             if (evidenceNotes.Any())
             {
@@ -492,12 +494,22 @@
                 {
                     var noteTonnageIds = new List<Guid>();
                     noteTonnageIds = noteData.NoteTonnage.Select(nt => nt.Id).ToList();
-                    var noteTransferTonnage = await context.NoteTransferTonnage.Where(ntt => noteTonnageIds.Contains(ntt.NoteTonnageId)).ToListAsync();
+                    var noteTransferTonnage = await context.NoteTransferTonnage
+                                                           .Include(n => n.TransferNote)
+                                                           .Where(ntt => noteTonnageIds.Contains(ntt.NoteTonnageId))
+                                                           .ToListAsync();
 
-                    var totalAvailable = (noteData.NoteTonnage.Select(n => (n.Received != null && n.Received.HasValue) ? n.Received.Value : 0).Sum() -
-                                          noteTransferTonnage.Select(nt => (nt.Received != null && nt.Received.HasValue) ? nt.Received.Value : 0).Sum());
+                    if (noteTransferTonnage.Any())
+                    {
+                        var totalAvailable = (noteData.NoteTonnage.Select(n => n.Received != null && n.Received.HasValue ? n.Received.Value : 0).Sum() -
+                                              noteTransferTonnage.Select(nt => (nt.Received != null && nt.Received.HasValue && includedStatus.Contains(nt.TransferNote.Status) ? nt.Received.Value : 0)).Sum());
 
-                    if (totalAvailable > 0)
+                        if (totalAvailable > 0)
+                        {
+                            return true;
+                        }
+                    }
+                    else
                     {
                         return true;
                     }
