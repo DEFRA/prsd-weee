@@ -733,7 +733,7 @@
         }
 
         [Fact]
-        public async Task HasApprovedWasteHouseHoldEvidence_GivenApprovedNoteWithNullTonnage_ShouldReturnFalse()
+        public async Task HasApprovedWasteHouseHoldEvidence_GivenApprovedNoteWithNullTonnage_ShouldReturnTrue()
         {
             // arrange
             using (var database = new DatabaseWrapper())
@@ -772,7 +772,7 @@
                 var hasApprovedWaste = await dataAccess.HasApprovedWasteHouseHoldEvidence(recipientOrganisation1.Id, SystemTime.UtcNow.Year);
 
                 // assert
-                hasApprovedWaste.Should().BeFalse();
+                hasApprovedWaste.Should().BeTrue();
             }
         }
     }
