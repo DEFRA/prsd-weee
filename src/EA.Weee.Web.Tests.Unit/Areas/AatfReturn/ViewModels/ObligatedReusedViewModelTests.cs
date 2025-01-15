@@ -43,8 +43,8 @@
                 viewModel.CategoryValues.ElementAt(count).B2B = (count + 1).ToString();
             }
 
-            viewModel.B2BTotal.Should().Be("105.000");
-            viewModel.B2CTotal.Should().Be("105.000");
+            viewModel.B2BTotal.Should().Be("120.000");
+            viewModel.B2CTotal.Should().Be("120.000");
         }
 
         [Fact]
