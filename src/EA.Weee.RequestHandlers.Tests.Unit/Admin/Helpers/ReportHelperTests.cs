@@ -13,7 +13,7 @@
             var dictionary = ReportHelper.GetCategoryDisplayNames();
 
             // Assert
-            Assert.Equal(14, dictionary.Count);
+            Assert.Equal(15, dictionary.Count);
             Assert.Equal("01. Large household appliances", dictionary[(int)WeeeCategory.LargeHouseholdAppliances]);
             Assert.Equal("02. Small household appliances", dictionary[(int)WeeeCategory.SmallHouseholdAppliances]);
             Assert.Equal("03. IT and telecommunications equipment", dictionary[(int)WeeeCategory.ITAndTelecommsEquipment]);
@@ -28,6 +28,7 @@
             Assert.Equal("12. Appliances containing refrigerants", dictionary[(int)WeeeCategory.CoolingApplicancesContainingRefrigerants]);
             Assert.Equal("13. Gas discharge lamps and LED light sources", dictionary[(int)WeeeCategory.GasDischargeLampsAndLedLightSources]);
             Assert.Equal("14. Photovoltaic panels", dictionary[(int)WeeeCategory.PhotovoltaicPanels]);
+            Assert.Equal("15. Vaping devices", dictionary[(int)WeeeCategory.VapingDevices]);
         }
     }
 }
