@@ -107,7 +107,7 @@
             var results = handler.CreateResults(A.Dummy<IEnumerable<PartialAatfReturn>>(), year);
 
             // Assert
-            Assert.Equal(14 * 5, results.Count());
+            Assert.Equal(15 * 5, results.Count());
             Assert.Collection(results,
                 r => { Assert.Equal(WeeeCategory.LargeHouseholdAppliances, r.Category); Assert.Equal(QuarterType.Q1.ToString(), r.TimePeriod); },
                 r => { Assert.Equal(WeeeCategory.SmallHouseholdAppliances, r.Category); Assert.Equal(QuarterType.Q1.ToString(), r.TimePeriod); },
@@ -123,6 +123,7 @@
                 r => { Assert.Equal(WeeeCategory.CoolingApplicancesContainingRefrigerants, r.Category); Assert.Equal(QuarterType.Q1.ToString(), r.TimePeriod); },
                 r => { Assert.Equal(WeeeCategory.GasDischargeLampsAndLedLightSources, r.Category); Assert.Equal(QuarterType.Q1.ToString(), r.TimePeriod); },
                 r => { Assert.Equal(WeeeCategory.PhotovoltaicPanels, r.Category); Assert.Equal(QuarterType.Q1.ToString(), r.TimePeriod); },
+                r => { Assert.Equal(WeeeCategory.VapingDevices, r.Category); Assert.Equal(QuarterType.Q1.ToString(), r.TimePeriod); },
 
                 r => { Assert.Equal(WeeeCategory.LargeHouseholdAppliances, r.Category); Assert.Equal(QuarterType.Q2.ToString(), r.TimePeriod); },
                 r => { Assert.Equal(WeeeCategory.SmallHouseholdAppliances, r.Category); Assert.Equal(QuarterType.Q2.ToString(), r.TimePeriod); },
@@ -138,6 +139,7 @@
                 r => { Assert.Equal(WeeeCategory.CoolingApplicancesContainingRefrigerants, r.Category); Assert.Equal(QuarterType.Q2.ToString(), r.TimePeriod); },
                 r => { Assert.Equal(WeeeCategory.GasDischargeLampsAndLedLightSources, r.Category); Assert.Equal(QuarterType.Q2.ToString(), r.TimePeriod); },
                 r => { Assert.Equal(WeeeCategory.PhotovoltaicPanels, r.Category); Assert.Equal(QuarterType.Q2.ToString(), r.TimePeriod); },
+                r => { Assert.Equal(WeeeCategory.VapingDevices, r.Category); Assert.Equal(QuarterType.Q2.ToString(), r.TimePeriod); },
 
                 r => { Assert.Equal(WeeeCategory.LargeHouseholdAppliances, r.Category); Assert.Equal(QuarterType.Q3.ToString(), r.TimePeriod); },
                 r => { Assert.Equal(WeeeCategory.SmallHouseholdAppliances, r.Category); Assert.Equal(QuarterType.Q3.ToString(), r.TimePeriod); },
@@ -153,6 +155,7 @@
                 r => { Assert.Equal(WeeeCategory.CoolingApplicancesContainingRefrigerants, r.Category); Assert.Equal(QuarterType.Q3.ToString(), r.TimePeriod); },
                 r => { Assert.Equal(WeeeCategory.GasDischargeLampsAndLedLightSources, r.Category); Assert.Equal(QuarterType.Q3.ToString(), r.TimePeriod); },
                 r => { Assert.Equal(WeeeCategory.PhotovoltaicPanels, r.Category); Assert.Equal(QuarterType.Q3.ToString(), r.TimePeriod); },
+                r => { Assert.Equal(WeeeCategory.VapingDevices, r.Category); Assert.Equal(QuarterType.Q3.ToString(), r.TimePeriod); },
 
                 r => { Assert.Equal(WeeeCategory.LargeHouseholdAppliances, r.Category); Assert.Equal(QuarterType.Q4.ToString(), r.TimePeriod); },
                 r => { Assert.Equal(WeeeCategory.SmallHouseholdAppliances, r.Category); Assert.Equal(QuarterType.Q4.ToString(), r.TimePeriod); },
@@ -168,6 +171,7 @@
                 r => { Assert.Equal(WeeeCategory.CoolingApplicancesContainingRefrigerants, r.Category); Assert.Equal(QuarterType.Q4.ToString(), r.TimePeriod); },
                 r => { Assert.Equal(WeeeCategory.GasDischargeLampsAndLedLightSources, r.Category); Assert.Equal(QuarterType.Q4.ToString(), r.TimePeriod); },
                 r => { Assert.Equal(WeeeCategory.PhotovoltaicPanels, r.Category); Assert.Equal(QuarterType.Q4.ToString(), r.TimePeriod); },
+                r => { Assert.Equal(WeeeCategory.VapingDevices, r.Category); Assert.Equal(QuarterType.Q4.ToString(), r.TimePeriod); },
 
                 r => { Assert.Equal(WeeeCategory.LargeHouseholdAppliances, r.Category); Assert.Equal(year, r.TimePeriod); },
                 r => { Assert.Equal(WeeeCategory.SmallHouseholdAppliances, r.Category); Assert.Equal(year, r.TimePeriod); },
@@ -182,7 +186,8 @@
                 r => { Assert.Equal(WeeeCategory.DisplayEquipment, r.Category); Assert.Equal(year, r.TimePeriod); },
                 r => { Assert.Equal(WeeeCategory.CoolingApplicancesContainingRefrigerants, r.Category); Assert.Equal(year, r.TimePeriod); },
                 r => { Assert.Equal(WeeeCategory.GasDischargeLampsAndLedLightSources, r.Category); Assert.Equal(year, r.TimePeriod); },
-                r => { Assert.Equal(WeeeCategory.PhotovoltaicPanels, r.Category); Assert.Equal(year, r.TimePeriod); });
+                r => { Assert.Equal(WeeeCategory.PhotovoltaicPanels, r.Category); Assert.Equal(year, r.TimePeriod); },
+                r => { Assert.Equal(WeeeCategory.VapingDevices, r.Category); Assert.Equal(year, r.TimePeriod); });
         }
 
         [Fact]
