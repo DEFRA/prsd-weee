@@ -56,8 +56,8 @@
                 viewModel.CategoryValues.ElementAt(count).B2B = (count * 0.001m).ToString(CultureInfo.InvariantCulture);
             }
 
-            viewModel.B2CTotal.Should().Be("0.091");
-            viewModel.B2BTotal.Should().Be("0.091");
+            viewModel.B2CTotal.Should().Be("0.105");
+            viewModel.B2BTotal.Should().Be("0.105");
         }
 
         [Fact]
