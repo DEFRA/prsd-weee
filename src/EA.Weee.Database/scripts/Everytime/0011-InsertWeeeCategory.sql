@@ -22,7 +22,7 @@ VALUES
 (12, 'Appliances containing refrigerants'),
 (13, 'Gas discharge lamps and LED light sources'),
 (14, 'Photovoltaic panels'),
-(15, 'Vaping devices')
+(15, 'Vapes and electronic cigarettes')
 
 INSERT INTO [Lookup].[WeeeCategory] (Id , [Name])
 SELECT tmp.[Id], tmp.[NAME]
