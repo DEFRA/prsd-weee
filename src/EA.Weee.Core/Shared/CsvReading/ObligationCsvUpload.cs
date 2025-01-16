@@ -59,7 +59,7 @@
         [WeeeCategory(WeeeCategory.PhotovoltaicPanels)]
         public string Cat14 { get; set; }
 
-        [WeeeCategory(WeeeCategory.VapingDevices)]
+        [WeeeCategory(WeeeCategory.VapesAndElectronicCigarettes)]
         public string Cat15 { get; set; }
 
         public ObligationCsvUpload()

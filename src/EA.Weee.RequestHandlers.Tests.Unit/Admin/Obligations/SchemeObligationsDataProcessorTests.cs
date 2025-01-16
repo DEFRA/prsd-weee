@@ -86,7 +86,7 @@
                     .Obligation.Should().Be(decimal.Parse(obligation.Cat7));
                 schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.LightingEquipment)
                     .Obligation.Should().Be(decimal.Parse(obligation.Cat5));
-                schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.VapingDevices)
+                schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.VapesAndElectronicCigarettes)
                     .Obligation.Should().Be(decimal.Parse(obligation.Cat15));
             }
         }

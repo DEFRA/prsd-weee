@@ -46,7 +46,7 @@
         [Display(Name = "Photovoltaic panels")]
         PhotovoltaicPanels = 14,
 
-        [Display(Name = "Vaping devices")]
-        VapingDevices = 15
+        [Display(Name = "Vapes and electronic cigarettes")]
+        VapesAndElectronicCigarettes = 15
     }
 }
