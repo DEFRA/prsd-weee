@@ -151,7 +151,7 @@
                 r => { Assert.Equal(WeeeCategory.CoolingApplicancesContainingRefrigerants, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
                 r => { Assert.Equal(WeeeCategory.GasDischargeLampsAndLedLightSources, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
                 r => { Assert.Equal(WeeeCategory.PhotovoltaicPanels, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.VapingDevices, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.VapesAndElectronicCigarettes, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
                 r => { Assert.Equal(WeeeCategory.LargeHouseholdAppliances, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
                 r => { Assert.Equal(WeeeCategory.SmallHouseholdAppliances, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
                 r => { Assert.Equal(WeeeCategory.ITAndTelecommsEquipment, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
@@ -166,7 +166,7 @@
                 r => { Assert.Equal(WeeeCategory.CoolingApplicancesContainingRefrigerants, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
                 r => { Assert.Equal(WeeeCategory.GasDischargeLampsAndLedLightSources, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
                 r => { Assert.Equal(WeeeCategory.PhotovoltaicPanels, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.VapingDevices, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); });
+                r => { Assert.Equal(WeeeCategory.VapesAndElectronicCigarettes, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); });
         }
 
         /// <summary>

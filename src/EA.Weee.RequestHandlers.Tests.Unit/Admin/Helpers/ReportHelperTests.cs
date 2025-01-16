@@ -28,7 +28,7 @@
             Assert.Equal("12. Appliances containing refrigerants", dictionary[(int)WeeeCategory.CoolingApplicancesContainingRefrigerants]);
             Assert.Equal("13. Gas discharge lamps and LED light sources", dictionary[(int)WeeeCategory.GasDischargeLampsAndLedLightSources]);
             Assert.Equal("14. Photovoltaic panels", dictionary[(int)WeeeCategory.PhotovoltaicPanels]);
-            Assert.Equal("15. Vaping devices", dictionary[(int)WeeeCategory.VapingDevices]);
+            Assert.Equal("15. Vaping devices", dictionary[(int)WeeeCategory.VapesAndElectronicCigarettes]);
         }
     }
 }
