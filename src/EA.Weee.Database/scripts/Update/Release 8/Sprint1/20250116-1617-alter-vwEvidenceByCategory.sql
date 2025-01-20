@@ -1,5 +1,4 @@
-﻿GO
-/****** Object:  View [Evidence].[vwEvidenceByCategory]    Script Date: 16/01/2025 15:38:14 ******/
+﻿/****** Object:  View [Evidence].[vwEvidenceByCategory]    Script Date: 16/01/2025 15:38:14 ******/
 IF OBJECT_ID('[Evidence].[vwEvidenceByCategory]', 'V') IS NOT NULL
 	DROP VIEW [Evidence].[vwEvidenceByCategory]
 GO
