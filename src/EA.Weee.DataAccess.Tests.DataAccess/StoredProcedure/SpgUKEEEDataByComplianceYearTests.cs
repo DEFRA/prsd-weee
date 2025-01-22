@@ -785,7 +785,7 @@
                 var results = await wrapper.WeeeContext.StoredProcedures.SpgUKEEEDataByComplianceYear(complianceYear);
 
                 results.Should().NotBeNull()
-                    .And.HaveCount(14);
+                    .And.HaveCount(15);
 
                 var categoryExpectations = new Dictionary<string, object>
                 {
