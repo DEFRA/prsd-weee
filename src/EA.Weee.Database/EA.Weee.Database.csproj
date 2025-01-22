@@ -433,6 +433,7 @@
     <Content Include="scripts\Update\Release 7\Sprint6\20241022-1113-producer-eee-sp-update-direct-registrant.sql" />
     <Content Include="scripts\Update\Release 7\Sprint7\20241114-1700-fix-existing-records.sql" />
     <Content Include="scripts\Update\Release 7\Sprint7\20241114-1657-add-auth-rep-indicator.sql" />
+    <Content Include="scripts\Update\Release 7\Sprint8\20241217-0904-producer-details-sp-update-all-schemes.sql" />
     <Content Include="scripts\Update\Release 7\Sprint7\20241115-1555-producer-details-sp-update-all-schemes.sql" />
     <Content Include="scripts\Update\Release 7\Sprint7\20241202-1047-add-migration-organisation-complete.sql" />
     <Content Include="scripts\Update\Release 7\Sprint7\20241202-1002-add-migration-indicator.sql" />

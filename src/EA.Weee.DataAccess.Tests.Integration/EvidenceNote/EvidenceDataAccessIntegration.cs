@@ -498,17 +498,27 @@
                 var recipientOrganisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
                 var scheme1 = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation1);
 
-                var note1Match = NoteCommon.CreateNote(database, complianceYear: SystemTime.UtcNow.Year, organisation: organisation1, recipientOrganisation: recipientOrganisation1, wasteType: WasteType.HouseHold);
+                // Create note with positive tonnage
+                var noteTonnages = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.ConsumerEquipment, 10, null)
+                };
+
+                var note1Match = NoteCommon.CreateNote(database,
+                    complianceYear: SystemTime.UtcNow.Year,
+                    organisation: organisation1,
+                    recipientOrganisation: recipientOrganisation1,
+                    wasteType: WasteType.HouseHold,
+                    noteTonnages: noteTonnages);  // Added noteTonnages parameter
+
                 note1Match.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString(), SystemTime.Now);
                 note1Match.UpdateStatus(NoteStatus.Approved, userContext.UserId.ToString(), SystemTime.Now);
 
                 // act
                 context.Schemes.Add(scheme1);
-                
                 await context.SaveChangesAsync();
 
                 context.Notes.Add(note1Match);
-
                 await context.SaveChangesAsync();
 
                 var hasApprovedWaste = await dataAccess.HasApprovedWasteHouseHoldEvidence(recipientOrganisation1.Id, SystemTime.UtcNow.Year);
@@ -675,6 +685,94 @@
 
                 // assert
                 hasApprovedWaste.Should().BeFalse();
+            }
+        }
+
+        [Fact]
+        public async Task HasApprovedWasteHouseHoldEvidence_GivenApprovedNoteWithPositiveAvailableTonnage_ShouldReturnTrue()
+        {
+            // arrange
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
+
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var recipientOrganisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme1 = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation1);
+
+                // Create note with received tonnage of 10
+                var noteTonnages = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.ConsumerEquipment, 10, null)
+                };
+
+                var note = NoteCommon.CreateNote(database,
+                    complianceYear: SystemTime.UtcNow.Year,
+                    organisation: organisation1,
+                    recipientOrganisation: recipientOrganisation1,
+                    wasteType: WasteType.HouseHold,
+                    noteTonnages: noteTonnages);
+
+                note.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString(), SystemTime.Now);
+                note.UpdateStatus(NoteStatus.Approved, userContext.UserId.ToString(), SystemTime.Now);
+
+                // act
+                context.Schemes.Add(scheme1);
+                await context.SaveChangesAsync();
+                context.Notes.Add(note);
+                await context.SaveChangesAsync();
+
+                var hasApprovedWaste = await dataAccess.HasApprovedWasteHouseHoldEvidence(recipientOrganisation1.Id, SystemTime.UtcNow.Year);
+
+                // assert
+                hasApprovedWaste.Should().BeTrue();
+            }
+        }
+
+        [Fact]
+        public async Task HasApprovedWasteHouseHoldEvidence_GivenApprovedNoteWithNullTonnage_ShouldReturnTrue()
+        {
+            // arrange
+            using (var database = new DatabaseWrapper())
+            {
+                var context = database.WeeeContext;
+                var userContext = A.Fake<IUserContext>();
+                A.CallTo(() => userContext.UserId).Returns(Guid.Parse(context.GetCurrentUser()));
+                var dataAccess = new EvidenceDataAccess(database.WeeeContext, userContext, new GenericDataAccess(database.WeeeContext));
+
+                var organisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var recipientOrganisation1 = ObligatedWeeeIntegrationCommon.CreateOrganisation();
+                var scheme1 = ObligatedWeeeIntegrationCommon.CreateScheme(recipientOrganisation1);
+
+                // Create note with null tonnage
+                var noteTonnages = new List<NoteTonnage>()
+                {
+                    new NoteTonnage(WeeeCategory.ConsumerEquipment, null, null)
+                };
+
+                var note = NoteCommon.CreateNote(database,
+                    complianceYear: SystemTime.UtcNow.Year,
+                    organisation: organisation1,
+                    recipientOrganisation: recipientOrganisation1,
+                    wasteType: WasteType.HouseHold,
+                    noteTonnages: noteTonnages);
+
+                note.UpdateStatus(NoteStatus.Submitted, userContext.UserId.ToString(), SystemTime.Now);
+                note.UpdateStatus(NoteStatus.Approved, userContext.UserId.ToString(), SystemTime.Now);
+
+                // act
+                context.Schemes.Add(scheme1);
+                await context.SaveChangesAsync();
+                context.Notes.Add(note);
+                await context.SaveChangesAsync();
+
+                var hasApprovedWaste = await dataAccess.HasApprovedWasteHouseHoldEvidence(recipientOrganisation1.Id, SystemTime.UtcNow.Year);
+
+                // assert
+                hasApprovedWaste.Should().BeTrue();
             }
         }
     }
