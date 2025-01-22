@@ -948,7 +948,7 @@
                     new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 24.666M, 25.777M),
                     new NoteTonnage(WeeeCategory.LightingEquipment, 26.888M, 27.999M),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 28.111M, 29.222M),
-                    new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 29.111M, 30.222M),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, 29.111M, 30.222M),
                 };
 
                 var approvedNoteWithSchemeNameUpdate = EvidenceNoteDbSetup.Init()
