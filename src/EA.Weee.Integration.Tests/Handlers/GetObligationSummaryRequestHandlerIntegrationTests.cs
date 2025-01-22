@@ -558,7 +558,7 @@
                 category =
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.VapesAndElectronicCigarettes.ToInt());
                 category.Obligation.Should().Be(2);
-                category.Evidence.Should().Be(31);
+                category.Evidence.Should().Be(32);
                 category.Difference.Should().Be(30);
                 category.Reuse.Should().Be(0);
                 category.TransferredIn.Should().BeNull();
@@ -1048,7 +1048,7 @@
                 category =
                     result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.VapesAndElectronicCigarettes.ToInt());
                 category.Obligation.Should().BeNull();
-                category.Evidence.Should().Be(31);
+                category.Evidence.Should().Be(32);
                 category.Difference.Should().Be(31);
                 category.Reuse.Should().Be(0);
                 category.TransferredIn.Should().BeNull();
