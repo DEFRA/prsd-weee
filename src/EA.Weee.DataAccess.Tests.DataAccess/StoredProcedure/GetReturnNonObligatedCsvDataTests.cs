@@ -40,7 +40,7 @@
                 await db.WeeeContext.SaveChangesAsync();
 
                 var results = await db.StoredProcedures.GetReturnNonObligatedCsvData(@return.Id);
-                results.Count.Should().Be(14);
+                results.Count.Should().Be(15);
 
                 var values = CategoryValues();
                 for (var countValue = 0; countValue < values.Count(); countValue++)
@@ -76,7 +76,7 @@
                 await db.WeeeContext.SaveChangesAsync();
 
                 var results = await db.StoredProcedures.GetReturnNonObligatedCsvData(@return.Id);
-                results.Count.Should().Be(14);
+                results.Count.Should().Be(15);
 
                 for (var countValue = 0; countValue < values.Count(); countValue++)
                 {
@@ -114,7 +114,7 @@
                 await db.WeeeContext.SaveChangesAsync();
 
                 var results = await db.StoredProcedures.GetReturnNonObligatedCsvData(@return.Id);
-                results.Count.Should().Be(14);
+                results.Count.Should().Be(15);
 
                 for (var countValue = 0; countValue < values.Count(); countValue++)
                 {

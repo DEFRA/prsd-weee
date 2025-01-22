@@ -55,6 +55,7 @@
                     new ObligationSchemeAmount(WeeeCategory.ITAndTelecommsEquipment, 150.5M),
                     new ObligationSchemeAmount(WeeeCategory.LightingEquipment, null),
                     new ObligationSchemeAmount(WeeeCategory.MonitoringAndControlInstruments, 1),
+                    new ObligationSchemeAmount(WeeeCategory.VapesAndElectronicCigarettes, 1),
                 };
                 ObligationSchemeDbSetup.Init()
                                        .WithScheme(scheme.Id)
@@ -80,6 +81,7 @@
                     new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.LightingEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 1, 0),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, 1, 0),
                 };
 
                 var note = EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id)
@@ -105,6 +107,7 @@
                     new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 80, 70),
                     new NoteTonnage(WeeeCategory.LightingEquipment, 10, null),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 20, 0),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, 20, 0),
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id)
@@ -376,6 +379,7 @@
                     new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 80, 70),
                     new NoteTonnage(WeeeCategory.LightingEquipment, 10, null),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 20, 0),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, 20, 0),
                 };
 
                 var anotherRecipientOrganisation = OrganisationDbSetup.Init().Create();
@@ -415,8 +419,9 @@
 {scheme.SchemeName},{scheme.ApprovalNumber},12. Appliances containing refrigerants,0.000,201.789,101.000,0.000,0.000,201.789,0.000,0.000
 {scheme.SchemeName},{scheme.ApprovalNumber},13. Gas discharge lamps and LED light sources,0.000,201.000,11.000,0.000,0.000,201.000,0.000,0.000
 {scheme.SchemeName},{scheme.ApprovalNumber},14. Photovoltaic panels,1000.000,101.000,51.000,0.000,0.000,-899.000,100.000,50.000
+{scheme.SchemeName},{scheme.ApprovalNumber},15. Vapes and electronic cigarettes,1.000,21.000,0.000,0.000,0.000,20.000,0.000,0.000
 {scheme.SchemeName},{scheme.ApprovalNumber},Category 2-10 summary,2671.735,750.280,103.000,101.000,72.280,-1921.455,,
-{scheme.SchemeName},{scheme.ApprovalNumber},Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
+{scheme.SchemeName},{scheme.ApprovalNumber},Total (tonnes),4439.735,1407.069,268.000,101.000,72.280,-3052.666,100.000,50.000
 ");
 
                 result.FileName.Should().Contain($"2022_{scheme.ApprovalNumber}_PCS evidence and obligation progress{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
@@ -454,6 +459,7 @@
                     new ObligationSchemeAmount(WeeeCategory.ITAndTelecommsEquipment, 150.5M),
                     new ObligationSchemeAmount(WeeeCategory.LightingEquipment, null),
                     new ObligationSchemeAmount(WeeeCategory.MonitoringAndControlInstruments, 1),
+                    new ObligationSchemeAmount(WeeeCategory.VapesAndElectronicCigarettes, 1),
                 };
                 ObligationSchemeDbSetup.Init()
                                        .WithScheme(scheme.Id)
@@ -479,6 +485,7 @@
                     new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.LightingEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 1, 0),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, 1, 0),
                 };
 
                 var note = EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id)
@@ -504,6 +511,7 @@
                     new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 80, 70),
                     new NoteTonnage(WeeeCategory.LightingEquipment, 10, null),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 20, 0),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, 20, 0),
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(recipientOrganisation.Id)
@@ -775,6 +783,7 @@
                     new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 80, 70),
                     new NoteTonnage(WeeeCategory.LightingEquipment, 10, null),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 20, 0),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, 20, 0),
                 };
 
                 var anotherRecipientOrganisation = OrganisationDbSetup.Init().Create();
@@ -814,8 +823,9 @@
 12. Appliances containing refrigerants,0.000,201.789,101.000,0.000,0.000,201.789,0.000,0.000
 13. Gas discharge lamps and LED light sources,0.000,201.000,11.000,0.000,0.000,201.000,0.000,0.000
 14. Photovoltaic panels,1000.000,101.000,51.000,0.000,0.000,-899.000,100.000,50.000
+15. Vapes and electronic cigarettes,1.000,21.000,0.000,0.000,0.000,0.000,0.000,0.000
 Category 2-10 summary,2671.735,750.280,103.000,101.000,72.280,-1921.455,,
-Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
+Total (tonnes),4439.735,1407.069,268.000,101.000,72.280,-3052.666,100.000,50.000
 ");
                 result.FileName.Should().Contain($"2022_PCS Summary{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
                 result.FileName.Should().EndWith(".csv");
@@ -862,6 +872,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                     new ObligationSchemeAmount(WeeeCategory.ITAndTelecommsEquipment, 150.5M),
                     new ObligationSchemeAmount(WeeeCategory.LightingEquipment, null),
                     new ObligationSchemeAmount(WeeeCategory.MonitoringAndControlInstruments, 1),
+                    new ObligationSchemeAmount(WeeeCategory.VapesAndElectronicCigarettes, 1),
                 };
                 ObligationSchemeDbSetup.Init()
                                        .WithScheme(scheme1.Id)
@@ -887,6 +898,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                     new ObligationSchemeAmount(WeeeCategory.ITAndTelecommsEquipment, 1),
                     new ObligationSchemeAmount(WeeeCategory.LightingEquipment, 1),
                     new ObligationSchemeAmount(WeeeCategory.MonitoringAndControlInstruments, 1),
+                    new ObligationSchemeAmount(WeeeCategory.VapesAndElectronicCigarettes, 1),
                 };
                 ObligationSchemeDbSetup.Init()
                     .WithScheme(scheme2.Id)
@@ -912,6 +924,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                     new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.LightingEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 1, 0),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, 1, 0),
                 };
 
                 var note = EvidenceNoteDbSetup.Init().WithRecipient(recipient1Organisation.Id)
@@ -937,6 +950,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                     new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 80, 70),
                     new NoteTonnage(WeeeCategory.LightingEquipment, 10, null),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 20, 0),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, 20, 0),
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(recipient1Organisation.Id)
@@ -1210,6 +1224,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                     new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.LightingEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 1, 1),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, 1, 1),
                 };
 
                 var anotherRecipientOrganisation = OrganisationDbSetup.Init().Create();
@@ -1241,6 +1256,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                     new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.LightingEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 1, 1),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, 1, 1),
                 };
 
                 EvidenceNoteDbSetup.Init()
@@ -1269,6 +1285,7 @@ Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
                     new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.LightingEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 1, 1),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, 1, 1),
                 };
 
                 EvidenceNoteDbSetup.Init()
@@ -1331,8 +1348,9 @@ All producer compliance schemes,,11. Display equipment,201.000,33.000,3.000,0.00
 All producer compliance schemes,,12. Appliances containing refrigerants,1.000,203.789,103.000,0.000,0.000,202.789,1.000,1.000
 All producer compliance schemes,,13. Gas discharge lamps and LED light sources,1.000,203.000,13.000,0.000,0.000,202.000,1.000,1.000
 All producer compliance schemes,,14. Photovoltaic panels,1001.000,103.000,53.000,0.000,0.000,-898.000,101.000,51.000
+All producer compliance schemes,,15. Vapes and electronic cigarettes,1.000,2.000,3.000,0.000,0.000,0.000,0.000,0.000
 All producer compliance schemes,,Category 2-10 summary,2680.735,874.280,122.000,101.000,178.280,-1806.455,,
-All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.000,178.280,-2932.666,114.000,64.000
+All producer compliance schemes,,Total (tonnes),4453.735,1522.069,300.000,101.000,178.280,-2932.666,114.000,64.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},1. Large household appliances,567.000,101.000,1.000,0.000,0.000,-466.000,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},2. Small household appliances,20.000,26.000,1.000,100.000,0.000,6.000,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},3. IT and telecommunications equipment,150.500,81.000,71.000,0.000,0.000,-69.500,0.000,0.000
@@ -1347,8 +1365,9 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
 {scheme1.SchemeName},{scheme1.ApprovalNumber},12. Appliances containing refrigerants,0.000,201.789,101.000,0.000,0.000,201.789,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},13. Gas discharge lamps and LED light sources,0.000,201.000,11.000,0.000,0.000,201.000,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},14. Photovoltaic panels,1000.000,101.000,51.000,0.000,0.000,-899.000,100.000,50.000
+{scheme1.SchemeName},{scheme1.ApprovalNumber},15. Vapes and electronic cigarettes,1.000,2.000,3.000,0.000,0.000,0.000,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},Category 2-10 summary,2671.735,750.280,103.000,101.000,72.280,-1921.455,,
-{scheme1.SchemeName},{scheme1.ApprovalNumber},Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
+{scheme1.SchemeName},{scheme1.ApprovalNumber},Total (tonnes),4439.735,1388.069,271.000,101.000,72.280,-3052.666,100.000,50.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},1. Large household appliances,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},2. Small household appliances,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},3. IT and telecommunications equipment,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
@@ -1363,8 +1382,9 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
 {scheme2.SchemeName},{scheme2.ApprovalNumber},12. Appliances containing refrigerants,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},13. Gas discharge lamps and LED light sources,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},14. Photovoltaic panels,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
+{scheme2.SchemeName},{scheme2.ApprovalNumber},15. Vapes and electronic cigarettes,1.000,1.000,1.000,0.000,0.000,0.000,0.000,0.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},Category 2-10 summary,9.000,9.000,9.000,0.000,0.000,0.000,,
-{scheme2.SchemeName},{scheme2.ApprovalNumber},Total (tonnes),14.000,14.000,14.000,0.000,0.000,0.000,14.000,14.000
+{scheme2.SchemeName},{scheme2.ApprovalNumber},Total (tonnes),15.000,15.000,15.000,0.000,0.000,0.000,14.000,14.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},1. Large household appliances,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},2. Small household appliances,0.000,100.000,0.000,0.000,100.000,100.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},3. IT and telecommunications equipment,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
@@ -1379,6 +1399,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
 {scheme4.SchemeName},{scheme4.ApprovalNumber},12. Appliances containing refrigerants,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},13. Gas discharge lamps and LED light sources,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},14. Photovoltaic panels,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
+{scheme4.SchemeName},{scheme4.ApprovalNumber},15. Vapes and electronic cigarettes,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},Category 2-10 summary,0.000,106.000,1.000,0.000,106.000,106.000,,
 {scheme4.SchemeName},{scheme4.ApprovalNumber},Total (tonnes),0.000,106.000,1.000,0.000,106.000,106.000,0.000,0.000
 {scheme3.SchemeName},{scheme3.ApprovalNumber},1. Large household appliances,0.000,1.000,1.000,0.000,0.000,1.000,0.000,0.000
@@ -1395,6 +1416,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
 {scheme3.SchemeName},{scheme3.ApprovalNumber},12. Appliances containing refrigerants,0.000,1.000,1.000,0.000,0.000,1.000,0.000,0.000
 {scheme3.SchemeName},{scheme3.ApprovalNumber},13. Gas discharge lamps and LED light sources,0.000,1.000,1.000,0.000,0.000,1.000,0.000,0.000
 {scheme3.SchemeName},{scheme3.ApprovalNumber},14. Photovoltaic panels,0.000,1.000,1.000,0.000,0.000,1.000,0.000,0.000
+{scheme3.SchemeName},{scheme3.ApprovalNumber},15. Vapes and electronic cigarettes,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
 {scheme3.SchemeName},{scheme3.ApprovalNumber},Category 2-10 summary,0.000,9.000,9.000,0.000,0.000,9.000,,
 {scheme3.SchemeName},{scheme3.ApprovalNumber},Total (tonnes),0.000,14.000,14.000,0.000,0.000,14.000,0.000,0.000
 ");
@@ -1449,6 +1471,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
                     new ObligationSchemeAmount(WeeeCategory.ITAndTelecommsEquipment, 150.5M),
                     new ObligationSchemeAmount(WeeeCategory.LightingEquipment, null),
                     new ObligationSchemeAmount(WeeeCategory.MonitoringAndControlInstruments, 1),
+                    new ObligationSchemeAmount(WeeeCategory.VapesAndElectronicCigarettes, 1),
                 };
                 ObligationSchemeDbSetup.Init()
                                        .WithScheme(scheme1.Id)
@@ -1474,6 +1497,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
                     new ObligationSchemeAmount(WeeeCategory.ITAndTelecommsEquipment, 1),
                     new ObligationSchemeAmount(WeeeCategory.LightingEquipment, 1),
                     new ObligationSchemeAmount(WeeeCategory.MonitoringAndControlInstruments, 1),
+                    new ObligationSchemeAmount(WeeeCategory.VapesAndElectronicCigarettes, 1),
                 };
                 ObligationSchemeDbSetup.Init()
                     .WithScheme(scheme2.Id)
@@ -1499,6 +1523,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
                     new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.LightingEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 1, 0),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, 1, 0),
                 };
 
                 var note = EvidenceNoteDbSetup.Init().WithRecipient(recipient1Organisation.Id)
@@ -1524,6 +1549,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
                     new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 80, 70),
                     new NoteTonnage(WeeeCategory.LightingEquipment, 10, null),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 20, 0),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, 20, 0),
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(recipient1Organisation.Id)
@@ -1797,6 +1823,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
                     new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.LightingEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 1, 1),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, 1, 1),
                 };
 
                 var anotherRecipientOrganisation = OrganisationDbSetup.Init().Create();
@@ -1832,6 +1859,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
                     new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.LightingEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 1, 1),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, 1, 1),
                 };
 
                 EvidenceNoteDbSetup.Init()
@@ -1860,6 +1888,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.00
                     new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.LightingEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 1, 1),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, 1, 1),
                 };
 
                 EvidenceNoteDbSetup.Init()
@@ -1920,8 +1949,9 @@ All producer compliance schemes,,11. Display equipment,201.000,32.000,2.000,0.00
 All producer compliance schemes,,12. Appliances containing refrigerants,1.000,202.789,102.000,0.000,0.000,201.789,1.000,1.000
 All producer compliance schemes,,13. Gas discharge lamps and LED light sources,1.000,202.000,12.000,0.000,0.000,201.000,1.000,1.000
 All producer compliance schemes,,14. Photovoltaic panels,1001.000,102.000,52.000,0.000,0.000,-899.000,101.000,51.000
+All producer compliance schemes,,15. Vapes and electronic cigarettes,1.000,2.000,3.000,0.000,0.000,0.000,0.000,0.000
 All producer compliance schemes,,Category 2-10 summary,2680.735,865.280,113.000,101.000,178.280,-1815.455,,
-All producer compliance schemes,,Total (tonnes),4452.735,1506.069,283.000,101.000,178.280,-2946.666,114.000,64.000
+All producer compliance schemes,,Total (tonnes),4453.735,1508.069,286.000,101.000,178.280,-2946.666,114.000,64.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},1. Large household appliances,567.000,101.000,1.000,0.000,0.000,-466.000,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},2. Small household appliances,20.000,26.000,1.000,100.000,0.000,6.000,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},3. IT and telecommunications equipment,150.500,81.000,71.000,0.000,0.000,-69.500,0.000,0.000
@@ -1936,8 +1966,9 @@ All producer compliance schemes,,Total (tonnes),4452.735,1506.069,283.000,101.00
 {scheme1.SchemeName},{scheme1.ApprovalNumber},12. Appliances containing refrigerants,0.000,201.789,101.000,0.000,0.000,201.789,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},13. Gas discharge lamps and LED light sources,0.000,201.000,11.000,0.000,0.000,201.000,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},14. Photovoltaic panels,1000.000,101.000,51.000,0.000,0.000,-899.000,100.000,50.000
+{scheme1.SchemeName},{scheme1.ApprovalNumber},15. Vapes and electronic cigarettes,1.000,2.000,3.000,0.000,0.000,0.000,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},Category 2-10 summary,2671.735,750.280,103.000,101.000,72.280,-1921.455,,
-{scheme1.SchemeName},{scheme1.ApprovalNumber},Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
+{scheme1.SchemeName},{scheme1.ApprovalNumber},Total (tonnes),4439.737,1386.072,268.000,101.000,72.280,-3052.666,100.000,50.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},1. Large household appliances,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},2. Small household appliances,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},3. IT and telecommunications equipment,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
@@ -1952,8 +1983,9 @@ All producer compliance schemes,,Total (tonnes),4452.735,1506.069,283.000,101.00
 {scheme2.SchemeName},{scheme2.ApprovalNumber},12. Appliances containing refrigerants,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},13. Gas discharge lamps and LED light sources,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},14. Photovoltaic panels,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
+{scheme2.SchemeName},{scheme2.ApprovalNumber},15. Vapes and electronic cigarettes,1.000,1.000,1.000,0.000,0.000,0.000,0.000,0.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},Category 2-10 summary,9.000,9.000,9.000,0.000,0.000,0.000,,
-{scheme2.SchemeName},{scheme2.ApprovalNumber},Total (tonnes),14.000,14.000,14.000,0.000,0.000,0.000,14.000,14.000
+{scheme2.SchemeName},{scheme2.ApprovalNumber},Total (tonnes),15.000,15.000,15.000,0.000,0.000,0.000,14.000,14.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},1. Large household appliances,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},2. Small household appliances,0.000,100.000,0.000,0.000,100.000,100.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},3. IT and telecommunications equipment,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
@@ -1968,6 +2000,7 @@ All producer compliance schemes,,Total (tonnes),4452.735,1506.069,283.000,101.00
 {scheme4.SchemeName},{scheme4.ApprovalNumber},12. Appliances containing refrigerants,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},13. Gas discharge lamps and LED light sources,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},14. Photovoltaic panels,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
+{scheme4.SchemeName},{scheme4.ApprovalNumber},15. Vapes and electronic cigarettes,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},Category 2-10 summary,0.000,106.000,1.000,0.000,106.000,106.000,,
 {scheme4.SchemeName},{scheme4.ApprovalNumber},Total (tonnes),0.000,106.000,1.000,0.000,106.000,106.000,0.000,0.000
 ");
