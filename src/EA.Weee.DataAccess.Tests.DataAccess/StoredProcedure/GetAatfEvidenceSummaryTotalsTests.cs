@@ -339,12 +339,12 @@
                 totals.ElementAt(14).SubmittedReused.Should().Be(320);
 
                 totals.ElementAt(15).CategoryName.Should().Be("Total (tonnes)");
-                totals.ElementAt(15).ApprovedReceived.Should().Be(21000); 
-                totals.ElementAt(15).ApprovedReused.Should().Be(23800);
-                totals.ElementAt(15).DraftReceived.Should().Be(210);
-                totals.ElementAt(15).DraftReused.Should().Be(238);
-                totals.ElementAt(15).SubmittedReceived.Should().Be(2100);
-                totals.ElementAt(15).SubmittedReused.Should().Be(2380);
+                totals.ElementAt(15).ApprovedReceived.Should().Be(24000); 
+                totals.ElementAt(15).ApprovedReused.Should().Be(27000);
+                totals.ElementAt(15).DraftReceived.Should().Be(240);
+                totals.ElementAt(15).DraftReused.Should().Be(270);
+                totals.ElementAt(15).SubmittedReceived.Should().Be(2400);
+                totals.ElementAt(15).SubmittedReused.Should().Be(2700);
             }
         }
 
