@@ -325,8 +325,8 @@
                     "12. Appliances containing refrigerants,9.400,9.300,8.300,8.200,7.200,7.100\r\n" +
                     "13. Gas discharge lamps and LED light sources,16.400,16.300,15.300,15.200,14.200,14.100\r\n" +
                     "14. Photovoltaic panels,14.400,14.300,13.300,13.200,12.200,12.100\r\n" +
-                    "15. Vapes and electronic cigarettes,15.400,15.300,14.300,14.200,13.200,13.100\r\n" +
-                    "Total (tonnes),182.000,180.500,165.500,164.000,149.000,147.500\r\n";
+                    "15. Vapes and electronic cigarettes,19.400,19.300,18.300,18.200,17.200,17.100\r\n" +
+                    "Total (tonnes),186.000,184.500,169.500,168.000,153.000,151.500\r\n";
 
                 result.FileContent.Should().Be(expectedCsvData);
                 result.FileName.Should().Contain($"{request.ComplianceYear}_Summary report");
