@@ -393,10 +393,10 @@
                 var result = await dataAccess.GetIncompletePaymentSessions(180, 10);
 
                 // Assert
-                result.Count.Should().BeGreaterOrEqualTo(2);
-                result.Should().Contain(p => p.Id == paymentSession1.Id);
-                result.Should().Contain(p => p.Id == paymentSession2.Id);
-                result.Should().NotContain(p => p.Id == paymentSession3.Id);
+                result.Count.Should().Be(1);  // Only one session should be returned
+                result.Should().Contain(p => p.Id == paymentSession1.Id);  // Only the old session
+                result.Should().NotContain(p => p.Id == paymentSession2.Id);  // Too new
+                result.Should().NotContain(p => p.Id == paymentSession3.Id);  // Final state
             }
         }
 
