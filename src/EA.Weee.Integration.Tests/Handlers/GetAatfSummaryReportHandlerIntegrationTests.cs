@@ -249,7 +249,8 @@
                     new NoteTonnage(WeeeCategory.ElectricalAndElectronicTools, 11, 12),
                     new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, 12, 13),
                     new NoteTonnage(WeeeCategory.LightingEquipment, 13, 14),
-                    new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 14, 15)
+                    new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 14, 15),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, 15, 16)
                 };
                 return categories;
             }
@@ -271,7 +272,8 @@
                     new NoteTonnage(WeeeCategory.ElectricalAndElectronicTools, received, reused),
                     new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, received, reused),
                     new NoteTonnage(WeeeCategory.LightingEquipment, received, reused),
-                    new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, received, reused)
+                    new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, received, reused),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, received, reused)
                 };
                 return categories;
             }
@@ -293,7 +295,8 @@
                     new NoteTonnage(WeeeCategory.ElectricalAndElectronicTools, null, null),
                     new NoteTonnage(WeeeCategory.GasDischargeLampsAndLedLightSources, null, null),
                     new NoteTonnage(WeeeCategory.LightingEquipment, null, null),
-                    new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, null, null)
+                    new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, null, null),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, null, null)
                 };
                 return categories;
             }
@@ -322,7 +325,8 @@
                     "12. Appliances containing refrigerants,9.400,9.300,8.300,8.200,7.200,7.100\r\n" +
                     "13. Gas discharge lamps and LED light sources,16.400,16.300,15.300,15.200,14.200,14.100\r\n" +
                     "14. Photovoltaic panels,14.400,14.300,13.300,13.200,12.200,12.100\r\n" +
-                    "Total (tonnes),166.600,165.200,151.200,149.800,135.800,134.400\r\n";
+                    "15. Vapes and electronic cigarettes,19.400,19.300,18.300,18.200,17.200,17.100\r\n" +
+                    "Total (tonnes),186.000,184.500,169.500,168.000,153.000,151.500\r\n";
 
                 result.FileContent.Should().Be(expectedCsvData);
                 result.FileName.Should().Contain($"{request.ComplianceYear}_Summary report");
@@ -369,6 +373,7 @@
                     "12. Appliances containing refrigerants,0.000,0.000,0.000,0.000,0.000,0.000\r\n" +
                     "13. Gas discharge lamps and LED light sources,0.000,0.000,0.000,0.000,0.000,0.000\r\n" +
                     "14. Photovoltaic panels,0.000,0.000,0.000,0.000,0.000,0.000\r\n" +
+                    "15. Vapes and electronic cigarettes,0.000,0.000,0.000,0.000,0.000,0.000\r\n" +
                     "Total (tonnes),0.000,0.000,0.000,0.000,0.000,0.000\r\n";
 
                 result.FileContent.Should().Be(expectedCsvData);
