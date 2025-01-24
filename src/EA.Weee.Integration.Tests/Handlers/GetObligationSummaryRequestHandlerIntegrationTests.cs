@@ -51,6 +51,7 @@
                     new ObligationSchemeAmount(WeeeCategory.ITAndTelecommsEquipment, 150.5M),
                     new ObligationSchemeAmount(WeeeCategory.LightingEquipment, null),
                     new ObligationSchemeAmount(WeeeCategory.MonitoringAndControlInstruments, 1),
+                    new ObligationSchemeAmount(WeeeCategory.VapesAndElectronicCigarettes, 2),
                 };
                 ObligationSchemeDbSetup.Init()
                                        .WithScheme(scheme.Id)
@@ -76,6 +77,7 @@
                     new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.LightingEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 1, 0),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, 2, 1),
                 };
 
                 var note = EvidenceNoteDbSetup.Init()
@@ -102,6 +104,7 @@
                     new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 80, 70),
                     new NoteTonnage(WeeeCategory.LightingEquipment, 10, null),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 20, 0),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, 30, 0),
                 };
 
                 EvidenceNoteDbSetup.Init()
@@ -376,6 +379,7 @@
                     new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 80, 70),
                     new NoteTonnage(WeeeCategory.LightingEquipment, 10, null),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 20, 0),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, 30, 0),
                 };
 
                 EvidenceNoteDbSetup.Init()
@@ -550,6 +554,17 @@
                 category.TransferredOut.Should().BeNull();
                 category.EvidenceOriginal.Should().Be(21);
                 category.EvidenceDifference.Should().Be(21);
+
+                category =
+                    result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.VapesAndElectronicCigarettes.ToInt());
+                category.Obligation.Should().Be(2);
+                category.Evidence.Should().Be(32);
+                category.Difference.Should().Be(30);
+                category.Reuse.Should().Be(1);
+                category.TransferredIn.Should().BeNull();
+                category.TransferredOut.Should().BeNull();
+                category.EvidenceOriginal.Should().Be(32);
+                category.EvidenceDifference.Should().Be(32);
             };
         }
 
@@ -584,6 +599,7 @@
                     new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.LightingEquipment, 1, 1),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 1, 0),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, 2, 0),
                 };
 
                 var note = EvidenceNoteDbSetup.Init().WithRecipient(pbsId)
@@ -609,6 +625,7 @@
                     new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, 80, 70),
                     new NoteTonnage(WeeeCategory.LightingEquipment, 10, null),
                     new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, 20, 0),
+                    new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, 30, 0),
                 };
 
                 EvidenceNoteDbSetup.Init().WithRecipient(pbsId)
@@ -1027,6 +1044,17 @@
                 category.TransferredOut.Should().BeNull();
                 category.EvidenceOriginal.Should().Be(21);
                 category.EvidenceDifference.Should().Be(21);
+
+                category =
+                    result.ObligationEvidenceValues.First(r => r.CategoryId.ToInt() == WeeeCategory.VapesAndElectronicCigarettes.ToInt());
+                category.Obligation.Should().BeNull();
+                category.Evidence.Should().Be(32);
+                category.Difference.Should().Be(32);
+                category.Reuse.Should().Be(0);
+                category.TransferredIn.Should().BeNull();
+                category.TransferredOut.Should().BeNull();
+                category.EvidenceOriginal.Should().Be(32);
+                category.EvidenceDifference.Should().Be(32);
             };
         }
 
