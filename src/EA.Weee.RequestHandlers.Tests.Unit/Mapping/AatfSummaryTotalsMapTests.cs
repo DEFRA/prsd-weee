@@ -51,13 +51,16 @@
         public void Map_GivenSourceThatContainsCategoryIdNotMatchingCategoryEnum_ItemsShouldBeMapped()
         {
             //arrange
+
+            // only want to map valid WeeeCategory values, so ensure higher values are not mapped
             var categories = Enum.GetValues(typeof(WeeeCategory)).Cast<int>();
+            var maxId = categories.Max();
 
             var source = new List<AatfEvidenceSummaryTotalsData>()
             {
                 new AatfEvidenceSummaryTotalsData()
                 {
-                    CategoryId = (Domain.Lookup.WeeeCategory)15
+                    CategoryId = (Domain.Lookup.WeeeCategory)(maxId + 1)
                 }
             };
 
