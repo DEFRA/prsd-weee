@@ -51,6 +51,8 @@
         public void Map_GivenSourceThatContainsCategoryIdNotMatchingCategoryEnum_ItemsShouldBeMapped()
         {
             //arrange
+            var categories = Enum.GetValues(typeof(WeeeCategory)).Cast<int>();
+
             var source = new List<AatfEvidenceSummaryTotalsData>()
             {
                 new AatfEvidenceSummaryTotalsData()
@@ -66,11 +68,12 @@
                     CategoryId = (Domain.Lookup.WeeeCategory)value.Key
                 });
             }
+
             //act
             var result = map.Map(source);
 
             //assert
-            result.Should().HaveCount(14);
+            result.Should().HaveCount(categories.Count());
         }
     }
 }
