@@ -11,7 +11,7 @@
 
     internal class AatfSummaryTotalsMap : IMap<List<AatfEvidenceSummaryTotalsData>, List<EvidenceSummaryTonnageData>>
     {
-        private int MaxCategoryId => 14;
+        private int MaxCategoryId => System.Enum.GetValues(typeof(WeeeCategory)).Cast<int>().Max();
 
         public List<EvidenceSummaryTonnageData> Map(List<AatfEvidenceSummaryTotalsData> source)
         {
