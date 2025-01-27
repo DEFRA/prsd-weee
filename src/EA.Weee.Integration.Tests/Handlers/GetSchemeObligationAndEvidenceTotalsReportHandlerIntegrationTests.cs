@@ -1367,7 +1367,7 @@ All producer compliance schemes,,Total (tonnes),4454.735,1543.069,299.000,101.00
 {scheme1.SchemeName},{scheme1.ApprovalNumber},14. Photovoltaic panels,1000.000,101.000,51.000,0.000,0.000,-899.000,100.000,50.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},15. Vapes and electronic cigarettes,1.000,21.000,0.000,0.000,0.000,20.000,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},Category 2-10 summary,2671.735,750.280,103.000,101.000,72.280,-1921.455,,
-{scheme1.SchemeName},{scheme1.ApprovalNumber},Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
+{scheme1.SchemeName},{scheme1.ApprovalNumber},Total (tonnes),4439.735,1407.069,268.000,101.000,72.280,-3032.666,100.000,50.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},1. Large household appliances,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},2. Small household appliances,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},3. IT and telecommunications equipment,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
@@ -1384,7 +1384,7 @@ All producer compliance schemes,,Total (tonnes),4454.735,1543.069,299.000,101.00
 {scheme2.SchemeName},{scheme2.ApprovalNumber},14. Photovoltaic panels,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},15. Vapes and electronic cigarettes,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},Category 2-10 summary,9.000,9.000,9.000,0.000,0.000,0.000,,
-{scheme2.SchemeName},{scheme2.ApprovalNumber},Total (tonnes),14.000,14.000,14.000,0.000,0.000,0.000,14.000,14.000
+{scheme2.SchemeName},{scheme2.ApprovalNumber},Total (tonnes),15.000,15.000,15.000,0.000,0.000,0.000,15.000,15.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},1. Large household appliances,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},2. Small household appliances,0.000,100.000,0.000,0.000,100.000,100.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},3. IT and telecommunications equipment,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
@@ -1418,7 +1418,7 @@ All producer compliance schemes,,Total (tonnes),4454.735,1543.069,299.000,101.00
 {scheme3.SchemeName},{scheme3.ApprovalNumber},14. Photovoltaic panels,0.000,1.000,1.000,0.000,0.000,1.000,0.000,0.000
 {scheme3.SchemeName},{scheme3.ApprovalNumber},15. Vapes and electronic cigarettes,0.000,1.000,1.000,0.000,0.000,1.000,0.000,0.000
 {scheme3.SchemeName},{scheme3.ApprovalNumber},Category 2-10 summary,0.000,9.000,9.000,0.000,0.000,9.000,,
-{scheme3.SchemeName},{scheme3.ApprovalNumber},Total (tonnes),0.000,14.000,14.000,0.000,0.000,14.000,0.000,0.000
+{scheme3.SchemeName},{scheme3.ApprovalNumber},Total (tonnes),0.000,15.000,15.000,0.000,0.000,15.000,0.000,0.000
 ");
                 result.FileContent.Should().NotContain("DO NOT INCLUDE");
                 result.FileName.Should().Contain($"2022_PCS evidence and obligation progress{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
@@ -1968,7 +1968,7 @@ All producer compliance schemes,,Total (tonnes),4454.735,1528.069,284.000,101.00
 {scheme1.SchemeName},{scheme1.ApprovalNumber},14. Photovoltaic panels,1000.000,101.000,51.000,0.000,0.000,-899.000,100.000,50.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},15. Vapes and electronic cigarettes,1.000,21.000,0.000,0.000,0.000,20.000,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},Category 2-10 summary,2671.735,750.280,103.000,101.000,72.280,-1921.455,,
-{scheme1.SchemeName},{scheme1.ApprovalNumber},Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
+{scheme1.SchemeName},{scheme1.ApprovalNumber},Total (tonnes),4439.735,1407.069,268.000,101.000,72.280,-3032.666,100.000,50.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},1. Large household appliances,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},2. Small household appliances,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},3. IT and telecommunications equipment,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
@@ -1985,7 +1985,7 @@ All producer compliance schemes,,Total (tonnes),4454.735,1528.069,284.000,101.00
 {scheme2.SchemeName},{scheme2.ApprovalNumber},14. Photovoltaic panels,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},15. Vapes and electronic cigarettes,1.000,1.000,1.000,0.000,0.000,0.000,1.000,1.000
 {scheme2.SchemeName},{scheme2.ApprovalNumber},Category 2-10 summary,9.000,9.000,9.000,0.000,0.000,0.000,,
-{scheme2.SchemeName},{scheme2.ApprovalNumber},Total (tonnes),14.000,14.000,14.000,0.000,0.000,0.000,14.000,14.000
+{scheme2.SchemeName},{scheme2.ApprovalNumber},Total (tonnes),15.000,15.000,15.000,0.000,0.000,0.000,15.000,15.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},1. Large household appliances,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},2. Small household appliances,0.000,100.000,0.000,0.000,100.000,100.000,0.000,0.000
 {scheme4.SchemeName},{scheme4.ApprovalNumber},3. IT and telecommunications equipment,0.000,0.000,0.000,0.000,0.000,0.000,0.000,0.000
