@@ -421,7 +421,7 @@
 {scheme.SchemeName},{scheme.ApprovalNumber},14. Photovoltaic panels,1000.000,101.000,51.000,0.000,0.000,-899.000,100.000,50.000
 {scheme.SchemeName},{scheme.ApprovalNumber},15. Vapes and electronic cigarettes,1.000,21.000,0.000,0.000,0.000,20.000,0.000,0.000
 {scheme.SchemeName},{scheme.ApprovalNumber},Category 2-10 summary,2671.735,750.280,103.000,101.000,72.280,-1921.455,,
-{scheme.SchemeName},{scheme.ApprovalNumber},Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
+{scheme.SchemeName},{scheme.ApprovalNumber},Total (tonnes),4439.735,1407.069,268.000,101.000,72.280,-3032.666,100.000,50.000
 ");
 
                 result.FileName.Should().Contain($"2022_{scheme.ApprovalNumber}_PCS evidence and obligation progress{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
@@ -825,7 +825,7 @@
 14. Photovoltaic panels,1000.000,101.000,51.000,0.000,0.000,-899.000,100.000,50.000
 15. Vapes and electronic cigarettes,1.000,21.000,0.000,0.000,0.000,20.000,0.000,0.000
 Category 2-10 summary,2671.735,750.280,103.000,101.000,72.280,-1921.455,,
-Total (tonnes),4438.735,1386.069,268.000,101.000,72.280,-3052.666,100.000,50.000
+Total (tonnes),4439.735,1407.069,268.000,101.000,72.280,-3032.666,100.000,50.000
 ");
                 result.FileName.Should().Contain($"2022_PCS Summary{SystemTime.Now.ToString(DateTimeConstants.EvidenceReportFilenameTimestampFormat)}");
                 result.FileName.Should().EndWith(".csv");
@@ -1350,7 +1350,7 @@ All producer compliance schemes,,13. Gas discharge lamps and LED light sources,1
 All producer compliance schemes,,14. Photovoltaic panels,1001.000,103.000,53.000,0.000,0.000,-898.000,101.000,51.000
 All producer compliance schemes,,15. Vapes and electronic cigarettes,2.000,23.000,2.000,0.000,0.000,21.000,1.000,1.000
 All producer compliance schemes,,Category 2-10 summary,2680.735,874.280,122.000,101.000,178.280,-1806.455,,
-All producer compliance schemes,,Total (tonnes),4452.735,1520.069,297.000,101.000,178.280,-2932.666,114.000,64.000
+All producer compliance schemes,,Total (tonnes),4454.735,1543.069,299.000,101.000,178.280,-2911.666,115.000,65.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},1. Large household appliances,567.000,101.000,1.000,0.000,0.000,-466.000,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},2. Small household appliances,20.000,26.000,1.000,100.000,0.000,6.000,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},3. IT and telecommunications equipment,150.500,81.000,71.000,0.000,0.000,-69.500,0.000,0.000
@@ -1951,7 +1951,7 @@ All producer compliance schemes,,13. Gas discharge lamps and LED light sources,1
 All producer compliance schemes,,14. Photovoltaic panels,1001.000,102.000,52.000,0.000,0.000,-899.000,101.000,51.000
 All producer compliance schemes,,15. Vapes and electronic cigarettes,2.000,22.000,1.000,0.000,0.000,20.000,1.000,1.000
 All producer compliance schemes,,Category 2-10 summary,2680.735,865.280,113.000,101.000,178.280,-1815.455,,
-All producer compliance schemes,,Total (tonnes),4452.735,1506.069,283.000,101.000,178.280,-2946.666,114.000,64.000
+All producer compliance schemes,,Total (tonnes),4454.735,1528.069,284.000,101.000,178.280,-2926.666,115.000,65.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},1. Large household appliances,567.000,101.000,1.000,0.000,0.000,-466.000,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},2. Small household appliances,20.000,26.000,1.000,100.000,0.000,6.000,0.000,0.000
 {scheme1.SchemeName},{scheme1.ApprovalNumber},3. IT and telecommunications equipment,150.500,81.000,71.000,0.000,0.000,-69.500,0.000,0.000
