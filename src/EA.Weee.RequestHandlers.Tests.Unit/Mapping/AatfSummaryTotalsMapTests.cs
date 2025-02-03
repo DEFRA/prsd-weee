@@ -54,13 +54,13 @@
 
             // only want to map valid WeeeCategory values, so ensure higher values are not mapped
             var categories = EnumHelper.GetValues(typeof(WeeeCategory));
-            var maxId = categories.Max(x => x.Key);
+            var maxCategoryId = categories.Max(x => x.Key);
 
             var source = new List<AatfEvidenceSummaryTotalsData>()
             {
                 new AatfEvidenceSummaryTotalsData()
                 {
-                    CategoryId = (Domain.Lookup.WeeeCategory)(maxId + 1)
+                    CategoryId = (Domain.Lookup.WeeeCategory)(maxCategoryId + 1)
                 }
             };
 
