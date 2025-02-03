@@ -52,7 +52,8 @@
         {
             //arrange
 
-            // only want to map valid WeeeCategory values, so ensure higher values are not mapped
+            // ensure only valid WeeeCategory values are mapped by adding an invalid category (id too high)
+            // as well as all valid categories
             var categories = EnumHelper.GetValues(typeof(WeeeCategory));
             var maxCategoryId = categories.Max(x => x.Key);
 
