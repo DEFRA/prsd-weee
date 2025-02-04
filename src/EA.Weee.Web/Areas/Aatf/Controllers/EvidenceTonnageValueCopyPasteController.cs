@@ -1,5 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.Aatf.Controllers
 {
+    using System;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using EA.Weee.Core.Aatf;
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
@@ -8,10 +12,6 @@
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using System;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
 
     public class EvidenceTonnageValueCopyPasteController : AatfEvidenceBaseController
     {
@@ -30,7 +30,7 @@
 
         [HttpGet]
         public async Task<ActionResult> Index(Guid organisationId, string returnAction, int complianceYear, bool redirect = false)
-        { 
+        {
             await SetBreadcrumb(organisationId, BreadCrumbConstant.AatfManageEvidence);
 
             var evidenceModel = sessionService.GetTransferSessionObject<EditEvidenceNoteViewModel>(SessionKeyConstant.EditEvidenceViewModelKey);
@@ -40,13 +40,13 @@
                 return ReturnLinkCase(returnAction, evidenceModel, complianceYear);
             }
 
-            var model = new EvidenceTonnageValueCopyPasteViewModel() 
-                { 
-                    OrganisationId = evidenceModel.OrganisationId, 
-                    AatfId = evidenceModel.AatfId, 
-                    Action = returnAction, 
-                    EvidenceId = evidenceModel.Id,
-                    ComplianceYear = complianceYear
+            var model = new EvidenceTonnageValueCopyPasteViewModel()
+            {
+                OrganisationId = evidenceModel.OrganisationId,
+                AatfId = evidenceModel.AatfId,
+                Action = returnAction,
+                EvidenceId = evidenceModel.Id,
+                ComplianceYear = complianceYear
             };
 
             return View(model);
@@ -80,7 +80,7 @@
             {
                 case EvidenceCopyPasteActionConstants.EditEvidenceNoteAction:
                     return RedirectToRoute(AatfEvidenceRedirect.EditEvidenceRouteName, new { organisationId = evidenceModel.OrganisationId, aatfId = evidenceModel.AatfId, evidenceNoteId = evidenceModel.Id, returnFromCopyPaste = true, complianceYear });
-                default: 
+                default:
                     return RedirectToAction("CreateEvidenceNote", "ManageEvidenceNotes", new { evidenceModel.OrganisationId, evidenceModel.AatfId, complianceYear, returnFromCopyPaste = true });
             }
         }
