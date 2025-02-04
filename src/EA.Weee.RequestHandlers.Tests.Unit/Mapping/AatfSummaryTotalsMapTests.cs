@@ -51,26 +51,33 @@
         public void Map_GivenSourceThatContainsCategoryIdNotMatchingCategoryEnum_ItemsShouldBeMapped()
         {
             //arrange
+
+            // ensure only valid WeeeCategory values are mapped by adding an invalid category (id too high)
+            // as well as all valid categories
+            var categories = EnumHelper.GetValues(typeof(WeeeCategory));
+            var maxCategoryId = categories.Max(x => x.Key);
+
             var source = new List<AatfEvidenceSummaryTotalsData>()
             {
                 new AatfEvidenceSummaryTotalsData()
                 {
-                    CategoryId = (Domain.Lookup.WeeeCategory)15
+                    CategoryId = (Domain.Lookup.WeeeCategory)(maxCategoryId + 1)
                 }
             };
 
-            foreach (var value in EnumHelper.GetValues(typeof(WeeeCategory)))
+            foreach (var value in categories)
             {
                 source.Add(new AatfEvidenceSummaryTotalsData()
                 {
                     CategoryId = (Domain.Lookup.WeeeCategory)value.Key
                 });
             }
+
             //act
             var result = map.Map(source);
 
             //assert
-            result.Should().HaveCount(14);
+            result.Should().HaveCount(categories.Count());
         }
     }
 }
