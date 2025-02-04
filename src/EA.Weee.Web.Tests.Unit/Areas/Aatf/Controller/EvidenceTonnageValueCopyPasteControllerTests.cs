@@ -1,5 +1,9 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Controller
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using AutoFixture;
     using EA.Weee.Core.Aatf;
     using EA.Weee.Core.AatfEvidence;
@@ -12,10 +16,6 @@
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Weee.Tests.Core;
     using Xunit;
 
