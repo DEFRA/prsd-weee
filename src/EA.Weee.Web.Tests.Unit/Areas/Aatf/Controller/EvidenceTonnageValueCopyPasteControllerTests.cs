@@ -5,8 +5,10 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using AutoFixture;
+    using EA.Prsd.Core.Helpers;
     using EA.Weee.Core.Aatf;
     using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Aatf.Controllers;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
@@ -109,6 +111,8 @@
             result.Model.Should().BeOfType<EvidenceTonnageValueCopyPasteViewModel>();
             var convertedModel = (EvidenceTonnageValueCopyPasteViewModel)result.Model;
             convertedModel.ComplianceYear.Should().Be(complianceYear);
+
+            var categories = EnumHelper.GetValues(typeof(WeeeCategory));
         }
 
         [Theory]
