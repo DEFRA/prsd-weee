@@ -47,7 +47,7 @@
                 Action = returnAction,
                 EvidenceId = evidenceModel.Id,
                 ComplianceYear = complianceYear,
-                MaxWeeeCategoryId = 15
+                MaxWeeeCategoryId = evidenceModel.CategoryValues.Max(x => x.CategoryId)
             };
 
             return View(model);
