@@ -46,7 +46,8 @@
                 AatfId = evidenceModel.AatfId,
                 Action = returnAction,
                 EvidenceId = evidenceModel.Id,
-                ComplianceYear = complianceYear
+                ComplianceYear = complianceYear,
+                MaxWeeeCategoryId = 15
             };
 
             return View(model);
