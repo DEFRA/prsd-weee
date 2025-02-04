@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using AutoFixture;
@@ -113,6 +114,9 @@
             convertedModel.ComplianceYear.Should().Be(complianceYear);
 
             var categories = EnumHelper.GetValues(typeof(WeeeCategory));
+            var maxCategoryId = categories.Max(x => x.Key);
+            convertedModel.MaxWeeeCategoryId.Should().Be(maxCategoryId);
+            convertedModel.WeeeCategoryCount.Should().Be(categories.Count);
         }
 
         [Theory]
