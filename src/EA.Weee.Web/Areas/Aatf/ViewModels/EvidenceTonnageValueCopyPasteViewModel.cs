@@ -17,5 +17,7 @@
         public int ComplianceYear { get; set; }
 
         public int MaxWeeeCategoryId { get; internal set; }
+
+        public int WeeeCategoryCount { get; internal set; }
     }
 }
