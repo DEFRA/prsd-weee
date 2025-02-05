@@ -23,7 +23,7 @@
         [Fact]
         public void GivenGDLabel_WithHtmlAttributes_AndNonRequiredField_AndNoOptionalLabel_ShouldNotContainOptionalText()
         {
-            var control = htmlHelper.Gds().LabelFor(m => m.TopLevel, new {}, false);
+            var control = htmlHelper.Gds().LabelFor(m => m.TopLevel, new { }, false);
 
             control.ToString().Should().NotContain(OptionalText);
         }
@@ -39,7 +39,7 @@
         [Fact]
         public void GivenGDLabel_WithHtmlAttributes_AndNoWithRequiredField_AndOptionalLabel_ShouldContainOptionalText()
         {
-            var control = htmlHelper.Gds().LabelFor(m => m.TopLevel, new {}, true);
+            var control = htmlHelper.Gds().LabelFor(m => m.TopLevel, new { }, true);
 
             control.ToString().Should().Contain(OptionalText);
         }

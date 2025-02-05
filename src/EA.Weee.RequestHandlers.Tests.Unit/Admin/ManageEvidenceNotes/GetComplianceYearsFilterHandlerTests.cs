@@ -127,7 +127,7 @@
         public async Task HandleAsync_GivenNoComplianceYears_ShouldReturnEmptyList()
         {
             // arrange
-            var newRequest = new GetComplianceYearsFilter(new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Returned});
+            var newRequest = new GetComplianceYearsFilter(new List<NoteStatus> { NoteStatus.Approved, NoteStatus.Submitted, NoteStatus.Returned });
 
             A.CallTo(() => evidenceDataAccess.GetComplianceYearsForNotes(A<List<int>>._)).Returns(new List<int>());
 

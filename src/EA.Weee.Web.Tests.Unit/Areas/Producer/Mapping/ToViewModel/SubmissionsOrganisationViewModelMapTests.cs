@@ -151,9 +151,11 @@
 
             producerSubmission.SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>()
             {
-                { 2024, fixture.Build<SmallProducerSubmissionHistoryData>()
+                {
+                    2024, fixture.Build<SmallProducerSubmissionHistoryData>()
                     .With(x => x.EEEBrandNames, expectedBrandNames)
-                    .Create() }
+                    .Create()
+                }
             };
             producerSubmission.EeeBrandNames = expectedBrandNames;
 

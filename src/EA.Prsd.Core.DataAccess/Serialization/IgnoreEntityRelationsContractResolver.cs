@@ -1,19 +1,18 @@
 ﻿namespace EA.Prsd.Core.DataAccess.Serialization
 {
+    using EA.Prsd.Core.Domain;
+    using Newtonsoft.Json;
+    using Newtonsoft.Json.Serialization;
     using System;
     using System.Collections.Generic;
     using System.Reflection;
-    using Newtonsoft.Json;
-    using Newtonsoft.Json.Serialization;
-    using Prsd.Core.Domain;
 
     /// <summary>
     ///     A contract resolver which ignores properties that are of type Entity or IEnumerable&lt;Entity&gt;.
     /// </summary>
     internal class IgnoreEntityRelationsContractResolver : DefaultContractResolver
     {
-        protected override JsonProperty CreateProperty(MemberInfo member,
-            MemberSerialization memberSerialization)
+        protected override JsonProperty CreateProperty(MemberInfo member, MemberSerialization memberSerialization)
         {
             var property = base.CreateProperty(member, memberSerialization);
             var isDefaultValueIgnored =
@@ -29,6 +28,7 @@
                     ? o => oldShouldSerialize(o) && shouldSerialize(o)
                     : shouldSerialize;
             }
+
             return property;
         }
     }

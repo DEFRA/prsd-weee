@@ -85,10 +85,7 @@
                 return new AatfDeliveryLocation(approvalNumber, facilityName);
             }
 
-            public static AatfDeliveryLocation NewAatfDeliveryLocation
-            {
-                get { return new AatfDeliveryLocationBuilder().Build(); }
-            }
+            public static AatfDeliveryLocation NewAatfDeliveryLocation => new AatfDeliveryLocationBuilder().Build();
 
             public static AatfDeliveryLocation WithApprovalNumber(string approvalNumber)
             {

@@ -24,7 +24,7 @@
 
         public RuleElement this[int index]
         {
-            get { return (RuleElement)BaseGet(index); }
+            get => (RuleElement)BaseGet(index);
             set
             {
                 if (BaseGet(index) != null)

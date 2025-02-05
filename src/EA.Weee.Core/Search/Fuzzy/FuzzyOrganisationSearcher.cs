@@ -57,9 +57,6 @@
             }
         }
 
-        protected override double ConfidenceThreshold
-        {
-            get { return 0.7; }
-        }
+        protected override double ConfidenceThreshold => 0.7;
     }
 }

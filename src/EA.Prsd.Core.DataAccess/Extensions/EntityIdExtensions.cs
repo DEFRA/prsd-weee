@@ -1,9 +1,9 @@
 ﻿namespace EA.Prsd.Core.DataAccess.Extensions
 {
+    using EA.Prsd.Core.Domain;
+    using EA.Prsd.Core.Identity;
     using System.Data.Entity;
     using System.Linq;
-    using Prsd.Core.Domain;
-    using Prsd.Core.Identity;
 
     public static class EntityIdExtensions
     {

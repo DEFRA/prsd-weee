@@ -1,10 +1,9 @@
 ﻿namespace EA.Prsd.Core.DataAccess.Extensions
 {
+    using EA.Prsd.Core;
+    using EA.Prsd.Core.Domain;
+    using EA.Prsd.Core.Domain.Auditing;
     using Newtonsoft.Json;
-    using Prsd.Core;
-    using Prsd.Core.Domain;
-    using Prsd.Core.Domain.Auditing;
-    using Serialization;
     using System;
     using System.Collections.Concurrent;
     using System.Collections.Generic;
@@ -12,7 +11,6 @@
     using System.Data.Entity.Core.Mapping;
     using System.Data.Entity.Core.Metadata.Edm;
     using System.Data.Entity.Infrastructure;
-    using System.Diagnostics;
     using System.Linq;
 
     public static class AuditorExtensions
@@ -38,21 +36,15 @@
                 AuditLog auditLog;
                 if (entity.State == EntityState.Added)
                 {
-                    auditLog = new AuditLog(userId, SystemTime.UtcNow, EventType.Added, tableName, entityId,
-                        null,
-                        Serialize(entity.CurrentValues));
+                    auditLog = new AuditLog(userId, SystemTime.UtcNow, EventType.Added, tableName, entityId, null, Serialize(entity.CurrentValues));
                 }
                 else if (entity.State == EntityState.Deleted)
                 {
-                    auditLog = new AuditLog(userId, SystemTime.UtcNow, EventType.Deleted, tableName, entityId,
-                        Serialize(entity.OriginalValues),
-                        null);
+                    auditLog = new AuditLog(userId, SystemTime.UtcNow, EventType.Deleted, tableName, entityId, Serialize(entity.OriginalValues), null);
                 }
                 else if (entity.State == EntityState.Modified)
                 {
-                    auditLog = new AuditLog(userId, SystemTime.UtcNow, EventType.Modified, tableName, entityId,
-                        Serialize(entity.OriginalValues),
-                        Serialize(entity.CurrentValues));
+                    auditLog = new AuditLog(userId, SystemTime.UtcNow, EventType.Modified, tableName, entityId, Serialize(entity.OriginalValues), Serialize(entity.CurrentValues));
                 }
                 else
                 {
@@ -102,7 +94,7 @@
             var metadata = ((IObjectContextAdapter)context).ObjectContext.MetadataWorkspace;
 
             // Get the part of the model that contains info about the actual CLR types
-            var objectItemCollection = ((ObjectItemCollection)metadata.GetItemCollection(DataSpace.OSpace));
+            var objectItemCollection = (ObjectItemCollection)metadata.GetItemCollection(DataSpace.OSpace);
 
             // Get the entity type from the model that maps to the CLR type
             var entityType = metadata
@@ -135,8 +127,7 @@
             return string.Format("[{0}].[{1}]", tableSchema, tableName);
         }
 
-        private static TVal GetFromCache<TKey, TVal>(ConcurrentDictionary<TKey, TVal> dictionary, TKey key,
-            Func<TKey, TVal> valueFactory)
+        private static TVal GetFromCache<TKey, TVal>(ConcurrentDictionary<TKey, TVal> dictionary, TKey key, Func<TKey, TVal> valueFactory)
         {
             lock (dictionary)
             {

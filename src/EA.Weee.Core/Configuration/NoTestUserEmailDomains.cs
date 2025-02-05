@@ -9,17 +9,8 @@
     /// </summary>
     public class NoTestUserEmailDomains : ITestUserEmailDomains
     {
-        public bool UserTestModeEnabled
-        {
-            get { return false; }
-        }
+        public bool UserTestModeEnabled => false;
 
-        public IEnumerable<string> Domains
-        {
-            get
-            {
-                return Enumerable.Empty<string>();
-            }
-        }
+        public IEnumerable<string> Domains => Enumerable.Empty<string>();
     }
 }

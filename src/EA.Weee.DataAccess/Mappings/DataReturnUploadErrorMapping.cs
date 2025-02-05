@@ -3,9 +3,9 @@
     using Domain.DataReturns;
     using System.Data.Entity.ModelConfiguration;
 
-    internal class DataReturnsUploadErrorrMapping : EntityTypeConfiguration<DataReturnUploadError>
+    internal class DataReturnUploadErrorMapping : EntityTypeConfiguration<DataReturnUploadError>
     {
-        public DataReturnsUploadErrorrMapping()
+        public DataReturnUploadErrorMapping()
         {
             ToTable("DataReturnUploadError", "PCS");
 

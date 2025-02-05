@@ -184,10 +184,7 @@
                     postCode);
             }
 
-            public static ProducerAddress NewProducerAddress
-            {
-                get { return new ProducerAddressBuilder().Build(); }
-            }
+            public static ProducerAddress NewProducerAddress => new ProducerAddressBuilder().Build();
 
             public static ProducerAddress WithPrimaryName(string primaryName)
             {

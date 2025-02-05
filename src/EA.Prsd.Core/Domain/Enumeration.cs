@@ -23,10 +23,7 @@
 
         public int Value
         {
-            get
-            {
-                return this.value;
-            }
+            get => this.value;
             protected set
             {
                 this.value = value;
@@ -53,10 +50,7 @@
 
         public string DisplayName
         {
-            get
-            {
-                return this.displayName;
-            }
+            get => this.displayName;
 
             // Entity Framework will only retrieve and set the display name.
             // Use this setter to find the corresponding value as defined in the static fields.

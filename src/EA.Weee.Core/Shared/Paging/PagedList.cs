@@ -89,13 +89,7 @@ namespace EA.Weee.Core.Shared.Paging
         public int PageCount { get; private set; }
         public int TotalItemCount { get; private set; }
         public int PageIndex { get; private set; }
-        public int PageNumber
-        {
-            get
-            {
-                return PageIndex + 1;
-            }
-        }
+        public int PageNumber => PageIndex + 1;
         public int PageSize { get; private set; }
         public bool HasPreviousPage { get; private set; }
         public bool HasNextPage { get; private set; }

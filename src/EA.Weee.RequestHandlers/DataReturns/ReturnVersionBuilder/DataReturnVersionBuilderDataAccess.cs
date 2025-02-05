@@ -21,21 +21,9 @@
         private Dictionary<string, AatfDeliveryLocation> cachedAatfDeliveryLocations;
         private Dictionary<string, AeDeliveryLocation> cachedAeDeliveryLocations;
 
-        public ReadOnlyDictionary<string, AatfDeliveryLocation> CachedAatfDeliveryLocations
-        {
-            get
-            {
-                return new ReadOnlyDictionary<string, AatfDeliveryLocation>(cachedAatfDeliveryLocations);
-            }
-        }
+        public ReadOnlyDictionary<string, AatfDeliveryLocation> CachedAatfDeliveryLocations => new(cachedAatfDeliveryLocations);
 
-        public ReadOnlyDictionary<string, AeDeliveryLocation> CachedAeDeliveryLocations
-        {
-            get
-            {
-                return new ReadOnlyDictionary<string, AeDeliveryLocation>(cachedAeDeliveryLocations);
-            }
-        }
+        public ReadOnlyDictionary<string, AeDeliveryLocation> CachedAeDeliveryLocations => new(cachedAeDeliveryLocations);
 
         public DataReturnVersionBuilderDataAccess(Scheme scheme, Quarter quarter, WeeeContext context)
         {

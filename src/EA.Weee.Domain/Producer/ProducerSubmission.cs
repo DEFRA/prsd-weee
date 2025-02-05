@@ -168,13 +168,7 @@
             }
         }
 
-        public virtual string HasAnnualCharge
-        {
-            get
-            {
-                return MemberUpload.HasAnnualCharge ? "Yes" : "No";
-            }
-        }
+        public virtual string HasAnnualCharge => MemberUpload.HasAnnualCharge ? "Yes" : "No";
 
         public override int GetHashCode()
         {
@@ -213,8 +207,8 @@
         /// </summary>
         public string DatabaseObligationType
         {
-            get { return ObligationType.ToString(); }
-            set { ObligationType = (ObligationType)Enum.Parse(typeof(ObligationType), value); }
+            get => ObligationType.ToString();
+            set => ObligationType = (ObligationType)Enum.Parse(typeof(ObligationType), value);
         }
 
         internal void SetAsInvoiced()

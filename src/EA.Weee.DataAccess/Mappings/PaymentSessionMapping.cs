@@ -3,9 +3,9 @@
     using EA.Weee.Domain.Producer;
     using System.Data.Entity.ModelConfiguration;
 
-    internal class PaymentSessionConfiguration : EntityTypeConfiguration<PaymentSession>
+    internal class PaymentSessionMapping : EntityTypeConfiguration<PaymentSession>
     {
-        public PaymentSessionConfiguration()
+        public PaymentSessionMapping()
         {
             ToTable("PaymentSession", "Producer");
 

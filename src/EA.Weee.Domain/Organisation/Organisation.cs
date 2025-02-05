@@ -53,7 +53,7 @@
 
         public string CompanyRegistrationNumber
         {
-            get { return companyRegistrationNumber; }
+            get => companyRegistrationNumber;
             private set
             {
                 if (value != null && (value.Length < 5 || value.Length > 30))
@@ -182,15 +182,9 @@
             NpwdMigratedComplete = true;
         }
 
-        public bool HasBusinessAddress
-        {
-            get { return BusinessAddress != null; }
-        }
+        public bool HasBusinessAddress => BusinessAddress != null;
 
-        public bool HasNotificationAddress
-        {
-            get { return NotificationAddress != null; }
-        }
+        public bool HasNotificationAddress => NotificationAddress != null;
 
         /// <summary>
         /// Provides a name that can be displayed to identify the organisation.

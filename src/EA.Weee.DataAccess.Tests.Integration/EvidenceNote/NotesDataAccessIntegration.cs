@@ -663,7 +663,7 @@
                 {
                     NoteTypeFilter = new List<NoteType>() { NoteType.EvidenceNote },
                     SearchRef = noteShouldBeFound.Reference.ToString(),
-                    AllowedStatuses = new List<NoteStatus>() { noteShouldBeFound.Status}
+                    AllowedStatuses = new List<NoteStatus>() { noteShouldBeFound.Status }
                 };
 
                 var notes = await dataAccess.GetAllNotes(filter);
