@@ -1,6 +1,5 @@
 ﻿namespace EA.Weee.Core.Shared.CsvReading
 {
-    using CsvHelper;
     using CsvHelper.Configuration;
 
     public sealed class ObligationUploadClassMap : ClassMap<ObligationCsvUpload>
