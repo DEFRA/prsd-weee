@@ -134,7 +134,8 @@
                 .Then(A.CallTo(() => csvWriter.DefineColumn(ObligationCsvConstants.Cat11ColumnName, A<Func<Scheme, object>>._, false)).MustHaveHappened())
                 .Then(A.CallTo(() => csvWriter.DefineColumn(ObligationCsvConstants.Cat12ColumnName, A<Func<Scheme, object>>._, false)).MustHaveHappened())
                 .Then(A.CallTo(() => csvWriter.DefineColumn(ObligationCsvConstants.Cat13ColumnName, A<Func<Scheme, object>>._, false)).MustHaveHappened())
-                .Then(A.CallTo(() => csvWriter.DefineColumn(ObligationCsvConstants.Cat14ColumnName, A<Func<Scheme, object>>._, false)).MustHaveHappened());
+                .Then(A.CallTo(() => csvWriter.DefineColumn(ObligationCsvConstants.Cat14ColumnName, A<Func<Scheme, object>>._, false)).MustHaveHappened())
+                .Then(A.CallTo(() => csvWriter.DefineColumn(ObligationCsvConstants.Cat15ColumnName, A<Func<Scheme, object>>._, false)).MustHaveHappened());
         }
 
         [Fact]
