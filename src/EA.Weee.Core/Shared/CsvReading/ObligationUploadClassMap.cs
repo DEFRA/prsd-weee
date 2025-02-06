@@ -22,6 +22,7 @@
             Map(o => o.Cat12).Name("Cat12 (t)");
             Map(o => o.Cat13).Name("Cat13 (t)");
             Map(o => o.Cat14).Name("Cat14 (t)");
+            Map(o => o.Cat15).Name("Cat15 (t)");
         }
     }
 }
