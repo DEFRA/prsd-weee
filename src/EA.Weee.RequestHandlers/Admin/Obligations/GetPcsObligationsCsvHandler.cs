@@ -1,5 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Obligations
 {
+    using System.Linq;
+    using System.Threading.Tasks;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Constants;
@@ -9,8 +11,6 @@
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.RequestHandlers.Shared;
     using EA.Weee.Requests.Admin.Obligations;
-    using System.Linq;
-    using System.Threading.Tasks;
     using Prsd.Core;
     using Weee.Security;
 
