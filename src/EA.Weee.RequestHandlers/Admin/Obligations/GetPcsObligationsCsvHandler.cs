@@ -52,6 +52,7 @@
             csvWriter.DefineColumn(ObligationCsvConstants.Cat12ColumnName, x => string.Empty);
             csvWriter.DefineColumn(ObligationCsvConstants.Cat13ColumnName, x => string.Empty);
             csvWriter.DefineColumn(ObligationCsvConstants.Cat14ColumnName, x => string.Empty);
+            csvWriter.DefineColumn(ObligationCsvConstants.Cat15ColumnName, x => string.Empty);
 
             var fileContent = csvWriter.Write(authority.Schemes.OrderBy(s => s.SchemeName));
             var timestamp = SystemTime.Now;
