@@ -1,5 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Obligations
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Security;
+    using System.Threading.Tasks;
     using AutoFixture;
     using AutoFixture.Kernel;
     using EA.Prsd.Core;
@@ -15,11 +20,6 @@
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Security;
-    using System.Threading.Tasks;
     using Weee.Security;
     using Xunit;
 
