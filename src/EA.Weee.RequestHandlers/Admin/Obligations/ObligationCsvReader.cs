@@ -1,8 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.Obligations
 {
-    using System;
     using System.Collections.Generic;
-    using System.Globalization;
     using Core.Shared;
     using Core.Shared.CsvReading;
     using ObligationCsvUpload = Core.Shared.CsvReading.ObligationCsvUpload;
