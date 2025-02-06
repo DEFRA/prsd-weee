@@ -8,8 +8,6 @@
     public class ObligationCsvReader : IObligationCsvReader
     {
         private readonly IFileHelper fileHelper;
-        private const int NumberOfColumns = 17;
-
         private readonly string[] columnOrder = new[]
         {
             "Scheme Identifier",
@@ -30,7 +28,7 @@
             {
                 reader.RegisterClassMap<ObligationUploadClassMap>();
                 reader.ReadHeader();
-                reader.ValidateHeader<ObligationCsvUpload>(NumberOfColumns, columnOrder);
+                reader.ValidateHeader<ObligationCsvUpload>(columnOrder);
 
                 while (reader.Read())
                 {
