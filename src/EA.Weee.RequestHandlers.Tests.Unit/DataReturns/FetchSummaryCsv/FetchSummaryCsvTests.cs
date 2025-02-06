@@ -119,7 +119,8 @@
                 c => Assert.Equal("Cat 11 (t)", c),
                 c => Assert.Equal("Cat 12 (t)", c),
                 c => Assert.Equal("Cat 13 (t)", c),
-                c => Assert.Equal("Cat 14 (t)", c));
+                c => Assert.Equal("Cat 14 (t)", c),
+                c => Assert.Equal("Cat 15 (t)", c));
         }
     }
 }
