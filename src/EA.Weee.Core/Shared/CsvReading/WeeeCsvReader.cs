@@ -42,7 +42,7 @@
                 csvReader.Read();
                 return csvReader.ReadHeader();
             }
-            catch (Exception re) when (re is ReaderException || re is HeaderValidationException)  
+            catch (Exception re) when (re is ReaderException || re is HeaderValidationException)
             {
                 throw new CsvReaderException(re.Message);
             }
