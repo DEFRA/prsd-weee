@@ -16,7 +16,6 @@
     using Domain.Obligation;
     using Domain.Scheme;
     using FluentAssertions;
-    using NUnit.Specifications;
     using NUnit.Specifications.Categories;
     using Prsd.Core;
     using Prsd.Core.Autofac;
@@ -199,7 +198,7 @@
                     .Create();
 
                 obligationSchemes.Add(obligationScheme1);
-                
+
                 var amounts2 = new List<ObligationSchemeAmount>()
                 {
                     new ObligationSchemeAmount(WeeeCategory.LargeHouseholdAppliances, 1000),
@@ -372,7 +371,7 @@
 
                 schemes.Add(scheme1);
                 schemes.Add(scheme2);
-                
+
                 var csvHeader =
                     $@"Scheme Identifier,Scheme Name,Cat1 (t),Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat13 (t),Cat14 (t)
                 {scheme1.ApprovalNumber},{scheme1.SchemeName},Invalid,2,3,4,5,6,7,8,9,10,11,12,13,14
@@ -396,7 +395,7 @@
                 obligationUpload.ObligationUploadErrors.Count.Should().Be(2);
 
                 obligationUpload.ObligationUploadErrors.Should().Contain(e => e.SchemeIdentifier.Equals(schemes.ElementAt(0).ApprovalNumber)
-                                                                              && e.SchemeName.Equals(schemes.ElementAt(0).SchemeName) && 
+                                                                              && e.SchemeName.Equals(schemes.ElementAt(0).SchemeName) &&
                                                                               e.ErrorType.Equals(ObligationUploadErrorType.Data));
 
                 obligationUpload.ObligationUploadErrors.Should().Contain(e => e.SchemeIdentifier.Equals(schemes.ElementAt(1).ApprovalNumber)
@@ -556,7 +555,7 @@
 
             private readonly Cleanup cleanup = LocalCleanup;
         }
-        
+
         [Component]
         public class WhenISubmitSchemeObligationWithIncorrectColumnsOrder : SubmitSchemeObligationHandlerIntegrationTestBase
         {
