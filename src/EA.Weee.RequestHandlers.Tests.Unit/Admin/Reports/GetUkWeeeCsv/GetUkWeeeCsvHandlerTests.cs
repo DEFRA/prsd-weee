@@ -119,8 +119,8 @@
         }
 
         /// <summary>
-        /// This test ensures 28 CSV rows will be created representing each category and each obligation type (B2B or B2C).
-        /// The 14 rows for each obligation type should be listed together, with the B2B rows appearing before the B2C rows.
+        /// This test ensures 30 CSV rows will be created representing each category and each obligation type (B2B or B2C).
+        /// The 15 rows for each obligation type should be listed together, with the B2B rows appearing before the B2C rows.
         /// </summary>
         [Fact]
         public void CreateResults_Always_CreatesAResultForEachCategoryAndEachObligationType()
