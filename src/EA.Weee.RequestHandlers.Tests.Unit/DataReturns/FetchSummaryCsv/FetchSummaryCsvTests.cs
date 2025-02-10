@@ -86,7 +86,7 @@
         /// <summary>
         /// This test ensures that the CsvWriter will define columns for "Quarter",
         /// "EEE or WEEE in tonnes (t)", "Obligation type" and a column for each
-        /// of the fourteen categories; i.e. "Cat 1 (t)", "Cat 2 (t)", etc.
+        /// of the categories; i.e. "Cat 1 (t)", "Cat 2 (t)", etc.
         /// </summary>
         [Fact]
         public void CreateWriter_Always_CreatesExpectedColumns()
