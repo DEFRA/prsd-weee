@@ -11,8 +11,7 @@ GO
  * The procedure creates a table into which all WEEE collected, WEEE delivered
  * and EEE output amounts are inserted.
  *
- * The query then pivots this data to provide the sum for each of the 14
- * categories.
+ * The query then pivots this data to provide the sum for each of the categories.
  */
 ALTER PROCEDURE [PCS].[spgDataReturnSummaryCsv]
 	@SchemeID UNIQUEIDENTIFIER,
