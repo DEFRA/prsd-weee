@@ -25,6 +25,7 @@
         [InlineData("Cat12", WeeeCategory.CoolingApplicancesContainingRefrigerants)]
         [InlineData("Cat13", WeeeCategory.GasDischargeLampsAndLedLightSources)]
         [InlineData("Cat14", WeeeCategory.PhotovoltaicPanels)]
+        [InlineData("Cat15", WeeeCategory.VapesAndElectronicCigarettes)]
         public void ObligationCsvUpload_CategoryPropertiesShouldBeDecoratedWithCategoryAttribute(string property, WeeeCategory category)
         {
             typeof(ObligationCsvUpload).GetProperty(property).Should()
