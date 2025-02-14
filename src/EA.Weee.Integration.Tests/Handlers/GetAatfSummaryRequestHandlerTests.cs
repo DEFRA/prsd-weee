@@ -174,7 +174,7 @@
 
             private readonly It shouldHaveReturnedExpectedTonnages = () =>
             {
-                result.EvidenceCategoryTotals.Count.Should().Be(14);
+                result.EvidenceCategoryTotals.Count.Should().Be(15);
                 result.EvidenceCategoryTotals.First(c => c.CategoryId.Equals(Core.DataReturns.WeeeCategory.LargeHouseholdAppliances)).Received.Should().Be(null);
                 result.EvidenceCategoryTotals.First(c => c.CategoryId.Equals(Core.DataReturns.WeeeCategory.LargeHouseholdAppliances)).Reused.Should().Be(null);
                 result.EvidenceCategoryTotals.First(c => c.CategoryId.Equals(Core.DataReturns.WeeeCategory.SmallHouseholdAppliances)).Received.Should().Be(null);
@@ -203,6 +203,8 @@
                 result.EvidenceCategoryTotals.First(c => c.CategoryId.Equals(Core.DataReturns.WeeeCategory.GasDischargeLampsAndLedLightSources)).Reused.Should().Be(0);
                 result.EvidenceCategoryTotals.First(c => c.CategoryId.Equals(Core.DataReturns.WeeeCategory.PhotovoltaicPanels)).Received.Should().Be(null);
                 result.EvidenceCategoryTotals.First(c => c.CategoryId.Equals(Core.DataReturns.WeeeCategory.PhotovoltaicPanels)).Reused.Should().Be(null);
+                result.EvidenceCategoryTotals.First(c => c.CategoryId.Equals(Core.DataReturns.WeeeCategory.VapesAndElectronicCigarettes)).Received.Should().Be(null);
+                result.EvidenceCategoryTotals.First(c => c.CategoryId.Equals(Core.DataReturns.WeeeCategory.VapesAndElectronicCigarettes)).Reused.Should().Be(null);
             };
         }
 

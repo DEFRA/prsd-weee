@@ -1,8 +1,15 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Aatf.Controller
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using AutoFixture;
+    using EA.Prsd.Core.Helpers;
     using EA.Weee.Core.Aatf;
     using EA.Weee.Core.AatfEvidence;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Aatf.Controllers;
     using EA.Weee.Web.Areas.Aatf.ViewModels;
@@ -12,10 +19,6 @@
     using EA.Weee.Web.Services.Caching;
     using FakeItEasy;
     using FluentAssertions;
-    using System;
-    using System.Collections.Generic;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -109,12 +112,17 @@
             result.Model.Should().BeOfType<EvidenceTonnageValueCopyPasteViewModel>();
             var convertedModel = (EvidenceTonnageValueCopyPasteViewModel)result.Model;
             convertedModel.ComplianceYear.Should().Be(complianceYear);
+
+            var categories = EnumHelper.GetValues(typeof(WeeeCategory));
+            var maxCategoryId = categories.Max(x => x.Key);
+            convertedModel.MaxWeeeCategoryId.Should().Be(maxCategoryId);
+            convertedModel.WeeeCategoryCount.Should().Be(categories.Count);
         }
 
         [Theory]
         [InlineData(EvidenceCopyPasteActionConstants.CreateEvidenceNoteAction, "CreateEvidenceNote", "ManageEvidenceNotes")]
         [InlineData(EvidenceCopyPasteActionConstants.EditEvidenceNoteAction, "AATF_EditEvidence", "ManageEvidenceNotes")]
-        [InlineData(EvidenceCopyPasteActionConstants.ReturnedEvidenceNoteAction, "CreateEvidenceNote", "ManageEvidenceNotes")] 
+        [InlineData(EvidenceCopyPasteActionConstants.ReturnedEvidenceNoteAction, "CreateEvidenceNote", "ManageEvidenceNotes")]
         public async Task IndexGet_OnRedirectIsTrue_RedirectsToCorrectPage(string returnAction, string expectedAction, string expectedController)
         {
             //arrange

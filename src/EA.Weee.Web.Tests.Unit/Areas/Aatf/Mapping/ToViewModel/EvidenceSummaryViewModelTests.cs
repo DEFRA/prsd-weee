@@ -81,9 +81,9 @@
             A.CallTo(() => tonnageUtilities.CheckIfTonnageIsNull(10)).Returns("10");
 
             A.CallTo(() => categoryValueTotalCalculator.Total(A<List<string>>.That.IsSameSequenceAs(
-                new List<string>() {null, null, null, "1", null, "-", null, null, null, null, "3", null, null, null}))).Returns("4");
+                new List<string>() {null, null, null, "1", null, "-", null, null, null, null, "3", null, null, null, null}))).Returns("4");
             A.CallTo(() => categoryValueTotalCalculator.Total(A<List<string>>.That.IsSameSequenceAs(
-                new List<string>() { null, null, null, "2", null, "10", null, null, null, null, "4", null, null, null }))).Returns("16");
+                new List<string>() { null, null, null, "2", null, "10", null, null, null, null, "4", null, null, null, null }))).Returns("16");
 
             //act
             var model = mapper.Map(source);

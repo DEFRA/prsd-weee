@@ -105,7 +105,7 @@
                 await context.SaveChangesAsync();
 
                 context.WeeeSentOn.Count().Should().Be(weeeSentOnCount - 1);
-                context.WeeeSentOnAmount.Count().Should().Be(weeeSentOnAmountCount - 14);
+                context.WeeeSentOnAmount.Count().Should().Be(weeeSentOnAmountCount - 15);
                 context.AatfAddress.Count().Should().Be(weeeSentOnSiteCount - 2);
 
                 context.WeeeSentOn.Should().Contain(weeeSentOnList[1]);

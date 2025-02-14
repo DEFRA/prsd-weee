@@ -36,7 +36,8 @@
                 WeeeCategory.DisplayEquipment,
                 WeeeCategory.CoolingApplicancesContainingRefrigerants,
                 WeeeCategory.GasDischargeLampsAndLedLightSources,
-                WeeeCategory.PhotovoltaicPanels
+                WeeeCategory.PhotovoltaicPanels,
+                WeeeCategory.VapesAndElectronicCigarettes
             };
 
             if (source.ObligationEvidenceSummaryData != null)
