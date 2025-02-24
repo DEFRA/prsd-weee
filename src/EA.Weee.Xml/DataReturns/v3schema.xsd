@@ -12,7 +12,7 @@
 =
 =   APPLICATION: Waste Electronic and Electrical Equipment Regulations 2013
 =   MODULE: Scheme Returns
-=   FILE: XSD Scheme Returns version 3.35.xsd
+=   FILE: XSD Scheme Returns version 3.36.xsd
 =   DESCRIPTION: Schema to validate WEEE Scheme Quarterly Returns Data
 =
 ================================================================================
@@ -61,6 +61,8 @@
 =   11/01/2016   Muhammad I         3.34          - Restrict the tonnage value to a maximum of 28 digits.
 
 =   13/01/2016   Muhammad I         3.35          - Restrict the tonnage value to a maximum of 25 digits.
+
+=   24/02/2025   Civica UK Ltd      3.36          - Add support for new category (15, Vapes and electronic cigarettes), now allowing up to 2 x 15 tonnage returns.
 ================================================================================
 -->
   <xs:element name="SchemeReturn">
@@ -69,7 +71,7 @@
     </xs:annotation>
     <xs:complexType>
       <xs:sequence>
-        <xs:element name="XSDVersion" default="3.35">
+        <xs:element name="XSDVersion" default="3.36">
           <xs:simpleType>
             <xs:restriction base="XSDVersionType"/>
           </xs:simpleType>
@@ -89,7 +91,7 @@
         <xs:element name="CollectedFromDCF">
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="Return" type="TonnageReturnType" minOccurs="0" maxOccurs="28"/>
+              <xs:element name="Return" type="TonnageReturnType" minOccurs="0" maxOccurs="30"/>
             </xs:sequence>
           </xs:complexType>
           <xs:unique name="uniqueCategoryCollectedFromDCF">
@@ -164,7 +166,7 @@
           </xs:annotation>
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="Return" type="B2CTonnageReturnType" minOccurs="0" maxOccurs="28"/>
+              <xs:element name="Return" type="B2CTonnageReturnType" minOccurs="0" maxOccurs="30"/>
             </xs:sequence>
           </xs:complexType>
           <xs:unique name="uniqueCategoryObligationB2CWEEEFromDistributors">
@@ -179,7 +181,7 @@
           </xs:annotation>
           <xs:complexType>
             <xs:sequence>
-              <xs:element name="Return" type="B2CTonnageReturnType" minOccurs="0" maxOccurs="28"/>
+              <xs:element name="Return" type="B2CTonnageReturnType" minOccurs="0" maxOccurs="30"/>
             </xs:sequence>
           </xs:complexType>
           <xs:unique name="uniqueCategoryObligationB2CWEEEFromFinalHolders">
@@ -224,8 +226,8 @@
   </xs:element>
   <xs:simpleType name="XSDVersionType">
     <xs:restriction base="xs:decimal">
-      <xs:minInclusive value="3.35"/>
-      <xs:maxInclusive value="3.35"/>
+      <xs:minInclusive value="3.36"/>
+      <xs:maxInclusive value="3.36"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="approvalNoType">
@@ -255,6 +257,7 @@
       <xs:enumeration value="Cooling Appliances Containing Refrigerants"/>
       <xs:enumeration value="Gas Discharge Lamps and LED light sources"/>
       <xs:enumeration value="Photovoltaic Panels"/>
+      <xs:enumeration value="Vapes and electronic cigarettes"/>
     </xs:restriction>
   </xs:simpleType>
   <xs:simpleType name="obligationTypeType">
@@ -290,7 +293,7 @@
   </xs:complexType>
   <xs:complexType name="TonnageReturnTypeList">
     <xs:sequence>
-      <xs:element name="Return" type="TonnageReturnType" maxOccurs="28" />
+      <xs:element name="Return" type="TonnageReturnType" maxOccurs="30" />
     </xs:sequence>
   </xs:complexType>
   <xs:simpleType name="registrationNoType">
