@@ -3,7 +3,7 @@
 
 @model OrganisationDetailsTabsViewModel
 
-@if (Model.IsInternalAdmin)
+@if (Model.IsInternalAdmin || Model.IsInternal)
 {
     <div>
         <p class="govuk-body">
@@ -11,7 +11,7 @@
         </p>
     </div>
 }
-@if (!Model.IsInternalAdmin && Model.Year != null)
+@if (!Model.IsInternalAdmin && Model.Year != null && !Model.IsInternal)
 {
     <div>
         <p class="govuk-body">
