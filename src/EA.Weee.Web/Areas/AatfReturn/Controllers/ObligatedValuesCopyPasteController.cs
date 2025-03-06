@@ -3,6 +3,7 @@
     using Attributes;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
@@ -41,7 +42,8 @@
                     ReturnId = returnId,
                     OrganisationId = @return.OrganisationData.Id,
                     AatfName = (await cache.FetchAatfData(@return.OrganisationData.Id, aatfId)).Name,
-                    Type = obligatedType
+                    Type = obligatedType,
+                    WeeeCategoryCount = Enum.GetNames(typeof(WeeeCategory)).Count()
                 };
 
                 if (obligatedType == ObligatedType.Received)
