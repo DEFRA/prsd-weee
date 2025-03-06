@@ -2,6 +2,7 @@
 {
     using Attributes;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
@@ -41,7 +42,8 @@
                     ReturnId = returnId,
                     OrganisationId = @return.OrganisationData.Id,
                     Dcf = dcf,
-                    TypeHeading = typeHeading
+                    TypeHeading = typeHeading,
+                    WeeeCategoryCount = Enum.GetNames(typeof(WeeeCategory)).Count()
                 };
 
                 await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
