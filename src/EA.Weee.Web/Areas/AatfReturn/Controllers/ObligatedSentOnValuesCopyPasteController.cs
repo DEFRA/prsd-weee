@@ -3,6 +3,7 @@
     using Attributes;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
@@ -41,6 +42,7 @@
                     OrganisationId = returnData.OrganisationData.Id,
                     WeeeSentOnId = weeeSentOnId,
                     SiteName = siteName,
+                    WeeeCategoryCount = Enum.GetNames(typeof(WeeeCategory)).Count()
                 };
 
                 viewModel.IsEditDetails = isEditDetails;

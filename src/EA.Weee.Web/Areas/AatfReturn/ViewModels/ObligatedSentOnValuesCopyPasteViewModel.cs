@@ -21,5 +21,7 @@
         public bool? IsEditDetails { get; set; }
 
         public bool? IsEditTonnage { get; set; }
+
+        public int WeeeCategoryCount { get; internal set; }
     }
 }
