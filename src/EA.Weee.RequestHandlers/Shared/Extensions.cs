@@ -151,6 +151,8 @@
                     return Domain.Lookup.WeeeCategory.GasDischargeLampsAndLedLightSources;
                 case Xml.DataReturns.categoryNameType.PhotovoltaicPanels:
                     return Domain.Lookup.WeeeCategory.PhotovoltaicPanels;
+                case Xml.DataReturns.categoryNameType.VapesAndElectronicCigarettes:
+                    return Domain.Lookup.WeeeCategory.VapesAndElectronicCigarettes;
                 default:
                     throw new ArgumentException("Unable to map between category types");
             }
