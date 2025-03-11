@@ -23,7 +23,7 @@
             You can copy the WEEE in tonnes from an Excel spreadsheet
         </p>
         <p class="govuk-body">
-            Data entered here will be interpreted as category 1 at the top through to category @Html.DisplayFor(m => m.WeeeCategoryCount) at the bottom
+            Data entered here will be interpreted as category 1 at the top through to category @Html.DisplayFor(m => m.MaxWeeeCategoryId) at the bottom
         </p>
         @using (Html.BeginRouteForm(AatfRedirect.Default, FormMethod.Post))
         {
