@@ -15,6 +15,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Core.Aatf;
+    using EA.Prsd.Core.Helpers;
 
     [ValidateReturnCreatedActionFilter]
     public class ObligatedValuesCopyPasteController : AatfReturnBaseController
@@ -36,6 +37,9 @@
             using (var client = apiClient())
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
+                var categories = EnumHelper.GetValues(typeof(WeeeCategory));
+                var maxCategoryId = categories.Max(x => x.Key);
+
                 var viewModel = new ObligatedValuesCopyPasteViewModel()
                 {
                     AatfId = aatfId,
@@ -43,7 +47,8 @@
                     OrganisationId = @return.OrganisationData.Id,
                     AatfName = (await cache.FetchAatfData(@return.OrganisationData.Id, aatfId)).Name,
                     Type = obligatedType,
-                    WeeeCategoryCount = Enum.GetNames(typeof(WeeeCategory)).Count()
+                    WeeeCategoryCount = categories.Count(),
+                    MaxWeeeCategoryId = maxCategoryId
                 };
 
                 if (obligatedType == ObligatedType.Received)
