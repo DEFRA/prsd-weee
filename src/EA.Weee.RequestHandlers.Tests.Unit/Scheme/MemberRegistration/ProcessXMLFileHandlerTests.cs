@@ -87,7 +87,22 @@
         [Fact]
         public async Task ProcessXmlfile_ParsesXMLFile_SavesValidProducers()
         {
-            IEnumerable<ProducerSubmission> generatedProducers = new[] { TestProducer("ForestMoonOfEndor") };
+            IEnumerable<ProducerSubmission> generatedProducers = new[] { TestProducer("ForestMoonOfEndor", SellingTechniqueType.Both) };
+
+            A.CallTo(() => generator.GenerateProducers(Message, A<MemberUpload>.Ignored, A<Dictionary<string, ProducerCharge>>.Ignored))
+                .Returns(Task.FromResult(generatedProducers));
+            SetupSchemeTypeComplianceYear();
+
+            await handler.HandleAsync(Message);
+
+            A.CallTo(() => producerSubmissionDataAccess.AddRange(generatedProducers)).MustHaveHappened(1, Times.Exactly);
+            A.CallTo(() => context.SaveChangesAsync()).MustHaveHappened();
+        }
+
+        [Fact]
+        public async Task ProcessXmlfile_ParsesXMLFile_SavesValidProducers_As_OMP()
+        {
+            IEnumerable<ProducerSubmission> generatedProducers = new[] { TestProducer("ForestMoonOfEndor", SellingTechniqueType.OnlineMarketplacesAndFulfilmentHouses) };
 
             A.CallTo(() => generator.GenerateProducers(Message, A<MemberUpload>.Ignored, A<Dictionary<string, ProducerCharge>>.Ignored))
                 .Returns(Task.FromResult(generatedProducers));
@@ -307,7 +322,7 @@
                 .MustHaveHappened(1, Times.Exactly);
         }
 
-        public static ProducerSubmission TestProducer(string tradingName)
+        public static ProducerSubmission TestProducer(string tradingName, SellingTechniqueType techniqueType)
         {
             var scheme = A.Fake<Scheme>();
             A.CallTo(() => scheme.SchemeName).Returns("Scheme Name");
@@ -332,7 +347,7 @@
                 null,
                 tradingName,
                 EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
-                SellingTechniqueType.Both,
+                techniqueType,
                 ObligationType.Both,
                 AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 new List<BrandName>(),

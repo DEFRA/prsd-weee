@@ -187,6 +187,39 @@
         }
 
         [Fact]
+        public async Task GenerateProducerData_WithSellingTechnique_As_DSE_ReturnsProducerWithMatchingSellingTechnique()
+        {
+            var builder = new GenerateProducerDataTestsBuilder();
+            builder.SellingTechnique = sellingTechniqueType.DirectSellingtoEndUser;
+
+            var result = await builder.InvokeGenerateProducerDataWithSingleResult();
+
+            Assert.Equal(0, result.SellingTechniqueType);
+        }
+
+        [Fact]
+        public async Task GenerateProducerData_WithSellingTechnique_As_IDSE_ReturnsProducerWithMatchingSellingTechnique()
+        {
+            var builder = new GenerateProducerDataTestsBuilder();
+            builder.SellingTechnique = sellingTechniqueType.IndirectSellingtoEndUser;
+
+            var result = await builder.InvokeGenerateProducerDataWithSingleResult();
+
+            Assert.Equal(1, result.SellingTechniqueType);
+        }
+
+        [Fact]
+        public async Task GenerateProducerData_WithSellingTechnique_As_OMP_ReturnsProducerWithMatchingSellingTechnique()
+        {
+            var builder = new GenerateProducerDataTestsBuilder();
+            builder.SellingTechnique = sellingTechniqueType.OnlineMarketplacesAndFulfilmentHouses;
+
+            var result = await builder.InvokeGenerateProducerDataWithSingleResult();
+
+            Assert.Equal(3, result.SellingTechniqueType);
+        }
+
+        [Fact]
         public async Task GenerateProducerData_WithObligationType_ReturnsProducerWithMatchingObligationType()
         {
             var builder = new GenerateProducerDataTestsBuilder();
