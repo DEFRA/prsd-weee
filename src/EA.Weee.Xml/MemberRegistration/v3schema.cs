@@ -1725,6 +1725,10 @@ namespace EA.Weee.Xml.MemberRegistration {
         
         /// <remarks/>
         Both,
+
+        /// <remarks/>
+        [XmlEnum("Online Marketplaces and Fulfilment Houses")]
+        OnlineMarketplacesAndFulfilmentHouses,
     }
     
     /// <remarks/>
