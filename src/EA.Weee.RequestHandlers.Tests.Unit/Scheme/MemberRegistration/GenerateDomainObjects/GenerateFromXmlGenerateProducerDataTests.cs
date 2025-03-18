@@ -176,17 +176,6 @@
         }
 
         [Fact]
-        public async Task GenerateProducerData_WithSellingTechnique_ReturnsProducerWithMatchingSellingTechnique()
-        {
-            var builder = new GenerateProducerDataTestsBuilder();
-            builder.SellingTechnique = sellingTechniqueType.Both;
-
-            var result = await builder.InvokeGenerateProducerDataWithSingleResult();
-
-            Assert.Equal(2, result.SellingTechniqueType);
-        }
-
-        [Fact]
         public async Task GenerateProducerData_WithSellingTechnique_As_DSE_ReturnsProducerWithMatchingSellingTechnique()
         {
             var builder = new GenerateProducerDataTestsBuilder();
@@ -206,6 +195,17 @@
             var result = await builder.InvokeGenerateProducerDataWithSingleResult();
 
             Assert.Equal(1, result.SellingTechniqueType);
+        }
+
+        [Fact]
+        public async Task GenerateProducerData_WithSellingTechnique_ReturnsProducerWithMatchingSellingTechnique()
+        {
+            var builder = new GenerateProducerDataTestsBuilder();
+            builder.SellingTechnique = sellingTechniqueType.Both;
+
+            var result = await builder.InvokeGenerateProducerDataWithSingleResult();
+
+            Assert.Equal(2, result.SellingTechniqueType);
         }
 
         [Fact]
