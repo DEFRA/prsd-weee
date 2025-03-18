@@ -1722,8 +1722,9 @@ namespace EA.Weee.Xml.MemberRegistration {
         /// <remarks/>
         [XmlEnum("Indirect Selling to End User")]
         IndirectSellingtoEndUser,
-        
+
         /// <remarks/>
+        [XmlEnum("Both Direct and Indirect Selling to End User")]
         Both,
 
         /// <remarks/>
