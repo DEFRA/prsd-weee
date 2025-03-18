@@ -59,7 +59,7 @@
 	</xs:complexType>
 	<xs:simpleType name="XSDVersionType">
 		<xs:restriction base="xs:decimal">
-			<xs:minInclusive value="3.06"/>
+			<xs:minInclusive value="3.08"/>
 			<xs:maxInclusive value="3.08"/>
 		</xs:restriction>
 	</xs:simpleType>
@@ -340,7 +340,7 @@
 		<xs:restriction base="xs:token">
 			<xs:enumeration value="Direct Selling to End User"/>
 			<xs:enumeration value="Indirect Selling to End User"/>
-			<xs:enumeration value="Both"/>
+			<xs:enumeration value="Both Direct and Indirect Selling to End User"/>
 			<xs:enumeration value="Online Marketplaces and Fulfilment Houses"/>
 		</xs:restriction>
 	</xs:simpleType>
