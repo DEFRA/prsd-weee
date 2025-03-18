@@ -37,7 +37,7 @@
 
         public async Task<IEnumerable<MemberUploadError>> Validate(ProcessXmlFile message)
         {
-            string schemaVersion = MemberRegistrationSchemaVersion.Version_3_07.GetAttribute<DisplayAttribute>().Name;
+            string schemaVersion = MemberRegistrationSchemaVersion.Version_3_08.GetAttribute<DisplayAttribute>().Name;
             // Validate against the schema
             var errors = schemaValidator.Validate(message.Data, @"EA.Weee.Xml.MemberRegistration.v3schema.xsd", XmlNamespace.MemberRegistration, schemaVersion)
                 .Select(e => e.ToMemberUploadError())
