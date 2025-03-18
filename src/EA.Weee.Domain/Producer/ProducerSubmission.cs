@@ -3,6 +3,7 @@
     using Classfication;
     using Classification;
     using Domain;
+    using EA.Prsd.Core.Helpers;
     using Lookup;
     using Obligation;
     using Prsd.Core;
@@ -215,6 +216,14 @@
         {
             get { return ObligationType.ToString(); }
             set { ObligationType = (ObligationType)Enum.Parse(typeof(ObligationType), value); }
+        }
+
+        public string SellingTechniqueTypeName
+        {
+            get
+            {
+                return EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(SellingTechniqueType));
+            }
         }
 
         internal void SetAsInvoiced()
