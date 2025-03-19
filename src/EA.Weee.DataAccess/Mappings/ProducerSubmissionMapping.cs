@@ -20,6 +20,10 @@
 
             Ignore(ps => ps.ObligationType);
             Property(ps => ps.DatabaseObligationType).HasColumnName("ObligationType");
+
+            Ignore(ps => ps.SellingTechniqueTypeName);
+            Ignore(ps => ps.OMPChargeValue);
+            Ignore(ps => ps.ChargeValue);
         }
     }
 }

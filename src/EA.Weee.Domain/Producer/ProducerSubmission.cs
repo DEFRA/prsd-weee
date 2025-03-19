@@ -217,11 +217,18 @@
             set { ObligationType = (ObligationType)Enum.Parse(typeof(ObligationType), value); }
         }
 
-        public string SellingTechniqueTypeName;
+        public string SellingTechniqueTypeName { get; private set; }
 
-        public decimal? OMPChargeValue;
+        public decimal? OMPChargeValue { get; private set; }
 
-        public decimal? ChargeValue;
+        public decimal? ChargeValue { get; private set; }
+
+        public void UpdateOMPData(string sellingTechName, decimal? chargeValue, decimal? ompChargeValue)
+        {
+            this.SellingTechniqueTypeName = sellingTechName;
+            this.ChargeValue = chargeValue;
+            this.OMPChargeValue = ompChargeValue;
+        }
 
         internal void SetAsInvoiced()
         {
