@@ -2,10 +2,13 @@
 {
     using Domain.Producer.Classfication;
     using Domain.Producer.Classification;
+    using EA.Prsd.Core.Domain;
+    using EA.Prsd.Core.Helpers;
     using EA.Weee.Domain.Producer;
     using EA.Weee.Domain.Scheme;
     using FakeItEasy;
     using Lookup;
+    using Microsoft.SqlServer.Server;
     using Obligation;
     using System;
     using System.Collections.Generic;
@@ -431,6 +434,54 @@
                 A.Dummy<StatusType>());
 
             Assert.Equal("No", producer.HasAnnualCharge);
+        }
+
+        [Theory]
+        [InlineData(0)]
+        [InlineData(1)]
+        [InlineData(2)]
+        [InlineData(3)]
+        public void Producer_SetProducerMemberUpload_SellingTechniqueTypeName_Returns_As_DirectSellingtoEndUser(int sellingTechniqueType)
+        {
+            // Arrange
+            var sellingType = new CustomSellingTechniqueType(sellingTechniqueType);
+            var sellingTypeName = EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(sellingTechniqueType));
+            Scheme scheme = new Scheme(A.Dummy<Guid>());
+
+            MemberUpload memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                A.Dummy<List<MemberUploadError>>(),
+                A.Dummy<decimal>(),
+                2019,
+                scheme,
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
+
+            RegisteredProducer registeredProducer = new RegisteredProducer("WEE/AA1111AA", 2019, scheme);
+
+            var producer = new ProducerSubmission(
+               registeredProducer,
+               memberUpload,
+               A.Dummy<ProducerBusiness>(),
+               null,
+               new DateTime(2019, 3, 21),
+               0,
+               false,
+               null,
+               "Trading Name 1",
+               EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+               sellingType,
+               ObligationType.Both,
+               AnnualTurnOverBandType.Greaterthanonemillionpounds,
+               new List<BrandName>(),
+               new List<SICCode>(),
+               A.Dummy<ChargeBandAmount>(),
+               0,
+                A.Dummy<StatusType>());
+
+            Assert.Equal(sellingTypeName, producer.SellingTechniqueTypeName);
         }
 
         private class AlwaysEqualAuthorisedRepresentative : AuthorisedRepresentative
