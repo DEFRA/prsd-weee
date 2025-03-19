@@ -446,6 +446,7 @@
             var sellingType = new CustomSellingTechniqueType(sellingTechniqueType);
             var sellingTypeName = EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(sellingTechniqueType));
             decimal? ompChargeValue = (sellingTechniqueType == 3) ? chargeThisUpdate : null;
+            decimal? chargeValue = (sellingTechniqueType == 3) ? null : chargeThisUpdate;
             Scheme scheme = new Scheme(A.Dummy<Guid>());
 
             MemberUpload memberUpload = new MemberUpload(
@@ -481,8 +482,13 @@
                chargeThisUpdate,
                 A.Dummy<StatusType>());
 
+            producer.UpdateOMPData(sellingTypeName, chargeValue, ompChargeValue);
+
             Assert.Equal(sellingTechniqueType, producer.SellingTechniqueType);
             Assert.Equal(chargeThisUpdate, producer.ChargeThisUpdate);
+            Assert.Equal(sellingTypeName, producer.SellingTechniqueTypeName);
+            Assert.Equal(chargeValue, producer.ChargeValue);
+            Assert.Equal(ompChargeValue, producer.OMPChargeValue);
         }
 
         private class AlwaysEqualAuthorisedRepresentative : AuthorisedRepresentative

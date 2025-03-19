@@ -43,9 +43,11 @@
             {
                 foreach (ProducerSubmission submission in results)
                 {
-                    submission.ChargeValue = (submission.SellingTechniqueType.Equals(SellingTechniqueType.OnlineMarketplacesAndFulfilmentHouses.Value) ? null : submission.ChargeThisUpdate);
-                    submission.OMPChargeValue = (submission.SellingTechniqueType.Equals(SellingTechniqueType.OnlineMarketplacesAndFulfilmentHouses.Value) ? submission.ChargeThisUpdate : null);
-                    submission.SellingTechniqueTypeName = EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(submission.SellingTechniqueType));
+                    var sellingTechName = EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(submission.SellingTechniqueType));
+                    decimal? chargeValue = (submission.SellingTechniqueType.Equals(SellingTechniqueType.OnlineMarketplacesAndFulfilmentHouses.Value) ? null : submission.ChargeThisUpdate);
+                    decimal? ompChargeValue = (submission.SellingTechniqueType.Equals(SellingTechniqueType.OnlineMarketplacesAndFulfilmentHouses.Value) ? submission.ChargeThisUpdate : null);
+
+                    submission.UpdateOMPData(sellingTechName, chargeValue, ompChargeValue);
                 }
             }
 
