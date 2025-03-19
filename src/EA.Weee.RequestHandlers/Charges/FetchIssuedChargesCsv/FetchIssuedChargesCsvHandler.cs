@@ -2,12 +2,16 @@
 {
     using Domain;
     using Domain.Producer;
+    using EA.Prsd.Core.Domain;
+    using EA.Prsd.Core.Helpers;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Shared;
+    using EA.Weee.Domain.Producer.Classfication;
     using Prsd.Core;
     using Requests.Charges;
     using Security;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
 
@@ -35,6 +39,16 @@
 
             IEnumerable<ProducerSubmission> results = await dataAccess.FetchInvoicedProducerSubmissionsAsync(authority, message.ComplianceYear, message.SchemeId);
 
+            if (results != null && results.Count() > 0)
+            {
+                foreach (ProducerSubmission submission in results)
+                {
+                    submission.ChargeValue = (submission.SellingTechniqueType.Equals(SellingTechniqueType.OnlineMarketplacesAndFulfilmentHouses.Value) ? null : submission.ChargeThisUpdate);
+                    submission.OMPChargeValue = (submission.SellingTechniqueType.Equals(SellingTechniqueType.OnlineMarketplacesAndFulfilmentHouses.Value) ? submission.ChargeThisUpdate : null);
+                    submission.SellingTechniqueTypeName = EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(submission.SellingTechniqueType));
+                }
+            }
+
             CsvWriter<ProducerSubmission> csvWriter = csvWriterFactory.Create<ProducerSubmission>();
 
             csvWriter.DefineColumn("Scheme name", ps => ps.RegisteredProducer.Scheme.SchemeName);
@@ -42,7 +56,7 @@
             csvWriter.DefineColumn("Submission date and time (GMT)", ps => ps.MemberUpload.SubmittedDate.Value.ToString("dd/MM/yyyy HH:mm:ss"));
             csvWriter.DefineColumn("Producer name", ps => ps.OrganisationName);
             csvWriter.DefineColumn("PRN", ps => ps.RegisteredProducer.ProducerRegistrationNumber);
-            csvWriter.DefineColumn("Charge value (GBP)", ps => ps.ChargeThisUpdate);
+            csvWriter.DefineColumn("Charge value (GBP)", ps => ps.ChargeValue);
             csvWriter.DefineColumn("Charge band", ps => ps.ChargeBandAmount.ChargeBand);
             csvWriter.DefineColumn("Selling technique", ps => ps.SellingTechniqueTypeName.ToString());
             csvWriter.DefineColumn("Online market places charge value", ps => ps.OMPChargeValue);

@@ -481,9 +481,8 @@
                chargeThisUpdate,
                 A.Dummy<StatusType>());
 
-            Assert.Equal(sellingTypeName, producer.SellingTechniqueTypeName);
+            Assert.Equal(sellingTechniqueType, producer.SellingTechniqueType);
             Assert.Equal(chargeThisUpdate, producer.ChargeThisUpdate);
-            Assert.Equal(ompChargeValue, producer.OMPChargeValue);
         }
 
         private class AlwaysEqualAuthorisedRepresentative : AuthorisedRepresentative

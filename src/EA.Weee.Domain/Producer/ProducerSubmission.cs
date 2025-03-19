@@ -3,7 +3,6 @@
     using Classfication;
     using Classification;
     using Domain;
-    using EA.Prsd.Core.Helpers;
     using Lookup;
     using Obligation;
     using Prsd.Core;
@@ -218,21 +217,11 @@
             set { ObligationType = (ObligationType)Enum.Parse(typeof(ObligationType), value); }
         }
 
-        public string SellingTechniqueTypeName
-        {
-            get
-            {
-                return EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(SellingTechniqueType));
-            }
-        }
+        public string SellingTechniqueTypeName { get; set; }
 
-        public decimal? OMPChargeValue
-        {
-            get
-            {
-                return (SellingTechniqueType == 3) ? ChargeThisUpdate : null; // 3 means Online Marketplaces and Fulfilment Houses
-            }
-        }
+        public decimal? OMPChargeValue { get; set; }
+
+        public decimal? ChargeValue { get; set; }
 
         internal void SetAsInvoiced()
         {
