@@ -39,7 +39,7 @@
 
             IEnumerable<ProducerSubmission> results = await dataAccess.FetchInvoicedProducerSubmissionsAsync(authority, message.ComplianceYear, message.SchemeId);
 
-            if (results != null && results.Count() > 0)
+            if (results != null && results.Any())
             {
                 foreach (ProducerSubmission submission in results)
                 {
