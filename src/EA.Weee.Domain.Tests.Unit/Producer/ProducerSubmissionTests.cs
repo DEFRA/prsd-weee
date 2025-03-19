@@ -8,7 +8,6 @@
     using EA.Weee.Domain.Scheme;
     using FakeItEasy;
     using Lookup;
-    using Microsoft.SqlServer.Server;
     using Obligation;
     using System;
     using System.Collections.Generic;
@@ -437,16 +436,15 @@
         }
 
         [Theory]
-        [InlineData(0)]
-        [InlineData(1)]
-        [InlineData(2)]
-        [InlineData(3)]
-        public void ProducerMemberUpload_SellingTechniqueType_Returns_SellingTechniqueName_ChargeValue(int sellingTechniqueType)
+        [InlineData(0, 0.000)]
+        [InlineData(1, 1.111)]
+        [InlineData(2, 2.222)]
+        [InlineData(3, 3.333)]
+        public void ProducerMemberUpload_SellingTechniqueType_Returns_SellingTechniqueName_ChargeValue(int sellingTechniqueType, decimal chargeThisUpdate)
         {
             // Arrange
             var sellingType = new CustomSellingTechniqueType(sellingTechniqueType);
             var sellingTypeName = EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(sellingTechniqueType));
-            decimal chargeThisUpdate = (sellingTechniqueType == 3) ? Convert.ToDecimal(9.999) : 0;
             decimal? ompChargeValue = (sellingTechniqueType == 3) ? chargeThisUpdate : null;
             Scheme scheme = new Scheme(A.Dummy<Guid>());
 
