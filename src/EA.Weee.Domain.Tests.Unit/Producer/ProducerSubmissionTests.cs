@@ -441,11 +441,13 @@
         [InlineData(1)]
         [InlineData(2)]
         [InlineData(3)]
-        public void ProducerMemberUpload_SellingTechniqueType_Returns_SellingTechniqueName(int sellingTechniqueType)
+        public void ProducerMemberUpload_SellingTechniqueType_Returns_SellingTechniqueName_ChargeValue(int sellingTechniqueType)
         {
             // Arrange
             var sellingType = new CustomSellingTechniqueType(sellingTechniqueType);
             var sellingTypeName = EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(sellingTechniqueType));
+            decimal chargeThisUpdate = (sellingTechniqueType == 3) ? Convert.ToDecimal(9.999) : 0;
+            decimal? ompChargeValue = (sellingTechniqueType == 3) ? chargeThisUpdate : null;
             Scheme scheme = new Scheme(A.Dummy<Guid>());
 
             MemberUpload memberUpload = new MemberUpload(
@@ -478,10 +480,12 @@
                new List<BrandName>(),
                new List<SICCode>(),
                A.Dummy<ChargeBandAmount>(),
-               0,
+               chargeThisUpdate,
                 A.Dummy<StatusType>());
 
             Assert.Equal(sellingTypeName, producer.SellingTechniqueTypeName);
+            Assert.Equal(chargeThisUpdate, producer.ChargeThisUpdate);
+            Assert.Equal(ompChargeValue, producer.OMPChargeValue);
         }
 
         private class AlwaysEqualAuthorisedRepresentative : AuthorisedRepresentative

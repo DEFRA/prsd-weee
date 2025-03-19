@@ -45,6 +45,7 @@
             csvWriter.DefineColumn("Charge value (GBP)", ps => ps.ChargeThisUpdate);
             csvWriter.DefineColumn("Charge band", ps => ps.ChargeBandAmount.ChargeBand);
             csvWriter.DefineColumn("Selling technique", ps => ps.SellingTechniqueTypeName.ToString());
+            csvWriter.DefineColumn("Online market places charge value", ps => ps.OMPChargeValue);
             csvWriter.DefineColumn("Issued date", ps => ps.MemberUpload.InvoiceRun.IssuedDate.ToString("dd/MM/yyyy HH:mm:ss"));
             csvWriter.DefineColumn(@"Reg. Off. or PPoB country", ps => ps.RegOfficeOrPBoBCountry);
             csvWriter.DefineColumn(@"Includes annual charge", ps => ps.HasAnnualCharge);
