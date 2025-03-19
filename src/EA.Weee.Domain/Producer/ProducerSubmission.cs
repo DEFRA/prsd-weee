@@ -226,6 +226,14 @@
             }
         }
 
+        public decimal? OMPChargeValue
+        {
+            get
+            {
+                return (SellingTechniqueType == 3) ? ChargeThisUpdate : null; // 3 means Online Marketplaces and Fulfilment Houses
+            }
+        }
+
         internal void SetAsInvoiced()
         {
             if (Invoiced)
