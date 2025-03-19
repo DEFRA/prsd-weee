@@ -441,7 +441,7 @@
         [InlineData(1)]
         [InlineData(2)]
         [InlineData(3)]
-        public void Producer_SetProducerMemberUpload_SellingTechniqueTypeName_Returns_As_DirectSellingtoEndUser(int sellingTechniqueType)
+        public void ProducerMemberUpload_SellingTechniqueType_Returns_SellingTechniqueName(int sellingTechniqueType)
         {
             // Arrange
             var sellingType = new CustomSellingTechniqueType(sellingTechniqueType);
