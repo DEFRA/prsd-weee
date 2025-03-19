@@ -9,10 +9,10 @@
         [Display(Name = "Indirect selling (other)")]
         IndirectSellingToEndUser = 1,
 
-        [Display(Name = "Direct selling to end user (mail, order, internet etc) and Indirect selling (other)")]
+        [Display(Name = "Both Direct and Indirect Selling to End User")]
         Both = 2,
 
         [Display(Name = "Online Marketplaces and Fulfilment Houses")]
-        OnlineMarketplacesAndFulfilmentHouses = 3
+        OnlineMarketplacesAndFulfilmentHouses = 3,
     }
 }
