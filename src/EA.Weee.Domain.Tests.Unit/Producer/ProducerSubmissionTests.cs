@@ -482,7 +482,7 @@
                chargeThisUpdate,
                 A.Dummy<StatusType>());
 
-            producer.UpdateOMPData(sellingTypeName, chargeValue, ompChargeValue);
+            producer.UpdateOMPData(chargeValue, ompChargeValue);
 
             Assert.Equal(sellingTechniqueType, producer.SellingTechniqueType);
             Assert.Equal(chargeThisUpdate, producer.ChargeThisUpdate);
