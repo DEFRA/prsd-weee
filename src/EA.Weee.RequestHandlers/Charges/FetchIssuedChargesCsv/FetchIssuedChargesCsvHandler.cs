@@ -5,9 +5,9 @@
     using System.Threading.Tasks;
     using Domain;
     using Domain.Producer;
+    using Domain.Producer.Classfication;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Shared;
-    using EA.Weee.Domain.Producer.Classfication;
     using Prsd.Core;
     using Requests.Charges;
     using Security;
