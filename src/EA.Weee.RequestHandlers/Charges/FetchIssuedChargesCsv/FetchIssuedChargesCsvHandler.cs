@@ -46,10 +46,10 @@
             csvWriter.DefineColumn("Submission date and time (GMT)", ps => ps.MemberUpload.SubmittedDate.Value.ToString("dd/MM/yyyy HH:mm:ss"));
             csvWriter.DefineColumn("Producer name", ps => ps.OrganisationName);
             csvWriter.DefineColumn("PRN", ps => ps.RegisteredProducer.ProducerRegistrationNumber);
-            csvWriter.DefineColumn("Charge value (GBP)", ps => ps.ChargeThisUpdate);
+            csvWriter.DefineColumn("Charge value (GBP)", ps => IsOMP(ps) ? string.Empty : ps.ChargeThisUpdate);
             csvWriter.DefineColumn("Charge band", ps => ps.ChargeBandAmount.ChargeBand);
             csvWriter.DefineColumn("Selling technique", ps => ps.SellingTechniqueTypeName.ToString());
-            csvWriter.DefineColumn("Online market places charge value", ps => string.Empty);
+            csvWriter.DefineColumn("Online market places charge value", ps => IsOMP(ps) ? ps.ChargeThisUpdate : string.Empty);
             csvWriter.DefineColumn("Issued date", ps => ps.MemberUpload.InvoiceRun.IssuedDate.ToString("dd/MM/yyyy HH:mm:ss"));
             csvWriter.DefineColumn(@"Reg. Off. or PPoB country", ps => ps.RegOfficeOrPBoBCountry);
             csvWriter.DefineColumn(@"Includes annual charge", ps => ps.HasAnnualCharge);
@@ -79,6 +79,11 @@
                     SystemTime.UtcNow);
             }
             return new FileInfo(fileName, data);
+        }
+
+        private static bool IsOMP(ProducerSubmission ps)
+        {
+            return ps.SellingTechniqueType == SellingTechniqueType.OnlineMarketplacesAndFulfilmentHouses.Value;
         }
     }
 }
