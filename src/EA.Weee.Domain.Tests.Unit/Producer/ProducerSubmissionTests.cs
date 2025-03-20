@@ -2,8 +2,6 @@
 {
     using Domain.Producer.Classfication;
     using Domain.Producer.Classification;
-    using EA.Prsd.Core.Domain;
-    using EA.Prsd.Core.Helpers;
     using EA.Weee.Domain.Producer;
     using EA.Weee.Domain.Scheme;
     using FakeItEasy;
@@ -444,7 +442,6 @@
         {
             // Arrange
             var sellingType = new CustomSellingTechniqueType(sellingTechniqueType);
-            var sellingTypeName = EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(sellingTechniqueType));
             Scheme scheme = new Scheme(A.Dummy<Guid>());
 
             MemberUpload memberUpload = new MemberUpload(
@@ -482,7 +479,6 @@
 
             Assert.Equal(sellingTechniqueType, producer.SellingTechniqueType);
             Assert.Equal(chargeThisUpdate, producer.ChargeThisUpdate);
-            Assert.Equal(sellingTypeName, producer.SellingTechniqueTypeName);
         }
 
         private class AlwaysEqualAuthorisedRepresentative : AuthorisedRepresentative

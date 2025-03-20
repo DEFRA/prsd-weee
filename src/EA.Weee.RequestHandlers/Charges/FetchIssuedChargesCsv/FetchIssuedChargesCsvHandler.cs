@@ -6,6 +6,8 @@
     using Domain;
     using Domain.Producer;
     using Domain.Producer.Classfication;
+    using EA.Prsd.Core.Domain;
+    using EA.Prsd.Core.Helpers;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Shared;
     using Prsd.Core;
@@ -45,7 +47,7 @@
             csvWriter.DefineColumn("PRN", ps => ps.RegisteredProducer.ProducerRegistrationNumber);
             csvWriter.DefineColumn("Charge value (GBP)", ps => IsOMP(ps) ? string.Empty : ps.ChargeThisUpdate);
             csvWriter.DefineColumn("Charge band", ps => ps.ChargeBandAmount.ChargeBand);
-            csvWriter.DefineColumn("Selling technique", ps => ps.SellingTechniqueTypeName.ToString());
+            csvWriter.DefineColumn("Selling technique", ps => EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(ps.SellingTechniqueType)));
             csvWriter.DefineColumn("Online market places charge value", ps => IsOMP(ps) ? ps.ChargeThisUpdate : string.Empty);
             csvWriter.DefineColumn("Issued date", ps => ps.MemberUpload.InvoiceRun.IssuedDate.ToString("dd/MM/yyyy HH:mm:ss"));
             csvWriter.DefineColumn(@"Reg. Off. or PPoB country", ps => ps.RegOfficeOrPBoBCountry);
