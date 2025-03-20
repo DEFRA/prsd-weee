@@ -1,5 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.FetchIssuedChargesCsv
 {
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
     using Domain;
     using Domain.Producer;
     using EA.Prsd.Core.Mediator;
@@ -8,9 +11,6 @@
     using Prsd.Core;
     using Requests.Charges;
     using Security;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public class FetchIssuedChargesCsvHandler : IRequestHandler<FetchIssuedChargesCsv, FileInfo>
     {
