@@ -2,8 +2,6 @@
 {
     using Domain;
     using Domain.Producer;
-    using EA.Prsd.Core.Domain;
-    using EA.Prsd.Core.Helpers;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain.Producer.Classfication;
@@ -11,7 +9,6 @@
     using Requests.Charges;
     using Security;
     using System.Collections.Generic;
-    using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
 
