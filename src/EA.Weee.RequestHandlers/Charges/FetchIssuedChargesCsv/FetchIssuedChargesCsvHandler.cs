@@ -39,17 +39,6 @@
 
             IEnumerable<ProducerSubmission> results = await dataAccess.FetchInvoicedProducerSubmissionsAsync(authority, message.ComplianceYear, message.SchemeId);
 
-            if (results != null && results.Any())
-            {
-                foreach (ProducerSubmission submission in results)
-                {
-                    decimal? chargeValue = (submission.SellingTechniqueType.Equals(SellingTechniqueType.OnlineMarketplacesAndFulfilmentHouses.Value) ? null : submission.ChargeThisUpdate);
-                    decimal? ompChargeValue = (submission.SellingTechniqueType.Equals(SellingTechniqueType.OnlineMarketplacesAndFulfilmentHouses.Value) ? submission.ChargeThisUpdate : null);
-
-                    submission.UpdateOMPData(chargeValue, ompChargeValue);
-                }
-            }
-
             CsvWriter<ProducerSubmission> csvWriter = csvWriterFactory.Create<ProducerSubmission>();
 
             csvWriter.DefineColumn("Scheme name", ps => ps.RegisteredProducer.Scheme.SchemeName);
@@ -57,10 +46,10 @@
             csvWriter.DefineColumn("Submission date and time (GMT)", ps => ps.MemberUpload.SubmittedDate.Value.ToString("dd/MM/yyyy HH:mm:ss"));
             csvWriter.DefineColumn("Producer name", ps => ps.OrganisationName);
             csvWriter.DefineColumn("PRN", ps => ps.RegisteredProducer.ProducerRegistrationNumber);
-            csvWriter.DefineColumn("Charge value (GBP)", ps => ps.ChargeValue);
+            csvWriter.DefineColumn("Charge value (GBP)", ps => ps.ChargeThisUpdate);
             csvWriter.DefineColumn("Charge band", ps => ps.ChargeBandAmount.ChargeBand);
             csvWriter.DefineColumn("Selling technique", ps => ps.SellingTechniqueTypeName.ToString());
-            csvWriter.DefineColumn("Online market places charge value", ps => ps.OMPChargeValue);
+            csvWriter.DefineColumn("Online market places charge value", ps => string.Empty);
             csvWriter.DefineColumn("Issued date", ps => ps.MemberUpload.InvoiceRun.IssuedDate.ToString("dd/MM/yyyy HH:mm:ss"));
             csvWriter.DefineColumn(@"Reg. Off. or PPoB country", ps => ps.RegOfficeOrPBoBCountry);
             csvWriter.DefineColumn(@"Includes annual charge", ps => ps.HasAnnualCharge);
