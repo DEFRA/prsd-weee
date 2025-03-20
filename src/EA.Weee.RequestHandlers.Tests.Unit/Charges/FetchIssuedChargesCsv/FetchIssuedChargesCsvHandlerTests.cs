@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Charges.FetchIssuedChargesCsv
 {
+    using System.Security;
+    using System.Threading.Tasks;
     using Core.Shared;
     using FakeItEasy;
     using RequestHandlers.Charges.FetchIssuedChargesCsv;
     using RequestHandlers.Security;
     using Requests.Charges;
-    using System.Security;
-    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
 
