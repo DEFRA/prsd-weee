@@ -43,11 +43,10 @@
             {
                 foreach (ProducerSubmission submission in results)
                 {
-                    var sellingTechName = EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(submission.SellingTechniqueType));
                     decimal? chargeValue = (submission.SellingTechniqueType.Equals(SellingTechniqueType.OnlineMarketplacesAndFulfilmentHouses.Value) ? null : submission.ChargeThisUpdate);
                     decimal? ompChargeValue = (submission.SellingTechniqueType.Equals(SellingTechniqueType.OnlineMarketplacesAndFulfilmentHouses.Value) ? submission.ChargeThisUpdate : null);
 
-                    submission.UpdateOMPData(sellingTechName, chargeValue, ompChargeValue);
+                    submission.UpdateOMPData(chargeValue, ompChargeValue);
                 }
             }
 
