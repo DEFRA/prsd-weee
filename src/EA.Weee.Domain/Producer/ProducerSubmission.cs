@@ -226,16 +226,6 @@
             }
         }
 
-        public decimal? OMPChargeValue { get; private set; }
-
-        public decimal? ChargeValue { get; private set; }
-
-        public void UpdateOMPData(decimal? chargeValue, decimal? ompChargeValue)
-        {
-            this.ChargeValue = chargeValue;
-            this.OMPChargeValue = ompChargeValue;
-        }
-
         internal void SetAsInvoiced()
         {
             if (Invoiced)
