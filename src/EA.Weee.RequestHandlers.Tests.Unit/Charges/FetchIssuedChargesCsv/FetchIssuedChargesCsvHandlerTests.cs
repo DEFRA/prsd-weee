@@ -6,6 +6,8 @@
     using System.Text;
     using System.Threading.Tasks;
     using Core.Shared;
+    using EA.Prsd.Core.Domain;
+    using EA.Prsd.Core.Helpers;
     using EA.Weee.Domain;
     using EA.Weee.Domain.Lookup;
     using EA.Weee.Domain.Producer;
@@ -124,12 +126,16 @@
             // in either case, the other should be blank
 
             Assert.Equal(decimal.Parse(row1Data[5]), producerSubmissions[0].ChargeThisUpdate);
+            Assert.Equal(row1Data[7], EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(producerSubmissions[0].SellingTechniqueType)));
             Assert.Equal(row1Data[8], string.Empty);
             Assert.Equal(decimal.Parse(row2Data[5]), producerSubmissions[1].ChargeThisUpdate);
+            Assert.Equal(row2Data[7], EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(producerSubmissions[1].SellingTechniqueType)));
             Assert.Equal(row2Data[8], string.Empty);
             Assert.Equal(decimal.Parse(row3Data[5]), producerSubmissions[2].ChargeThisUpdate);
+            Assert.Equal(row3Data[7], EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(producerSubmissions[2].SellingTechniqueType)));
             Assert.Equal(row3Data[8], string.Empty);
             Assert.Equal(row4Data[5], string.Empty);
+            Assert.Equal(row4Data[7], EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(producerSubmissions[3].SellingTechniqueType)));
             Assert.Equal(decimal.Parse(row4Data[8]), producerSubmissions[3].ChargeThisUpdate);
         }
 
