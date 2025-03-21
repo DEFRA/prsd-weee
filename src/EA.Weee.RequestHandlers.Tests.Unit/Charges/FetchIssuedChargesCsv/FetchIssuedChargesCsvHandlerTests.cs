@@ -9,8 +9,11 @@
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Helpers;
     using EA.Weee.Domain;
+    using EA.Weee.Domain.Lookup;
     using EA.Weee.Domain.Producer;
     using EA.Weee.Domain.Producer.Classfication;
+    using EA.Weee.Domain.Producer.Classification;
+    using EA.Weee.Domain.Scheme;
     using FakeItEasy;
     using RequestHandlers.Charges.FetchIssuedChargesCsv;
     using RequestHandlers.Security;
@@ -83,7 +86,7 @@
                 CreateDummyProducerSubmission(4m, SellingTechniqueType.OnlineMarketplace),
             };
 
-            A.CallTo(() => dataAccess.FetchInvoicedProducerSubmissionsAsync(A<UKCompetentAuthority>.Ignored, A<int>.Ignored, A<Guid>.Ignored)).Returns(Task.FromResult<IEnumerable<ProducerSubmission>>(producerSubmissions));
+            A.CallTo(() => dataAccess.FetchInvoicedProducerSubmissionsAsync(A<UKCompetentAuthority>.Ignored, A<int>.Ignored, A<Guid?>.Ignored)).Returns(Task.FromResult<IEnumerable<ProducerSubmission>>(producerSubmissions));
 
             var handler = new FetchIssuedChargesCsvHandler(authorization, dataAccess, csvWriterFactory);
 
@@ -138,12 +141,40 @@
 
         private static ProducerSubmission CreateDummyProducerSubmission(decimal chargeThisUpdate, SellingTechniqueType sellingTechnique)
         {
-            var submission = A.Fake<ProducerSubmission>();
+            var complianceYear = A.Dummy<int>();
+            var schemeId = A.Dummy<Guid>();
 
-            A.CallTo(() => submission.ChargeThisUpdate).Returns(chargeThisUpdate);
-            A.CallTo(() => submission.SellingTechniqueType).Returns(sellingTechnique.Value);
+            // need to enforce some restrictions
+            // the compliance year and scheme ID need to match between registered producer and member upload
+            var registeredProducer = A.Fake<RegisteredProducer>();
+            A.CallTo(() => registeredProducer.ComplianceYear).Returns(complianceYear);
+            A.CallTo(() => registeredProducer.Scheme.Id).Returns(schemeId);
 
-            return submission;
+            var memberUpload = A.Fake<MemberUpload>();
+            A.CallTo(() => memberUpload.ComplianceYear).Returns(complianceYear);
+            A.CallTo(() => memberUpload.Scheme.Id).Returns(schemeId);
+
+            // ... and the submitted date is assumed to be non-null, so needs to actually be non-null
+            A.CallTo(() => memberUpload.SubmittedDate).Returns(A.Dummy<DateTime>());
+
+            return new ProducerSubmission(registeredProducer,
+                            memberUpload,
+                            A.Dummy<ProducerBusiness>(),
+                            A.Dummy<AuthorisedRepresentative>(),
+                            A.Dummy<DateTime>(),
+                            A.Dummy<decimal?>(),
+                            A.Dummy<bool>(),
+                            A.Dummy<DateTime?>(),
+                            A.Dummy<string>(),
+                            A.Dummy<EEEPlacedOnMarketBandType>(),
+                            sellingTechnique,
+                            A.Dummy<Domain.Obligation.ObligationType>(),
+                            A.Dummy<AnnualTurnOverBandType>(),
+                            A.Dummy<List<BrandName>>(),
+                            A.Dummy<List<SICCode>>(),
+                            A.Dummy<ChargeBandAmount>(),
+                            chargeThisUpdate,
+                            A.Dummy<StatusType>());
         }
     }
 }
