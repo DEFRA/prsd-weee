@@ -139,7 +139,7 @@
             Assert.Equal(decimal.Parse(row4Data[8]), producerSubmissions[3].ChargeThisUpdate);
         }
 
-        private static ProducerSubmission CreateDummyProducerSubmission(decimal value, SellingTechniqueType sellingTechnique)
+        private static ProducerSubmission CreateDummyProducerSubmission(decimal chargeThisUpdate, SellingTechniqueType sellingTechnique)
         {
             return new ProducerSubmission(A.Dummy<RegisteredProducer>(),
                             A.Dummy<MemberUpload>(),
@@ -157,7 +157,7 @@
                             A.Dummy<List<BrandName>>(),
                             A.Dummy<List<SICCode>>(),
                             A.Dummy<ChargeBandAmount>(),
-                            value,
+                            chargeThisUpdate,
                             A.Dummy<StatusType>());
         }
     }
