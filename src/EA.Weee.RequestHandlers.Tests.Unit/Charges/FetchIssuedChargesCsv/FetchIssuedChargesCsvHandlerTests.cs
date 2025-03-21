@@ -9,8 +9,11 @@
     using EA.Prsd.Core.Domain;
     using EA.Prsd.Core.Helpers;
     using EA.Weee.Domain;
+    using EA.Weee.Domain.Lookup;
     using EA.Weee.Domain.Producer;
     using EA.Weee.Domain.Producer.Classfication;
+    using EA.Weee.Domain.Producer.Classification;
+    using EA.Weee.Domain.Scheme;
     using FakeItEasy;
     using RequestHandlers.Charges.FetchIssuedChargesCsv;
     using RequestHandlers.Security;
@@ -138,12 +141,24 @@
 
         private static ProducerSubmission CreateDummyProducerSubmission(decimal chargeThisUpdate, SellingTechniqueType sellingTechnique)
         {
-            var submission = A.Fake<ProducerSubmission>();
-
-            A.CallTo(() => submission.ChargeThisUpdate).Returns(chargeThisUpdate);
-            A.CallTo(() => submission.SellingTechniqueType).Returns(sellingTechnique.Value);
-
-            return submission;
+            return new ProducerSubmission(A.Dummy<RegisteredProducer>(),
+                            A.Dummy<MemberUpload>(),
+                            A.Dummy<ProducerBusiness>(),
+                            A.Dummy<AuthorisedRepresentative>(),
+                            A.Dummy<DateTime>(),
+                            A.Dummy<decimal?>(),
+                            A.Dummy<bool>(),
+                            A.Dummy<DateTime?>(),
+                            A.Dummy<string>(),
+                            A.Dummy<EEEPlacedOnMarketBandType>(),
+                            sellingTechnique,
+                            A.Dummy<Domain.Obligation.ObligationType>(),
+                            A.Dummy<AnnualTurnOverBandType>(),
+                            A.Dummy<List<BrandName>>(),
+                            A.Dummy<List<SICCode>>(),
+                            A.Dummy<ChargeBandAmount>(),
+                            chargeThisUpdate,
+                            A.Dummy<StatusType>());
         }
     }
 }
