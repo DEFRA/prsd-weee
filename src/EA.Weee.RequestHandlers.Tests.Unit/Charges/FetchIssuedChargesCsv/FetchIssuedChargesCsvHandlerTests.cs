@@ -86,7 +86,7 @@
                 CreateDummyProducerSubmission(4m, SellingTechniqueType.OnlineMarketplacesAndFulfilmentHouses),
             };
 
-            A.CallTo(() => dataAccess.FetchInvoicedProducerSubmissionsAsync(A<UKCompetentAuthority>.Ignored, A<int>.Ignored, A<Guid>.Ignored)).Returns(Task.FromResult<IEnumerable<ProducerSubmission>>(producerSubmissions));
+            A.CallTo(() => dataAccess.FetchInvoicedProducerSubmissionsAsync(A<UKCompetentAuthority>.Ignored, A<int>.Ignored, A<Guid?>.Ignored)).Returns(Task.FromResult<IEnumerable<ProducerSubmission>>(producerSubmissions));
 
             var handler = new FetchIssuedChargesCsvHandler(authorization, dataAccess, csvWriterFactory);
 
