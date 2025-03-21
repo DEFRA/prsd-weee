@@ -141,8 +141,24 @@
 
         private static ProducerSubmission CreateDummyProducerSubmission(decimal chargeThisUpdate, SellingTechniqueType sellingTechnique)
         {
-            return new ProducerSubmission(A.Dummy<RegisteredProducer>(),
-                            A.Dummy<MemberUpload>(),
+            var complianceYear = A.Dummy<int>();
+            var schemeId = A.Dummy<Guid>();
+
+            // need to enforce some restrictions
+            // the compliance year and scheme ID need to match between registered producer and member upload
+            var registeredProducer = A.Fake<RegisteredProducer>();
+            A.CallTo(() => registeredProducer.ComplianceYear).Returns(complianceYear);
+            A.CallTo(() => registeredProducer.Scheme.Id).Returns(schemeId);
+
+            var memberUpload = A.Fake<MemberUpload>();
+            A.CallTo(() => memberUpload.ComplianceYear).Returns(complianceYear);
+            A.CallTo(() => memberUpload.Scheme.Id).Returns(schemeId);
+
+            // ... and the submitted date is assumed to be non-null, so needs to actually be non-null
+            A.CallTo(() => memberUpload.SubmittedDate).Returns(A.Dummy<DateTime>());
+
+            return new ProducerSubmission(registeredProducer,
+                            memberUpload,
                             A.Dummy<ProducerBusiness>(),
                             A.Dummy<AuthorisedRepresentative>(),
                             A.Dummy<DateTime>(),
