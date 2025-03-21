@@ -212,7 +212,7 @@
         public async Task GenerateProducerData_WithSellingTechnique_As_OMP_ReturnsProducerWithMatchingSellingTechnique()
         {
             var builder = new GenerateProducerDataTestsBuilder();
-            builder.SellingTechnique = sellingTechniqueType.OnlineMarketplacesAndFulfilmentHouses;
+            builder.SellingTechnique = sellingTechniqueType.OnlineMarketplace;
 
             var result = await builder.InvokeGenerateProducerDataWithSingleResult();
 

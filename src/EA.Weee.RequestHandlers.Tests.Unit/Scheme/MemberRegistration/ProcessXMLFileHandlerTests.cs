@@ -102,7 +102,7 @@
         [Fact]
         public async Task ProcessXmlfile_ParsesXMLFile_SavesValidProducers_As_OMP()
         {
-            IEnumerable<ProducerSubmission> generatedProducers = new[] { TestProducer("ForestMoonOfEndor", SellingTechniqueType.OnlineMarketplacesAndFulfilmentHouses) };
+            IEnumerable<ProducerSubmission> generatedProducers = new[] { TestProducer("ForestMoonOfEndor", SellingTechniqueType.OnlineMarketplace) };
 
             A.CallTo(() => generator.GenerateProducers(Message, A<MemberUpload>.Ignored, A<Dictionary<string, ProducerCharge>>.Ignored))
                 .Returns(Task.FromResult(generatedProducers));

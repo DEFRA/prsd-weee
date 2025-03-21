@@ -48,7 +48,7 @@
             csvWriter.DefineColumn("Charge value (GBP)", ps => IsOMP(ps) ? string.Empty : ps.ChargeThisUpdate);
             csvWriter.DefineColumn("Charge band", ps => ps.ChargeBandAmount.ChargeBand);
             csvWriter.DefineColumn("Selling technique", ps => EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(ps.SellingTechniqueType)));
-            csvWriter.DefineColumn("Online market places charge value", ps => IsOMP(ps) ? ps.ChargeThisUpdate : string.Empty);
+            csvWriter.DefineColumn("Online marketplace charge value", ps => IsOMP(ps) ? ps.ChargeThisUpdate : string.Empty);
             csvWriter.DefineColumn("Issued date", ps => ps.MemberUpload.InvoiceRun.IssuedDate.ToString("dd/MM/yyyy HH:mm:ss"));
             csvWriter.DefineColumn(@"Reg. Off. or PPoB country", ps => ps.RegOfficeOrPBoBCountry);
             csvWriter.DefineColumn(@"Includes annual charge", ps => ps.HasAnnualCharge);
@@ -82,7 +82,7 @@
 
         private static bool IsOMP(ProducerSubmission ps)
         {
-            return ps.SellingTechniqueType == SellingTechniqueType.OnlineMarketplacesAndFulfilmentHouses.Value;
+            return ps.SellingTechniqueType == SellingTechniqueType.OnlineMarketplace.Value;
         }
     }
 }
