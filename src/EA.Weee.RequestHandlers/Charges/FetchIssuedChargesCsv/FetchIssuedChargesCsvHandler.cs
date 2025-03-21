@@ -1,15 +1,18 @@
 ﻿namespace EA.Weee.RequestHandlers.Charges.FetchIssuedChargesCsv
 {
+    using System.Collections.Generic;
+    using System.Text;
+    using System.Threading.Tasks;
     using Domain;
     using Domain.Producer;
+    using Domain.Producer.Classfication;
+    using EA.Prsd.Core.Domain;
+    using EA.Prsd.Core.Helpers;
     using EA.Prsd.Core.Mediator;
     using EA.Weee.Core.Shared;
     using Prsd.Core;
     using Requests.Charges;
     using Security;
-    using System.Collections.Generic;
-    using System.Text;
-    using System.Threading.Tasks;
 
     public class FetchIssuedChargesCsvHandler : IRequestHandler<FetchIssuedChargesCsv, FileInfo>
     {
@@ -42,8 +45,10 @@
             csvWriter.DefineColumn("Submission date and time (GMT)", ps => ps.MemberUpload.SubmittedDate.Value.ToString("dd/MM/yyyy HH:mm:ss"));
             csvWriter.DefineColumn("Producer name", ps => ps.OrganisationName);
             csvWriter.DefineColumn("PRN", ps => ps.RegisteredProducer.ProducerRegistrationNumber);
-            csvWriter.DefineColumn("Charge value (GBP)", ps => ps.ChargeThisUpdate);
+            csvWriter.DefineColumn("Charge value (GBP)", ps => IsOMP(ps) ? string.Empty : ps.ChargeThisUpdate);
             csvWriter.DefineColumn("Charge band", ps => ps.ChargeBandAmount.ChargeBand);
+            csvWriter.DefineColumn("Selling technique", ps => EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(ps.SellingTechniqueType)));
+            csvWriter.DefineColumn("Online market places charge value", ps => IsOMP(ps) ? ps.ChargeThisUpdate : string.Empty);
             csvWriter.DefineColumn("Issued date", ps => ps.MemberUpload.InvoiceRun.IssuedDate.ToString("dd/MM/yyyy HH:mm:ss"));
             csvWriter.DefineColumn(@"Reg. Off. or PPoB country", ps => ps.RegOfficeOrPBoBCountry);
             csvWriter.DefineColumn(@"Includes annual charge", ps => ps.HasAnnualCharge);
@@ -73,6 +78,11 @@
                     SystemTime.UtcNow);
             }
             return new FileInfo(fileName, data);
+        }
+
+        private static bool IsOMP(ProducerSubmission ps)
+        {
+            return ps.SellingTechniqueType == SellingTechniqueType.OnlineMarketplacesAndFulfilmentHouses.Value;
         }
     }
 }
