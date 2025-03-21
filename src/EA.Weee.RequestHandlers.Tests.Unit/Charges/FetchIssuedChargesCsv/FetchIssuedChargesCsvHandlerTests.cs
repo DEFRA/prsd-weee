@@ -59,7 +59,7 @@
             "Charge value (GBP)",
             "Charge band",
             "Selling technique",
-            "Online market places charge value",
+            "Online marketplace charge value",
             "Issued date",
             "Reg. Off. or PPoB country",
             "Includes annual charge"
@@ -105,7 +105,7 @@
             "Charge value (GBP)",
             "Charge band",
             "Selling technique",
-            "Online market places charge value",
+            "Online marketplace charge value",
             "Issued date",
             "Reg. Off. or PPoB country",
             "Includes annual charge"
