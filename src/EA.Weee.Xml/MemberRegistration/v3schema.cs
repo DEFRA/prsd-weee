@@ -1728,8 +1728,8 @@ namespace EA.Weee.Xml.MemberRegistration {
         Both,
 
         /// <remarks/>
-        [XmlEnum("Online Marketplaces and Fulfilment Houses")]
-        OnlineMarketplacesAndFulfilmentHouses,
+        [XmlEnum("Online marketplace")]
+        OnlineMarketplace,
     }
     
     /// <remarks/>
