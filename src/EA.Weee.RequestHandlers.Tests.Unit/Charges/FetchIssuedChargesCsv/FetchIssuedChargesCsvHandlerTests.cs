@@ -62,7 +62,7 @@
             "Charge value (GBP)",
             "Charge band",
             "Selling technique",
-            "Online market places charge value",
+            "Online marketplace charge value",
             "Issued date",
             "Reg. Off. or PPoB country",
             "Includes annual charge"
@@ -83,7 +83,7 @@
                 CreateDummyProducerSubmission(1m, SellingTechniqueType.DirectSellingtoEndUser),
                 CreateDummyProducerSubmission(2m, SellingTechniqueType.IndirectSellingtoEndUser),
                 CreateDummyProducerSubmission(3m, SellingTechniqueType.Both),
-                CreateDummyProducerSubmission(4m, SellingTechniqueType.OnlineMarketplacesAndFulfilmentHouses),
+                CreateDummyProducerSubmission(4m, SellingTechniqueType.OnlineMarketplace),
             };
 
             A.CallTo(() => dataAccess.FetchInvoicedProducerSubmissionsAsync(A<UKCompetentAuthority>.Ignored, A<int>.Ignored, A<Guid?>.Ignored)).Returns(Task.FromResult<IEnumerable<ProducerSubmission>>(producerSubmissions));
@@ -108,7 +108,7 @@
             "Charge value (GBP)",
             "Charge band",
             "Selling technique",
-            "Online market places charge value",
+            "Online marketplace charge value",
             "Issued date",
             "Reg. Off. or PPoB country",
             "Includes annual charge"
