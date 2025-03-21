@@ -12,7 +12,7 @@
         [Display(Name = "Both Direct and Indirect Selling to End User")]
         Both = 2,
 
-        [Display(Name = "Online Marketplaces and Fulfilment Houses")]
-        OnlineMarketplacesAndFulfilmentHouses = 3,
+        [Display(Name = "Online marketplace")]
+        OnlineMarketplace = 3,
     }
 }

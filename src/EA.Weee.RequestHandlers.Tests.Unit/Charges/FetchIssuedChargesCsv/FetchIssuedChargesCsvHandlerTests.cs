@@ -80,7 +80,7 @@
                 CreateDummyProducerSubmission(1m, SellingTechniqueType.DirectSellingtoEndUser),
                 CreateDummyProducerSubmission(2m, SellingTechniqueType.IndirectSellingtoEndUser),
                 CreateDummyProducerSubmission(3m, SellingTechniqueType.Both),
-                CreateDummyProducerSubmission(4m, SellingTechniqueType.OnlineMarketplacesAndFulfilmentHouses),
+                CreateDummyProducerSubmission(4m, SellingTechniqueType.OnlineMarketplace),
             };
 
             A.CallTo(() => dataAccess.FetchInvoicedProducerSubmissionsAsync(A<UKCompetentAuthority>.Ignored, A<int>.Ignored, A<Guid>.Ignored)).Returns(Task.FromResult<IEnumerable<ProducerSubmission>>(producerSubmissions));

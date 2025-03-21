@@ -82,7 +82,7 @@
 
         private static bool IsOMP(ProducerSubmission ps)
         {
-            return ps.SellingTechniqueType == SellingTechniqueType.OnlineMarketplacesAndFulfilmentHouses.Value;
+            return ps.SellingTechniqueType == SellingTechniqueType.OnlineMarketplace.Value;
         }
     }
 }
