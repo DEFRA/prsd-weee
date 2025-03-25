@@ -20,22 +20,22 @@ BEGIN
         -- Scheme Information
         S.SchemeName,
         S.ApprovalNumber,
-        
+
         -- Producer Information
         PS.TradingName,
         PBC.Name AS 'CompanyName',
-        CASE 
+        CASE
             WHEN PBC.Name IS NULL THEN 'Partnership'
             ELSE 'Registered company'
         END AS 'ProducerType',
-        CASE 
+        CASE
             WHEN PBC.Name IS NULL THEN PBP.Name
             ELSE PBC.Name
         END AS 'ProducerName',
         RP.ProducerRegistrationNumber AS 'PRN',
         P_First.SubmittedDate AS 'DateRegistered',
         MU.SubmittedDate AS 'DateAmended',
-        
+
         -- Business Details
         SICCODES.SICCode as 'SICCODES',
         PS.VATRegistered,
@@ -71,7 +71,7 @@ BEGIN
             ELSE ''
         END AS 'SellingTechniqueType',
         PS.CeaseToExist,
-        
+
         -- Correspondence for Notices Contact Details
         CFNC.Title as 'CNTitle',
         CFNC.Forename as 'CNForename',
@@ -88,7 +88,7 @@ BEGIN
         CFNC_A.AdministrativeArea as 'CNAdministrativeArea',
         CFNC_A.PostCode as 'CNPostcode',
         CFNC_A_C.Name as 'CNCountry',
-   
+
         -- Registered Office Details
         PBC.CompanyNumber,
         ROC.Title as 'CompanyContactTitle',
@@ -106,7 +106,7 @@ BEGIN
         ROC_A.AdministrativeArea as 'CompanyContactAdministrativeArea',
         ROC_A.PostCode as 'CompanyContactPostcode',
         ROC_A_C.Name as 'CompanyContactCountry',
-   
+
         -- Principal Place of Business Details
         Partners.Partners,
         PPOB.Title as 'PPOBContactTitle',
@@ -124,7 +124,7 @@ BEGIN
         PPOB_A.AdministrativeArea as 'PPOBContactAdministrativeArea',
         PPOB_A.PostCode as 'PPOBContactPostcode',
         PPOB_A_C.Name as 'PPOBContactCountry',
-      
+
         -- Overseas Contact Details
         AR.OverseasProducerName as 'OverseasProducerName',
         OC.Title as 'OverseasContactTitle',
@@ -142,7 +142,7 @@ BEGIN
         OC_A.AdministrativeArea as 'OverseasContactAdministrativeArea',
         OC_A.PostCode as 'OverseasContactPostcode',
         OC_A_C.Name as 'OverseasContactCountry',
-        
+
         -- Removal Status
         CASE RP.Removed
             WHEN 1 THEN 'Yes'
@@ -151,12 +151,12 @@ BEGIN
 
         -- Brand Names (if requested)
         CASE @IncludeBrandNames
-            WHEN 1 THEN 
+            WHEN 1 THEN
                 (SELECT STUFF((SELECT '; ' + BN.Name
                 FROM [Producer].[BrandName] BN
                 WHERE BN.ProducerSubmissionId = PS.Id
                 FOR XML PATH(''), TYPE)
-                .value('.', 'NVARCHAR(MAX)') 
+                .value('.', 'NVARCHAR(MAX)')
                 , 1, 2, ''))
             WHEN 0 THEN NULL
         END AS 'BrandNames',
@@ -219,7 +219,7 @@ BEGIN
             Producer.ProducerSubmission PS
         INNER JOIN
             PCS.MemberUpload MU ON PS.MemberUploadId = MU.Id
-        INNER JOIN 
+        INNER JOIN
             Producer.RegisteredProducer RP ON PS.RegisteredProducerId = RP.Id
         WHERE
             MU.IsSubmitted = 1
@@ -231,10 +231,10 @@ BEGIN
         SELECT DISTINCT
             PS.Id,
             STUFF((SELECT distinct '; ' + SIC.Name
-                FROM [Producer].[SICCode] SIC 
-                WHERE PS.Id = SIC.ProducerSubmissionId 
+                FROM [Producer].[SICCode] SIC
+                WHERE PS.Id = SIC.ProducerSubmissionId
                 FOR XML PATH(''), TYPE
-                ).value('.', 'NVARCHAR(MAX)') 
+                ).value('.', 'NVARCHAR(MAX)')
                 ,1,2,'') SICCode
         FROM
             [Producer].[ProducerSubmission] PS
@@ -245,10 +245,10 @@ BEGIN
         SELECT DISTINCT
             P.Id,
             STUFF((SELECT distinct '; ' + PP.Name
-                FROM [Producer].[Partner] PP 
+                FROM [Producer].[Partner] PP
                 WHERE P.Id = PP.PartnershipId
                 FOR XML PATH(''), TYPE
-                ).value('.', 'NVARCHAR(MAX)') 
+                ).value('.', 'NVARCHAR(MAX)')
                 ,1,2,'') Partners
         FROM
             [Producer].[Partnership] P
@@ -272,7 +272,7 @@ BEGIN
         -- Producer Information
         o.[TradingName] AS 'TradingName',
         o.[Name] AS 'CompanyName',
-		CASE 
+		CASE
 			WHEN o.OrganisationType = 1 THEN 'Registered company'
 			WHEN o.OrganisationType IN (2,4) THEN 'Partnership'
 			WHEN o.OrganisationType = 3 THEN 'Sole trader or individual'
@@ -287,7 +287,7 @@ BEGIN
         END AS 'DateRegistered',
 
         dpsh.SubmittedDate AS 'DateAmended',
-        
+
         -- Business Details
         NULL AS 'SICCODES',
         NULL AS VATRegistered,
@@ -303,7 +303,7 @@ BEGIN
             ELSE ''
         END AS 'SellingTechniqueType',
         NULL AS CeaseToExist,
-        
+
         -- Correspondence for Notices Contact Details
         NULL as 'CNTitle',
         NULL as 'CNForename',
@@ -320,7 +320,7 @@ BEGIN
         NULL as 'CNAdministrativeArea',
         serviceAddress.PostCode as 'CNPostcode',
         serviceAddressCountry.Name as 'CNCountry',
-   
+
         -- Registered Office Details
         o.CompanyRegistrationNumber AS 'CompanyNumber',
         NULL as 'CompanyContactTitle',
@@ -338,7 +338,7 @@ BEGIN
         NULL as 'CompanyContactAdministrativeArea',
         oa.PostCode as 'CompanyContactPostcode',
         loc.Name as 'CompanyContactCountry',
-   
+
         -- Principal Place of Business Details
         additionalDetails.AllFullNames AS 'Partners',
         NULL as 'PPOBContactTitle',
@@ -356,7 +356,7 @@ BEGIN
         NULL as 'PPOBContactAdministrativeArea',
         NULL as 'PPOBContactPostcode',
         NULL as 'PPOBContactCountry',
-      
+
         -- Overseas Contact Details / Auth rep
         ap.OverseasProducerName as 'OverseasProducerName',
         pc.Title as 'OverseasContactTitle',
@@ -374,7 +374,7 @@ BEGIN
         pa.AdministrativeArea as 'OverseasContactAdministrativeArea',
         pa.PostCode as 'OverseasContactPostcode',
         ac.Name as 'OverseasContactCountry',
-        
+
         -- Removal Status
         CASE RP.Removed
             WHEN 1 THEN 'Yes'
@@ -383,15 +383,15 @@ BEGIN
 
         -- Brand Names (if requested)
         CASE @IncludeBrandNames
-            WHEN 1 THEN 
+            WHEN 1 THEN
                 ISNULL(NULLIF(
                     (SELECT STUFF((SELECT '; ' + BN.Name
-                    FROM 
+                    FROM
                     [Producer].[DirectRegistrant] drb
                     INNER JOIN [Producer].[BrandName] bn ON bn.Id = drb.BrandNameId
                     WHERE drb.Id = dr.Id
                     FOR XML PATH(''), TYPE)
-                    .value('.', 'NVARCHAR(MAX)') 
+                    .value('.', 'NVARCHAR(MAX)')
                     , 1, 2, '')), ''), '')
             WHEN 0 THEN ''
         END AS 'BrandNames',
@@ -406,15 +406,15 @@ BEGIN
         INNER JOIN [Lookup].[Country] loc ON loc.Id = oa.CountryId
         INNER JOIN [Producer].[RegisteredProducer] rp ON dps.RegisteredProducerId = rp.Id AND dps.ComplianceYear = @ComplianceYear
         INNER JOIN (
-                    SELECT 
+                    SELECT
                         dpsh.Id,
                         dpsh.DirectProducerSubmissionId,
                         ROW_NUMBER() OVER (PARTITION BY dpsh.DirectProducerSubmissionId ORDER BY dpsh.SubmittedDate DESC) as rn
-                    FROM 
+                    FROM
                         [Producer].[DirectProducerSubmissionHistory] dpsh
                         INNER JOIN [Producer].[DirectProducerSubmission] ps ON dpsh.DirectProducerSubmissionId = ps.Id
                         INNER JOIN [Producer].[RegisteredProducer] rp ON ps.RegisteredProducerId = rp.Id
-                    WHERE 
+                    WHERE
                         dpsh.SubmittedDate IS NOT NULL
                         AND (@IncludeRemovedProducer = 1 OR RP.Removed = 0)
                     ) latest_submission ON latest_submission.DirectProducerSubmissionId = dps.Id AND latest_submission.rn = 1
@@ -443,7 +443,7 @@ BEGIN
             GROUP BY
                 ps.RegisteredProducerId
 		) firstSubmitted ON dps.RegisteredProducerId = firstSubmitted.RegisteredProducerId
-		LEFT JOIN 
+		LEFT JOIN
 		(
 			 SELECT
                 DirectRegistrantId,
@@ -462,7 +462,7 @@ BEGIN
         dps.ComplianceYear = @ComplianceYear AND
 		 @SchemeId IS NULL AND
 		(@FilterByDirectRegistrant = 1 OR (@FilterBySchemes = 0 AND @FilterByDirectRegistrant = 0))
-		
+
     ORDER BY
 		IsDirectProducer,
         S.SchemeName,
