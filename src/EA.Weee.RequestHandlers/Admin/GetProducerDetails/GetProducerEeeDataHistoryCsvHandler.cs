@@ -162,11 +162,11 @@
                                                                      item.Cat1B2C, item.Cat2B2C, item.Cat3B2C, item.Cat4B2C,
                                                                      item.Cat5B2C, item.Cat6B2C, item.Cat7B2C, item.Cat8B2C,
                                                                      item.Cat9B2C, item.Cat10B2C, item.Cat11B2C, item.Cat12B2C,
-                                                                     item.Cat13B2C, item.Cat14B2C,
+                                                                     item.Cat13B2C, item.Cat14B2C, item.Cat15B2C,
                                                                      item.Cat1B2B, item.Cat2B2B, item.Cat3B2B, item.Cat4B2B,
                                                                      item.Cat5B2B, item.Cat6B2B, item.Cat7B2B, item.Cat8B2B,
                                                                      item.Cat9B2B, item.Cat10B2B, item.Cat11B2B, item.Cat12B2B,
-                                                                     item.Cat13B2B, item.Cat14B2B);
+                                                                     item.Cat13B2B, item.Cat14B2B, item.Cat15B2B);
                     csvResults.Add(row);
                 }
                 //remove consecutive items from removed list 
@@ -216,6 +216,7 @@
             public decimal? Cat12B2C { get; set; }
             public decimal? Cat13B2C { get; set; }
             public decimal? Cat14B2C { get; set; }
+            public decimal? Cat15B2C { get; set; }
             public decimal? Cat1B2B { get; set; }
             public decimal? Cat2B2B { get; set; }
             public decimal? Cat3B2B { get; set; }
@@ -230,14 +231,15 @@
             public decimal? Cat12B2B { get; set; }
             public decimal? Cat13B2B { get; set; }
             public decimal? Cat14B2B { get; set; }
+            public decimal? Cat15B2B { get; set; }
 
             public EeeHistoryCsvResult(string prn, string approvalNumber, string schemeName, int year, int quarter, DateTime date, string latestData,
                 decimal? cat1b2c = null, decimal? cat2b2c = null, decimal? cat3b2c = null, decimal? cat4b2c = null, decimal? cat5b2c = null,
                 decimal? cat6b2c = null, decimal? cat7b2c = null, decimal? cat8b2c = null, decimal? cat9b2c = null, decimal? cat10b2c = null,
-                decimal? cat11b2c = null, decimal? cat12b2c = null, decimal? cat13b2c = null, decimal? cat14b2c = null,
+                decimal? cat11b2c = null, decimal? cat12b2c = null, decimal? cat13b2c = null, decimal? cat14b2c = null, decimal? cat15b2c = null,
                 decimal? cat1b2b = null, decimal? cat2b2b = null, decimal? cat3b2b = null, decimal? cat4b2b = null, decimal? cat5b2b = null,
                 decimal? cat6b2b = null, decimal? cat7b2b = null, decimal? cat8b2b = null, decimal? cat9b2b = null, decimal? cat10b2b = null,
-                decimal? cat11b2b = null, decimal? cat12b2b = null, decimal? cat13b2b = null, decimal? cat14b2b = null)
+                decimal? cat11b2b = null, decimal? cat12b2b = null, decimal? cat13b2b = null, decimal? cat14b2b = null, decimal? cat15b2b = null)
             {
                 PRN = prn;
                 ApprovalNumber = approvalNumber;
@@ -260,6 +262,7 @@
                 Cat12B2C = cat12b2c;
                 Cat13B2C = cat13b2c;
                 Cat14B2C = cat14b2c;
+                Cat15B2C = cat15b2c;
                 //B2B
                 Cat1B2B = cat1b2b;
                 Cat2B2B = cat2b2b;
@@ -275,6 +278,7 @@
                 Cat12B2B = cat12b2b;
                 Cat13B2B = cat13b2b;
                 Cat14B2B = cat14b2b;
+                Cat15B2B = cat15b2b;
             }
         }
     }
