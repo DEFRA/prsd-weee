@@ -67,7 +67,7 @@ BEGIN
         CASE PS.SellingTechniqueType
             WHEN 0 THEN 'Direct Selling to End User'
             WHEN 1 THEN 'Indirect Selling to End User'
-            WHEN 2 THEN 'Both'
+            WHEN 2 THEN 'Both Direct and Indirect Selling to End User'
             ELSE ''
         END AS 'SellingTechniqueType',
         PS.CeaseToExist,
@@ -299,7 +299,7 @@ BEGIN
         CASE dpsh.SellingTechniqueType
             WHEN 0 THEN 'Direct Selling to End User'
             WHEN 1 THEN 'Indirect Selling to End User'
-            WHEN 2 THEN 'Both'
+            WHEN 2 THEN 'Both Direct and Indirect Selling to End User'
             ELSE ''
         END AS 'SellingTechniqueType',
         NULL AS CeaseToExist,
