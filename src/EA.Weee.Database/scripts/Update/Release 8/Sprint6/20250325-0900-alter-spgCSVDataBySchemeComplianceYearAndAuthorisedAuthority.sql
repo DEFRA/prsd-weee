@@ -68,6 +68,7 @@ BEGIN
             WHEN 0 THEN 'Direct Selling to End User'
             WHEN 1 THEN 'Indirect Selling to End User'
             WHEN 2 THEN 'Both Direct and Indirect Selling to End User'
+            WHEN 3 THEN 'Online marketplace'
             ELSE ''
         END AS 'SellingTechniqueType',
         PS.CeaseToExist,
@@ -300,6 +301,7 @@ BEGIN
             WHEN 0 THEN 'Direct Selling to End User'
             WHEN 1 THEN 'Indirect Selling to End User'
             WHEN 2 THEN 'Both Direct and Indirect Selling to End User'
+            WHEN 3 THEN 'Online marketplace'
             ELSE ''
         END AS 'SellingTechniqueType',
         NULL AS CeaseToExist,
