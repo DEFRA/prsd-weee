@@ -5,6 +5,8 @@
     using DataAccess;
     using DataAccess.StoredProcedure;
     using EA.Prsd.Core;
+    using EA.Prsd.Core.Helpers;
+    using EA.Weee.Core.DataReturns;
     using Prsd.Core.Mediator;
     using Requests.Admin;
     using Security;
@@ -64,18 +66,24 @@
             csvWriter.DefineColumn(@"Date and time (GMT) data submitted", i => i.SubmittedDate);
             csvWriter.DefineColumn(@"Quarter", i => i.Quarter);
             csvWriter.DefineColumn(@"Latest data", i => i.LatestData);
-            foreach (int category in Enumerable.Range(1, 14))
+
+            var categories = EnumHelper.GetValues(typeof(WeeeCategory));
+            var maxCategoryId = categories.Max(x => x.Key);
+
+            foreach (int category in Enumerable.Range(1, maxCategoryId))
             {
                 string title = string.Format("Cat{0} B2C", category);
                 string columnName = string.Format("Cat{0}B2C", category);
                 csvWriter.DefineColumn(title, i => i.GetType().GetProperty(columnName).GetValue(i));
             }
-            foreach (int category in Enumerable.Range(1, 14))
+
+            foreach (int category in Enumerable.Range(1, maxCategoryId))
             {
                 string title = string.Format("Cat{0} B2B", category);
                 string columnName = string.Format("Cat{0}B2B", category);
                 csvWriter.DefineColumn(title, i => i.GetType().GetProperty(columnName).GetValue(i));
             }
+
             string fileContent = csvWriter.Write(csvResults);
             return fileContent;
         }
