@@ -48,6 +48,7 @@
                 helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2C", 12, (decimal)1.12);
                 helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2C", 13, (decimal)1.13);
                 helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2C", 14, (decimal)1.14);
+                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2C", 15, (decimal)1.15);
 
                 helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2B", 1, (decimal)2.01);
                 helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2B", 2, (decimal)2.02);
@@ -63,6 +64,7 @@
                 helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2B", 12, (decimal)2.12);
                 helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2B", 13, (decimal)2.13);
                 helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2B", 14, (decimal)2.14);
+                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2B", 15, (decimal)2.15);
 
                 database.Model.SaveChanges();
 
@@ -96,6 +98,7 @@
                     Assert.Equal(result.Cat12B2C, (decimal)1.12);
                     Assert.Equal(result.Cat13B2C, (decimal)1.13);
                     Assert.Equal(result.Cat14B2C, (decimal)1.14);
+                    Assert.Equal(result.Cat15B2C, (decimal)1.15);
 
                     Assert.Equal(result.Cat1B2B, (decimal)2.01);
                     Assert.Equal(result.Cat2B2B, (decimal)2.02);
@@ -111,6 +114,7 @@
                     Assert.Equal(result.Cat12B2B, (decimal)2.12);
                     Assert.Equal(result.Cat13B2B, (decimal)2.13);
                     Assert.Equal(result.Cat14B2B, (decimal)2.14);
+                    Assert.Equal(result.Cat15B2B, (decimal)2.15);
                 }
             }
         }
