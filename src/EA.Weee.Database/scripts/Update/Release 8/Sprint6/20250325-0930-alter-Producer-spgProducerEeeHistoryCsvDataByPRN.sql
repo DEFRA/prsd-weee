@@ -214,7 +214,7 @@ SELECT DISTINCT EEEData.EeeOutputReturnVersionId, EEEData.PRN, EEEData.ApprovalN
         EEEData.Cat12 as Cat12B2C,
         EEEData.cat13 as Cat13B2C, 
         EEEData.Cat14 as Cat14B2C,
-		EEEData.Cat15 as Cat15B2C
+        EEEData.Cat15 as Cat15B2C
      from #ProducerEEEData EEEData
      where EEEData.ObligationType = 'B2C' 
 ) as B2C on (Producers.EeeOutputReturnVersionId = B2C.EeeOutputReturnVersionId and 
@@ -240,7 +240,7 @@ SELECT DISTINCT EEEData.EeeOutputReturnVersionId, EEEData.PRN, EEEData.ApprovalN
         EEEData.Cat12 as Cat12B2B,
         EEEData.cat13 as Cat13B2B, 
         EEEData.Cat14 as Cat14B2B,
-		EEEData.Cat15 as Cat15B2B
+        EEEData.Cat15 as Cat15B2B
      from #ProducerEEEData EEEData
      where EEEData.ObligationType = 'B2B' 
 ) as B2B on (Producers.EeeOutputReturnVersionId = B2B.EeeOutputReturnVersionId and 
