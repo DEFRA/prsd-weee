@@ -9,6 +9,7 @@
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Lookup;
+    using EA.Weee.Domain.Organisation;
     using EA.Weee.Domain.Producer;
     using EA.Weee.Domain.Producer.Classfication;
     using EA.Weee.Domain.Producer.Classification;
@@ -668,7 +669,7 @@
                 result1.CompanyName.Should().Be("My company");
                 result1.SchemeName.Should().Be("Direct registrant");
                 result1.TradingName.Should().BeNullOrWhiteSpace();
-                result1.ProducerType.Should().Be("Registered company");
+                result1.ProducerType.Should().Be(EnumHelper.GetDisplayName(OrganisationType.RegisteredCompany));
                 result1.ProducerName.Should().Be("My company");
                 result1.PRN.Should().Be("WEE/AG48365JN");
                 result1.SICCodes.Should().BeNull();
@@ -751,7 +752,7 @@
                 result2.CompanyName.Should().Be("My company 2");
                 result2.SchemeName.Should().Be("Direct registrant");
                 result2.TradingName.Should().BeNullOrWhiteSpace();
-                result2.ProducerType.Should().Be("Registered company");
+                result2.ProducerType.Should().Be(EnumHelper.GetDisplayName(OrganisationType.RegisteredCompany));
                 result2.ProducerName.Should().Be("My company 2");
                 result2.PRN.Should().Be("WEE/AG48365JX");
                 result2.SICCodes.Should().BeNull();
@@ -1121,7 +1122,7 @@
                 result1.CompanyName.Should().Be("My company");
                 result1.SchemeName.Should().Be("Direct registrant");
                 result1.TradingName.Should().BeNullOrWhiteSpace();
-                result1.ProducerType.Should().Be("Registered company");
+                result1.ProducerType.Should().Be(EnumHelper.GetDisplayName(OrganisationType.RegisteredCompany));
                 result1.ProducerName.Should().Be("My company");
                 result1.PRN.Should().Be("WEE/AG43365JN");
                 result1.SICCodes.Should().BeNull();
@@ -1239,7 +1240,7 @@
                 result1.CompanyName.Should().Be("My company");
                 result1.SchemeName.Should().Be("Direct registrant");
                 result1.TradingName.Should().BeNullOrWhiteSpace();
-                result1.ProducerType.Should().Be("Registered company");
+                result1.ProducerType.Should().Be(EnumHelper.GetDisplayName(OrganisationType.RegisteredCompany));
                 result1.ProducerName.Should().Be("My company");
                 result1.PRN.Should().Be("WEE/AG13365JN");
                 result1.SICCodes.Should().BeNull();
@@ -1358,7 +1359,7 @@
                 result1.CompanyName.Should().Be(companyName);
                 result1.SchemeName.Should().Be("Direct registrant");
                 result1.TradingName.Should().BeNullOrWhiteSpace();
-                result1.ProducerType.Should().Be("Registered company");
+                result1.ProducerType.Should().Be(EnumHelper.GetDisplayName(OrganisationType.RegisteredCompany));
                 result1.ProducerName.Should().Be(companyName);
                 result1.PRN.Should().Be(prn);
                 result1.SICCodes.Should().BeNull();
