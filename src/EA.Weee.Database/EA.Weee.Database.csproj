@@ -462,6 +462,8 @@
     <Content Include="scripts\Update\Release 8\Sprint2\20250127-1256-alter-Evidence-getTransferNotes.sql" />
     <Content Include="scripts\Update\Release 8\Sprint3\20250206-1221-alter-spgDataReturnSummaryCsv.sql" />
     <Content Include="scripts\Update\Release 8\Sprint5\20250314-1500-alter-spgSubmissionChangesCsvData.sql" />
+    <Content Include="scripts\Update\Release 8\Sprint6\20250325-0900-alter-Producer-spgProducerAmendmentsCSVDataByPRN.sql" />
+    <Content Include="scripts\Update\Release 8\Sprint6\20250325-0930-alter-Producer-spgProducerEeeHistoryCsvDataByPRN.sql" />
     <None Include="rebuild-development.bat" />
     <Content Include="scripts\Update\Release 4\20220311-1315-sent-on-for-treatment-report.sql" />
     <Content Include="scripts\Update\Release 4\20220923-1751-remove-weeesenton-table-relation.sql" />

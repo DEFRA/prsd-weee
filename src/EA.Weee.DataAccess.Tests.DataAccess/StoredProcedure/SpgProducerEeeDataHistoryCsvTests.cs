@@ -1,5 +1,9 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
+    using EA.Prsd.Core.Helpers;
+    using EA.Weee.Core.DataReturns;
+    using EA.Weee.Core.Helpers;
+    using EA.Weee.Core.Shared;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
@@ -767,6 +771,81 @@
                 Assert.Equal(101, result.Cat1B2C);
                 Assert.Equal("Yes", result.LatestData);
                 Assert.Equal(new DateTime(2015, 1, 1), result.SubmittedDate);
+            }
+        }
+
+        [Fact]
+        public async Task SpgProducerEeeDataHistoryCsvTests_ForQuarter1_WithAllCategories_ReturnsProducerEeeDataHistoryLatestDataSet()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                //Arrange
+                ModelHelper helper = new ModelHelper(db.Model);
+                var scheme1 = helper.CreateScheme();
+                scheme1.ApprovalNumber = "WEE/TE1111ST/SCH";
+                var memberUpload1 = helper.CreateSubmittedMemberUpload(scheme1);
+                int complianceYear = DateTime.Now.Year;
+                memberUpload1.ComplianceYear = complianceYear;
+                const string prnNumber = "PRN345";
+                string b2bObligationType = EnumHelper.GetDescription(ObligationType.B2B);
+                string b2cObligationType = EnumHelper.GetDescription(ObligationType.B2C);
+
+                var producer1 = helper.CreateProducerAsCompany(memberUpload1, prnNumber);
+                producer1.ObligationType = b2bObligationType;
+
+                var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme1, complianceYear, 1);
+                dataReturnVersion1.SubmittedDate = new DateTime(complianceYear, 06, 01);
+
+                var categories = EnumHelper.GetValues(typeof(WeeeCategory));
+                var maxCategoryId = categories.Max(x => x.Key);
+                var tonnage = 0;
+
+                for (int i = 1; i <= maxCategoryId; i++)
+                {
+                    tonnage = tonnage + 10;
+                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, b2bObligationType, i, tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, b2cObligationType, i, tonnage);
+                }
+
+                db.Model.SaveChanges();
+
+                // Act
+                var results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData(prnNumber);
+
+                //Assert
+                Assert.NotNull(results);
+
+                Assert.Equal(10, results.ProducerReturnsHistoryData[0].Cat1B2B);
+                Assert.Equal(20, results.ProducerReturnsHistoryData[0].Cat2B2B);
+                Assert.Equal(30, results.ProducerReturnsHistoryData[0].Cat3B2B);
+                Assert.Equal(40, results.ProducerReturnsHistoryData[0].Cat4B2B);
+                Assert.Equal(50, results.ProducerReturnsHistoryData[0].Cat5B2B);
+                Assert.Equal(60, results.ProducerReturnsHistoryData[0].Cat6B2B);
+                Assert.Equal(70, results.ProducerReturnsHistoryData[0].Cat7B2B);
+                Assert.Equal(80, results.ProducerReturnsHistoryData[0].Cat8B2B);
+                Assert.Equal(90, results.ProducerReturnsHistoryData[0].Cat9B2B);
+                Assert.Equal(100, results.ProducerReturnsHistoryData[0].Cat10B2B);
+                Assert.Equal(110, results.ProducerReturnsHistoryData[0].Cat11B2B);
+                Assert.Equal(120, results.ProducerReturnsHistoryData[0].Cat12B2B);
+                Assert.Equal(130, results.ProducerReturnsHistoryData[0].Cat13B2B);
+                Assert.Equal(140, results.ProducerReturnsHistoryData[0].Cat14B2B);
+                Assert.Equal(150, results.ProducerReturnsHistoryData[0].Cat15B2B);
+
+                Assert.Equal(10, results.ProducerReturnsHistoryData[0].Cat1B2C);
+                Assert.Equal(20, results.ProducerReturnsHistoryData[0].Cat2B2C);
+                Assert.Equal(30, results.ProducerReturnsHistoryData[0].Cat3B2C);
+                Assert.Equal(40, results.ProducerReturnsHistoryData[0].Cat4B2C);
+                Assert.Equal(50, results.ProducerReturnsHistoryData[0].Cat5B2C);
+                Assert.Equal(60, results.ProducerReturnsHistoryData[0].Cat6B2C);
+                Assert.Equal(70, results.ProducerReturnsHistoryData[0].Cat7B2C);
+                Assert.Equal(80, results.ProducerReturnsHistoryData[0].Cat8B2C);
+                Assert.Equal(90, results.ProducerReturnsHistoryData[0].Cat9B2C);
+                Assert.Equal(100, results.ProducerReturnsHistoryData[0].Cat10B2C);
+                Assert.Equal(110, results.ProducerReturnsHistoryData[0].Cat11B2C);
+                Assert.Equal(120, results.ProducerReturnsHistoryData[0].Cat12B2C);
+                Assert.Equal(130, results.ProducerReturnsHistoryData[0].Cat13B2C);
+                Assert.Equal(140, results.ProducerReturnsHistoryData[0].Cat14B2C);
+                Assert.Equal(150, results.ProducerReturnsHistoryData[0].Cat15B2C);
             }
         }
     }
