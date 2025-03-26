@@ -23,6 +23,8 @@
 
             int complianceYear = DateTime.Now.Year;
             const string prn = "WEE/AW0101AW";
+            string b2bObligationType = EnumHelper.GetDescription(ObligationType.B2B);
+            string b2cObligationType = EnumHelper.GetDescription(ObligationType.B2C);
 
             using (var database = new DatabaseWrapper())
             {
@@ -48,8 +50,8 @@
                     b2cTonnage = b2cTonnage + (decimal)0.01;
                     b2bTonnage = b2bTonnage + (decimal)0.01;
 
-                    helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2C", i, b2cTonnage);
-                    helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2B", i, b2bTonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, b2cObligationType, i, b2cTonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, b2bObligationType, i, b2bTonnage);
                 }
 
                 database.Model.SaveChanges();
