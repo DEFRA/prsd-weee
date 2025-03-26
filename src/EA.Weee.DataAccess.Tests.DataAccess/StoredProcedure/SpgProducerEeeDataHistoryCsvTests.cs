@@ -769,5 +769,97 @@
                 Assert.Equal(new DateTime(2015, 1, 1), result.SubmittedDate);
             }
         }
+
+        [Fact]
+        public async Task SpgProducerEeeDataHistoryCsvTests_ForQuarter1_WithAllCategories_ReturnsProducerEeeDataHistoryLatestDataSet()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                //Arrange
+                ModelHelper helper = new ModelHelper(db.Model);
+                var scheme1 = helper.CreateScheme();
+                scheme1.ApprovalNumber = "WEE/TE1111ST/SCH";
+                var memberUpload1 = helper.CreateSubmittedMemberUpload(scheme1);
+                memberUpload1.ComplianceYear = 2024;
+
+                var producer1 = helper.CreateProducerAsCompany(memberUpload1, "PRN345");
+                producer1.ObligationType = "B2B";
+
+                var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme1, 2024, 1);
+                dataReturnVersion1.SubmittedDate = new DateTime(2024, 06, 01);
+
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2B", 1, 100);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2B", 2, 200);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2B", 3, 300);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2B", 4, 400);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2B", 5, 500);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2B", 6, 600);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2B", 7, 700);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2B", 8, 800);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2B", 9, 900);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2B", 10, 1000);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2B", 11, 1100);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2B", 12, 1200);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2B", 13, 1300);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2B", 14, 1400);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2B", 15, 1500);
+
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2C", 1, 100);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2C", 2, 200);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2C", 3, 300);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2C", 4, 400);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2C", 5, 500);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2C", 6, 600);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2C", 7, 700);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2C", 8, 800);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2C", 9, 900);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2C", 10, 1000);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2C", 11, 1100);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2C", 12, 1200);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2C", 13, 1300);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2C", 14, 1400);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2C", 15, 1500);
+
+                db.Model.SaveChanges();
+
+                // Act
+                var results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData("PRN345");
+
+                //Assert
+                Assert.NotNull(results);
+
+                Assert.Equal(100, results.ProducerReturnsHistoryData[0].Cat1B2B);
+                Assert.Equal(200, results.ProducerReturnsHistoryData[0].Cat2B2B);
+                Assert.Equal(300, results.ProducerReturnsHistoryData[0].Cat3B2B);
+                Assert.Equal(400, results.ProducerReturnsHistoryData[0].Cat4B2B);
+                Assert.Equal(500, results.ProducerReturnsHistoryData[0].Cat5B2B);
+                Assert.Equal(600, results.ProducerReturnsHistoryData[0].Cat6B2B);
+                Assert.Equal(700, results.ProducerReturnsHistoryData[0].Cat7B2B);
+                Assert.Equal(800, results.ProducerReturnsHistoryData[0].Cat8B2B);
+                Assert.Equal(900, results.ProducerReturnsHistoryData[0].Cat9B2B);
+                Assert.Equal(1000, results.ProducerReturnsHistoryData[0].Cat10B2B);
+                Assert.Equal(1100, results.ProducerReturnsHistoryData[0].Cat11B2B);
+                Assert.Equal(1200, results.ProducerReturnsHistoryData[0].Cat12B2B);
+                Assert.Equal(1300, results.ProducerReturnsHistoryData[0].Cat13B2B);
+                Assert.Equal(1400, results.ProducerReturnsHistoryData[0].Cat14B2B);
+                Assert.Equal(1500, results.ProducerReturnsHistoryData[0].Cat15B2B);
+
+                Assert.Equal(100, results.ProducerReturnsHistoryData[0].Cat1B2C);
+                Assert.Equal(200, results.ProducerReturnsHistoryData[0].Cat2B2C);
+                Assert.Equal(300, results.ProducerReturnsHistoryData[0].Cat3B2C);
+                Assert.Equal(400, results.ProducerReturnsHistoryData[0].Cat4B2C);
+                Assert.Equal(500, results.ProducerReturnsHistoryData[0].Cat5B2C);
+                Assert.Equal(600, results.ProducerReturnsHistoryData[0].Cat6B2C);
+                Assert.Equal(700, results.ProducerReturnsHistoryData[0].Cat7B2C);
+                Assert.Equal(800, results.ProducerReturnsHistoryData[0].Cat8B2C);
+                Assert.Equal(900, results.ProducerReturnsHistoryData[0].Cat9B2C);
+                Assert.Equal(1000, results.ProducerReturnsHistoryData[0].Cat10B2C);
+                Assert.Equal(1100, results.ProducerReturnsHistoryData[0].Cat11B2C);
+                Assert.Equal(1200, results.ProducerReturnsHistoryData[0].Cat12B2C);
+                Assert.Equal(1300, results.ProducerReturnsHistoryData[0].Cat13B2C);
+                Assert.Equal(1400, results.ProducerReturnsHistoryData[0].Cat14B2C);
+                Assert.Equal(1500, results.ProducerReturnsHistoryData[0].Cat15B2C);
+            }
+        }
     }
 }
