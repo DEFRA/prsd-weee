@@ -3,6 +3,7 @@
     using EA.Prsd.Core.Helpers;
     using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Helpers;
+    using EA.Weee.Core.Shared;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
@@ -786,8 +787,8 @@
                 int complianceYear = DateTime.Now.Year;
                 memberUpload1.ComplianceYear = complianceYear;
                 const string prnNumber = "PRN345";
-                const string b2bObligationType = "B2B";
-                const string b2cObligationType = "B2C";
+                string b2bObligationType = EnumHelper.GetDescription(ObligationType.B2B);
+                string b2cObligationType = EnumHelper.GetDescription(ObligationType.B2C);
 
                 var producer1 = helper.CreateProducerAsCompany(memberUpload1, prnNumber);
                 producer1.ObligationType = b2bObligationType;
