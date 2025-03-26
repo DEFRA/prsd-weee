@@ -1327,9 +1327,9 @@
                 var (_, country) = DirectRegistrantHelper.SetupCommonTestData(wrapper);
 
                 var complianceYear = DateTime.Now.Year;
-                const string Prn = "WEE/AG53365JN";
-                const string CompanyName = "My company";
-                var (_, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, CompanyName, Prn, complianceYear);
+                const string prn = "WEE/AG53365JN";
+                const string companyName = "My company";
+                var (_, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, companyName, prn, complianceYear);
 
                 // initially no EEE and selling technique type of both
                 var submission1 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete, SellingTechniqueType.OnlineMarketplace.Value);
@@ -1355,12 +1355,12 @@
                 results.Count.Should().Be(1);
 
                 var result1 = results.ElementAt(0);
-                result1.CompanyName.Should().Be(CompanyName);
+                result1.CompanyName.Should().Be(companyName);
                 result1.SchemeName.Should().Be("Direct registrant");
                 result1.TradingName.Should().BeNullOrWhiteSpace();
                 result1.ProducerType.Should().Be("Registered company");
-                result1.ProducerName.Should().Be(CompanyName);
-                result1.PRN.Should().Be(Prn);
+                result1.ProducerName.Should().Be(companyName);
+                result1.PRN.Should().Be(prn);
                 result1.SICCodes.Should().BeNull();
                 result1.VATRegistered.Should().BeNull();
                 result1.AnnualTurnover.Should().BeNull();
