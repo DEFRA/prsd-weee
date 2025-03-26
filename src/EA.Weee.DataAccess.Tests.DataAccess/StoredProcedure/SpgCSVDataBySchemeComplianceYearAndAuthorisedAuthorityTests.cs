@@ -675,7 +675,7 @@
                 result1.VATRegistered.Should().BeNull();
                 result1.AnnualTurnover.Should().BeNull();
                 result1.AnnualTurnoverBandType.Should().BeNull();
-                result1.EEEPlacedOnMarketBandType.Should().Be("Less than 5T EEE placed on market");
+                result1.EEEPlacedOnMarketBandType.Should().Be(EnumHelper.GetDisplayName(EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket));
                 result1.ObligationType.Should().Be(EnumHelper.GetDisplayName(ObligationType.B2C));
                 result1.ChargeBandType.Should().BeNull();
                 result1.SellingTechniqueType.Should().Be(EnumHelper.GetDescription(SellingTechniqueType.Both));
@@ -758,7 +758,7 @@
                 result2.VATRegistered.Should().BeNull();
                 result2.AnnualTurnover.Should().BeNull();
                 result2.AnnualTurnoverBandType.Should().BeNull();
-                result2.EEEPlacedOnMarketBandType.Should().Be("Less than 5T EEE placed on market");
+                result2.EEEPlacedOnMarketBandType.Should().Be(EnumHelper.GetDisplayName(EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket));
                 result2.ObligationType.Should().Be(EnumHelper.GetDisplayName(ObligationType.B2B));
                 result2.ChargeBandType.Should().BeNull();
                 result2.SellingTechniqueType.Should().Be(EnumHelper.GetDescription(SellingTechniqueType.IndirectSellingtoEndUser));
@@ -1128,7 +1128,7 @@
                 result1.VATRegistered.Should().BeNull();
                 result1.AnnualTurnover.Should().BeNull();
                 result1.AnnualTurnoverBandType.Should().BeNull();
-                result1.EEEPlacedOnMarketBandType.Should().Be("Less than 5T EEE placed on market");
+                result1.EEEPlacedOnMarketBandType.Should().Be(EnumHelper.GetDisplayName(EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket));
                 result1.ObligationType.Should().Be(EnumHelper.GetDisplayName(ObligationType.B2C));
                 result1.ChargeBandType.Should().BeNull();
                 result1.SellingTechniqueType.Should().Be(EnumHelper.GetDescription(SellingTechniqueType.DirectSellingtoEndUser));
@@ -1246,7 +1246,7 @@
                 result1.VATRegistered.Should().BeNull();
                 result1.AnnualTurnover.Should().BeNull();
                 result1.AnnualTurnoverBandType.Should().BeNull();
-                result1.EEEPlacedOnMarketBandType.Should().Be("Less than 5T EEE placed on market");
+                result1.EEEPlacedOnMarketBandType.Should().Be(EnumHelper.GetDisplayName(EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket));
                 result1.ObligationType.Should().Be("Unknown");
                 result1.ChargeBandType.Should().BeNull();
                 result1.SellingTechniqueType.Should().Be(EnumHelper.GetDescription(SellingTechniqueType.Both));
@@ -1365,7 +1365,7 @@
                 result1.VATRegistered.Should().BeNull();
                 result1.AnnualTurnover.Should().BeNull();
                 result1.AnnualTurnoverBandType.Should().BeNull();
-                result1.EEEPlacedOnMarketBandType.Should().Be("Less than 5T EEE placed on market");
+                result1.EEEPlacedOnMarketBandType.Should().Be(EnumHelper.GetDisplayName(EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket));
                 result1.ObligationType.Should().Be("Unknown");
                 result1.ChargeBandType.Should().BeNull();
                 result1.SellingTechniqueType.Should().Be(EnumHelper.GetDescription(SellingTechniqueType.OnlineMarketplace));
