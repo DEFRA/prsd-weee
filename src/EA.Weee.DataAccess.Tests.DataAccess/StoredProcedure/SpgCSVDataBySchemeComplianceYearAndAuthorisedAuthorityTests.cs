@@ -1318,5 +1318,125 @@
                 result1.BrandNames.Should().BeNullOrWhiteSpace();
             }
         }
+        [Fact]
+        public async Task Execute_WithDirectRegistrantSubmissions_WithReturnedSubmissionThatHasNotBeenReSubmitte_UsingOMP_ShouldUseRecentSubmittedData()
+        {
+            using (var wrapper = new DatabaseWrapper())
+            {
+                var (_, country) = DirectRegistrantHelper.SetupCommonTestData(wrapper);
+
+                const int complianceYear = 2082;
+                const string Prn = "WEE/AG53365JN";
+                const string CompanyName = "My company";
+                var (_, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, CompanyName, Prn, complianceYear);
+
+                // initially no EEE and selling technique type of both
+                var submission1 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete, SellingTechniqueType.OnlineMarketplace.Value);
+
+                // return the submission update the amounts but is not submitted, should use original empty values
+                var amounts1 = new List<DirectRegistrantHelper.EeeOutputAmountData>
+                {
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 123.456m, ObligationType = Domain.Obligation.ObligationType.B2C },
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C }
+                };
+
+                var paidDate = new DateTime(2023, 1, 1);
+                await DirectRegistrantHelper.SetSubmissionAsPaid(wrapper, submission1, paidDate);
+
+                await DirectRegistrantHelper.ReturnSubmission(wrapper, submission1);
+
+                await DirectRegistrantHelper.UpdateEeeeAmounts(wrapper, submission1, amounts1);
+
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                var results = await wrapper.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(complianceYear, true, true, null, null, false);
+
+                results.Count.Should().Be(1);
+
+                var result1 = results.ElementAt(0);
+                result1.CompanyName.Should().Be(CompanyName);
+                result1.SchemeName.Should().Be("Direct registrant");
+                result1.TradingName.Should().BeNullOrWhiteSpace();
+                result1.ProducerType.Should().Be("Registered company");
+                result1.ProducerName.Should().Be(CompanyName);
+                result1.PRN.Should().Be(Prn);
+                result1.SICCodes.Should().BeNull();
+                result1.VATRegistered.Should().BeNull();
+                result1.AnnualTurnover.Should().BeNull();
+                result1.AnnualTurnoverBandType.Should().BeNull();
+                result1.EEEPlacedOnMarketBandType.Should().Be("Less than 5T EEE placed on market");
+                result1.ObligationType.Should().Be("Unknown");
+                result1.ChargeBandType.Should().BeNull();
+                result1.SellingTechniqueType.Should().Be("Online marketplace");
+                result1.CeaseToExist.Should().BeNull();
+                result1.CNTitle.Should().BeNull();
+                result1.CNForename.Should().BeNull();
+                result1.CNSurname.Should().BeNull();
+                result1.CNTelephone.Should().BeNull();
+                result1.CNMobile.Should().BeNull();
+                result1.CNFax.Should().BeNull();
+                result1.CNEmail.Should().BeNull();
+                result1.CNPrimaryName.Should().BeNull();
+                result1.CNSecondaryName.Should().BeNull();
+                result1.CNStreet.Should().BeNull();
+                result1.CNTown.Should().BeNull();
+                result1.CNLocality.Should().BeNull();
+                result1.CNAdministrativeArea.Should().BeNull();
+                result1.CNPostcode.Should().BeNull();
+                result1.CNCountry.Should().BeNull();
+                result1.CNCountry.Should().BeNull();
+                result1.CompanyNumber.Should().Be("123456789");
+                result1.CompanyContactTitle.Should().BeNull();
+                result1.CompanyContactForename.Should().Be("first name");
+                result1.CompanyContactSurname.Should().Be("last name");
+                result1.CompanyContactTelephone.Should().Be("12345678");
+                result1.CompanyContactMobile.Should().BeNull();
+                result1.CompanyContactFax.Should().BeNull();
+                result1.CompanyContactCountry.Should().Be("Azerbaijan");
+                result1.CompanyContactEmail.Should().Be("test@co.uk");
+                result1.CompanyContactPrimaryName.Should().Be("primary 1");
+                result1.CompanyContactSecondaryName.Should().BeNull();
+                result1.CompanyContactStreet.Should().Be("street");
+                result1.CompanyContactTown.Should().Be("Woking");
+                result1.CompanyContactLocality.Should().Be("Hampshire");
+                result1.CompanyContactAdministrativeArea.Should().BeNull();
+                result1.CompanyContactPostcode.Should().Be("GU21 5EE");
+                result1.CompanyContactCountry.Should().Be("Azerbaijan");
+                result1.PPOBContactTitle.Should().BeNull();
+                result1.PPOBContactForename.Should().BeNull();
+                result1.PPOBContactSurname.Should().BeNull();
+                result1.PPOBContactTelephone.Should().BeNull();
+                result1.PPOBContactMobile.Should().BeNull();
+                result1.PPOBContactFax.Should().BeNull();
+                result1.PPOBContactEmail.Should().BeNull();
+                result1.PPOBContactPrimaryName.Should().BeNull();
+                result1.PPOBContactSecondaryName.Should().BeNull();
+                result1.PPOBContactStreet.Should().BeNull();
+                result1.PPOBContactTown.Should().BeNull();
+                result1.PPOBContactLocality.Should().BeNull();
+                result1.PPOBContactAdministrativeArea.Should().BeNull();
+                result1.PPOBContactPostcode.Should().BeNull();
+                result1.OverseasProducerName.Should().BeNull();
+                result1.OverseasContactForename.Should().BeNull();
+                result1.OverseasContactSurname.Should().BeNull();
+                result1.OverseasContactTelephone.Should().BeNull();
+                result1.OverseasContactMobile.Should().BeNull();
+                result1.OverseasContactFax.Should().BeNull();
+                result1.OverseasContactEmail.Should().BeNull();
+                result1.OverseasContactPrimaryName.Should().BeNull();
+                result1.OverseasContactSecondaryName.Should().BeNull();
+                result1.OverseasContactStreet.Should().BeNull();
+                result1.OverseasContactTown.Should().BeNull();
+                result1.OverseasContactLocality.Should().BeNull();
+                result1.OverseasContactAdministrativeArea.Should().BeNull();
+                result1.OverseasContactPostcode.Should().BeNull();
+                result1.OverseasContactCountry.Should().BeNull();
+                result1.RemovedFromScheme.Should().Be("No");
+                result1.DateAmended.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
+                result1.DateRegistered.Should().Be(paidDate);
+                result1.BrandNames.Should().BeNullOrWhiteSpace();
+            }
+        }
+
     }
 }
