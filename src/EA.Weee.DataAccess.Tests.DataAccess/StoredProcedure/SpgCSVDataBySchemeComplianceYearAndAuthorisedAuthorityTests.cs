@@ -23,7 +23,7 @@
         public async Task Execute_HappyPath_ReturnsProducerWithSelectedSchemeAndAA()
         {
             using (var db = new DatabaseWrapper())
-            { 
+            {
                 // Arrange
                 var helper = new ModelHelper(db.Model);
 
@@ -545,7 +545,7 @@
 
                 var paidDate = new DateTime(2020, 1, 1);
                 var payment = await DirectRegistrantHelper.CreatePaymentSession(wrapper, submission, paidDate);
-                
+
                 submission.FinalPaymentSession = payment;
                 submission.PaymentFinished = true;
 
@@ -556,7 +556,7 @@
                             "rep town", "rep locality", "rep admin area", country, "rep postcode")));
 
                 var brandNames = new BrandName("brand name");
-                var (_, directRegistrant2, registeredProducer2) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 2", "WEE/AG48365JX", complianceYear,  "987654321", authorisedRep, brandNames);
+                var (_, directRegistrant2, registeredProducer2) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 2", "WEE/AG48365JX", complianceYear, "987654321", authorisedRep, brandNames);
 
                 var amounts2 = new List<DirectRegistrantHelper.EeeOutputAmountData>
                 {
@@ -568,7 +568,7 @@
 
                 // should include removed
                 registeredProducer2.Remove();
-                
+
                 await wrapper.WeeeContext.SaveChangesAsync();
 
                 // Create a scheme for test or ordering
@@ -1086,7 +1086,7 @@
 
                 const int complianceYear = 2082;
                 var (_, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG43365JN", complianceYear);
-                
+
                 // initially no EEE and selling technique type of both
                 var submission1 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete, SellingTechniqueType.Both.Value);
 
@@ -1115,7 +1115,7 @@
                 var results = await wrapper.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(complianceYear, true, true, null, null, false);
 
                 results.Count.Should().Be(1);
-             
+
                 var result1 = results.ElementAt(0);
                 result1.CompanyName.Should().Be("My company");
                 result1.SchemeName.Should().Be("Direct registrant");
