@@ -1325,7 +1325,7 @@
             {
                 var (_, country) = DirectRegistrantHelper.SetupCommonTestData(wrapper);
 
-                const int complianceYear = 2082;
+                var complianceYear = DateTime.Now.Year;
                 const string Prn = "WEE/AG53365JN";
                 const string CompanyName = "My company";
                 var (_, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, CompanyName, Prn, complianceYear);
