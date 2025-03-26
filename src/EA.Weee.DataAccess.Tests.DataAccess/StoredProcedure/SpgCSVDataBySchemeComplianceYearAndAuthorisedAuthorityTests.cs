@@ -1437,6 +1437,5 @@
                 result1.BrandNames.Should().BeNullOrWhiteSpace();
             }
         }
-
     }
 }
