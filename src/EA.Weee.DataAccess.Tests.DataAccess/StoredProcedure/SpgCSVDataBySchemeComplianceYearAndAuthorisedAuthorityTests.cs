@@ -677,7 +677,7 @@
                 result1.EEEPlacedOnMarketBandType.Should().Be("Less than 5T EEE placed on market");
                 result1.ObligationType.Should().Be("B2C");
                 result1.ChargeBandType.Should().BeNull();
-                result1.SellingTechniqueType.Should().Be("Both");
+                result1.SellingTechniqueType.Should().Be("Both Direct and Indirect Selling to End User");
                 result1.CeaseToExist.Should().BeNull();
                 result1.CNTitle.Should().BeNull();
                 result1.CNForename.Should().BeNull();
@@ -1248,7 +1248,7 @@
                 result1.EEEPlacedOnMarketBandType.Should().Be("Less than 5T EEE placed on market");
                 result1.ObligationType.Should().Be("Unknown");
                 result1.ChargeBandType.Should().BeNull();
-                result1.SellingTechniqueType.Should().Be("Both");
+                result1.SellingTechniqueType.Should().Be("Both Direct and Indirect Selling to End User");
                 result1.CeaseToExist.Should().BeNull();
                 result1.CNTitle.Should().BeNull();
                 result1.CNForename.Should().BeNull();
