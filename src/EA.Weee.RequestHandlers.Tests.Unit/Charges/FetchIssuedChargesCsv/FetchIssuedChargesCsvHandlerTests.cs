@@ -125,18 +125,18 @@
             // for OMP, the new OMP charge value column should be used
             // in either case, the other should be blank
 
-            Assert.Equal(decimal.Parse(row1Data[5]), producerSubmissions[0].ChargeThisUpdate);
-            Assert.Equal(row1Data[7], EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(producerSubmissions[0].SellingTechniqueType)));
-            Assert.Equal(row1Data[8], string.Empty);
-            Assert.Equal(decimal.Parse(row2Data[5]), producerSubmissions[1].ChargeThisUpdate);
-            Assert.Equal(row2Data[7], EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(producerSubmissions[1].SellingTechniqueType)));
-            Assert.Equal(row2Data[8], string.Empty);
-            Assert.Equal(decimal.Parse(row3Data[5]), producerSubmissions[2].ChargeThisUpdate);
-            Assert.Equal(row3Data[7], EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(producerSubmissions[2].SellingTechniqueType)));
-            Assert.Equal(row3Data[8], string.Empty);
-            Assert.Equal(row4Data[5], string.Empty);
-            Assert.Equal(row4Data[7], EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(producerSubmissions[3].SellingTechniqueType)));
-            Assert.Equal(decimal.Parse(row4Data[8]), producerSubmissions[3].ChargeThisUpdate);
+            Assert.Equal(producerSubmissions[0].ChargeThisUpdate, decimal.Parse(row1Data[5]));
+            Assert.Equal(EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(producerSubmissions[0].SellingTechniqueType)), row1Data[7]);
+            Assert.Equal(string.Empty, row1Data[8]);
+            Assert.Equal(producerSubmissions[1].ChargeThisUpdate, decimal.Parse(row2Data[5]));
+            Assert.Equal(EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(producerSubmissions[1].SellingTechniqueType)), row2Data[7]);
+            Assert.Equal(string.Empty, row2Data[8]);
+            Assert.Equal(producerSubmissions[2].ChargeThisUpdate, decimal.Parse(row3Data[5]));
+            Assert.Equal(EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(producerSubmissions[2].SellingTechniqueType)), row3Data[7]);
+            Assert.Equal(string.Empty, row3Data[8]);
+            Assert.Equal(string.Empty, row4Data[5]);
+            Assert.Equal(EnumHelper.GetDisplayName(Enumeration.FromValue<SellingTechniqueType>(producerSubmissions[3].SellingTechniqueType)), row4Data[7]);
+            Assert.Equal(producerSubmissions[3].ChargeThisUpdate, decimal.Parse(row4Data[8]));
         }
 
         private static ProducerSubmission CreateDummyProducerSubmission(decimal chargeThisUpdate, SellingTechniqueType sellingTechnique)
