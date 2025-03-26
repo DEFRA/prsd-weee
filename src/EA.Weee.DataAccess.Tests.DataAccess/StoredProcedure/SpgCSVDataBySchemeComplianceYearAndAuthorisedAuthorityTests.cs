@@ -761,7 +761,7 @@
                 result2.EEEPlacedOnMarketBandType.Should().Be("Less than 5T EEE placed on market");
                 result2.ObligationType.Should().Be(EnumHelper.GetDisplayName(ObligationType.B2B));
                 result2.ChargeBandType.Should().BeNull();
-                result2.SellingTechniqueType.Should().Be("Indirect Selling to End User");
+                result2.SellingTechniqueType.Should().Be(EnumHelper.GetDescription(SellingTechniqueType.IndirectSellingtoEndUser));
                 result2.CeaseToExist.Should().BeNull();
                 result2.CNTitle.Should().BeNull();
                 result2.CNForename.Should().BeNull();
