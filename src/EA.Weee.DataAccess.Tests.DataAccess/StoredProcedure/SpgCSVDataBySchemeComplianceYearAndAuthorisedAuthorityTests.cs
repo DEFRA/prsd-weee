@@ -1,5 +1,9 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using EA.Prsd.Core;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain.DataReturns;
@@ -10,11 +14,6 @@
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Weee.DataAccess.StoredProcedure;
     using Weee.Tests.Core.Model;
     using Xunit;
 
