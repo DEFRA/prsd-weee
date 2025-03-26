@@ -1,9 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin.Reports
 {
     using Core.Shared;
+    using EA.Prsd.Core.Helpers;
+    using EA.Weee.Core.DataReturns;
     using FakeItEasy;
     using RequestHandlers.Admin;
+    using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Weee.Tests.Core.Model;
@@ -17,7 +21,7 @@
             var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
             var csvWriterFactory = A.Fake<CsvWriterFactory>();
 
-            const int complianceYear = 2995;
+            int complianceYear = DateTime.Now.Year;
             const string prn = "WEE/AW0101AW";
 
             using (var database = new DatabaseWrapper())
@@ -30,41 +34,23 @@
                 var memberUpload = helper.CreateSubmittedMemberUpload(scheme);
                 memberUpload.ComplianceYear = complianceYear;
 
+                var categories = EnumHelper.GetValues(typeof(WeeeCategory));
+                var maxCategoryId = categories.Max(x => x.Key);
+                decimal b2cTonnage = 1;
+                decimal b2bTonnage = 2;
+
                 var producer1 = helper.CreateProducerAsCompany(memberUpload, prn);
 
                 var dataReturnVersion = helper.CreateDataReturnVersion(scheme, complianceYear, 1);
 
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2C", 1, (decimal)1.01);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2C", 2, (decimal)1.02);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2C", 3, (decimal)1.03);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2C", 4, (decimal)1.04);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2C", 5, (decimal)1.05);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2C", 6, (decimal)1.06);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2C", 7, (decimal)1.07);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2C", 8, (decimal)1.08);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2C", 9, (decimal)1.09);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2C", 10, (decimal)1.10);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2C", 11, (decimal)1.11);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2C", 12, (decimal)1.12);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2C", 13, (decimal)1.13);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2C", 14, (decimal)1.14);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2C", 15, (decimal)1.15);
+                for (int i = 1; i <= maxCategoryId; i++)
+                {
+                    b2cTonnage = b2cTonnage + (decimal)0.01;
+                    b2bTonnage = b2bTonnage + (decimal)0.01;
 
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2B", 1, (decimal)2.01);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2B", 2, (decimal)2.02);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2B", 3, (decimal)2.03);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2B", 4, (decimal)2.04);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2B", 5, (decimal)2.05);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2B", 6, (decimal)2.06);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2B", 7, (decimal)2.07);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2B", 8, (decimal)2.08);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2B", 9, (decimal)2.09);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2B", 10, (decimal)2.10);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2B", 11, (decimal)2.11);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2B", 12, (decimal)2.12);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2B", 13, (decimal)2.13);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2B", 14, (decimal)2.14);
-                helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2B", 15, (decimal)2.15);
+                    helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2C", i, b2cTonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion, producer1.RegisteredProducer, "B2B", i, b2bTonnage);
+                }
 
                 database.Model.SaveChanges();
 
