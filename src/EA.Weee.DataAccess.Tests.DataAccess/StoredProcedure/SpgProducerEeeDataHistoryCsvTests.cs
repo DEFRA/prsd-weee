@@ -2,6 +2,7 @@
 {
     using EA.Prsd.Core.Helpers;
     using EA.Weee.Core.DataReturns;
+    using EA.Weee.Core.Helpers;
     using System;
     using System.Linq;
     using System.Threading.Tasks;
@@ -782,14 +783,14 @@
                 var scheme1 = helper.CreateScheme();
                 scheme1.ApprovalNumber = "WEE/TE1111ST/SCH";
                 var memberUpload1 = helper.CreateSubmittedMemberUpload(scheme1);
-                var currentYear = DateTime.Now.Year;
-                memberUpload1.ComplianceYear = currentYear;
+                int complianceYear = DateTime.Now.Year;
+                memberUpload1.ComplianceYear = complianceYear;
 
                 var producer1 = helper.CreateProducerAsCompany(memberUpload1, "PRN345");
                 producer1.ObligationType = "B2B";
 
-                var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme1, currentYear, 1);
-                dataReturnVersion1.SubmittedDate = new DateTime(currentYear, 06, 01);
+                var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme1, complianceYear, 1);
+                dataReturnVersion1.SubmittedDate = new DateTime(complianceYear, 06, 01);
 
                 var categories = EnumHelper.GetValues(typeof(WeeeCategory));
                 var maxCategoryId = categories.Max(x => x.Key);
