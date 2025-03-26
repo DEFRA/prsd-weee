@@ -785,9 +785,12 @@
                 var memberUpload1 = helper.CreateSubmittedMemberUpload(scheme1);
                 int complianceYear = DateTime.Now.Year;
                 memberUpload1.ComplianceYear = complianceYear;
+                const string prnNumber = "PRN345";
+                const string obligationType = "B2B";
+                const string b2cObligationType = "B2C";
 
-                var producer1 = helper.CreateProducerAsCompany(memberUpload1, "PRN345");
-                producer1.ObligationType = "B2B";
+                var producer1 = helper.CreateProducerAsCompany(memberUpload1, prnNumber);
+                producer1.ObligationType = obligationType;
 
                 var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme1, complianceYear, 1);
                 dataReturnVersion1.SubmittedDate = new DateTime(complianceYear, 06, 01);
@@ -799,14 +802,14 @@
                 for (int i = 1; i <= maxCategoryId; i++)
                 {
                     tonnage = tonnage + 10;
-                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2B", i, tonnage);
-                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2C", i, tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, obligationType, i, tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, b2cObligationType, i, tonnage);
                 }
 
                 db.Model.SaveChanges();
 
                 // Act
-                var results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData("PRN345");
+                var results = await db.StoredProcedures.SpgProducerEeeHistoryCsvData(prnNumber);
 
                 //Assert
                 Assert.NotNull(results);
