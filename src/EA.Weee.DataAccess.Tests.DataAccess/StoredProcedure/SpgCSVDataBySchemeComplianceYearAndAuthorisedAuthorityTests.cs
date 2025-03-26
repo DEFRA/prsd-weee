@@ -676,7 +676,7 @@
                 result1.AnnualTurnover.Should().BeNull();
                 result1.AnnualTurnoverBandType.Should().BeNull();
                 result1.EEEPlacedOnMarketBandType.Should().Be("Less than 5T EEE placed on market");
-                result1.ObligationType.Should().Be("B2C");
+                result1.ObligationType.Should().Be(EnumHelper.GetDisplayName(ObligationType.B2C));
                 result1.ChargeBandType.Should().BeNull();
                 result1.SellingTechniqueType.Should().Be(EnumHelper.GetDescription(SellingTechniqueType.Both));
                 result1.CeaseToExist.Should().BeNull();
@@ -759,7 +759,7 @@
                 result2.AnnualTurnover.Should().BeNull();
                 result2.AnnualTurnoverBandType.Should().BeNull();
                 result2.EEEPlacedOnMarketBandType.Should().Be("Less than 5T EEE placed on market");
-                result2.ObligationType.Should().Be("B2B");
+                result2.ObligationType.Should().Be(EnumHelper.GetDisplayName(ObligationType.B2B));
                 result2.ChargeBandType.Should().BeNull();
                 result2.SellingTechniqueType.Should().Be("Indirect Selling to End User");
                 result2.CeaseToExist.Should().BeNull();
@@ -1129,7 +1129,7 @@
                 result1.AnnualTurnover.Should().BeNull();
                 result1.AnnualTurnoverBandType.Should().BeNull();
                 result1.EEEPlacedOnMarketBandType.Should().Be("Less than 5T EEE placed on market");
-                result1.ObligationType.Should().Be("B2C");
+                result1.ObligationType.Should().Be(EnumHelper.GetDisplayName(ObligationType.B2C));
                 result1.ChargeBandType.Should().BeNull();
                 result1.SellingTechniqueType.Should().Be(EnumHelper.GetDescription(SellingTechniqueType.DirectSellingtoEndUser));
                 result1.CeaseToExist.Should().BeNull();
