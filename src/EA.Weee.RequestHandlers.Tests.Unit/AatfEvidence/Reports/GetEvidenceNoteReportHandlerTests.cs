@@ -168,6 +168,8 @@
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat14Received,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat15Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.TotalReceived,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat1Reused,
@@ -197,6 +199,8 @@
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat13Reused,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat14Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat15Reused,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.TotalReused,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly());
@@ -270,6 +274,8 @@
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat14Received,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat15Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.TotalReceived,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat1Reused,
@@ -299,6 +305,8 @@
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat13Reused,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat14Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat15Reused,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.TotalReused,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly());
@@ -372,6 +380,8 @@
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat14Received,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat15Received,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.TotalReceived,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat1Reused,
@@ -401,6 +411,8 @@
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat13Reused,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat14Reused,
+                    A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
+                .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.Cat15Reused,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly())
                 .Then(A.CallTo(() => evidenceWriter.DefineColumn(EvidenceReportConstants.TotalReused,
                     A<Func<EvidenceNoteReportData, object>>._, false)).MustHaveHappenedOnceExactly());
