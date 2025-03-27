@@ -169,6 +169,7 @@
         [InlineData("Cat12")]
         [InlineData("Cat13")]
         [InlineData("Cat14")]
+        [InlineData("Cat15")]
         public async Task Validate_GivenObligationCsvUploads_EachTonnageValueShouldBeValidated(string propertyName)
         {
             //arrange
@@ -213,6 +214,7 @@
         [InlineData("Cat12")]
         [InlineData("Cat13")]
         [InlineData("Cat14")]
+        [InlineData("Cat15")]
         public async Task Validate_GivenObligationCsvUploadsWithDecimalPlaceFormatTonnageError_ErrorsShouldContainRelevantError(string propertyName)
         {
             //arrange
@@ -257,6 +259,7 @@
         [InlineData("Cat12")]
         [InlineData("Cat13")]
         [InlineData("Cat14")]
+        [InlineData("Cat15")]
         public async Task Validate_GivenObligationCsvUploadsWithMaximumDigitsError_ErrorsShouldContainRelevantError(string propertyName)
         {
             //arrange
@@ -301,6 +304,7 @@
         [InlineData("Cat12")]
         [InlineData("Cat13")]
         [InlineData("Cat14")]
+        [InlineData("Cat15")]
         public async Task Validate_GivenObligationCsvUploadsWithNotNumericalError_ErrorsShouldContainRelevantError(string propertyName)
         {
             //arrange
@@ -345,6 +349,7 @@
         [InlineData("Cat12")]
         [InlineData("Cat13")]
         [InlineData("Cat14")]
+        [InlineData("Cat15")]
         public async Task Validate_GivenObligationCsvUploadsWithLessThanZeroError_ErrorsShouldContainRelevantError(string propertyName)
         {
             //arrange
@@ -389,6 +394,7 @@
         [InlineData("Cat12")]
         [InlineData("Cat13")]
         [InlineData("Cat14")]
+        [InlineData("Cat15")]
         public async Task Validate_GivenObligationCsvUploadsWithDecimalPlacesError_ErrorsShouldContainRelevantError(string propertyName)
         {
             //arrange
