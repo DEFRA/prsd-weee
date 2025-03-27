@@ -230,8 +230,8 @@
                 A.Dummy<IEnumerable<string>>());
 
             // Assert
-            Assert.Equal(56, results.Count());
-            Assert.Collection(results.Take(15), // Just examine the first 15 rows
+            Assert.Equal(60, results.Count());
+            Assert.Collection(results.Take(16), // Just examine the first 16 rows
                 r => { Assert.Equal(1, r.Category); Assert.Equal(1, r.QuarterType); },
                 r => { Assert.Equal(2, r.Category); Assert.Equal(1, r.QuarterType); },
                 r => { Assert.Equal(3, r.Category); Assert.Equal(1, r.QuarterType); },
@@ -246,6 +246,7 @@
                 r => { Assert.Equal(12, r.Category); Assert.Equal(1, r.QuarterType); },
                 r => { Assert.Equal(13, r.Category); Assert.Equal(1, r.QuarterType); },
                 r => { Assert.Equal(14, r.Category); Assert.Equal(1, r.QuarterType); },
+                r => { Assert.Equal(15, r.Category); Assert.Equal(1, r.QuarterType); },
                 r => { Assert.Equal(1, r.Category); Assert.Equal(2, r.QuarterType); });
             // etc...
         }
