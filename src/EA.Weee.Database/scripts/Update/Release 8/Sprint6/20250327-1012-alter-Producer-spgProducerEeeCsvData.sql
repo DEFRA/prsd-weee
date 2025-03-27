@@ -150,7 +150,7 @@ BEGIN
         Q1.Cat12Q1, Q2.Cat12Q2, Q3.Cat12Q3, Q4.Cat12Q4,
         Q1.Cat13Q1, Q2.Cat13Q2, Q3.Cat13Q3, Q4.Cat13Q4,
         Q1.Cat14Q1, Q2.Cat14Q2, Q3.Cat14Q3, Q4.Cat14Q4,
-		Q1.Cat15Q1, Q2.Cat15Q2, Q3.Cat15Q3, Q4.Cat15Q4
+        Q1.Cat15Q1, Q2.Cat15Q2, Q3.Cat15Q3, Q4.Cat15Q4
     FROM (
         SELECT PE.PRN, PE.SchemeId, PE.ApprovalNumber, PE.SchemeName, PE.ProducerName, PE.ProducerCountry, PE.IsDirectProducer
         FROM #ProducerEEEData PE    
