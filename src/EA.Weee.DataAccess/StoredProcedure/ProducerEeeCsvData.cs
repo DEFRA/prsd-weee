@@ -67,5 +67,9 @@
         public decimal? Cat14Q2 { get; set; }
         public decimal? Cat14Q3 { get; set; }
         public decimal? Cat14Q4 { get; set; }
+        public decimal? Cat15Q1 { get; set; }
+        public decimal? Cat15Q2 { get; set; }
+        public decimal? Cat15Q3 { get; set; }
+        public decimal? Cat15Q4 { get; set; }
     }
 }
