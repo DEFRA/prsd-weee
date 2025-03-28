@@ -41,12 +41,15 @@
                 const string b2cObligationType = "B2C";
                 const string b2bObligationType = "B2B";
 
+                const int weeeCategory1 = 1;
+                const int weeeCategory2 = 2;
+
                 // data we should retrieve
-                helper.CreateEeeOutputAmount(quarter1Year1DataReturnVersion, producer1.RegisteredProducer, b2cObligationType, 1, 100);
-                helper.CreateEeeOutputAmount(quarter2Year1DataReturnVersion, producer1.RegisteredProducer, b2cObligationType, 2, 1000);
+                helper.CreateEeeOutputAmount(quarter1Year1DataReturnVersion, producer1.RegisteredProducer, b2cObligationType, weeeCategory1, 100);
+                helper.CreateEeeOutputAmount(quarter2Year1DataReturnVersion, producer1.RegisteredProducer, b2cObligationType, weeeCategory2, 1000);
 
                 // data we should not retrieve
-                helper.CreateEeeOutputAmount(quarter1Year1DataReturnVersion, producer2.RegisteredProducer, b2bObligationType, 2, 400);
+                helper.CreateEeeOutputAmount(quarter1Year1DataReturnVersion, producer2.RegisteredProducer, b2bObligationType, weeeCategory2, 400);
 
                 db.Model.SaveChanges();
 
