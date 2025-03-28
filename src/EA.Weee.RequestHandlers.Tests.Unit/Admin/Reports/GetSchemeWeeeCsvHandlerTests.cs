@@ -239,7 +239,9 @@
             Assert.Equal(maxCategoryId * numberOfQuarter, results.Count());
             Assert.All(results, (x, i) =>
             {
+                // categories from 1 to max
                 Assert.Equal((i % maxCategoryId) + 1, x.Category);
+                // quarters increase one after going through each category (integer division)
                 Assert.Equal((i / maxCategoryId) + 1, x.QuarterType);
             });
         }
