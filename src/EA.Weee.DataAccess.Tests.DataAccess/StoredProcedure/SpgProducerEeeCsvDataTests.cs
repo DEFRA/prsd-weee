@@ -57,7 +57,7 @@
 
                 // data we should not retrieve
                 // same year, different obligation type (and different producer)
-                const int unwantedTonnage = 400;
+                const int unwantedTonnage = 9999;
                 helper.CreateEeeOutputAmount(quarter1Year1DataReturnVersion, producer2.RegisteredProducer, b2bObligationType, weeeCategory2, unwantedTonnage);
                 // same year, different obligation type, same producer
                 helper.CreateEeeOutputAmount(quarter1Year1DataReturnVersion, producer1.RegisteredProducer, b2bObligationType, weeeCategory2, unwantedTonnage);
