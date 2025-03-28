@@ -45,8 +45,10 @@
                 const int weeeCategory2 = 2;
 
                 // data we should retrieve
-                helper.CreateEeeOutputAmount(quarter1Year1DataReturnVersion, producer1.RegisteredProducer, b2cObligationType, weeeCategory1, 100);
-                helper.CreateEeeOutputAmount(quarter2Year1DataReturnVersion, producer1.RegisteredProducer, b2cObligationType, weeeCategory2, 1000);
+                const int quarter1Category1Tonnage = 100;
+                helper.CreateEeeOutputAmount(quarter1Year1DataReturnVersion, producer1.RegisteredProducer, b2cObligationType, weeeCategory1, quarter1Category1Tonnage);
+                const int quarter2Category2Tonnage = 1000;
+                helper.CreateEeeOutputAmount(quarter2Year1DataReturnVersion, producer1.RegisteredProducer, b2cObligationType, weeeCategory2, quarter2Category2Tonnage);
 
                 // data we should not retrieve
                 helper.CreateEeeOutputAmount(quarter1Year1DataReturnVersion, producer2.RegisteredProducer, b2bObligationType, weeeCategory2, 400);
@@ -67,9 +69,9 @@
                 Assert.Equal("test scheme name", result.SchemeName);
                 Assert.Equal("WEE/TE0000ST/SCH", result.ApprovalNumber);
                 Assert.Equal("PRN123", result.PRN);
-                Assert.Equal(100, result.Cat1Q1);
-                Assert.Equal(1000, result.Cat2Q2);
-                Assert.Equal(1100, result.TotalTonnage);
+                Assert.Equal(quarter1Category1Tonnage, result.Cat1Q1);
+                Assert.Equal(quarter2Category2Tonnage, result.Cat2Q2);
+                Assert.Equal(quarter1Category1Tonnage + quarter2Category2Tonnage, result.TotalTonnage);
                 Assert.Null(result.Cat1Q3);
             }
         }
