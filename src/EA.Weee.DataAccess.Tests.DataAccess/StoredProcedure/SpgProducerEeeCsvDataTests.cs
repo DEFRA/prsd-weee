@@ -65,101 +65,10 @@
             }
         }
 
-        [Fact]
-        public async Task Execute_HappyPath_ReturnsProducerEeeWithSelectedYearAndObligationType_As_B2C_WithAllCategories()
-        {
-            using (DatabaseWrapper db = new DatabaseWrapper())
-            {
-                //Arrange
-                ModelHelper helper = new ModelHelper(db.Model);
-                var scheme = helper.CreateScheme();
-                string approvalNumber = "WEE/TE0000ST/SCH";
-                scheme.ApprovalNumber = approvalNumber;
-                var memberUpload = helper.CreateSubmittedMemberUpload(scheme);
-                int complianceYear = DateTime.Now.Year;
-                memberUpload.ComplianceYear = complianceYear;
-                string pnr1 = "PRN123";
-                string pnr2 = "PRN456";
-                string b2bObligationType = EnumHelper.GetDisplayName(ObligationType.B2B);
-                string b2cObligationType = EnumHelper.GetDisplayName(ObligationType.B2C);
-
-                var producer1 = helper.CreateProducerAsCompany(memberUpload, pnr1);
-                var producer2 = helper.CreateProducerAsCompany(memberUpload, pnr2);
-
-                var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme, complianceYear, 1);
-                var dataReturnVersion2 = helper.CreateDataReturnVersion(scheme, complianceYear, 2);
-
-                var categories = EnumHelper.GetValues(typeof(WeeeCategory));
-                var maxCategoryId = categories.Max(x => x.Key);
-                int quarter1Tonnage = 0;
-                int quarter2Tonnage = 0;
-
-                for (int i = 1; i <= maxCategoryId; i++)
-                {
-                    quarter1Tonnage = quarter1Tonnage + 10;
-                    quarter2Tonnage = quarter2Tonnage + 5;
-                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, b2cObligationType, i, quarter1Tonnage);
-                    helper.CreateEeeOutputAmount(dataReturnVersion2, producer1.RegisteredProducer, b2cObligationType, i, quarter2Tonnage);
-                }
-
-                helper.CreateEeeOutputAmount(dataReturnVersion1, producer2.RegisteredProducer, b2bObligationType, 2, 400);
-
-                db.Model.SaveChanges();
-
-                // Act
-                var results = await db.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, b2cObligationType, false, false);
-
-                //Assert
-                Assert.NotNull(results);
-
-                //Data return with obligation type B2B should not be there in the result.
-                ProducerEeeCsvData b2bProducer = results.Find(x => (x.PRN == pnr2));
-                Assert.Null(b2bProducer);
-
-                ProducerEeeCsvData result = results[0];
-                Assert.Equal(approvalNumber, result.ApprovalNumber);
-                Assert.Equal(pnr1, result.PRN);
-                Assert.Equal(10, result.Cat1Q1);
-                Assert.Equal(20, result.Cat2Q1);
-                Assert.Equal(30, result.Cat3Q1);
-                Assert.Equal(40, result.Cat4Q1);
-                Assert.Equal(50, result.Cat5Q1);
-                Assert.Equal(60, result.Cat6Q1);
-                Assert.Equal(70, result.Cat7Q1);
-                Assert.Equal(80, result.Cat8Q1);
-                Assert.Equal(90, result.Cat9Q1);
-                Assert.Equal(100, result.Cat10Q1);
-                Assert.Equal(110, result.Cat11Q1);
-                Assert.Equal(120, result.Cat12Q1);
-                Assert.Equal(130, result.Cat13Q1);
-                Assert.Equal(140, result.Cat14Q1);
-                Assert.Equal(150, result.Cat15Q1);
-
-                Assert.Equal(5, result.Cat1Q2);
-                Assert.Equal(10, result.Cat2Q2);
-                Assert.Equal(15, result.Cat3Q2);
-                Assert.Equal(20, result.Cat4Q2);
-                Assert.Equal(25, result.Cat5Q2);
-                Assert.Equal(30, result.Cat6Q2);
-                Assert.Equal(35, result.Cat7Q2);
-                Assert.Equal(40, result.Cat8Q2);
-                Assert.Equal(45, result.Cat9Q2);
-                Assert.Equal(50, result.Cat10Q2);
-                Assert.Equal(55, result.Cat11Q2);
-                Assert.Equal(60, result.Cat12Q2);
-                Assert.Equal(65, result.Cat13Q2);
-                Assert.Equal(70, result.Cat14Q2);
-                Assert.Equal(75, result.Cat15Q2);
-
-                Assert.Null(result.Cat1Q3);
-                Assert.Null(result.Cat1Q4);
-
-                Assert.Equal(1800, result.TotalTonnage);
-            }
-        }
-
-        [Fact]
-        public async Task Execute_HappyPath_ReturnsProducerEeeWithSelectedYearAndObligationType_As_B2B_WithAllCategories()
+        [Theory]
+        [InlineData(ObligationType.B2B)]
+        [InlineData(ObligationType.B2C)]
+        public async Task Execute_HappyPath_ReturnsProducerEeeWithSelectedYearAndObligationType_As_WithAllCategories(ObligationType obligationType)
         {
             using (DatabaseWrapper db = new DatabaseWrapper())
             {
@@ -179,75 +88,137 @@
                 var producer1 = helper.CreateProducerAsCompany(memberUpload, prn1);
                 var producer2 = helper.CreateProducerAsCompany(memberUpload, prn2);
 
-                var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme, complianceYear, 3);
-                var dataReturnVersion2 = helper.CreateDataReturnVersion(scheme, complianceYear, 4);
+                var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme, complianceYear, 1);
+                var dataReturnVersion2 = helper.CreateDataReturnVersion(scheme, complianceYear, 2);
+                var dataReturnVersion3 = helper.CreateDataReturnVersion(scheme, complianceYear, 3);
+                var dataReturnVersion4 = helper.CreateDataReturnVersion(scheme, complianceYear, 4);
 
                 var categories = EnumHelper.GetValues(typeof(WeeeCategory));
                 var maxCategoryId = categories.Max(x => x.Key);
+                int quarter1Tonnage = 0;
+                int quarter2Tonnage = 0;
                 int quarter3Tonnage = 0;
                 int quarter4Tonnage = 0;
 
-                for (int i = 1; i <= maxCategoryId; i++)
+                for (int categoryId = 1; categoryId <= maxCategoryId; categoryId++)
                 {
-                    quarter3Tonnage = quarter3Tonnage + 10;
-                    quarter4Tonnage = quarter4Tonnage + 5;
-                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, b2bObligationType, i, quarter3Tonnage);
-                    helper.CreateEeeOutputAmount(dataReturnVersion2, producer1.RegisteredProducer, b2bObligationType, i, quarter4Tonnage);
+                    quarter1Tonnage = quarter1Tonnage + 1;
+                    quarter2Tonnage = quarter2Tonnage + 2;
+                    quarter3Tonnage = quarter3Tonnage + 3;
+                    quarter4Tonnage = quarter4Tonnage + 4;
+
+                    //Adding B2C Data for all quarters
+                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, b2cObligationType, categoryId, quarter1Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion2, producer1.RegisteredProducer, b2cObligationType, categoryId, quarter2Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion3, producer1.RegisteredProducer, b2cObligationType, categoryId, quarter3Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion4, producer1.RegisteredProducer, b2cObligationType, categoryId, quarter4Tonnage);
+
+                    //Adding B2B Data for all quarters
+                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer2.RegisteredProducer, b2bObligationType, categoryId, quarter1Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion2, producer2.RegisteredProducer, b2bObligationType, categoryId, quarter2Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion3, producer2.RegisteredProducer, b2bObligationType, categoryId, quarter3Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion4, producer2.RegisteredProducer, b2bObligationType, categoryId, quarter4Tonnage);
                 }
 
-                helper.CreateEeeOutputAmount(dataReturnVersion1, producer2.RegisteredProducer, b2cObligationType, 2, 400);
-
                 db.Model.SaveChanges();
+                var results = new List<ProducerEeeCsvData>();
+                if (obligationType == ObligationType.B2C)
+                {
+                    // Act
+                    results = await db.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, b2cObligationType, false, false);
 
-                // Act
-                var results = await db.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, b2bObligationType, false, false);
+                    //Data return with obligation type B2B should not be there in the result.
+                    ProducerEeeCsvData b2bProducer = results.Find(x => (x.PRN == prn2));
+                    Assert.Null(b2bProducer);
+                }
+                else
+                {
+                    // Act
+                    results = await db.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, b2bObligationType, false, false);
+
+                    //Data return with obligation type B2C should not be there in the result.
+                    ProducerEeeCsvData b2cProducer = results.Find(x => (x.PRN == prn1));
+                    Assert.Null(b2cProducer);
+                }
 
                 //Assert
                 Assert.NotNull(results);
 
-                //Data return with obliation type B2B should not be there in the result.
-                ProducerEeeCsvData b2bProducer = results.Find(x => (x.PRN == prn2));
-                Assert.Null(b2bProducer);
-
                 ProducerEeeCsvData result = results[0];
                 Assert.Equal(approvalNumber, result.ApprovalNumber);
-                Assert.Equal(prn1, result.PRN);
-                Assert.Equal(10, result.Cat1Q3);
-                Assert.Equal(20, result.Cat2Q3);
-                Assert.Equal(30, result.Cat3Q3);
-                Assert.Equal(40, result.Cat4Q3);
-                Assert.Equal(50, result.Cat5Q3);
-                Assert.Equal(60, result.Cat6Q3);
-                Assert.Equal(70, result.Cat7Q3);
-                Assert.Equal(80, result.Cat8Q3);
-                Assert.Equal(90, result.Cat9Q3);
-                Assert.Equal(100, result.Cat10Q3);
-                Assert.Equal(110, result.Cat11Q3);
-                Assert.Equal(120, result.Cat12Q3);
-                Assert.Equal(130, result.Cat13Q3);
-                Assert.Equal(140, result.Cat14Q3);
-                Assert.Equal(150, result.Cat15Q3);
+                if (obligationType == ObligationType.B2C)
+                {
+                    Assert.Equal(prn1, result.PRN);
+                }
+                else
+                {
+                    Assert.Equal(prn2, result.PRN);
+                }
+                Assert.Equal(1, result.Cat1Q1);
+                Assert.Equal(2, result.Cat2Q1);
+                Assert.Equal(3, result.Cat3Q1);
+                Assert.Equal(4, result.Cat4Q1);
+                Assert.Equal(5, result.Cat5Q1);
+                Assert.Equal(6, result.Cat6Q1);
+                Assert.Equal(7, result.Cat7Q1);
+                Assert.Equal(8, result.Cat8Q1);
+                Assert.Equal(9, result.Cat9Q1);
+                Assert.Equal(10, result.Cat10Q1);
+                Assert.Equal(11, result.Cat11Q1);
+                Assert.Equal(12, result.Cat12Q1);
+                Assert.Equal(13, result.Cat13Q1);
+                Assert.Equal(14, result.Cat14Q1);
+                Assert.Equal(15, result.Cat15Q1);
 
-                Assert.Equal(5, result.Cat1Q4);
-                Assert.Equal(10, result.Cat2Q4);
-                Assert.Equal(15, result.Cat3Q4);
-                Assert.Equal(20, result.Cat4Q4);
-                Assert.Equal(25, result.Cat5Q4);
-                Assert.Equal(30, result.Cat6Q4);
-                Assert.Equal(35, result.Cat7Q4);
-                Assert.Equal(40, result.Cat8Q4);
-                Assert.Equal(45, result.Cat9Q4);
-                Assert.Equal(50, result.Cat10Q4);
-                Assert.Equal(55, result.Cat11Q4);
-                Assert.Equal(60, result.Cat12Q4);
-                Assert.Equal(65, result.Cat13Q4);
-                Assert.Equal(70, result.Cat14Q4);
-                Assert.Equal(75, result.Cat15Q4);
+                Assert.Equal(2, result.Cat1Q2);
+                Assert.Equal(4, result.Cat2Q2);
+                Assert.Equal(6, result.Cat3Q2);
+                Assert.Equal(8, result.Cat4Q2);
+                Assert.Equal(10, result.Cat5Q2);
+                Assert.Equal(12, result.Cat6Q2);
+                Assert.Equal(14, result.Cat7Q2);
+                Assert.Equal(16, result.Cat8Q2);
+                Assert.Equal(18, result.Cat9Q2);
+                Assert.Equal(20, result.Cat10Q2);
+                Assert.Equal(22, result.Cat11Q2);
+                Assert.Equal(24, result.Cat12Q2);
+                Assert.Equal(26, result.Cat13Q2);
+                Assert.Equal(28, result.Cat14Q2);
+                Assert.Equal(30, result.Cat15Q2);
 
-                Assert.Null(result.Cat1Q1);
-                Assert.Null(result.Cat1Q2);
+                Assert.Equal(3, result.Cat1Q3);
+                Assert.Equal(6, result.Cat2Q3);
+                Assert.Equal(9, result.Cat3Q3);
+                Assert.Equal(12, result.Cat4Q3);
+                Assert.Equal(15, result.Cat5Q3);
+                Assert.Equal(18, result.Cat6Q3);
+                Assert.Equal(21, result.Cat7Q3);
+                Assert.Equal(24, result.Cat8Q3);
+                Assert.Equal(27, result.Cat9Q3);
+                Assert.Equal(30, result.Cat10Q3);
+                Assert.Equal(33, result.Cat11Q3);
+                Assert.Equal(36, result.Cat12Q3);
+                Assert.Equal(39, result.Cat13Q3);
+                Assert.Equal(42, result.Cat14Q3);
+                Assert.Equal(45, result.Cat15Q3);
 
-                Assert.Equal(1800, result.TotalTonnage);
+                Assert.Equal(4, result.Cat1Q4);
+                Assert.Equal(8, result.Cat2Q4);
+                Assert.Equal(12, result.Cat3Q4);
+                Assert.Equal(16, result.Cat4Q4);
+                Assert.Equal(20, result.Cat5Q4);
+                Assert.Equal(24, result.Cat6Q4);
+                Assert.Equal(28, result.Cat7Q4);
+                Assert.Equal(32, result.Cat8Q4);
+                Assert.Equal(36, result.Cat9Q4);
+                Assert.Equal(40, result.Cat10Q4);
+                Assert.Equal(44, result.Cat11Q4);
+                Assert.Equal(48, result.Cat12Q4);
+                Assert.Equal(52, result.Cat13Q4);
+                Assert.Equal(56, result.Cat14Q4);
+                Assert.Equal(60, result.Cat15Q4);
+
+                Assert.Equal(1200, result.TotalTonnage);
             }
         }
 
