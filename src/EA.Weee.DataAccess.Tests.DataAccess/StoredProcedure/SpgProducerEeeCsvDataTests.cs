@@ -171,13 +171,13 @@
                 var memberUpload = helper.CreateSubmittedMemberUpload(scheme);
                 int complianceYear = DateTime.Now.Year;
                 memberUpload.ComplianceYear = complianceYear;
-                string pnr1 = "PRN123";
-                string pnr2 = "PRN456";
+                string prn1 = "PRN123";
+                string prn2 = "PRN456";
                 string b2bObligationType = EnumHelper.GetDisplayName(ObligationType.B2B);
                 string b2cObligationType = EnumHelper.GetDisplayName(ObligationType.B2C);
 
-                var producer1 = helper.CreateProducerAsCompany(memberUpload, pnr1);
-                var producer2 = helper.CreateProducerAsCompany(memberUpload, pnr2);
+                var producer1 = helper.CreateProducerAsCompany(memberUpload, prn1);
+                var producer2 = helper.CreateProducerAsCompany(memberUpload, prn2);
 
                 var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme, complianceYear, 3);
                 var dataReturnVersion2 = helper.CreateDataReturnVersion(scheme, complianceYear, 4);
@@ -206,12 +206,12 @@
                 Assert.NotNull(results);
 
                 //Data return with obliation type B2B should not be there in the result.
-                ProducerEeeCsvData b2bProducer = results.Find(x => (x.PRN == pnr2));
+                ProducerEeeCsvData b2bProducer = results.Find(x => (x.PRN == prn2));
                 Assert.Null(b2bProducer);
 
                 ProducerEeeCsvData result = results[0];
                 Assert.Equal(approvalNumber, result.ApprovalNumber);
-                Assert.Equal(pnr1, result.PRN);
+                Assert.Equal(prn1, result.PRN);
                 Assert.Equal(10, result.Cat1Q3);
                 Assert.Equal(20, result.Cat2Q3);
                 Assert.Equal(30, result.Cat3Q3);
