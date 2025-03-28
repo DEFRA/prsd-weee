@@ -29,13 +29,14 @@
                 var scheme = helper.CreateScheme();
                 scheme.ApprovalNumber = "WEE/TE0000ST/SCH";
                 var memberUpload = helper.CreateSubmittedMemberUpload(scheme);
-                memberUpload.ComplianceYear = 2000;
+                const int complianceYear = 2000;
+                memberUpload.ComplianceYear = complianceYear;
 
                 var producer1 = helper.CreateProducerAsCompany(memberUpload, "PRN123");
                 var producer2 = helper.CreateProducerAsCompany(memberUpload, "PRN456");
 
-                var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme, 2000, 1);
-                var dataReturnVersion2 = helper.CreateDataReturnVersion(scheme, 2000, 2);
+                var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme, complianceYear, 1);
+                var dataReturnVersion2 = helper.CreateDataReturnVersion(scheme, complianceYear, 2);
 
                 helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2C", 1, 100);
                 helper.CreateEeeOutputAmount(dataReturnVersion2, producer1.RegisteredProducer, "B2C", 2, 1000);
@@ -45,7 +46,7 @@
                 db.Model.SaveChanges();
 
                 // Act
-                var results = await db.StoredProcedures.SpgProducerEeeCsvData(2000, null, "B2C", false, false);
+                var results = await db.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, "B2C", false, false);
 
                 //Assert
                 Assert.NotNull(results);
