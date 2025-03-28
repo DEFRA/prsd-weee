@@ -92,29 +92,39 @@
 
                 var categories = EnumHelper.GetValues(typeof(WeeeCategory));
                 var maxCategoryId = categories.Max(x => x.Key);
-                int quarter1Tonnage = 0;
-                int quarter2Tonnage = 0;
-                int quarter3Tonnage = 0;
-                int quarter4Tonnage = 0;
+                int b2bQuarter1Tonnage = 0;
+                int b2bQuarter2Tonnage = 0;
+                int b2bQuarter3Tonnage = 0;
+                int b2bQuarter4Tonnage = 0;
+
+                int b2cQuarter1Tonnage = 0;
+                int b2cQuarter2Tonnage = 0;
+                int b2cQuarter3Tonnage = 0;
+                int b2cQuarter4Tonnage = 0;
 
                 for (int categoryId = 1; categoryId <= maxCategoryId; categoryId++)
                 {
-                    quarter1Tonnage = quarter1Tonnage + 1;
-                    quarter2Tonnage = quarter2Tonnage + 2;
-                    quarter3Tonnage = quarter3Tonnage + 3;
-                    quarter4Tonnage = quarter4Tonnage + 4;
+                    b2bQuarter1Tonnage = b2bQuarter1Tonnage + 1;
+                    b2bQuarter2Tonnage = b2bQuarter2Tonnage + 2;
+                    b2bQuarter3Tonnage = b2bQuarter3Tonnage + 3;
+                    b2bQuarter4Tonnage = b2bQuarter4Tonnage + 4;
+
+                    b2cQuarter1Tonnage = b2cQuarter1Tonnage + 5;
+                    b2cQuarter2Tonnage = b2cQuarter2Tonnage + 10;
+                    b2cQuarter3Tonnage = b2cQuarter3Tonnage + 15;
+                    b2cQuarter4Tonnage = b2cQuarter4Tonnage + 20;
 
                     //Adding B2C Data for all quarters
-                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer.RegisteredProducer, b2cObligationType, categoryId, quarter1Tonnage);
-                    helper.CreateEeeOutputAmount(dataReturnVersion2, producer.RegisteredProducer, b2cObligationType, categoryId, quarter2Tonnage);
-                    helper.CreateEeeOutputAmount(dataReturnVersion3, producer.RegisteredProducer, b2cObligationType, categoryId, quarter3Tonnage);
-                    helper.CreateEeeOutputAmount(dataReturnVersion4, producer.RegisteredProducer, b2cObligationType, categoryId, quarter4Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer.RegisteredProducer, b2cObligationType, categoryId, b2cQuarter1Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion2, producer.RegisteredProducer, b2cObligationType, categoryId, b2cQuarter2Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion3, producer.RegisteredProducer, b2cObligationType, categoryId, b2cQuarter3Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion4, producer.RegisteredProducer, b2cObligationType, categoryId, b2cQuarter4Tonnage);
 
                     //Adding B2B Data for all quarters
-                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer.RegisteredProducer, b2bObligationType, categoryId, quarter1Tonnage);
-                    helper.CreateEeeOutputAmount(dataReturnVersion2, producer.RegisteredProducer, b2bObligationType, categoryId, quarter2Tonnage);
-                    helper.CreateEeeOutputAmount(dataReturnVersion3, producer.RegisteredProducer, b2bObligationType, categoryId, quarter3Tonnage);
-                    helper.CreateEeeOutputAmount(dataReturnVersion4, producer.RegisteredProducer, b2bObligationType, categoryId, quarter4Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer.RegisteredProducer, b2bObligationType, categoryId, b2bQuarter1Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion2, producer.RegisteredProducer, b2bObligationType, categoryId, b2bQuarter2Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion3, producer.RegisteredProducer, b2bObligationType, categoryId, b2bQuarter3Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion4, producer.RegisteredProducer, b2bObligationType, categoryId, b2bQuarter4Tonnage);
                 }
 
                 db.Model.SaveChanges();
