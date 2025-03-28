@@ -35,15 +35,15 @@
                 var producer1 = helper.CreateProducerAsCompany(memberUpload, "PRN123");
                 var producer2 = helper.CreateProducerAsCompany(memberUpload, "PRN456");
 
-                var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme, complianceYear, 1);
-                var dataReturnVersion2 = helper.CreateDataReturnVersion(scheme, complianceYear, 2);
+                var quarter1Year1DataReturnVersion = helper.CreateDataReturnVersion(scheme, complianceYear, 1);
+                var quarter2Year1DataReturnVersion = helper.CreateDataReturnVersion(scheme, complianceYear, 2);
 
                 const string b2cObligationType = "B2C";
                 const string b2bObligationType = "B2B";
-                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, b2cObligationType, 1, 100);
-                helper.CreateEeeOutputAmount(dataReturnVersion2, producer1.RegisteredProducer, b2cObligationType, 2, 1000);
+                helper.CreateEeeOutputAmount(quarter1Year1DataReturnVersion, producer1.RegisteredProducer, b2cObligationType, 1, 100);
+                helper.CreateEeeOutputAmount(quarter2Year1DataReturnVersion, producer1.RegisteredProducer, b2cObligationType, 2, 1000);
 
-                helper.CreateEeeOutputAmount(dataReturnVersion1, producer2.RegisteredProducer, b2bObligationType, 2, 400);
+                helper.CreateEeeOutputAmount(quarter1Year1DataReturnVersion, producer2.RegisteredProducer, b2bObligationType, 2, 400);
 
                 db.Model.SaveChanges();
 
