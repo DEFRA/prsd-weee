@@ -90,35 +90,35 @@
                 int quarter2Tonnage = 0;
 
                 //Previous Year Data
-                var memberUpload1 = helper.CreateSubmittedMemberUpload(scheme);
-                memberUpload1.ComplianceYear = complianceYear - 1;
-                var prod1 = helper.CreateProducerAsCompany(memberUpload1, prn1, b2cObligationType);
-                var prod2 = helper.CreateProducerAsCompany(memberUpload1, prn2, b2bObligationType);
+                var memberUploadPreviousYear = helper.CreateSubmittedMemberUpload(scheme);
+                memberUploadPreviousYear.ComplianceYear = complianceYear - 1;
+                var prodPrn1PreviousYear = helper.CreateProducerAsCompany(memberUploadPreviousYear, prn1, b2cObligationType);
+                var prodPrn2PreviousYear = helper.CreateProducerAsCompany(memberUploadPreviousYear, prn2, b2bObligationType);
                 var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme, complianceYear - 1, 1);
                 var dataReturnVersion2 = helper.CreateDataReturnVersion(scheme, complianceYear - 1, 2);
                 for (int categoryId = 1; categoryId <= maxCategoryId; categoryId++)
                 {
                     quarter1Tonnage = quarter1Tonnage + 10;
                     quarter2Tonnage = quarter2Tonnage + 5;
-                    helper.CreateEeeOutputAmount(dataReturnVersion1, prod1.RegisteredProducer, b2cObligationType, categoryId, quarter1Tonnage);
-                    helper.CreateEeeOutputAmount(dataReturnVersion2, prod1.RegisteredProducer, b2cObligationType, categoryId, quarter2Tonnage);
-                    helper.CreateEeeOutputAmount(dataReturnVersion1, prod2.RegisteredProducer, b2bObligationType, categoryId, quarter2Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion1, prodPrn1PreviousYear.RegisteredProducer, b2cObligationType, categoryId, quarter1Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion2, prodPrn1PreviousYear.RegisteredProducer, b2cObligationType, categoryId, quarter2Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion1, prodPrn2PreviousYear.RegisteredProducer, b2bObligationType, categoryId, quarter2Tonnage);
                 }
 
                 //Current Year Data
-                var memberUpload2 = helper.CreateSubmittedMemberUpload(scheme);
-                memberUpload2.ComplianceYear = complianceYear;
-                var prod3 = helper.CreateProducerAsCompany(memberUpload2, prn1, b2cObligationType);
-                var prod4 = helper.CreateProducerAsCompany(memberUpload2, prn2, b2bObligationType);
+                var memberUploadCurrentYear = helper.CreateSubmittedMemberUpload(scheme);
+                memberUploadCurrentYear.ComplianceYear = complianceYear;
+                var prodPrn1CurrentYear = helper.CreateProducerAsCompany(memberUploadCurrentYear, prn1, b2cObligationType);
+                var prodPrn2CurrentYear = helper.CreateProducerAsCompany(memberUploadCurrentYear, prn2, b2bObligationType);
                 var dataReturnVersion3 = helper.CreateDataReturnVersion(scheme, complianceYear, 1);
                 var dataReturnVersion4 = helper.CreateDataReturnVersion(scheme, complianceYear, 2);
                 for (int categoryId = 1; categoryId <= maxCategoryId; categoryId++)
                 {
                     quarter1Tonnage = quarter1Tonnage + 100;
                     quarter2Tonnage = quarter2Tonnage + 50;
-                    helper.CreateEeeOutputAmount(dataReturnVersion3, prod3.RegisteredProducer, b2cObligationType, categoryId, quarter1Tonnage);
-                    helper.CreateEeeOutputAmount(dataReturnVersion4, prod3.RegisteredProducer, b2cObligationType, categoryId, quarter2Tonnage);
-                    helper.CreateEeeOutputAmount(dataReturnVersion3, prod4.RegisteredProducer, b2bObligationType, categoryId, quarter2Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion3, prodPrn1CurrentYear.RegisteredProducer, b2cObligationType, categoryId, quarter1Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion4, prodPrn1CurrentYear.RegisteredProducer, b2cObligationType, categoryId, quarter2Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion3, prodPrn2CurrentYear.RegisteredProducer, b2bObligationType, categoryId, quarter2Tonnage);
                 }
 
                 db.Model.SaveChanges();
