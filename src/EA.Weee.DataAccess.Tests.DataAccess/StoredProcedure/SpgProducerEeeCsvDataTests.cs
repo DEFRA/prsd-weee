@@ -76,7 +76,7 @@
                 //Assert
                 Assert.NotNull(results);
 
-                //Data return with obliation type B2B should not be there in the result.
+                //Data return with obligation type B2B should not be there in the result.
                 ProducerEeeCsvData b2bProducer = results.Find(x => (x.PRN == prn2));
                 Assert.Null(b2bProducer);
 
