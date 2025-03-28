@@ -32,8 +32,10 @@
                 const int complianceYear = 2000;
                 memberUpload.ComplianceYear = complianceYear;
 
-                var producer1 = helper.CreateProducerAsCompany(memberUpload, "PRN123");
-                var producer2 = helper.CreateProducerAsCompany(memberUpload, "PRN456");
+                const string prn1 = "PRN123";
+                const string prn2 = "PRN456";
+                var producer1 = helper.CreateProducerAsCompany(memberUpload, prn1);
+                var producer2 = helper.CreateProducerAsCompany(memberUpload, prn2);
 
                 var quarter1Year1DataReturnVersion = helper.CreateDataReturnVersion(scheme, complianceYear, 1);
                 var quarter2Year1DataReturnVersion = helper.CreateDataReturnVersion(scheme, complianceYear, 2);
@@ -74,13 +76,13 @@
                 Assert.NotNull(results);
 
                 //Data return with obliation type B2B should not be there in the result.
-                ProducerEeeCsvData b2bProducer = results.Find(x => (x.PRN == "PRN456"));
+                ProducerEeeCsvData b2bProducer = results.Find(x => (x.PRN == prn2));
                 Assert.Null(b2bProducer);
 
                 ProducerEeeCsvData result = results[0];
                 Assert.Equal("test scheme name", result.SchemeName);
                 Assert.Equal("WEE/TE0000ST/SCH", result.ApprovalNumber);
-                Assert.Equal("PRN123", result.PRN);
+                Assert.Equal(prn1, result.PRN);
                 Assert.Equal(quarter1Category1Tonnage, result.Cat1Q1);
                 Assert.Equal(quarter2Category2Tonnage, result.Cat2Q2);
                 Assert.Equal(quarter1Category1Tonnage + quarter2Category2Tonnage, result.TotalTonnage);
