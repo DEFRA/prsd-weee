@@ -463,6 +463,7 @@
     <Content Include="scripts\Update\Release 8\Sprint3\20250206-1221-alter-spgDataReturnSummaryCsv.sql" />
     <Content Include="scripts\Update\Release 8\Sprint5\20250314-1500-alter-spgSubmissionChangesCsvData.sql" />
     <Content Include="scripts\Update\Release 8\Sprint6\20250325-0900-alter-Producer-spgProducerAmendmentsCSVDataByPRN.sql" />
+    <Content Include="scripts\Update\Release 8\Sprint6\20250325-0900-alter-spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority.sql" />
     <Content Include="scripts\Update\Release 8\Sprint6\20250325-0930-alter-Producer-spgProducerEeeHistoryCsvDataByPRN.sql" />
     <Content Include="scripts\Update\Release 8\Sprint6\20250327-1012-alter-Producer-spgProducerEeeCsvData.sql" />
     <Content Include="scripts\Update\Release 8\Sprint6\20250327-1437-alter-Producer-spgSchemeObligationCsvData.sql" />
