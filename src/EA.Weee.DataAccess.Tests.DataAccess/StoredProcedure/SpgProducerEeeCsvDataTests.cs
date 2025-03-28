@@ -91,15 +91,15 @@
 
                 var categories = EnumHelper.GetValues(typeof(WeeeCategory));
                 var maxCategoryId = categories.Max(x => x.Key);
-                int quater1Tonnage = 0;
-                int quater2Tonnage = 0;
+                int quarter1Tonnage = 0;
+                int quarter2Tonnage = 0;
 
                 for (int i = 1; i <= maxCategoryId; i++)
                 {
-                    quater1Tonnage = quater1Tonnage + 10;
-                    quater2Tonnage = quater2Tonnage + 5;
-                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, b2cObligationType, i, quater1Tonnage);
-                    helper.CreateEeeOutputAmount(dataReturnVersion2, producer1.RegisteredProducer, b2cObligationType, i, quater2Tonnage);
+                    quarter1Tonnage = quarter1Tonnage + 10;
+                    quarter2Tonnage = quarter2Tonnage + 5;
+                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, b2cObligationType, i, quarter1Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion2, producer1.RegisteredProducer, b2cObligationType, i, quarter2Tonnage);
                 }
 
                 helper.CreateEeeOutputAmount(dataReturnVersion1, producer2.RegisteredProducer, b2bObligationType, 2, 400);
@@ -184,15 +184,15 @@
 
                 var categories = EnumHelper.GetValues(typeof(WeeeCategory));
                 var maxCategoryId = categories.Max(x => x.Key);
-                int quater3Tonnage = 0;
-                int quater4Tonnage = 0;
+                int quarter3Tonnage = 0;
+                int quarter4Tonnage = 0;
 
                 for (int i = 1; i <= maxCategoryId; i++)
                 {
-                    quater3Tonnage = quater3Tonnage + 10;
-                    quater4Tonnage = quater4Tonnage + 5;
-                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, b2bObligationType, i, quater3Tonnage);
-                    helper.CreateEeeOutputAmount(dataReturnVersion2, producer1.RegisteredProducer, b2bObligationType, i, quater4Tonnage);
+                    quarter3Tonnage = quarter3Tonnage + 10;
+                    quarter4Tonnage = quarter4Tonnage + 5;
+                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, b2bObligationType, i, quarter3Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion2, producer1.RegisteredProducer, b2bObligationType, i, quarter4Tonnage);
                 }
 
                 helper.CreateEeeOutputAmount(dataReturnVersion1, producer2.RegisteredProducer, b2cObligationType, 2, 400);
