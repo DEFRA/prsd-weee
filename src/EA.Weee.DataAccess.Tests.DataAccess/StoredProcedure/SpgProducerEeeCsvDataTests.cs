@@ -38,6 +38,9 @@
                 var quarter1Year1DataReturnVersion = helper.CreateDataReturnVersion(scheme, complianceYear, 1);
                 var quarter2Year1DataReturnVersion = helper.CreateDataReturnVersion(scheme, complianceYear, 2);
 
+                var quarter1PreviousYearDataReturnVersion = helper.CreateDataReturnVersion(scheme, complianceYear - 1, 1);
+                var quarter1FollowingYearDataReturnVersion = helper.CreateDataReturnVersion(scheme, complianceYear + 1, 1);
+
                 const string b2cObligationType = "B2C";
                 const string b2bObligationType = "B2B";
 
@@ -51,7 +54,16 @@
                 helper.CreateEeeOutputAmount(quarter2Year1DataReturnVersion, producer1.RegisteredProducer, b2cObligationType, weeeCategory2, quarter2Category2Tonnage);
 
                 // data we should not retrieve
+                // same year, different obligation type (and different producer)
                 helper.CreateEeeOutputAmount(quarter1Year1DataReturnVersion, producer2.RegisteredProducer, b2bObligationType, weeeCategory2, 400);
+                // same year, different obligation type, same producer
+                helper.CreateEeeOutputAmount(quarter1Year1DataReturnVersion, producer1.RegisteredProducer, b2bObligationType, weeeCategory2, 400);
+
+                // earlier year, same obligation type
+                helper.CreateEeeOutputAmount(quarter1PreviousYearDataReturnVersion, producer1.RegisteredProducer, b2cObligationType, weeeCategory2, 400);
+
+                // later year, same obligation type
+                helper.CreateEeeOutputAmount(quarter1FollowingYearDataReturnVersion, producer1.RegisteredProducer, b2cObligationType, weeeCategory2, 400);
 
                 db.Model.SaveChanges();
 
