@@ -38,15 +38,17 @@
                 var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme, complianceYear, 1);
                 var dataReturnVersion2 = helper.CreateDataReturnVersion(scheme, complianceYear, 2);
 
-                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2C", 1, 100);
-                helper.CreateEeeOutputAmount(dataReturnVersion2, producer1.RegisteredProducer, "B2C", 2, 1000);
+                const string b2cObligationType = "B2C";
+                const string b2bObligationType = "B2B";
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, b2cObligationType, 1, 100);
+                helper.CreateEeeOutputAmount(dataReturnVersion2, producer1.RegisteredProducer, b2cObligationType, 2, 1000);
 
-                helper.CreateEeeOutputAmount(dataReturnVersion1, producer2.RegisteredProducer, "B2B", 2, 400);
+                helper.CreateEeeOutputAmount(dataReturnVersion1, producer2.RegisteredProducer, b2bObligationType, 2, 400);
 
                 db.Model.SaveChanges();
 
                 // Act
-                var results = await db.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, "B2C", false, false);
+                var results = await db.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, b2cObligationType, false, false);
 
                 //Assert
                 Assert.NotNull(results);
