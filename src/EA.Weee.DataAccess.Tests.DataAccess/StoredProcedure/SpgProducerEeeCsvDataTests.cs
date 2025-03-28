@@ -57,15 +57,16 @@
 
                 // data we should not retrieve
                 // same year, different obligation type (and different producer)
-                helper.CreateEeeOutputAmount(quarter1Year1DataReturnVersion, producer2.RegisteredProducer, b2bObligationType, weeeCategory2, 400);
+                const int unwantedTonnage = 400;
+                helper.CreateEeeOutputAmount(quarter1Year1DataReturnVersion, producer2.RegisteredProducer, b2bObligationType, weeeCategory2, unwantedTonnage);
                 // same year, different obligation type, same producer
-                helper.CreateEeeOutputAmount(quarter1Year1DataReturnVersion, producer1.RegisteredProducer, b2bObligationType, weeeCategory2, 400);
+                helper.CreateEeeOutputAmount(quarter1Year1DataReturnVersion, producer1.RegisteredProducer, b2bObligationType, weeeCategory2, unwantedTonnage);
 
                 // earlier year, same obligation type
-                helper.CreateEeeOutputAmount(quarter1PreviousYearDataReturnVersion, producer1.RegisteredProducer, b2cObligationType, weeeCategory2, 400);
+                helper.CreateEeeOutputAmount(quarter1PreviousYearDataReturnVersion, producer1.RegisteredProducer, b2cObligationType, weeeCategory2, unwantedTonnage);
 
                 // later year, same obligation type
-                helper.CreateEeeOutputAmount(quarter1FollowingYearDataReturnVersion, producer1.RegisteredProducer, b2cObligationType, weeeCategory2, 400);
+                helper.CreateEeeOutputAmount(quarter1FollowingYearDataReturnVersion, producer1.RegisteredProducer, b2cObligationType, weeeCategory2, unwantedTonnage);
 
                 db.Model.SaveChanges();
 
