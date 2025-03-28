@@ -208,10 +208,14 @@
         }
 
         [Theory]
-        [InlineData(ObligationType.B2B)]
-        [InlineData(ObligationType.B2C)]
-        public async Task Execute_HappyPath_ReturnsProducerEeeWithSelectedYearAndObligationType_As_WithAllCategories(ObligationType obligationType)
+        [InlineData(ObligationType.B2B, ObligationType.B2C)]
+        [InlineData(ObligationType.B2C, ObligationType.B2B)]
+        public async Task Execute_HappyPath_ReturnsOnlyProducerEeeWithSelectedYearAndObligationType_As_WithAllCategories(ObligationType obligationTypeProducer1, ObligationType obligationTypeProducer2)
         {
+            // this test relies on the obligation types being different, and not set to Both
+            // the idea is we set producer 1 up with only the type we ask for, and producer 2 with the other type
+            // and then ask for producer 1's obligation type, and ensure that's all we get
+
             using (DatabaseWrapper db = new DatabaseWrapper())
             {
                 //Arrange
@@ -224,8 +228,8 @@
                 memberUpload.ComplianceYear = complianceYear;
                 string prn1 = "PRN123";
                 string prn2 = "PRN456";
-                string b2bObligationType = EnumHelper.GetDisplayName(ObligationType.B2B);
-                string b2cObligationType = EnumHelper.GetDisplayName(ObligationType.B2C);
+                string producer1ObligationType = EnumHelper.GetDisplayName(obligationTypeProducer1);
+                string producer2ObligationType = EnumHelper.GetDisplayName(obligationTypeProducer2);
 
                 var producer1 = helper.CreateProducerAsCompany(memberUpload, prn1);
                 var producer2 = helper.CreateProducerAsCompany(memberUpload, prn2);
@@ -249,53 +253,35 @@
                     quarter3Tonnage = quarter3Tonnage + 3;
                     quarter4Tonnage = quarter4Tonnage + 4;
 
-                    //Adding B2C Data for all quarters
-                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, b2cObligationType, categoryId, quarter1Tonnage);
-                    helper.CreateEeeOutputAmount(dataReturnVersion2, producer1.RegisteredProducer, b2cObligationType, categoryId, quarter2Tonnage);
-                    helper.CreateEeeOutputAmount(dataReturnVersion3, producer1.RegisteredProducer, b2cObligationType, categoryId, quarter3Tonnage);
-                    helper.CreateEeeOutputAmount(dataReturnVersion4, producer1.RegisteredProducer, b2cObligationType, categoryId, quarter4Tonnage);
+                    // Add Data for all quarters to producer 1
+                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, producer1ObligationType, categoryId, quarter1Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion2, producer1.RegisteredProducer, producer1ObligationType, categoryId, quarter2Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion3, producer1.RegisteredProducer, producer1ObligationType, categoryId, quarter3Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion4, producer1.RegisteredProducer, producer1ObligationType, categoryId, quarter4Tonnage);
 
-                    //Adding B2B Data for all quarters
-                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer2.RegisteredProducer, b2bObligationType, categoryId, quarter1Tonnage);
-                    helper.CreateEeeOutputAmount(dataReturnVersion2, producer2.RegisteredProducer, b2bObligationType, categoryId, quarter2Tonnage);
-                    helper.CreateEeeOutputAmount(dataReturnVersion3, producer2.RegisteredProducer, b2bObligationType, categoryId, quarter3Tonnage);
-                    helper.CreateEeeOutputAmount(dataReturnVersion4, producer2.RegisteredProducer, b2bObligationType, categoryId, quarter4Tonnage);
+                    // Add Data for all quarters to producer 2
+                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer2.RegisteredProducer, producer2ObligationType, categoryId, quarter1Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion2, producer2.RegisteredProducer, producer2ObligationType, categoryId, quarter2Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion3, producer2.RegisteredProducer, producer2ObligationType, categoryId, quarter3Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion4, producer2.RegisteredProducer, producer2ObligationType, categoryId, quarter4Tonnage);
                 }
 
                 db.Model.SaveChanges();
-                var results = new List<ProducerEeeCsvData>();
-                if (obligationType == ObligationType.B2C)
-                {
-                    // Act
-                    results = await db.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, b2cObligationType, false, false);
 
-                    //Data return with obligation type B2B should not be there in the result.
-                    ProducerEeeCsvData b2bProducer = results.Find(x => (x.PRN == prn2));
-                    Assert.Null(b2bProducer);
-                }
-                else
-                {
-                    // Act
-                    results = await db.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, b2bObligationType, false, false);
+                // Act
+                var results = await db.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, producer1ObligationType, false, false);
 
-                    //Data return with obligation type B2C should not be there in the result.
-                    ProducerEeeCsvData b2cProducer = results.Find(x => (x.PRN == prn1));
-                    Assert.Null(b2cProducer);
-                }
-
-                //Assert
+                // Assert
                 Assert.NotNull(results);
+
+                // ensure there are no results for producer 2
+                Assert.Null(results.Find(x => (x.PRN == prn2)));
 
                 ProducerEeeCsvData result = results[0];
                 Assert.Equal(approvalNumber, result.ApprovalNumber);
-                if (obligationType == ObligationType.B2C)
-                {
-                    Assert.Equal(prn1, result.PRN);
-                }
-                else
-                {
-                    Assert.Equal(prn2, result.PRN);
-                }
+
+                Assert.Equal(prn1, result.PRN);
+
                 Assert.Equal(1, result.Cat1Q1);
                 Assert.Equal(2, result.Cat2Q1);
                 Assert.Equal(3, result.Cat3Q1);
