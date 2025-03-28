@@ -4,8 +4,7 @@
     using DataAccess.StoredProcedure;
     using Domain.DataReturns;
     using EA.Prsd.Core.Helpers;
-    using EA.Weee.Domain;
-    using EA.Weee.Domain.Lookup;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.RequestHandlers.Admin.Helpers;
     using Prsd.Core;
     using Prsd.Core.Mediator;
