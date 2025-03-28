@@ -4,7 +4,9 @@
     using Core.Shared;
     using DataAccess.StoredProcedure;
     using EA.Prsd.Core;
+    using EA.Prsd.Core.Helpers;
     using EA.Weee.Core.Constants;
+    using EA.Weee.Core.DataReturns;
     using Prsd.Core.Mediator;
     using Requests.Admin.Reports;
     using Security;
@@ -85,7 +87,10 @@
             string totalEEEtitle = string.Format("Total EEE {0} (t)", obligationType);
             csvWriter.DefineColumn(totalEEEtitle, i => i.TotalTonnage);
 
-            foreach (int category in Enumerable.Range(1, 14))
+            var categories = EnumHelper.GetValues(typeof(WeeeCategory));
+            var maxCategoryId = categories.Max(x => x.Key);
+
+            foreach (int category in Enumerable.Range(1, maxCategoryId))
             {
                 foreach (int quarterType in Enumerable.Range(1, 4))
                 {
