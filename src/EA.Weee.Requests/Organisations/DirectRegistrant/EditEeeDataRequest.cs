@@ -19,7 +19,6 @@
         {
             Condition.Requires(directRegistrantId).IsNotEqualTo(Guid.Empty);
             Condition.Requires(tonnageData).IsNotNull();
-            Condition.Requires(tonnageData).IsNotEmpty();
 
             DirectRegistrantId = directRegistrantId;
             SellingTechniqueType = sellingTechniqueType;

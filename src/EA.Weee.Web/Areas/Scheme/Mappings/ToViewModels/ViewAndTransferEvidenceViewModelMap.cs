@@ -18,7 +18,7 @@
             var model = MapSchemeBase(source.NoteData, source.Scheme, source.CurrentDate, source.SelectedComplianceYear, source.PageNumber, source.PageSize);
 
             model.OrganisationId = source.OrganisationId;
-            model.DisplayTransferButton = model.CanSchemeManageEvidence && source.NoteData.HasApprovedEvidenceNotes && (source.NoteData.Results.Sum(x => x.TotalReceivedAvailable) > 0);
+            model.DisplayTransferButton = model.CanSchemeManageEvidence && source.NoteData.HasApprovedEvidenceNotes;
 
             return model;
         }

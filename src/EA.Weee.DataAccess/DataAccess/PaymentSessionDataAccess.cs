@@ -68,13 +68,17 @@
 
         public async Task<List<PaymentSession>> GetIncompletePaymentSessions(int windowMinutes, int lastProcessMinutes)
         {
-            var threeHoursAgo = SystemTime.UtcNow.AddMinutes(windowMinutes);
-            var lastProcessed = SystemTime.UtcNow.AddMinutes(lastProcessMinutes);
+            // If windowMinutes is 180, this will be 3 hours ago
+            var cutoffTime = SystemTime.UtcNow.AddMinutes(-windowMinutes);
+
+            // If lastProcessMinutes is 30, this will be 30 minutes ago
+            var processedCutoff = SystemTime.UtcNow.AddMinutes(-lastProcessMinutes);
 
             return await weeeContext.PaymentSessions
-                .Where(p => !p.InFinalState && (p.CreatedAt < threeHoursAgo) &&
-                            (p.LastProcessedAt == null || p.LastProcessedAt < lastProcessed))
-                .ToListAsync();
+                .Where(p => !p.InFinalState &&                    // Not in final state
+                            p.CreatedAt < cutoffTime &&           // Created more than 3 hours ago
+                            (p.LastProcessedAt == null ||         // Never processed OR
+                             p.LastProcessedAt < processedCutoff)).ToListAsync(); // Not processed in last 30 minutes
         }
     }
 }

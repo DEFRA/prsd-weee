@@ -44,7 +44,7 @@
             registeredProducer = A.Fake<RegisteredProducer>();
 
             // Create the main submission
-            submission = new DirectProducerSubmission(registeredProducer, 2024)
+            submission = new DirectProducerSubmission(registeredProducer, DateTime.Now.Year)
             {
                 DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Complete
             };
