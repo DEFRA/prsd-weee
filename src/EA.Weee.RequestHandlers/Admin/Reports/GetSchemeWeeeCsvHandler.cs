@@ -4,8 +4,7 @@
     using DataAccess.StoredProcedure;
     using Domain.DataReturns;
     using EA.Prsd.Core.Helpers;
-    using EA.Weee.Domain;
-    using EA.Weee.Domain.Lookup;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.RequestHandlers.Admin.Helpers;
     using Prsd.Core;
     using Prsd.Core.Mediator;
@@ -94,10 +93,12 @@
 
             var collectedAmountsDictionary = new Dictionary<WeeeAmountKey, IEnumerable<SpgSchemeWeeeCsvResult.CollectedAmountResult>>();
             var deliveredAmountsDictionary = new Dictionary<WeeeAmountKey, IEnumerable<SpgSchemeWeeeCsvResult.DeliveredAmountResult>>();
+            var categories = EnumHelper.GetValues(typeof(WeeeCategory));
+            var maxCategoryId = categories.Max(x => x.Key);
 
             foreach (var quarterType in Enumerable.Range(1, 4))
             {
-                foreach (var category in Enumerable.Range(1, 14))
+                foreach (var category in Enumerable.Range(1, maxCategoryId))
                 {
                     foreach (var scheme in results.Schemes)
                     {

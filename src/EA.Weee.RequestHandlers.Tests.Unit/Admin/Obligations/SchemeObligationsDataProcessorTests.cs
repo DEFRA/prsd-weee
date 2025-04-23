@@ -57,7 +57,7 @@
                 var schemeObligation = result.First(s => s.Scheme.ApprovalNumber == obligation.SchemeIdentifier);
                 schemeObligation.ComplianceYear.Should().Be(complianceYear);
 
-                schemeObligation.ObligationSchemeAmounts.Count.Should().Be(14);
+                schemeObligation.ObligationSchemeAmounts.Count.Should().Be(15);
                 schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.ITAndTelecommsEquipment)
                         .Obligation.Should().Be(decimal.Parse(obligation.Cat3));
                 schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.AutomaticDispensers)
@@ -86,6 +86,8 @@
                     .Obligation.Should().Be(decimal.Parse(obligation.Cat7));
                 schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.LightingEquipment)
                     .Obligation.Should().Be(decimal.Parse(obligation.Cat5));
+                schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.VapesAndElectronicCigarettes)
+                    .Obligation.Should().Be(decimal.Parse(obligation.Cat15));
             }
         }
     }

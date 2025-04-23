@@ -25,5 +25,6 @@
         public decimal? Cat12B2CTotal { get; set; }
         public decimal? Cat13B2CTotal { get; set; }
         public decimal? Cat14B2CTotal { get; set; }
+        public decimal? Cat15B2CTotal { get; set; }
     }
 }

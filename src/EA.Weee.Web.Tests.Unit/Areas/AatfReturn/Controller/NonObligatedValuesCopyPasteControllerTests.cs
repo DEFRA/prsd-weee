@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
+    using EA.Prsd.Core.Helpers;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
@@ -14,6 +15,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
@@ -67,6 +69,8 @@
             var schemeId = Guid.NewGuid();
             var organisationId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
+            var categories = EnumHelper.GetValues(typeof(WeeeCategory));
+            var maxCategoryId = categories.Max(x => x.Key);
 
             A.CallTo(() => @return.OrganisationData.Id).Returns(organisationId);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId)))).Returns(@return);
@@ -76,6 +80,8 @@
             var viewModel = result.Model as NonObligatedValuesCopyPasteViewModel;
             viewModel.OrganisationId.Should().Be(organisationId);
             viewModel.ReturnId.Should().Be(returnId);
+            viewModel.WeeeCategoryCount.Should().Be(categories.Count());
+            viewModel.MaxWeeeCategoryId.Should().Be(maxCategoryId);
         }
 
         [Fact]

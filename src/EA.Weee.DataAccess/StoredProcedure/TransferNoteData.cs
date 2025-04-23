@@ -59,6 +59,8 @@
 
         public decimal Cat14Received { get; set; }
 
+        public decimal Cat15Received { get; set; }
+
         public decimal TotalReceived { get; set; }
 
         public decimal Cat1Reused { get; set; }
@@ -88,6 +90,8 @@
         public decimal Cat13Reused { get; set; }
 
         public decimal Cat14Reused { get; set; }
+
+        public decimal Cat15Reused { get; set; }
 
         public decimal TotalReused { get; set; }
     }

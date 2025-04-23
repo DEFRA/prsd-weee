@@ -28,6 +28,7 @@
         public const string Cat12Received = "Cat 12 received (t)";
         public const string Cat13Received = "Cat 13 received (t)";
         public const string Cat14Received = "Cat 14 received (t)";
+        public const string Cat15Received = "Cat 15 received (t)";
         public const string TotalReceived = "Total received (t)";
         public const string Cat1Reused = "Cat 1 reuse (t)";
         public const string Cat2Reused = "Cat 2 reuse (t)";
@@ -43,6 +44,7 @@
         public const string Cat12Reused = "Cat 12 reuse (t)";
         public const string Cat13Reused = "Cat 13 reuse (t)";
         public const string Cat14Reused = "Cat 14 reuse (t)";
+        public const string Cat15Reused = "Cat 15 reuse (t)";
         public const string TotalReused = "Total reused (t)";
 
         public const string SchemeName = "PCS name";
@@ -79,6 +81,7 @@
         public const string Cat12Transferred = "Cat 12 transferred (t)";
         public const string Cat13Transferred = "Cat 13 transferred (t)";
         public const string Cat14Transferred = "Cat 14 transferred (t)";
+        public const string Cat15Transferred = "Cat 15 transferred (t)";
         public const string TotalTransferred = "Total transferred (t)";
         public const string Cat1ReusedTransferred = "Cat 1 reuse transferred (t)";
         public const string Cat2ReusedTransferred = "Cat 2 reuse transferred (t)";
@@ -94,6 +97,7 @@
         public const string Cat12ReusedTransferred = "Cat 12 reuse transferred (t)";
         public const string Cat13ReusedTransferred = "Cat 13 reuse transferred (t)";
         public const string Cat14ReusedTransferred = "Cat 14 reuse transferred (t)";
+        public const string Cat15ReusedTransferred = "Cat 15 reuse transferred (t)";
         public const string TotalReusedTransferred = "Total reuse transferred (t)";
 
         public const string ApprovedEvidence = "Approved evidence (tonnes)";

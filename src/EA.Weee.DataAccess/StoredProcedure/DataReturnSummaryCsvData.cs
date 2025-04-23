@@ -59,5 +59,7 @@
         public decimal? Category13 { get; set; }
 
         public decimal? Category14 { get; set; }
+
+        public decimal? Category15 { get; set; }
     }
 }

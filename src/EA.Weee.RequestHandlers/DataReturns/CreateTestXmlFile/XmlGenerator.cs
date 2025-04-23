@@ -44,6 +44,7 @@
             { WeeeCategory.CoolingApplicancesContainingRefrigerants, "Cooling Appliances Containing Refrigerants" },
             { WeeeCategory.GasDischargeLampsAndLedLightSources, "Gas Discharge Lamps and LED light sources" },
             { WeeeCategory.PhotovoltaicPanels, "Photovoltaic Panels" },
+            { WeeeCategory.VapesAndElectronicCigarettes, "Vapes and electronic cigarettes" },
         };
 
         public XDocument GenerateXml(DataReturnVersion dataReturnVersion)
@@ -67,7 +68,7 @@
         {
             XElement xmlXsdVersion = new XElement(XmlNamespace.DataReturns + "XSDVersion");
             xmlSchemeReturn.Add(xmlXsdVersion);
-            xmlXsdVersion.Value = "3.35";
+            xmlXsdVersion.Value = "3.36";
 
             XElement xmlApprovalNo = new XElement(XmlNamespace.DataReturns + "ApprovalNo");
             xmlSchemeReturn.Add(xmlApprovalNo);

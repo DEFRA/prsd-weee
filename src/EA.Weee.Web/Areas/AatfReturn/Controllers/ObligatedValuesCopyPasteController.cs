@@ -3,6 +3,7 @@
     using Attributes;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
@@ -14,6 +15,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Core.Aatf;
+    using EA.Prsd.Core.Helpers;
 
     [ValidateReturnCreatedActionFilter]
     public class ObligatedValuesCopyPasteController : AatfReturnBaseController
@@ -35,13 +37,18 @@
             using (var client = apiClient())
             {
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
+                var categories = EnumHelper.GetValues(typeof(WeeeCategory));
+                var maxCategoryId = categories.Max(x => x.Key);
+
                 var viewModel = new ObligatedValuesCopyPasteViewModel()
                 {
                     AatfId = aatfId,
                     ReturnId = returnId,
                     OrganisationId = @return.OrganisationData.Id,
                     AatfName = (await cache.FetchAatfData(@return.OrganisationData.Id, aatfId)).Name,
-                    Type = obligatedType
+                    Type = obligatedType,
+                    WeeeCategoryCount = categories.Count(),
+                    MaxWeeeCategoryId = maxCategoryId
                 };
 
                 if (obligatedType == ObligatedType.Received)

@@ -16,7 +16,6 @@
     using Domain.Obligation;
     using Domain.Scheme;
     using FluentAssertions;
-    using NUnit.Specifications;
     using NUnit.Specifications.Categories;
     using Prsd.Core;
     using Prsd.Core.Autofac;
@@ -36,9 +35,9 @@
                 schemes.Add(SchemeDbSetup.Init().Create());
 
                 var csvHeader =
-                    $@"Scheme Identifier,Scheme Name,Cat1 (t),Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat13 (t),Cat14 (t)
-                {schemes.ElementAt(0).ApprovalNumber},{schemes.ElementAt(0).SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,
-                {schemes.ElementAt(1).ApprovalNumber},{schemes.ElementAt(1).SchemeName}, ,15,16,17,18,19,20,21,22,23,24,25,26,27";
+                    $@"Scheme Identifier,Scheme Name,Cat1 (t),Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat13 (t),Cat14 (t),Cat15 (t)
+                {schemes.ElementAt(0).ApprovalNumber},{schemes.ElementAt(0).SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,,
+                {schemes.ElementAt(1).ApprovalNumber},{schemes.ElementAt(1).SchemeName}, ,15,16,17,18,19,20,21,22,23,24,25,26,27,28";
 
                 var fileInfo = new FileInfo(FileName, Encoding.UTF8.GetBytes(csvHeader));
                 request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);
@@ -105,6 +104,9 @@
                 schemeCategoryObligation =
                     schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.PhotovoltaicPanels);
                 schemeCategoryObligation.Obligation.Should().BeNull();
+                schemeCategoryObligation =
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.VapesAndElectronicCigarettes);
+                schemeCategoryObligation.Obligation.Should().BeNull();
 
                 schemeObligation = obligationUpload.ObligationSchemes.First(s => s.Scheme.Id == schemes.ElementAt(1).Id);
                 schemeObligation.ComplianceYear.Should().Be(SystemTime.UtcNow.Year);
@@ -151,6 +153,9 @@
                 schemeCategoryObligation =
                     schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.PhotovoltaicPanels);
                 schemeCategoryObligation.Obligation.Should().Be(27);
+                schemeCategoryObligation =
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.VapesAndElectronicCigarettes);
+                schemeCategoryObligation.Obligation.Should().Be(28);
             };
 
             private readonly Cleanup cleanup = LocalCleanup;
@@ -183,7 +188,8 @@
                     new ObligationSchemeAmount(WeeeCategory.DisplayEquipment, null),
                     new ObligationSchemeAmount(WeeeCategory.CoolingApplicancesContainingRefrigerants, null),
                     new ObligationSchemeAmount(WeeeCategory.GasDischargeLampsAndLedLightSources, null),
-                    new ObligationSchemeAmount(WeeeCategory.PhotovoltaicPanels, 4000)
+                    new ObligationSchemeAmount(WeeeCategory.PhotovoltaicPanels, 4000),
+                    new ObligationSchemeAmount(WeeeCategory.VapesAndElectronicCigarettes, null)
                 };
 
                 obligationUpload = ObligationUploadDbSetup
@@ -199,7 +205,7 @@
                     .Create();
 
                 obligationSchemes.Add(obligationScheme1);
-                
+
                 var amounts2 = new List<ObligationSchemeAmount>()
                 {
                     new ObligationSchemeAmount(WeeeCategory.LargeHouseholdAppliances, 1000),
@@ -215,7 +221,8 @@
                     new ObligationSchemeAmount(WeeeCategory.DisplayEquipment, 11000),
                     new ObligationSchemeAmount(WeeeCategory.CoolingApplicancesContainingRefrigerants, 12000),
                     new ObligationSchemeAmount(WeeeCategory.GasDischargeLampsAndLedLightSources, 13000),
-                    new ObligationSchemeAmount(WeeeCategory.PhotovoltaicPanels, 14000)
+                    new ObligationSchemeAmount(WeeeCategory.PhotovoltaicPanels, 14000),
+                    new ObligationSchemeAmount(WeeeCategory.VapesAndElectronicCigarettes, 15000)
                 };
 
                 var obligationScheme2 = ObligationSchemeDbSetup
@@ -229,9 +236,9 @@
                 obligationSchemes.Add(obligationScheme2);
 
                 var csvHeader =
-                    $@"Scheme Identifier,Scheme Name,Cat1 (t),Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat13 (t),Cat14 (t)
-                {schemes.ElementAt(0).ApprovalNumber},{schemes.ElementAt(0).SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,
-                {schemes.ElementAt(1).ApprovalNumber},{schemes.ElementAt(1).SchemeName}, ,15,16,17,18,19,20,21,22,23,24,25,26,27";
+                    $@"Scheme Identifier,Scheme Name,Cat1 (t),Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat13 (t),Cat14 (t),Cat15 (t)
+                {schemes.ElementAt(0).ApprovalNumber},{schemes.ElementAt(0).SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,,
+                {schemes.ElementAt(1).ApprovalNumber},{schemes.ElementAt(1).SchemeName}, ,15,16,17,18,19,20,21,22,23,24,25,26,27,28";
 
                 var fileInfo = new FileInfo(FileName, Encoding.UTF8.GetBytes(csvHeader));
                 request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);
@@ -309,6 +316,9 @@
                 schemeCategoryObligation =
                     schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.PhotovoltaicPanels);
                 schemeCategoryObligation.Obligation.Should().BeNull();
+                schemeCategoryObligation =
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.VapesAndElectronicCigarettes);
+                schemeCategoryObligation.Obligation.Should().BeNull();
 
                 schemeObligation = obligationUpload.ObligationSchemes.First(s => s.Scheme.Id == schemes.ElementAt(1).Id);
                 schemeObligation.ComplianceYear.Should().Be(SystemTime.UtcNow.Year);
@@ -355,6 +365,9 @@
                 schemeCategoryObligation =
                     schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.PhotovoltaicPanels);
                 schemeCategoryObligation.Obligation.Should().Be(27);
+                schemeCategoryObligation =
+                    schemeObligation.ObligationSchemeAmounts.First(s => s.CategoryId == WeeeCategory.VapesAndElectronicCigarettes);
+                schemeCategoryObligation.Obligation.Should().Be(28);
             };
 
             private readonly Cleanup cleanup = LocalCleanup;
@@ -372,11 +385,11 @@
 
                 schemes.Add(scheme1);
                 schemes.Add(scheme2);
-                
+
                 var csvHeader =
-                    $@"Scheme Identifier,Scheme Name,Cat1 (t),Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat13 (t),Cat14 (t)
-                {scheme1.ApprovalNumber},{scheme1.SchemeName},Invalid,2,3,4,5,6,7,8,9,10,11,12,13,14
-                {scheme2.ApprovalNumber},{scheme2.SchemeName},14,15,16,17,18,190000000000000,20,21,22,23,24,25,26,";
+                    $@"Scheme Identifier,Scheme Name,Cat1 (t),Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat13 (t),Cat14 (t),Cat15 (t)
+                {scheme1.ApprovalNumber},{scheme1.SchemeName},Invalid,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+                {scheme2.ApprovalNumber},{scheme2.SchemeName},14,15,16,17,18,190000000000000,20,21,22,23,24,25,26,,";
 
                 var fileInfo = new FileInfo(FileName, Encoding.UTF8.GetBytes(csvHeader));
                 request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);
@@ -396,7 +409,7 @@
                 obligationUpload.ObligationUploadErrors.Count.Should().Be(2);
 
                 obligationUpload.ObligationUploadErrors.Should().Contain(e => e.SchemeIdentifier.Equals(schemes.ElementAt(0).ApprovalNumber)
-                                                                              && e.SchemeName.Equals(schemes.ElementAt(0).SchemeName) && 
+                                                                              && e.SchemeName.Equals(schemes.ElementAt(0).SchemeName) &&
                                                                               e.ErrorType.Equals(ObligationUploadErrorType.Data));
 
                 obligationUpload.ObligationUploadErrors.Should().Contain(e => e.SchemeIdentifier.Equals(schemes.ElementAt(1).ApprovalNumber)
@@ -420,8 +433,8 @@
                 //header incorrect
                 var csvHeader =
                     $@",Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat13 (t),Cat14 (t),
-                {scheme1.ApprovalNumber},{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,14
-                {scheme2.ApprovalNumber},{scheme2.SchemeName},14,15,16,17,18,19,20,21,22,23,24,25,26,";
+                {scheme1.ApprovalNumber},{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,14,15
+                {scheme2.ApprovalNumber},{scheme2.SchemeName},14,15,16,17,18,19,20,21,22,23,24,25,26,,";
 
                 var fileInfo = new FileInfo(FileName, Encoding.UTF8.GetBytes(csvHeader));
                 request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);
@@ -458,8 +471,8 @@
                 schemes.Add(SchemeDbSetup.Init().Create());
 
                 var csvHeader =
-                    $@"Scheme Identifier,Scheme Name,Cat1 (t),Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat13 (t),Cat14 (t)
-                {schemes.ElementAt(0).ApprovalNumber},{schemes.ElementAt(0).SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,";
+                    $@"Scheme Identifier,Scheme Name,Cat1 (t),Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat13 (t),Cat14 (t),Cat15 (t)
+                {schemes.ElementAt(0).ApprovalNumber},{schemes.ElementAt(0).SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,,";
 
                 var fileInfo = new FileInfo("File.txt", Encoding.UTF8.GetBytes(csvHeader));
                 request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);
@@ -495,8 +508,8 @@
 
                 //header incorrect
                 var csvHeader =
-                    $@",Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat13 (t),Cat14 (t),additional
-                {scheme1.ApprovalNumber},{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,14";
+                    $@",Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat13 (t),Cat14 (t),Cat15 (t),additional
+                {scheme1.ApprovalNumber},{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,14,15";
 
                 var fileInfo = new FileInfo(FileName, Encoding.UTF8.GetBytes(csvHeader));
                 request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);
@@ -532,8 +545,8 @@
 
                 //header incorrect
                 var csvHeader =
-                    $@",Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat13 (t),Cat14 (t)
-                {scheme1.ApprovalNumber},{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,14,additional";
+                    $@",Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat13 (t),Cat14 (t),Cat15 (t)
+                {scheme1.ApprovalNumber},{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,additional";
 
                 var fileInfo = new FileInfo(FileName, Encoding.UTF8.GetBytes(csvHeader));
                 request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);
@@ -556,7 +569,7 @@
 
             private readonly Cleanup cleanup = LocalCleanup;
         }
-        
+
         [Component]
         public class WhenISubmitSchemeObligationWithIncorrectColumnsOrder : SubmitSchemeObligationHandlerIntegrationTestBase
         {
@@ -569,8 +582,8 @@
 
                 //header incorrect
                 var csvHeader =
-                    $@",Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat14 (t),Cat13 (t)
-                {scheme1.ApprovalNumber},{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,14";
+                    $@",Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat13 (t),Cat15 (t),Cat14 (t)
+                {scheme1.ApprovalNumber},{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,14,15";
 
                 var fileInfo = new FileInfo(FileName, Encoding.UTF8.GetBytes(csvHeader));
                 request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);
@@ -605,8 +618,8 @@
 
                 //header incorrect
                 var csvHeader =
-                    $@"Scheme Identifier,Scheme Name,Cat1 (t),Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat13 (t),Cat14 (t)
-                {scheme1.ApprovalNumber}nomatch,{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,";
+                    $@"Scheme Identifier,Scheme Name,Cat1 (t),Cat2 (t),Cat3 (t),Cat4 (t),Cat5 (t),Cat6 (t),Cat7 (t),Cat8 (t),Cat9 (t),Cat10 (t),Cat11 (t),Cat12 (t),Cat13 (t),Cat14 (t),Cat15 (t)
+                {scheme1.ApprovalNumber}nomatch,{scheme1.SchemeName},1,2,3,4,5,6,7,8,9,10,11,12,13,,";
 
                 var fileInfo = new FileInfo(FileName, Encoding.UTF8.GetBytes(csvHeader));
                 request = new SubmitSchemeObligation(fileInfo, CompetentAuthority.England, SystemTime.UtcNow.Year);

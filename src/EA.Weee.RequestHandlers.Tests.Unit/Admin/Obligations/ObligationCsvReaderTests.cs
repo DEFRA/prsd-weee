@@ -86,11 +86,11 @@
             reader.Read(data);
 
             //assert
-            A.CallTo(() => csvReader.ValidateHeader<ObligationCsvUpload>(16,
-                A<string[]>.That.Matches(a => a.SequenceEqual(new[] 
-                    { 
+            A.CallTo(() => csvReader.ValidateHeader<ObligationCsvUpload>(
+                A<string[]>.That.Matches(a => a.SequenceEqual(new[]
+                    {
                     "Scheme Identifier", "Scheme Name", "Cat1 (t)", "Cat2 (t)", "Cat3 (t)", "Cat4 (t)", "Cat5 (t)", "Cat6 (t)", "Cat7 (t)", "Cat8 (t)",
-                    "Cat9 (t)", "Cat10 (t)", "Cat11 (t)", "Cat12 (t)", "Cat13 (t)", "Cat14 (t)"
+                    "Cat9 (t)", "Cat10 (t)", "Cat11 (t)", "Cat12 (t)", "Cat13 (t)", "Cat14 (t)", "Cat15 (t)"
                 })))).MustHaveHappenedOnceExactly();
         }
     }

@@ -2,6 +2,8 @@
 {
     using DataAccess.StoredProcedure;
     using EA.Prsd.Core;
+    using EA.Prsd.Core.Helpers;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.Shared;
     using EA.Weee.RequestHandlers.Admin.Reports;
     using EA.Weee.RequestHandlers.Security;
@@ -230,24 +232,18 @@
                 A.Dummy<IEnumerable<string>>());
 
             // Assert
-            Assert.Equal(56, results.Count());
-            Assert.Collection(results.Take(15), // Just examine the first 15 rows
-                r => { Assert.Equal(1, r.Category); Assert.Equal(1, r.QuarterType); },
-                r => { Assert.Equal(2, r.Category); Assert.Equal(1, r.QuarterType); },
-                r => { Assert.Equal(3, r.Category); Assert.Equal(1, r.QuarterType); },
-                r => { Assert.Equal(4, r.Category); Assert.Equal(1, r.QuarterType); },
-                r => { Assert.Equal(5, r.Category); Assert.Equal(1, r.QuarterType); },
-                r => { Assert.Equal(6, r.Category); Assert.Equal(1, r.QuarterType); },
-                r => { Assert.Equal(7, r.Category); Assert.Equal(1, r.QuarterType); },
-                r => { Assert.Equal(8, r.Category); Assert.Equal(1, r.QuarterType); },
-                r => { Assert.Equal(9, r.Category); Assert.Equal(1, r.QuarterType); },
-                r => { Assert.Equal(10, r.Category); Assert.Equal(1, r.QuarterType); },
-                r => { Assert.Equal(11, r.Category); Assert.Equal(1, r.QuarterType); },
-                r => { Assert.Equal(12, r.Category); Assert.Equal(1, r.QuarterType); },
-                r => { Assert.Equal(13, r.Category); Assert.Equal(1, r.QuarterType); },
-                r => { Assert.Equal(14, r.Category); Assert.Equal(1, r.QuarterType); },
-                r => { Assert.Equal(1, r.Category); Assert.Equal(2, r.QuarterType); });
-            // etc...
+            var categories = EnumHelper.GetValues(typeof(WeeeCategory));
+            var maxCategoryId = categories.Max(x => x.Key);
+            var numberOfQuarter = 4;
+
+            Assert.Equal(maxCategoryId * numberOfQuarter, results.Count());
+            Assert.All(results, (x, i) =>
+            {
+                // categories from 1 to max
+                Assert.Equal((i % maxCategoryId) + 1, x.Category);
+                // quarters increase one after going through each category (integer division)
+                Assert.Equal((i / maxCategoryId) + 1, x.QuarterType);
+            });
         }
 
         /// <summary>

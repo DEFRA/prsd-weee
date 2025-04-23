@@ -61,6 +61,10 @@
                     xmlXSDVersion.Value = "3.07";
                     break;
 
+                case MemberRegistrationSchemaVersion.Version_3_08:
+                    xmlXSDVersion.Value = "3.08";
+                    break;
+
                 default:
                     throw new NotSupportedException();
             }

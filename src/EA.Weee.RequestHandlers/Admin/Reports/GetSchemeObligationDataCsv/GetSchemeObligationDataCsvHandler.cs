@@ -4,6 +4,8 @@
     using Core.Shared;
     using DataAccess.StoredProcedure;
     using EA.Prsd.Core;
+    using EA.Prsd.Core.Helpers;
+    using EA.Weee.Core.DataReturns;
     using Prsd.Core.Mediator;
     using Requests.Admin.Reports;
     using Security;
@@ -60,7 +62,10 @@
             csvWriter.DefineColumn(@"Obligation type previous compliance year", i => i.ObligationTypeForPreviousYear);
             csvWriter.DefineColumn(@"Obligation type compliance year selected", i => i.ObligationTypeForSelectedYear);
 
-            foreach (int category in Enumerable.Range(1, 14))
+            var categories = EnumHelper.GetValues(typeof(WeeeCategory));
+            var maxCategoryId = categories.Max(x => x.Key);
+
+            foreach (int category in Enumerable.Range(1, maxCategoryId))
             {
                 string title = string.Format("Cat{0} B2C (t)", category);
                 string columnName = string.Format("Cat{0}B2CTotal", category);
