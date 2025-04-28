@@ -719,7 +719,7 @@
                 result1.PPOBContactTelephone.Should().BeNull();
                 result1.PPOBContactMobile.Should().BeNull();
                 result1.PPOBContactFax.Should().BeNull();
-                result1.PPOBContactEmail.Should().BeNull();
+                result1.PPOBContactEmail.Should().NotBeNull();
                 result1.PPOBContactPrimaryName.Should().BeNull();
                 result1.PPOBContactSecondaryName.Should().BeNull();
                 result1.PPOBContactStreet.Should().BeNull();
@@ -802,7 +802,7 @@
                 result2.PPOBContactTelephone.Should().BeNull();
                 result2.PPOBContactMobile.Should().BeNull();
                 result2.PPOBContactFax.Should().BeNull();
-                result2.PPOBContactEmail.Should().BeNull();
+                result2.PPOBContactEmail.Should().NotBeNull();
                 result2.PPOBContactPrimaryName.Should().BeNull();
                 result2.PPOBContactSecondaryName.Should().BeNull();
                 result2.PPOBContactStreet.Should().BeNull();
@@ -1172,7 +1172,7 @@
                 result1.PPOBContactTelephone.Should().BeNull();
                 result1.PPOBContactMobile.Should().BeNull();
                 result1.PPOBContactFax.Should().BeNull();
-                result1.PPOBContactEmail.Should().BeNull();
+                result1.PPOBContactEmail.Should().NotBeNull();
                 result1.PPOBContactPrimaryName.Should().BeNull();
                 result1.PPOBContactSecondaryName.Should().BeNull();
                 result1.PPOBContactStreet.Should().BeNull();
@@ -1290,7 +1290,7 @@
                 result1.PPOBContactTelephone.Should().BeNull();
                 result1.PPOBContactMobile.Should().BeNull();
                 result1.PPOBContactFax.Should().BeNull();
-                result1.PPOBContactEmail.Should().BeNull();
+                result1.PPOBContactEmail.Should().NotBeNull();
                 result1.PPOBContactPrimaryName.Should().BeNull();
                 result1.PPOBContactSecondaryName.Should().BeNull();
                 result1.PPOBContactStreet.Should().BeNull();
