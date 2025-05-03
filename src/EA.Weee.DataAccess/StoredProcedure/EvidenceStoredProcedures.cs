@@ -66,7 +66,7 @@
                 IsNullable = true,
                 Value = organisationId ?? (object)DBNull.Value
             };
-           
+
             return await context.Database.SqlQuery<TransferNoteData>(queryString, complianceYearParameter, organisationIdParameter).ToListAsync();
         }
 
@@ -82,7 +82,7 @@
         public async Task<List<ObligationEvidenceSummaryTotalsData>> GetObligationEvidenceSummaryTotals(Guid? pcsId, Guid? orgId, int complianceYear)
         {
             Condition.Requires(pcsId == null && orgId == null).IsFalse("pcsId and orgId cannot be both null");
-            
+
             var queryString = "[Evidence].[getObligationEvidenceSummaryTotals] @ComplianceYear, @OrganisationId, @SchemeId ";
 
             var complianceYearParameter = new SqlParameter("@ComplianceYear", (short)complianceYear);

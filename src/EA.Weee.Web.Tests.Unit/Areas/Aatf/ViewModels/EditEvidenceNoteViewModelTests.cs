@@ -153,7 +153,7 @@
         [Fact]
         public void EvidenceNoteViewModel_ReceivedTotal_ShouldCallCalculator()
         {
-            model.CategoryValues.Add(new EvidenceCategoryValue(WeeeCategory.ConsumerEquipment) { Received = "1"});
+            model.CategoryValues.Add(new EvidenceCategoryValue(WeeeCategory.ConsumerEquipment) { Received = "1" });
 
             var total = model.ReceivedTotal;
 

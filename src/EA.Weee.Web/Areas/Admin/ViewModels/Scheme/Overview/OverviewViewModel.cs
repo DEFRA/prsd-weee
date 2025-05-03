@@ -19,7 +19,7 @@
 
                 return schemeName;
             }
-            set { schemeName = value; }
+            set => schemeName = value;
         }
 
         public OverviewDisplayOption ActiveOverviewDisplayOption { get; private set; }

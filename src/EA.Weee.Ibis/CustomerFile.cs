@@ -13,10 +13,7 @@
         /// <summary>
         /// The collection of customers associated with the customer file.
         /// </summary>
-        public IReadOnlyList<Customer> Customers
-        {
-            get { return mCustomers; }
-        }
+        public IReadOnlyList<Customer> Customers => mCustomers;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="CustomerFile"/> class with the specified file source and file ID.

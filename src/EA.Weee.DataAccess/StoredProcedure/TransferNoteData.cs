@@ -3,7 +3,7 @@
     using System;
 
     /// <summary>
-    /// Maps to [Evidence].[getTransferNotes]
+    /// Maps to [Evidence].[getTransferNotes].
     /// </summary>
     public class TransferNoteData
     {
@@ -16,7 +16,7 @@
         public string TransferredByName { get; set; }
 
         public string TransferredByApprovalNumber { get; set; }
-        
+
         public string RecipientName { get; set; }
 
         public string RecipientApprovalNumber { get; set; }

@@ -161,6 +161,8 @@ AppPackages/
 *.[Cc]ache
 ClientBin/
 [Ss]tyle[Cc]op.*
+!stylecop.json
+!Stylecop.ruleset
 ~$*
 *~
 *.dbmdl

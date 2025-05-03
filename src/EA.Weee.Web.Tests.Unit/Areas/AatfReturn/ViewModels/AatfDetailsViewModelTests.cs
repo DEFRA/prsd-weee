@@ -77,7 +77,7 @@
         [Fact]
         public void AatfDetailsViewModel_CYIsEqualToLatest_IsLatestComplianceYearShouldBeTrue()
         {
-            var model = new AatfDetailsViewModel() { ComplianceYear = 4, ComplianceYearList = new List<short> {4, 3} };
+            var model = new AatfDetailsViewModel() { ComplianceYear = 4, ComplianceYearList = new List<short> { 4, 3 } };
 
             model.IsLatestComplianceYear.Should().BeTrue();
         }

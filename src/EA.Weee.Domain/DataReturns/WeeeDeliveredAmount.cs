@@ -38,15 +38,9 @@
         {
         }
 
-        public bool IsAatfDeliveredAmount
-        {
-            get { return AatfDeliveryLocation != null; }
-        }
+        public bool IsAatfDeliveredAmount => AatfDeliveryLocation != null;
 
-        public bool IsAeDeliveredAmount
-        {
-            get { return AeDeliveryLocation != null; }
-        }
+        public bool IsAeDeliveredAmount => AeDeliveryLocation != null;
 
         public bool Equals(WeeeDeliveredAmount other)
         {

@@ -14,13 +14,7 @@
         [TonnageValue("CategoryId", "The tonnage value", "B2B", false)]
         public string B2B { get; set; }
 
-        public bool RedirectToSummary
-        {
-            get
-            {
-                return this.B2B != "-" || this.B2C != "-";
-            }
-        }
+        public bool RedirectToSummary => this.B2B != "-" || this.B2C != "-";
 
         public ObligatedCategoryValue()
         {

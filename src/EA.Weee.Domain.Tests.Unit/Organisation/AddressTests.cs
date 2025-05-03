@@ -140,10 +140,7 @@
                     Postcode, Country, Telephone, Email);
             }
 
-            public static Address NewAddress
-            {
-                get { return new AddressBuilder().Build(); }
-            }
+            public static Address NewAddress => new AddressBuilder().Build();
 
             public static Address WithAddress1(string address1)
             {

@@ -8,40 +8,22 @@
         [ConfigurationProperty("action", IsRequired = true)]
         public RuleAction Action
         {
-            get
-            {
-                return (RuleAction)this["action"];
-            }
-            set
-            {
-                this["action"] = value;
-            }
+            get => (RuleAction)this["action"];
+            set => this["action"] = value;
         }
 
         [ConfigurationProperty("type", IsRequired = true)]
         public RuleTypeEnum Type
         {
-            get
-            {
-                return (RuleTypeEnum)this["type"];
-            }
-            set
-            {
-                this["type"] = value;
-            }
+            get => (RuleTypeEnum)this["type"];
+            set => this["type"] = value;
         }
 
         [ConfigurationProperty("value", IsRequired = true)]
         public string Value
         {
-            get
-            {
-                return (string)this["value"];
-            }
-            set
-            {
-                this["value"] = value;
-            }
+            get => (string)this["value"];
+            set => this["value"] = value;
         }
 
         public enum RuleTypeEnum

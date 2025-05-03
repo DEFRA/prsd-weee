@@ -4,10 +4,7 @@
     {
         public string Description { get; private set; }
 
-        public string TypeName
-        {
-            get { return "Error"; }
-        }
+        public string TypeName => "Error";
 
         public DataReturnError(string description)
         {

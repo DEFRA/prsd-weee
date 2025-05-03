@@ -135,10 +135,7 @@
                     new WeeeDeliveredAmount(obligationType, weeeCategory, tonnage, aeDeliveryLocation);
             }
 
-            public static WeeeDeliveredAmount NewWeeeDeliveredAmount
-            {
-                get { return new WeeeDeliveredAmountBuilder().Build(); }
-            }
+            public static WeeeDeliveredAmount NewWeeeDeliveredAmount => new WeeeDeliveredAmountBuilder().Build();
 
             public static WeeeDeliveredAmount WithObligationType(ObligationType obligationType)
             {

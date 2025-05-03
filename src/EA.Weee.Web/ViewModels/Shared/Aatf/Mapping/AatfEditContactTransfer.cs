@@ -1,10 +1,9 @@
 ﻿namespace EA.Weee.Web.ViewModels.Shared.Aatf.Mapping
 {
+    using Core.AatfReturn;
+    using EA.Weee.Core.Shared;
     using System;
     using System.Collections.Generic;
-
-    using EA.Weee.Core.AatfReturn;
-    using EA.Weee.Core.Shared;
 
     public class AatfEditContactTransfer
     {

@@ -18,8 +18,10 @@
         private readonly IUserContext userContext;
         private readonly IGenericDataAccess genericDataAccess;
 
-        public EvidenceDataAccess(WeeeContext context,
-            IUserContext userContext, IGenericDataAccess genericDataAccess)
+        public EvidenceDataAccess(
+            WeeeContext context,
+            IUserContext userContext,
+            IGenericDataAccess genericDataAccess)
         {
             this.context = context;
             this.userContext = userContext;
@@ -39,7 +41,11 @@
             return note;
         }
 
-        public async Task<Note> Update(Note note, Organisation recipient, DateTime startDate, DateTime endDate,
+        public async Task<Note> Update(
+            Note note,
+            Organisation recipient,
+            DateTime startDate,
+            DateTime endDate,
             WasteType wasteType,
             Protocol? protocol,
             IList<NoteTonnage> tonnages,
@@ -105,9 +111,9 @@
             }
             if (filter.SubmittedById.HasValue)
             {
-                //So logic here,
-                //If NoteType = Transfer then use OrganisationSchemaData.SchemeName if available, OrganisationData.OrganisationName if not
-                //Else If SubmittedDate != null then use AatfData.Name
+                // So logic here,
+                // If NoteType = Transfer then use OrganisationSchemaData.SchemeName if available, OrganisationData.OrganisationName if not
+                // Else If SubmittedDate != null then use AatfData.Name
                 notes = notes.Where(n =>
                     (n.NoteType.Value == NoteType.TransferNote.Value
                         && (n.Organisation.Schemes.Where(s => s.Id == filter.SubmittedById).Any() || n.OrganisationId == filter.SubmittedById))
@@ -237,7 +243,8 @@
                                       .ToListAsync();
         }
 
-        public async Task<EvidenceNoteResults> GetNotesToTransfer(Guid recipientOrganisationId,
+        public async Task<EvidenceNoteResults> GetNotesToTransfer(
+            Guid recipientOrganisationId,
             List<int> categories,
             List<Guid> excludeEvidenceNotes,
             int complianceYear,
@@ -262,12 +269,12 @@
 
             if (submittedById.HasValue)
             {
-                //So logic here,
-                //If NoteType = Transfer then use OrganisationSchemaData.SchemeName if available, OrganisationData.OrganisationName if not
-                //Else If SubmittedDate != null then use AatfData.Name
+                // So logic here,
+                // If NoteType = Transfer then use OrganisationSchemaData.SchemeName if available, OrganisationData.OrganisationName if not
+                // Else if SubmittedDate != null then use AatfData.Name
                 filteredNotes = filteredNotes.Where(n =>
                     (n.NoteType.Value == NoteType.TransferNote.Value
-                        && (n.Organisation.Schemes.Where(s => s.Id == submittedById).Any() || n.OrganisationId == submittedById))
+                        && (n.Organisation.Schemes.Any(s => s.Id == submittedById) || n.OrganisationId == submittedById))
                     || n.Aatf.Id == submittedById);
             }
 
@@ -295,8 +302,10 @@
             return new EvidenceNoteResults(pagedNotes, notes.Count());
         }
 
-        public async Task<EvidenceNoteResults> GetTransferSelectedNotes(Guid recipientOrganisationId,
-            List<Guid> evidenceNotes, List<int> categories)
+        public async Task<EvidenceNoteResults> GetTransferSelectedNotes(
+            Guid recipientOrganisationId,
+            List<Guid> evidenceNotes,
+            List<int> categories)
         {
             var pagedNotes = await context.Notes.Where(n => n.RecipientId == recipientOrganisationId &&
                                                             evidenceNotes.Contains(n.Id) &&
@@ -317,7 +326,8 @@
                 .CountAsync();
         }
 
-        public async Task<Note> AddTransferNote(Organisation organisation,
+        public async Task<Note> AddTransferNote(
+            Organisation organisation,
             Organisation recipientOrganisation,
             List<NoteTransferTonnage> transferTonnage,
             NoteStatus status,
@@ -325,7 +335,8 @@
             string userId,
             DateTime date)
         {
-            var evidenceNote = new Note(organisation,
+            var evidenceNote = new Note(
+                organisation,
                 recipientOrganisation,
                 userId,
                 transferTonnage,
@@ -353,7 +364,9 @@
                 .ToListAsync();
         }
 
-        public async Task<Note> UpdateTransfer(Note note, Organisation recipient,
+        public async Task<Note> UpdateTransfer(
+            Note note,
+            Organisation recipient,
             IList<NoteTransferTonnage> tonnages,
             NoteStatus status,
             DateTime updateDate)
@@ -403,7 +416,8 @@
             return note;
         }
 
-        public async Task<List<Organisation>> GetRecipientOrganisations(Guid? aatfId,
+        public async Task<List<Organisation>> GetRecipientOrganisations(
+            Guid? aatfId,
             int complianceYear,
             List<NoteStatus> allowedStatus,
             List<NoteType> allowedNoteTypes)

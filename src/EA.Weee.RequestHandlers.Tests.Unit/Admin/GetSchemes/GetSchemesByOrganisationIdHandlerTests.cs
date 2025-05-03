@@ -79,7 +79,7 @@
             var pendingScheme = A.Fake<Scheme>();
             A.CallTo(() => pendingScheme.SchemeStatus).Returns(SchemeStatus.Pending);
 
-            var schemeList = new List<Scheme>() { notPendingScheme, pendingScheme};
+            var schemeList = new List<Scheme>() { notPendingScheme, pendingScheme };
 
             A.CallTo(() => dataAccess.GetSchemes()).Returns(schemeList);
             A.CallTo(() => schemeMap.Map(pendingScheme)).Returns(new SchemeData());

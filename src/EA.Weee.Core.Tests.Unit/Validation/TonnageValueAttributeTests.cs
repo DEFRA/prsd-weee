@@ -50,7 +50,7 @@
 
             Action action = () => attribute.Validate(1, validationContextWithInvalidModel);
 
-            action.Should().Throw<ValidationException>().WithMessage($"Property {CategoryIdProperty} should be of type { typeof(WeeeCategory).Name }");
+            action.Should().Throw<ValidationException>().WithMessage($"Property {CategoryIdProperty} should be of type {nameof(WeeeCategory)}");
         }
 
         [Fact]

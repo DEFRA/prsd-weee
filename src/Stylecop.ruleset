@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RuleSet Name="Custom Rules" Description="Custom Rules" ToolsVersion="16.0">
+  <Rules AnalyzerId="StyleCop.Analyzers" RuleNamespace="StyleCop.Analyzers">
+    <Rule Id="SA1101" Action="None" /> <!-- A call to an instance member of the local class or a base class is not prefixed with 'this.' -->
+	<Rule Id="SA0001" Action="None" /> <!-- XML comment analysis is disabled due to project configuration -->
+	<Rule Id="SA1202" Action="None" /> <!-- All private methods must be placed after all public methods. -->
+	<Rule Id="SA1135" Action="None" /> <!-- All using directives should be qualified. -->
+	<Rule Id="SA1413" Action="None" /> <!-- A multi-line initializer in a C# code file should use a comma on the last line. -->
+	<Rule Id="SA1513" Action="None" /> <!-- A closing brace within a C# element, statement, or expression is not followed by a blank line. -->
+	<Rule Id="SA1633" Action="None" /> <!-- A C# code file is missing a standard file header. -->
+	<Rule Id="SA1201" Action="None" /> <!-- An element within a C# code file is out of order in relation to the other elements in the code. -->
+	<Rule Id="SA1516" Action="None" /> <!-- Adjacent C# elements are not separated by a blank line. -->
+  </Rules>
+</RuleSet>

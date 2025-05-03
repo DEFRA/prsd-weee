@@ -161,10 +161,7 @@
                                  address);
             }
 
-            public static ProducerContact NewProducerContact
-            {
-                get { return new ProducerContactBuilder().Build(); }
-            }
+            public static ProducerContact NewProducerContact => new ProducerContactBuilder().Build();
 
             public static ProducerContact WithTitle(string title)
             {

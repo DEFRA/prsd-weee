@@ -396,7 +396,7 @@
 
         private ActionResult RedirectToOrganisationHasNoSubmissions(Guid organisationId)
         {
-            return RedirectToAction("OrganisationHasNoSubmissions", new { organisationId, fromRemoved = true});
+            return RedirectToAction("OrganisationHasNoSubmissions", new { organisationId, fromRemoved = true });
         }
 
         private async Task<ManualPaymentResult> SendPaymentDetails(PaymentDetailsViewModel model)

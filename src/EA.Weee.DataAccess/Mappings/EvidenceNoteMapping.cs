@@ -1,8 +1,8 @@
 ﻿namespace EA.Weee.DataAccess.Mappings
 {
+    using Domain.Evidence;
     using System.ComponentModel.DataAnnotations.Schema;
     using System.Data.Entity.ModelConfiguration;
-    using Domain.Evidence;
 
     internal class EvidenceNoteMapping : EntityTypeConfiguration<Note>
     {

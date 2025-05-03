@@ -9,7 +9,7 @@
     /// If we aren't using this we need to generate a different convention for foreign key naming.
     /// </summary>
     /// <remarks>
-    /// See: https://msdn.microsoft.com/en-us/data/dn469439
+    /// See: https://msdn.microsoft.com/en-us/data/dn469439.
     /// </remarks>
     internal class ForeignKeyNaming : IStoreModelConvention<AssociationType>
     {
@@ -31,8 +31,7 @@
             }
         }
 
-        private bool PropertiesHaveDefaultNames(ReadOnlyMetadataCollection<EdmProperty> properties,
-            ReadOnlyMetadataCollection<EdmProperty> otherEndProperties)
+        private bool PropertiesHaveDefaultNames(ReadOnlyMetadataCollection<EdmProperty> properties, ReadOnlyMetadataCollection<EdmProperty> otherEndProperties)
         {
             bool result = false;
 

@@ -27,9 +27,6 @@ namespace EA.Weee.Tests.Core
             return GetAsyncEnumerator();
         }
 
-        IQueryProvider IQueryable.Provider
-        {
-            get { return new TestDbAsyncQueryProvider<T>(this); }
-        }
+        IQueryProvider IQueryable.Provider => new TestDbAsyncQueryProvider<T>(this);
     }
 }

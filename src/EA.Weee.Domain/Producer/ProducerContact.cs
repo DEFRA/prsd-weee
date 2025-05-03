@@ -67,15 +67,9 @@
 
         public virtual ProducerAddress Address { get; private set; }
 
-        public virtual bool IsOverseas
-        {
-            get { return !Address.IsUkAddress(); }
-        }
+        public virtual bool IsOverseas => !Address.IsUkAddress();
 
-        public string ContactName
-        {
-            get { return string.Format("{0} {1} {2}", Title, ForeName, SurName); }
-        }
+        public string ContactName => string.Format("{0} {1} {2}", Title, ForeName, SurName);
 
         public ProducerContact OverwriteWhereNull(ProducerContact other)
         {

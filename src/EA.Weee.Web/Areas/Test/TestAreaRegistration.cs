@@ -23,10 +23,7 @@
             testAreaEnabled = config.CurrentConfiguration.EnableTestArea;
         }
 
-        public override string AreaName
-        {
-            get { return "Test"; }
-        }
+        public override string AreaName => "Test";
 
         public override void RegisterArea(AreaRegistrationContext context)
         {

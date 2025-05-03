@@ -4,10 +4,7 @@
     {
         public string Description { get; private set; }
 
-        public string TypeName
-        {
-            get { return "Warning"; }
-        }
+        public string TypeName => "Warning";
 
         public DataReturnWarning(string description)
         {

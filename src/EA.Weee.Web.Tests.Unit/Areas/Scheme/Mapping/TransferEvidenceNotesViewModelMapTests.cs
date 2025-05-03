@@ -271,7 +271,7 @@
             var request = TestFixture.Build<TransferEvidenceNoteRequest>()
                 .With(e => e.CategoryIds,
                     new List<int>() { Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment.ToInt() })
-                .With(e => e.EvidenceNoteIds, new List<Guid>() { evidenceNoteId1, evidenceNoteId2, evidenceNoteId3})
+                .With(e => e.EvidenceNoteIds, new List<Guid>() { evidenceNoteId1, evidenceNoteId2, evidenceNoteId3 })
                 .With(e => e.DeselectedEvidenceNoteIds, new List<Guid>()
                 {
                     evidenceNoteId4

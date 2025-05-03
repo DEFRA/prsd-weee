@@ -1340,7 +1340,7 @@
             var associatedSchemes = fixture.CreateMany<SchemeData>().ToList();
             var associatedViewModel = fixture.Create<AssociatedEntitiesViewModel>();
 
-            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(new SchemeData() {Id = schemeId, OrganisationId = organisationId});
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetSchemeById>._)).Returns(new SchemeData() {Id = schemeId, OrganisationId = organisationId });
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<OrganisationData>>._))
                 .Returns(new OrganisationData
                 {

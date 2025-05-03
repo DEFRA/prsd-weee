@@ -8,12 +8,6 @@
     {
         private readonly Dictionary<object, object> fakeItems = new Dictionary<object, object>();
 
-        public override IDictionary Items 
-        { 
-            get 
-            { 
-                return fakeItems; 
-            } 
-        }
+        public override IDictionary Items => fakeItems;
     }
 }
