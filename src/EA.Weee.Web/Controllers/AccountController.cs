@@ -23,17 +23,21 @@
     {
         private readonly Func<IWeeeClient> apiClient;
         private readonly Func<IOAuthClientCredentialClient> apiClientCredential;
+        private readonly IAppConfiguration appConfiguration;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IExternalRouteService externalRouteService;
 
         public AccountController(Func<IWeeeClient> apiClient,
             IWeeeAuthorization weeeAuthorization,
-            IExternalRouteService externalRouteService, Func<IOAuthClientCredentialClient> apiClientCredential)
+            IExternalRouteService externalRouteService, 
+            Func<IOAuthClientCredentialClient> apiClientCredential,
+            IAppConfiguration appConfiguration)
         {
             this.apiClient = apiClient;
             this.weeeAuthorization = weeeAuthorization;
             this.externalRouteService = externalRouteService;
             this.apiClientCredential = apiClientCredential;
+            this.appConfiguration = appConfiguration;
         }
 
         [HttpGet]
@@ -81,6 +85,12 @@
             weeeAuthorization.SignOut();
 
             return RedirectToAction("SignIn");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public void ExtendSession()
+        {
         }
 
         [HttpGet]
@@ -233,6 +243,14 @@
         [AllowAnonymous]
         public ActionResult ResetPasswordRequest()
         {
+            return View();
+        }
+
+        [HttpGet]
+        [AllowAnonymous]
+        public ActionResult SessionSignedOut()
+        {
+            ViewBag.SessionTimeoutInMinutes = appConfiguration.SessionTimeoutInMinutes;
             return View();
         }
 

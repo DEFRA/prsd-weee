@@ -1,0 +1,16 @@
+﻿@using EA.Weee.Web.Controllers
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+
+@section main_content {
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">
+            You have been signed out
+        </h1>
+    </header>
+
+    <div class="govuk-body">
+        <p>You have been signed out and any information you have not saved has been deleted because you did not do anything for @ViewBag.SessionTimeoutInMinutes minutes. This is to protect your information.</p>
+    </div>
+    <a href="@Url.Action("SignIn", "Account")" class="govuk-button">Sign back in</a>
+}
