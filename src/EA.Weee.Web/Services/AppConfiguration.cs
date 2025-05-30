@@ -144,5 +144,11 @@
 
         [DefaultValue("2025/01/01")]
         public DateTime SmallProducerFeatureEnabledFrom { get; set; }
+
+        [DefaultValue(15)]
+        public int SessionTimeoutInMinutes { get; set; }
+
+        [DefaultValue(5)]
+        public int SessionTimeoutWarningInMinutes { get; set; }
     }
 }
