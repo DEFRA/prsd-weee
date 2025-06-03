@@ -101,6 +101,6 @@
     }
 
     window.weee = window.weee || {};
-    window.weee.sessionTimeout = window.weee.sessionTeimout || {};
+    window.weee.sessionTimeout = window.weee.sessionTimeout || {};
     window.weee.sessionTimeout.start = start;
 })();
