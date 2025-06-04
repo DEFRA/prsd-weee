@@ -26,6 +26,130 @@ $govuk-button-shadow-colour: darken($govuk-button-colour, 15%);
     margin-bottom: 0px !important;
 }
 
+
+.govuk-button_automation-ignored {
+    font-family: "GDS Transport",arial,sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-weight: 400;
+    font-size: 16px;
+    font-size: 1rem;
+    line-height: 1.1875;
+    box-sizing: border-box;
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    margin-top: 0;
+    margin-right: 0;
+    margin-left: 0;
+    margin-bottom: 0;
+    padding: 8px 10px 7px;
+    border: 2px solid transparent;
+    border-radius: 0;
+    color: #fff;
+    background-color: #00703c;
+    box-shadow: 0 2px 0 #002d18;
+    text-align: center;
+    vertical-align: top;
+    cursor: pointer;
+    -webkit-appearance: none;
+    margin-right: 20px;
+}
+
+@media print {
+    .govuk-button_automation-ignored {
+        font-family: sans-serif
+    }
+}
+
+@media(min-width: 40.0625em) {
+    .govuk-button_automation-ignored {
+        font-size: 19px;
+        font-size: 1.1875rem;
+        line-height: 1
+    }
+}
+
+@media print {
+    .govuk-button_automation-ignored {
+        font-size: 14pt;
+        line-height: 19px
+    }
+}
+
+@media(min-width: 40.0625em) {
+    .govuk-button_automation-ignored {
+        margin-bottom: 32px
+    }
+}
+
+@media(min-width: 40.0625em) {
+    .govuk-button_automation-ignored {
+        width: auto
+    }
+}
+
+.govuk-button_automation-ignored:link, .govuk-button_automation-ignored:visited, .govuk-button_automation-ignored:active, .govuk-button_automation-ignored:hover {
+    color: #fff;
+    text-decoration: none
+}
+
+.govuk-button_automation-ignored::-moz-focus-inner {
+    padding: 0;
+    border: 0
+}
+
+.govuk-button_automation-ignored:hover {
+    background-color: #005a30
+}
+
+.govuk-button_automation-ignored:active {
+    top: 2px
+}
+
+.govuk-button_automation-ignored:focus {
+    border-color: #fd0;
+    outline: 3px solid transparent;
+    box-shadow: inset 0 0 0 1px #fd0
+}
+
+.govuk-button_automation-ignored:focus:not(:active):not(:hover) {
+    border-color: #fd0;
+    color: #0b0c0c;
+    background-color: #fd0;
+    box-shadow: 0 2px 0 #0b0c0c
+}
+
+.govuk-button_automation-ignored:before {
+    content: "";
+    display: block;
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    bottom: -4px;
+    left: -2px;
+    background: transparent
+}
+
+.govuk-button_automation-ignored:active:before {
+    top: -4px
+}
+
+.govuk-button_automation-ignored--disabled, .govuk-button_automation-ignored[disabled=disabled], .govuk-button_automation-ignored[disabled] {
+    opacity: .5
+}
+
+.govuk-button_automation-ignored--disabled:hover, .govuk-button_automation-ignored[disabled=disabled]:hover, .govuk-button_automation-ignored[disabled]:hover {
+    background-color: #00703c;
+    cursor: default
+}
+
+.govuk-button_automation-ignored--disabled:active, .govuk-button_automation-ignored[disabled=disabled]:active, .govuk-button_automation-ignored[disabled]:active {
+    top: 0;
+    box-shadow: 0 2px 0 #002d18
+}
+
+
 .weee-search-button {
     left: govuk-spacing(-1);
 }
