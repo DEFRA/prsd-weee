@@ -175,5 +175,13 @@
 
             Assert.IsAssignableFrom<ActionResult>(result);
         }
+
+        [Fact]
+        public void ExtendSession_Exists()
+        {
+            var controller = AccountController();
+
+            controller.ExtendSession();
+        }
     }
 }

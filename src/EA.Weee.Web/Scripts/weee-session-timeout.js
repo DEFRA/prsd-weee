@@ -8,7 +8,7 @@
     let sessionWarningTimer;
     let sessionLogoutTimer;
 
-    const $sessionDialog = $("#hmrc-timeout-dialog, .hmrc-timeout-overlay");
+    const $sessionDialog = $("#prsd-timeout-dialog, .prsd-timeout-overlay");
 
     function startSessionTimeout() {
         clearTimeout(sessionWarningTimer);
@@ -26,7 +26,7 @@
     }
 
     function setTimeValue(val) {
-        let setVal = () => $("#hmrc-timeout-countdown").html(formatTime(val));
+        let setVal = () => $("#prsd-timeout-countdown").html(formatTime(val));
         
         setVal();
 
@@ -88,7 +88,7 @@
             setTimeWith(timeoutInMinutes, warningBeforeInMinutes);
             startSessionTimeout();
 
-            $("#hmrc-timeout-keep-signin-btn").click(async () => {
+            $("#prsd-timeout-keep-signin-btn").click(async () => {
                 await post('/Account/ExtendSession');
 
                 setTimeWith(timeoutInMinutes, warningBeforeInMinutes);
