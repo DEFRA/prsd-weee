@@ -1,6 +1,6 @@
 
 
-.hmrc-timeout-dialog {
+.prsd-timeout-dialog {
     position: fixed;
     z-index: 1002;
     top: 50%;
@@ -17,16 +17,16 @@
 }
 
 @media (min-width: 40.0625em) {
-    .hmrc-timeout-dialog {
+    .prsd-timeout-dialog {
         width: 435px;
     }
 }
 
-.hmrc-timeout-dialog:focus {
+.prsd-timeout-dialog:focus {
     outline: 3px solid #ffdd00;
 }
 
-.hmrc-timeout-dialog__message {
+.prsd-timeout-dialog__message {
     font-family: Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -37,32 +37,32 @@
 }
 
 @media print {
-    .hmrc-timeout-dialog__message {
+    .prsd-timeout-dialog__message {
         font-family: sans-serif;
     }
 }
 
 @media (min-width: 40.0625em) {
-    .hmrc-timeout-dialog__message {
+    .prsd-timeout-dialog__message {
         font-size: 1.1875rem;
         line-height: 1.3157894737;
     }
 }
 
 @media print {
-    .hmrc-timeout-dialog__message {
+    .prsd-timeout-dialog__message {
         font-size: 14pt;
         line-height: 1.15;
     }
 }
 
-.hmrc-timeout-dialog__countdown {
+.prsd-timeout-dialog__countdown {
     display: inline-block;
     font-weight: 700;
     white-space: nowrap;
 }
 
-.hmrc-timeout-dialog__link {
+.prsd-timeout-dialog__link {
     font-family: Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -72,27 +72,27 @@
 }
 
 @media print {
-    .hmrc-timeout-dialog__link {
+    .prsd-timeout-dialog__link {
         font-family: sans-serif;
     }
 }
 
 @media (min-width: 40.0625em) {
-    .hmrc-timeout-dialog__link {
+    .prsd-timeout-dialog__link {
         font-size: 1.5rem;
         line-height: 1.25;
     }
 }
 
 @media print {
-    .hmrc-timeout-dialog__link {
+    .prsd-timeout-dialog__link {
         font-size: 18pt;
         line-height: 1.15;
     }
 }
 
 @media (min-width: 40.0625em) {
-    .hmrc-timeout-dialog__link {
+    .prsd-timeout-dialog__link {
         font-family: Helvetica, Arial, sans-serif;
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
@@ -104,27 +104,27 @@
 }
 
 @media print and (min-width: 40.0625em) {
-    .hmrc-timeout-dialog__link {
+    .prsd-timeout-dialog__link {
         font-family: sans-serif;
     }
 }
 
 @media (min-width: 40.0625em) and (min-width: 40.0625em) {
-    .hmrc-timeout-dialog__link {
+    .prsd-timeout-dialog__link {
         font-size: 1.1875rem;
         line-height: 1.3157894737;
     }
 }
 
 @media print and (min-width: 40.0625em) {
-    .hmrc-timeout-dialog__link {
+    .prsd-timeout-dialog__link {
         font-size: 14pt;
         line-height: 1.15;
     }
 }
 
 
-.hmrc-timeout-overlay {
+.prsd-timeout-overlay {
     position: fixed;
     z-index: 1001;
     top: 0;
