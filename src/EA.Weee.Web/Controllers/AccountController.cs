@@ -250,7 +250,6 @@
         [AllowAnonymous]
         public ActionResult SessionSignedOut()
         {
-            ViewBag.SessionTimeoutInMinutes = appConfiguration.SessionTimeoutInMinutes;
             return View();
         }
 
