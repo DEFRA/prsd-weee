@@ -389,7 +389,7 @@ input[type="file"].form-control {
     border: 0;
 }
 
-#link-sign-out {
+#link-sign-out, #session-link-sign-out {
     @include govuk-font(16);
 }
 
