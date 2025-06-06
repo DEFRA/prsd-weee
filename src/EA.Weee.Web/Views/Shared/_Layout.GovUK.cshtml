@@ -40,6 +40,8 @@
         document.body.className = ((document.body.className) ? document.body.className + ' js-enabled' : 'js-enabled');
     </script>
 
+    @Html.Partial("_SessionTimeout")
+
     @RenderSection("body_start", required: false)
 
     <div id="skiplink-container">
@@ -146,6 +148,12 @@
 
 </body>
 </html>
+
+
+@{
+    var sessionTimeoutInMinutes = System.Configuration.ConfigurationManager.AppSettings["Weee.SessionTimeoutInMinutes"];
+    var sessionTimeoutWarningInMinutes = System.Configuration.ConfigurationManager.AppSettings["Weee.SessionTimeoutWarningInMinutes"];
+}
 
 <script>
     var cookieConsent = GOVUK.getCookie("weee-cookie-consent");
@@ -269,4 +277,6 @@
         document.getElementById("global-cookie-accept-message").style.display = "none";
         document.getElementById("global-cookie-reject-message").style.display = "none";
     }
+
+    weee.sessionTimeout.start(@sessionTimeoutInMinutes, @sessionTimeoutWarningInMinutes, "@Context.User.Identity.IsAuthenticated");
 </script>

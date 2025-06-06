@@ -25,6 +25,7 @@
         private readonly IUnauthenticatedUser unauthenticatedUserClient;
         private readonly IWeeeAuthorization weeeAuthorization;
         private readonly IExternalRouteService externalRouteService;
+        private readonly IAppConfiguration appConfiguration;
 
         public AccountControllerTests()
         {
@@ -33,6 +34,7 @@
             unauthenticatedUserClient = A.Fake<IUnauthenticatedUser>();
             weeeAuthorization = A.Fake<IWeeeAuthorization>();
             externalRouteService = A.Fake<IExternalRouteService>();
+            appConfiguration = A.Fake<IAppConfiguration>();
         }
 
         private AccountController AccountController()
@@ -41,7 +43,8 @@
                 () => apiClient,
                 weeeAuthorization,
                 externalRouteService,
-                () => oauthClientCredentialClient);
+                () => oauthClientCredentialClient,
+                appConfiguration);
         }
 
         [Fact]
@@ -55,7 +58,7 @@
             IWeeeAuthorization weeeAuthorization = A.Dummy<IWeeeAuthorization>();
             IExternalRouteService externalRouteService = A.Dummy<IExternalRouteService>();
 
-            var controller = new AccountController(() => apiClient, weeeAuthorization, externalRouteService, () => oauthClientCredentialClient);
+            var controller = new AccountController(() => apiClient, weeeAuthorization, externalRouteService, () => oauthClientCredentialClient, appConfiguration);
 
             // Act
             var result = await controller.ActivateUserAccount(new Guid("EF565DF2-DC16-4589-9CE4-B29568B3E274"), "code");
@@ -157,6 +160,24 @@
             Assert.NotNull(viewResult);
 
             Assert.Equal("ResetPasswordComplete", viewResult.ViewName);
+        }
+
+        [Fact]
+        public void SessionSignedOut_SetsTimeout()
+        {
+            var controller = AccountController();
+
+            var result = controller.SessionSignedOut() as ActionResult;
+
+            Assert.IsAssignableFrom<ActionResult>(result);
+        }
+
+        [Fact]
+        public void ExtendSession_Exists()
+        {
+            var controller = AccountController();
+
+            controller.ExtendSession();
         }
     }
 }
