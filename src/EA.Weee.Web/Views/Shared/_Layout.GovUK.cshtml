@@ -153,6 +153,9 @@
 @{
     var sessionTimeoutInMinutes = System.Configuration.ConfigurationManager.AppSettings["Weee.SessionTimeoutInMinutes"];
     var sessionTimeoutWarningInMinutes = System.Configuration.ConfigurationManager.AppSettings["Weee.SessionTimeoutWarningInMinutes"];
+
+    var isInternal = ((System.Security.Claims.ClaimsIdentity)User.Identity).HasClaim(
+               System.Security.Claims.ClaimTypes.AuthenticationMethod, EA.Weee.Security.Claims.CanAccessInternalArea);
 }
 
 <script>
@@ -278,5 +281,5 @@
         document.getElementById("global-cookie-reject-message").style.display = "none";
     }
 
-    weee.sessionTimeout.start(@sessionTimeoutInMinutes, @sessionTimeoutWarningInMinutes, "@Context.User.Identity.IsAuthenticated");
+    weee.sessionTimeout.start(@sessionTimeoutInMinutes, @sessionTimeoutWarningInMinutes, "@Context.User.Identity.IsAuthenticated", "@isInternal");
 </script>

@@ -8,6 +8,8 @@
     let sessionWarningTimer;
     let sessionLogoutTimer;
 
+    let urlPrefix = "";
+
     const $sessionDialog = $("#prsd-timeout-dialog, .prsd-timeout-overlay");
 
     function startSessionTimeout() {
@@ -59,7 +61,7 @@
     }
 
     async function logout() {
-        await post('Account/SignOut');
+        await post(urlPrefix + '/Account/SignOut');
 
         let signOutUrl = `${location.protocol}//${location.host}/Account/SessionSignedOut`
 
@@ -83,15 +85,31 @@
         return `${minutesResult}${secs} seconds`;
     }
 
-    function start(timeoutInMinutes, warningBeforeInMinutes, authenticated) {
+    function start(timeoutInMinutes,
+        warningBeforeInMinutes,
+        authenticated,
+        isInternal) {
         if (authenticated == "False") return;
+
+        isInternal = isInternal == "True";
+
+        if (isInternal) urlPrefix = "/Admin";
 
         $(document).ready(() => {
             setTimeWith(timeoutInMinutes, warningBeforeInMinutes);
             startSessionTimeout();
 
+            if (isInternal) {
+                $("#signoutForm").hide();
+                $("#signoutFormAdmin").show();
+            }
+            if (!isInternal) {
+                $("#signoutForm").show();
+                $("#signoutFormAdmin").hide();
+            }
+
             $("#prsd-timeout-keep-signin-btn").click(async () => {
-                await post('/Account/ExtendSession');
+                await post(urlPrefix + '/Account/ExtendSession');
 
                 setTimeWith(timeoutInMinutes, warningBeforeInMinutes);
 

@@ -15,11 +15,18 @@
                 Continue
             </button>
 
-            @using (Html.BeginForm("SignOut", "Account", method: FormMethod.Post, htmlAttributes: new { id = "logoutForm" }))
+            @using (Html.BeginForm("SignOut", "Account", method: FormMethod.Post, htmlAttributes: new { id = "signoutForm" }))
             {
                 @Html.AntiForgeryToken()
 
-                <input class="link-submit-automation-ignored" id="session-link-sign-out" type="submit" value="Sign out" />
+                <input class="link-submit-automation-ignored session-link-sign-out" id="session-link-sign-out-external" type="submit" value="Sign out" />
+            }
+
+            @using (Html.BeginForm("SignOut", "Account", new { @area = "Admin" }, FormMethod.Post, new { id = "signoutFormAdmin" }))
+            {
+                @Html.AntiForgeryToken()
+
+                <input class="link-submit-automation-ignored session-link-sign-out" id="session-link-sign-out-internal" type="submit" value="Sign out" />
             }
         </div>
     </div>
