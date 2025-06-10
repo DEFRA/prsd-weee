@@ -163,7 +163,7 @@
         }
 
         [Fact]
-        public void SessionSignedOut_SetsTimeout()
+        public void SessionSignedOut_ReturnsView()
         {
             var controller = AccountController();
 
