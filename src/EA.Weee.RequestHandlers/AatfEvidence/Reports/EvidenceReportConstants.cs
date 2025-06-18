@@ -45,7 +45,7 @@
         public const string Cat13Reused = "Cat 13 reuse (t)";
         public const string Cat14Reused = "Cat 14 reuse (t)";
         public const string Cat15Reused = "Cat 15 reuse (t)";
-        public const string TotalReused = "Total reused (t)";
+        public const string TotalReused = "Total reuse (t)";
 
         public const string SchemeName = "PCS name";
         public const string SchemeApprovalNumber = "PCS approval number";
