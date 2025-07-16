@@ -90,6 +90,7 @@
             csvWriter.DefineColumn(EvidenceReportConstants.Cat12Received, x => x.Cat12Received.ToTonnageDisplay());
             csvWriter.DefineColumn(EvidenceReportConstants.Cat13Received, x => x.Cat13Received.ToTonnageDisplay());
             csvWriter.DefineColumn(EvidenceReportConstants.Cat14Received, x => x.Cat14Received.ToTonnageDisplay());
+            csvWriter.DefineColumn(EvidenceReportConstants.Cat15Received, x => x.Cat15Received.ToTonnageDisplay());
             csvWriter.DefineColumn(EvidenceReportConstants.TotalReceived, x => x.TotalReceived.ToTonnageDisplay());
             csvWriter.DefineColumn(EvidenceReportConstants.Cat1Reused, x => x.Cat1Reused.ToTonnageDisplay());
             csvWriter.DefineColumn(EvidenceReportConstants.Cat2Reused, x => x.Cat2Reused.ToTonnageDisplay());
@@ -105,6 +106,7 @@
             csvWriter.DefineColumn(EvidenceReportConstants.Cat12Reused, x => x.Cat12Reused.ToTonnageDisplay());
             csvWriter.DefineColumn(EvidenceReportConstants.Cat13Reused, x => x.Cat13Reused.ToTonnageDisplay());
             csvWriter.DefineColumn(EvidenceReportConstants.Cat14Reused, x => x.Cat14Reused.ToTonnageDisplay());
+            csvWriter.DefineColumn(EvidenceReportConstants.Cat15Reused, x => x.Cat15Reused.ToTonnageDisplay());
             csvWriter.DefineColumn(EvidenceReportConstants.TotalReused, x => x.TotalReused.ToTonnageDisplay());
 
             var fileContent = csvWriter.Write(reportData);

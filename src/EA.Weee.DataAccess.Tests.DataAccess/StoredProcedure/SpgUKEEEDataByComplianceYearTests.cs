@@ -58,7 +58,7 @@
                 //Assert
                 Assert.NotNull(results);
 
-                Assert.Equal(14, results.Count);
+                Assert.Equal(15, results.Count);
 
                 var firstCategoryRecord = results[0];
                 var secondCategoryRecord = results[1];
@@ -111,7 +111,7 @@
 
                 //Assert
                 Assert.NotNull(results);
-                Assert.Equal(14, results.Count);
+                Assert.Equal(15, results.Count);
                 var firstCategoryRecord = results[0];
                 Assert.Equal("01. Large household appliances", firstCategoryRecord.Category);
 
@@ -241,7 +241,7 @@
                 var results = await wrapper.WeeeContext.StoredProcedures.SpgUKEEEDataByComplianceYear(complianceYear);
 
                 results.Should().NotBeNull();
-                results.Count.Should().Be(14);
+                results.Count.Should().Be(15);
 
                 var schemeElement = results.ElementAt(0);
                 schemeElement.Category.Should().Be("01. Large household appliances");
@@ -291,7 +291,7 @@
                 var results = await wrapper.WeeeContext.StoredProcedures.SpgUKEEEDataByComplianceYear(complianceYear);
 
                 results.Should().NotBeNull()
-                    .And.HaveCount(14);
+                    .And.HaveCount(15);
 
                 var categoryExpectations = new Dictionary<string, object>
                 {
@@ -476,6 +476,19 @@
                         Q4B2CEEE = (decimal?)null,
                         TotalB2BEEE = 0M,
                         TotalB2CEEE = 0M
+                    },
+                    ["15. Vapes and electronic cigarettes"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
                     }
                 };
 
@@ -531,7 +544,7 @@
                 var results = await wrapper.WeeeContext.StoredProcedures.SpgUKEEEDataByComplianceYear(complianceYear);
 
                 results.Should().NotBeNull()
-                    .And.HaveCount(14);
+                    .And.HaveCount(15);
 
                 var categoryExpectations = new Dictionary<string, object>
                 {
@@ -716,6 +729,19 @@
                         Q4B2CEEE = (decimal?)null,
                         TotalB2BEEE = 0M,
                         TotalB2CEEE = 0M
+                    },
+                    ["15. Vapes and electronic cigarettes"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
                     }
                 };
 
@@ -759,7 +785,7 @@
                 var results = await wrapper.WeeeContext.StoredProcedures.SpgUKEEEDataByComplianceYear(complianceYear);
 
                 results.Should().NotBeNull()
-                    .And.HaveCount(14);
+                    .And.HaveCount(15);
 
                 var categoryExpectations = new Dictionary<string, object>
                 {
@@ -933,6 +959,19 @@
                         TotalB2CEEE = 0M
                     },
                     ["14. Photovoltaic panels"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["15. Vapes and electronic cigarettes"] = new
                     {
                         Q1B2CEEE = (decimal?)null,
                         Q1B2BEEE = (decimal?)null,
@@ -986,7 +1025,7 @@
                 var results = await wrapper.WeeeContext.StoredProcedures.SpgUKEEEDataByComplianceYear(complianceYear);
 
                 results.Should().NotBeNull()
-                    .And.HaveCount(14);
+                    .And.HaveCount(15);
 
                 var categoryExpectations = new Dictionary<string, object>
                 {
@@ -1160,6 +1199,19 @@
                         TotalB2CEEE = 0M
                     },
                     ["14. Photovoltaic panels"] = new
+                    {
+                        Q1B2CEEE = (decimal?)null,
+                        Q1B2BEEE = (decimal?)null,
+                        Q2B2BEEE = (decimal?)null,
+                        Q2B2CEEE = (decimal?)null,
+                        Q3B2BEEE = (decimal?)null,
+                        Q3B2CEEE = (decimal?)null,
+                        Q4B2BEEE = (decimal?)null,
+                        Q4B2CEEE = (decimal?)null,
+                        TotalB2BEEE = 0M,
+                        TotalB2CEEE = 0M
+                    },
+                    ["15. Vapes and electronic cigarettes"] = new
                     {
                         Q1B2CEEE = (decimal?)null,
                         Q1B2BEEE = (decimal?)null,
