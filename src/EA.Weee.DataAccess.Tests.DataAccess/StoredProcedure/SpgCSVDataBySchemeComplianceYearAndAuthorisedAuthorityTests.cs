@@ -1180,7 +1180,7 @@
                 result1.PPOBContactTelephone.Should().BeNull();
                 result1.PPOBContactMobile.Should().BeNull();
                 result1.PPOBContactFax.Should().BeNull();
-                result1.PPOBContactEmail.Should().NotBeNull();
+                result1.PPOBContactEmail.Should().BeNull();
                 result1.PPOBContactPrimaryName.Should().BeNull();
                 result1.PPOBContactSecondaryName.Should().BeNull();
                 result1.PPOBContactStreet.Should().BeNull();
@@ -1417,7 +1417,7 @@
                 result1.PPOBContactTelephone.Should().BeNull();
                 result1.PPOBContactMobile.Should().BeNull();
                 result1.PPOBContactFax.Should().BeNull();
-                result1.PPOBContactEmail.Should().NotBeNull();
+                result1.PPOBContactEmail.Should().BeNull();
                 result1.PPOBContactPrimaryName.Should().BeNull();
                 result1.PPOBContactSecondaryName.Should().BeNull();
                 result1.PPOBContactStreet.Should().BeNull();
