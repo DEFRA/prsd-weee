@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
     using Core.Aatf;
+    using EA.Prsd.Core.Helpers;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
@@ -16,6 +17,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
@@ -73,6 +75,8 @@
             var schemeInfo = A.Fake<SchemePublicInfo>();
             var organisationId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
+            var categories = EnumHelper.GetValues(typeof(WeeeCategory));
+            var maxCategoryId = categories.Max(x => x.Key);
 
             A.CallTo(() => @return.OrganisationData.Id).Returns(organisationId);
             A.CallTo(() => schemeInfo.Name).Returns(schemeName);
@@ -90,6 +94,8 @@
             viewModel.ReturnId.Should().Be(returnId);
             viewModel.SchemeId.Should().Be(schemeId);
             viewModel.SchemeName.Should().Be(schemeName);
+            viewModel.WeeeCategoryCount.Should().Be(categories.Count());
+            viewModel.MaxWeeeCategoryId.Should().Be(maxCategoryId);
         }
 
         [Fact]
@@ -101,6 +107,8 @@
             var aatfData = A.Fake<AatfData>();
             var organisationId = Guid.NewGuid();
             var @return = A.Fake<ReturnData>();
+            var categories = EnumHelper.GetValues(typeof(WeeeCategory));
+            var maxCategoryId = categories.Max(x => x.Key);
 
             A.CallTo(() => @return.OrganisationData.Id).Returns(organisationId);
             A.CallTo(() => aatfData.Name).Returns(aatfName);
@@ -116,6 +124,8 @@
             viewModel.ReturnId.Should().Be(returnId);
             viewModel.SchemeId.Should().Be(Guid.Empty);
             viewModel.SchemeName.Should().Be(null);
+            viewModel.WeeeCategoryCount.Should().Be(categories.Count());
+            viewModel.MaxWeeeCategoryId.Should().Be(maxCategoryId);
         }
 
         [Fact]
