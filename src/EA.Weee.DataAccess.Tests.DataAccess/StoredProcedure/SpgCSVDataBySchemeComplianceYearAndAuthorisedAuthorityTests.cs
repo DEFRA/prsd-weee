@@ -551,11 +551,21 @@
                 submission.FinalPaymentSession = payment;
                 submission.PaymentFinished = true;
 
-                var authorisedRep = new Domain.Producer.AuthorisedRepresentative("authed rep name",
-                    new ProducerContact("rep title", "rep first name", "rep surname",
-                        "rep tel", "rep mob", "rep fax", "rep email", new ProducerAddress("rep address1",
-                            "rep secondary", "rep street",
-                            "rep town", "rep locality", "rep admin area", country, "rep postcode")));
+                var authorisedRep = new Domain.Producer.AuthorisedRepresentative("authed rep name", new ProducerContact("rep title",
+                                                                                                                        "rep first name",
+                                                                                                                        "rep surname",
+                                                                                                                        "rep tel",
+                                                                                                                        "rep mob",
+                                                                                                                        "rep fax",
+                                                                                                                        "rep email",
+                                                                                                                        new ProducerAddress("rep address1",
+                                                                                                                                            "rep secondary",
+                                                                                                                                            "rep street",
+                                                                                                                                            "rep town",
+                                                                                                                                            "rep locality",
+                                                                                                                                            "rep admin area",
+                                                                                                                                            country,
+                                                                                                                                            "rep postcode")));
 
                 var brandNames = new BrandName("brand name");
                 var (_, directRegistrant2, registeredProducer2) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 2", "WEE/AG48365JX", complianceYear, "987654321", authorisedRep, brandNames);
@@ -609,19 +619,19 @@
 
                 var schemeSubmission1 = new Domain.Producer.ProducerSubmission(
                     schemeRegisteredProducer1, memberUpload1,
-                    new Domain.Producer.ProducerBusiness(),
+                    new ProducerBusiness(),
                     new Domain.Producer.AuthorisedRepresentative("Foo"),
                     new DateTime(complianceYear, 1, 1),
                     0,
                     true,
                     null,
                     "Trading Name 1",
-                    Domain.Producer.Classfication.EEEPlacedOnMarketBandType.Both,
-                    Domain.Producer.Classfication.SellingTechniqueType.Both,
+                    EEEPlacedOnMarketBandType.Both,
+                    SellingTechniqueType.Both,
                     Domain.Obligation.ObligationType.B2C,
-                    Domain.Producer.Classfication.AnnualTurnOverBandType.Lessthanorequaltoonemillionpounds,
-                    new List<Domain.Producer.BrandName>(),
-                    new List<Domain.Producer.SICCode>(),
+                    AnnualTurnOverBandType.Lessthanorequaltoonemillionpounds,
+                    new List<BrandName>(),
+                    new List<SICCode>(),
                     chargeBandAmount,
                     0,
                     A.Dummy<StatusType>());
@@ -720,7 +730,7 @@
                 result1.PPOBContactTelephone.Should().BeNull();
                 result1.PPOBContactMobile.Should().BeNull();
                 result1.PPOBContactFax.Should().BeNull();
-                result1.PPOBContactEmail.Should().NotBeNull();
+                result1.PPOBContactEmail.Should().BeNull();
                 result1.PPOBContactPrimaryName.Should().BeNull();
                 result1.PPOBContactSecondaryName.Should().BeNull();
                 result1.PPOBContactStreet.Should().BeNull();
@@ -803,7 +813,7 @@
                 result2.PPOBContactTelephone.Should().BeNull();
                 result2.PPOBContactMobile.Should().BeNull();
                 result2.PPOBContactFax.Should().BeNull();
-                result2.PPOBContactEmail.Should().NotBeNull();
+                result2.PPOBContactEmail.Should().BeNull();
                 result2.PPOBContactPrimaryName.Should().BeNull();
                 result2.PPOBContactSecondaryName.Should().BeNull();
                 result2.PPOBContactStreet.Should().BeNull();
@@ -890,19 +900,19 @@
 
                 var schemeSubmission1 = new Domain.Producer.ProducerSubmission(
                     schemeRegisteredProducer1, memberUpload1,
-                    new Domain.Producer.ProducerBusiness(),
+                    new ProducerBusiness(),
                     new Domain.Producer.AuthorisedRepresentative("Foo"),
                     new DateTime(complianceYear, 1, 1),
                     0,
                     true,
                     null,
                     "Trading Name 1",
-                    Domain.Producer.Classfication.EEEPlacedOnMarketBandType.Both,
-                    Domain.Producer.Classfication.SellingTechniqueType.Both,
+                    EEEPlacedOnMarketBandType.Both,
+                    SellingTechniqueType.Both,
                     Domain.Obligation.ObligationType.B2C,
-                    Domain.Producer.Classfication.AnnualTurnOverBandType.Lessthanorequaltoonemillionpounds,
-                    new List<Domain.Producer.BrandName>(),
-                    new List<Domain.Producer.SICCode>(),
+                    AnnualTurnOverBandType.Lessthanorequaltoonemillionpounds,
+                    new List<BrandName>(),
+                    new List<SICCode>(),
                     chargeBandAmount,
                     0,
                     A.Dummy<StatusType>());
@@ -999,19 +1009,19 @@
 
                 var schemeSubmission1 = new Domain.Producer.ProducerSubmission(
                     schemeRegisteredProducer1, memberUpload1,
-                    new Domain.Producer.ProducerBusiness(),
+                    new ProducerBusiness(),
                     new Domain.Producer.AuthorisedRepresentative("Foo"),
                     new DateTime(complianceYear, 1, 1),
                     0,
                     true,
                     null,
                     "Trading Name 1",
-                    Domain.Producer.Classfication.EEEPlacedOnMarketBandType.Both,
-                    Domain.Producer.Classfication.SellingTechniqueType.Both,
+                    EEEPlacedOnMarketBandType.Both,
+                    SellingTechniqueType.Both,
                     Domain.Obligation.ObligationType.B2C,
-                    Domain.Producer.Classfication.AnnualTurnOverBandType.Lessthanorequaltoonemillionpounds,
-                    new List<Domain.Producer.BrandName>(),
-                    new List<Domain.Producer.SICCode>(),
+                    AnnualTurnOverBandType.Lessthanorequaltoonemillionpounds,
+                    new List<BrandName>(),
+                    new List<SICCode>(),
                     chargeBandAmount,
                     0,
                     A.Dummy<StatusType>());
@@ -1108,10 +1118,7 @@
                 };
 
                 // resubmit with EEE and update the selling technique, this data should be the data returned as its most recent
-                await DirectRegistrantHelper.SubmitSubmission(wrapper, submission1,
-                    amounts1,
-                    SellingTechniqueType.DirectSellingtoEndUser.Value);
-
+                await DirectRegistrantHelper.SubmitSubmission(wrapper, submission1, amounts1, SellingTechniqueType.DirectSellingtoEndUser.Value);
                 await wrapper.WeeeContext.SaveChangesAsync();
 
                 var results = await wrapper.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(complianceYear, true, true, null, null, false);
