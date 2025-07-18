@@ -42,7 +42,7 @@
 
                 var results = await db.StoredProcedures.GetUkNonObligatedWeeeReceivedByComplianceYear(2019);
 
-                results.Count.Should().Be(70);
+                results.Count.Should().Be(75);
 
                 var values = CategoryValues();
                 var index = 0;
@@ -105,7 +105,7 @@
                 await db.WeeeContext.SaveChangesAsync();
 
                 var results = await db.StoredProcedures.GetUkNonObligatedWeeeReceivedByComplianceYear(2019);
-                results.Count.Should().Be(70);
+                results.Count.Should().Be(75);
 
                 var index = 0;
                 foreach (var quarter in Quarters())

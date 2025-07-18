@@ -23,7 +23,7 @@
             // Assert
             viewModel.CategoryValues.Should().NotBeNull();
             viewModel.CategoryValues.Should().BeOfType<List<ProducerSubmissionCategoryValue>>();
-            viewModel.CategoryValues.Should().HaveCount(14); // Based on the WeeeCategory enum
+            viewModel.CategoryValues.Should().HaveCount(15); // Based on the WeeeCategory enum
         }
 
         [Fact]
@@ -47,7 +47,7 @@
             foreach (var categoryValue in viewModel.CategoryValues)
             {
                 categoryValue.Should().BeOfType<ProducerSubmissionCategoryValue>();
-                categoryValue.CategoryId.Should().BeInRange(1, 14);
+                categoryValue.CategoryId.Should().BeInRange(1, 15);
                 categoryValue.CategoryDisplay.Should().NotBeNullOrWhiteSpace();
                 categoryValue.HouseHold.Should().BeNull();
                 categoryValue.NonHouseHold.Should().BeNull();

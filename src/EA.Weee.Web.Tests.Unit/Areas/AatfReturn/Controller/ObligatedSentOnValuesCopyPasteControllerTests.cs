@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.AatfReturn.Controller
 {
+    using EA.Prsd.Core.Helpers;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.DataReturns;
@@ -14,6 +15,7 @@
     using FakeItEasy;
     using FluentAssertions;
     using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Web.Areas.AatfReturn.Attributes;
@@ -68,6 +70,8 @@
             Guid weeeSentOnId = Guid.NewGuid();
             string siteName = "site name";
             ReturnData returnData = A.Fake<ReturnData>();
+            var categories = EnumHelper.GetValues(typeof(WeeeCategory));
+            var maxCategoryId = categories.Max(x => x.Key);
 
             A.CallTo(() => returnData.OrganisationData.Id).Returns(organisationId);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetReturn>.That.Matches(r => r.ReturnId.Equals(returnId)))).Returns(returnData);
@@ -79,6 +83,8 @@
             viewModel.OrganisationId.Should().Be(organisationId);
             viewModel.ReturnId.Should().Be(returnId);
             viewModel.SiteName.Should().Be(siteName);
+            viewModel.WeeeCategoryCount.Should().Be(categories.Count());
+            viewModel.MaxWeeeCategoryId.Should().Be(maxCategoryId);
         }
 
         [Fact]

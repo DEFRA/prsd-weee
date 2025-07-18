@@ -6,7 +6,7 @@
 =   
 =   APPLICATION: Waste Electronic and Electrical Equipment Regulations 2006
 =   MODULE: Scheme/Producer Registration (2008 onwards)
-=   FILE: XSD Schema - Producer Registration v3.07.xsd
+=   FILE: XSD Schema - Producer Registration v3.08.xsd
 =   DESCRIPTION: Schema to validate WEEE Scheme and Producer Registration
 =   
 ================================================================================
@@ -35,6 +35,7 @@
 =   06/07/2015      Owen H               3.05       Removed unbounded maxOccurs constraint from overseasContact on overseasProducerType.
 =   15/07/2015      Owen H               3.06       Removed unused billingAddressType.
 =   07/10/2015      Graham A-T           3.07       Updated producerType to make authorisedRepresentative optional.
+=   14/03/2025      Sreedhar             3.08       Amended sellingTechnique (Added Online marketplace)
 ================================================================================
 -->
 	<xs:element name="scheme" type="schemeType">
@@ -44,7 +45,7 @@
 	</xs:element>
 	<xs:complexType name="schemeType">
 		<xs:sequence>
-			<xs:element name="XSDVersion" default="3.07">
+			<xs:element name="XSDVersion" default="3.08">
 				<xs:simpleType>
 					<xs:restriction base="XSDVersionType"/>
 				</xs:simpleType>
@@ -58,8 +59,8 @@
 	</xs:complexType>
 	<xs:simpleType name="XSDVersionType">
 		<xs:restriction base="xs:decimal">
-			<xs:minInclusive value="3.06"/>
-			<xs:maxInclusive value="3.07"/>
+			<xs:minInclusive value="3.08"/>
+			<xs:maxInclusive value="3.08"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="approvalNoType">
@@ -339,7 +340,8 @@
 		<xs:restriction base="xs:token">
 			<xs:enumeration value="Direct Selling to End User"/>
 			<xs:enumeration value="Indirect Selling to End User"/>
-			<xs:enumeration value="Both"/>
+			<xs:enumeration value="Both Direct and Indirect Selling to End User"/>
+			<xs:enumeration value="Online marketplace"/>
 		</xs:restriction>
 	</xs:simpleType>
 	<xs:simpleType name="countryType">

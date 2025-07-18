@@ -284,7 +284,7 @@
             var result = map.Map(source);
 
             //assert
-            result.CategoryValues.Count.Should().Be(14);
+            result.CategoryValues.Count.Should().Be(15);
 
             var consumerCategory =
                 result.CategoryValues.First(c => c.CategoryId.Equals(WeeeCategory.ConsumerEquipment.ToInt()));

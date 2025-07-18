@@ -50,7 +50,7 @@
             ValidationResult validationResult = validator.Validate(model);
 
             validationResult.IsValid.Should().BeFalse();
-            validationResult.Errors.Count.Should().Be(14);
+            validationResult.Errors.Count.Should().Be(15);
             for (var i = 0; i < validationResult.Errors.Count; i++)
             {
                 var categoryId = i + 1;
@@ -119,7 +119,7 @@
             ValidationResult validationResult = validator.Validate(model);
 
             validationResult.IsValid.Should().BeFalse();
-            validationResult.Errors.Count.Should().Be(14);
+            validationResult.Errors.Count.Should().Be(15);
             for (var i = 0; i < validationResult.Errors.Count; i++)
             {
                 var categoryId = i + 1;
@@ -159,7 +159,7 @@
             ValidationResult validationResult = validator.Validate(model);
 
             validationResult.IsValid.Should().BeFalse();
-            validationResult.Errors.Count.Should().Be(14);
+            validationResult.Errors.Count.Should().Be(15);
             for (var i = 0; i < validationResult.Errors.Count; i++)
             {
                 var categoryId = i + 1;
