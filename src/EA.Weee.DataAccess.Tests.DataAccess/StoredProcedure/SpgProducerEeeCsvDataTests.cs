@@ -3,6 +3,7 @@
     using Domain.DataReturns;
     using Domain.Lookup;
     using Domain.Producer.Classification;
+    using EA.Prsd.Core.Helpers;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain.Producer;
     using EA.Weee.Tests.Core;
@@ -28,39 +29,430 @@
                 var scheme = helper.CreateScheme();
                 scheme.ApprovalNumber = "WEE/TE0000ST/SCH";
                 var memberUpload = helper.CreateSubmittedMemberUpload(scheme);
-                memberUpload.ComplianceYear = 2000;
+                const int complianceYear = 2000;
+                memberUpload.ComplianceYear = complianceYear;
 
-                var producer1 = helper.CreateProducerAsCompany(memberUpload, "PRN123");
-                var producer2 = helper.CreateProducerAsCompany(memberUpload, "PRN456");
+                const string prn1 = "PRN123";
+                const string prn2 = "PRN456";
+                var producer1 = helper.CreateProducerAsCompany(memberUpload, prn1);
+                var producer2 = helper.CreateProducerAsCompany(memberUpload, prn2);
 
-                var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme, 2000, 1);
-                var dataReturnVersion2 = helper.CreateDataReturnVersion(scheme, 2000, 2);
+                var quarter1Year1DataReturnVersion = helper.CreateDataReturnVersion(scheme, complianceYear, 1);
+                var quarter2Year1DataReturnVersion = helper.CreateDataReturnVersion(scheme, complianceYear, 2);
 
-                helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, "B2C", 1, 100);
-                helper.CreateEeeOutputAmount(dataReturnVersion2, producer1.RegisteredProducer, "B2C", 2, 1000);
+                var quarter1PreviousYearDataReturnVersion = helper.CreateDataReturnVersion(scheme, complianceYear - 1, 1);
+                var quarter1FollowingYearDataReturnVersion = helper.CreateDataReturnVersion(scheme, complianceYear + 1, 1);
 
-                helper.CreateEeeOutputAmount(dataReturnVersion1, producer2.RegisteredProducer, "B2B", 2, 400);
+                const string b2cObligationType = "B2C";
+                const string b2bObligationType = "B2B";
+
+                const int weeeCategory1 = 1;
+                const int weeeCategory2 = 2;
+
+                // data we should retrieve
+                const int quarter1Category1Tonnage = 100;
+                helper.CreateEeeOutputAmount(quarter1Year1DataReturnVersion, producer1.RegisteredProducer, b2cObligationType, weeeCategory1, quarter1Category1Tonnage);
+                const int quarter2Category2Tonnage = 1000;
+                helper.CreateEeeOutputAmount(quarter2Year1DataReturnVersion, producer1.RegisteredProducer, b2cObligationType, weeeCategory2, quarter2Category2Tonnage);
+
+                // data we should not retrieve
+                // same year, different obligation type (and different producer)
+                const int unwantedTonnage = 9999;
+                helper.CreateEeeOutputAmount(quarter1Year1DataReturnVersion, producer2.RegisteredProducer, b2bObligationType, weeeCategory2, unwantedTonnage);
+                // same year, different obligation type, same producer
+                helper.CreateEeeOutputAmount(quarter1Year1DataReturnVersion, producer1.RegisteredProducer, b2bObligationType, weeeCategory2, unwantedTonnage);
+
+                // earlier year, same obligation type
+                helper.CreateEeeOutputAmount(quarter1PreviousYearDataReturnVersion, producer1.RegisteredProducer, b2cObligationType, weeeCategory2, unwantedTonnage);
+
+                // later year, same obligation type
+                helper.CreateEeeOutputAmount(quarter1FollowingYearDataReturnVersion, producer1.RegisteredProducer, b2cObligationType, weeeCategory2, unwantedTonnage);
 
                 db.Model.SaveChanges();
 
                 // Act
-                var results = await db.StoredProcedures.SpgProducerEeeCsvData(2000, null, "B2C", false, false);
+                var results = await db.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, b2cObligationType, false, false);
 
                 //Assert
                 Assert.NotNull(results);
 
-                //Data return with obliation type B2B should not be there in the result.
-                ProducerEeeCsvData b2bProducer = results.Find(x => (x.PRN == "PRN456"));
+                //Data return with obligation type B2B should not be there in the result.
+                ProducerEeeCsvData b2bProducer = results.Find(x => (x.PRN == prn2));
                 Assert.Null(b2bProducer);
 
                 ProducerEeeCsvData result = results[0];
                 Assert.Equal("test scheme name", result.SchemeName);
                 Assert.Equal("WEE/TE0000ST/SCH", result.ApprovalNumber);
-                Assert.Equal("PRN123", result.PRN);
-                Assert.Equal(100, result.Cat1Q1);
-                Assert.Equal(1000, result.Cat2Q2);
-                Assert.Equal(1100, result.TotalTonnage);
+                Assert.Equal(prn1, result.PRN);
+                Assert.Equal(quarter1Category1Tonnage, result.Cat1Q1);
+                Assert.Equal(quarter2Category2Tonnage, result.Cat2Q2);
+                Assert.Equal(quarter1Category1Tonnage + quarter2Category2Tonnage, result.TotalTonnage);
                 Assert.Null(result.Cat1Q3);
+            }
+        }
+
+        [Fact]
+        public async Task Execute_HappyPath_ReturnsMultipleProducerEeeWithSelectedYearAndObligationType()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                //Arrange
+                ModelHelper helper = new ModelHelper(db.Model);
+                var scheme = helper.CreateScheme();
+                scheme.ApprovalNumber = "WEE/TE0000ST/SCH";
+                var memberUpload = helper.CreateSubmittedMemberUpload(scheme);
+                const int complianceYear = 2000;
+                memberUpload.ComplianceYear = complianceYear;
+
+                const string prn1 = "PRN123";
+                const string prn2 = "PRN456";
+                var producer1 = helper.CreateProducerAsCompany(memberUpload, prn1);
+                var producer2 = helper.CreateProducerAsCompany(memberUpload, prn2);
+
+                var quarter1Year1DataReturnVersion = helper.CreateDataReturnVersion(scheme, complianceYear, 1);
+                var quarter2Year1DataReturnVersion = helper.CreateDataReturnVersion(scheme, complianceYear, 2);
+
+                var quarter1PreviousYearDataReturnVersion = helper.CreateDataReturnVersion(scheme, complianceYear - 1, 1);
+                var quarter1FollowingYearDataReturnVersion = helper.CreateDataReturnVersion(scheme, complianceYear + 1, 1);
+
+                const string b2cObligationType = "B2C";
+                const string b2bObligationType = "B2B";
+
+                const int weeeCategory1 = 1;
+                const int weeeCategory2 = 2;
+
+                // data we should retrieve
+                const int producer1Quarter1Category1Tonnage = 100;
+                helper.CreateEeeOutputAmount(quarter1Year1DataReturnVersion, producer1.RegisteredProducer, b2cObligationType, weeeCategory1, producer1Quarter1Category1Tonnage);
+                const int producer1Quarter2Category2Tonnage = 1000;
+                helper.CreateEeeOutputAmount(quarter2Year1DataReturnVersion, producer1.RegisteredProducer, b2cObligationType, weeeCategory2, producer1Quarter2Category2Tonnage);
+                const int producer2Quarter2Category2Tonnage = 5000;
+                helper.CreateEeeOutputAmount(quarter2Year1DataReturnVersion, producer2.RegisteredProducer, b2cObligationType, weeeCategory2, producer2Quarter2Category2Tonnage);
+
+                // data we should not retrieve
+                // same year, different obligation type (and different producer)
+                const int unwantedTonnage = 9999;
+                helper.CreateEeeOutputAmount(quarter1Year1DataReturnVersion, producer2.RegisteredProducer, b2bObligationType, weeeCategory2, unwantedTonnage);
+                // same year, different obligation type, same producer
+                helper.CreateEeeOutputAmount(quarter1Year1DataReturnVersion, producer1.RegisteredProducer, b2bObligationType, weeeCategory2, unwantedTonnage);
+
+                // earlier year, same obligation type
+                helper.CreateEeeOutputAmount(quarter1PreviousYearDataReturnVersion, producer1.RegisteredProducer, b2cObligationType, weeeCategory2, unwantedTonnage);
+
+                // later year, same obligation type
+                helper.CreateEeeOutputAmount(quarter1FollowingYearDataReturnVersion, producer1.RegisteredProducer, b2cObligationType, weeeCategory2, unwantedTonnage);
+
+                db.Model.SaveChanges();
+
+                // Act
+                var results = await db.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, b2cObligationType, false, false);
+
+                //Assert
+                Assert.NotNull(results);
+
+                ProducerEeeCsvData producer1Results = results.Find(x => (x.PRN == prn1));
+                ProducerEeeCsvData producer2Results = results.Find(x => (x.PRN == prn2));
+
+                Assert.Equal("test scheme name", producer1Results.SchemeName);
+                Assert.Equal("WEE/TE0000ST/SCH", producer1Results.ApprovalNumber);
+                Assert.Equal(prn1, producer1Results.PRN);
+                Assert.Equal(producer1Quarter1Category1Tonnage, producer1Results.Cat1Q1);
+                Assert.Equal(producer1Quarter2Category2Tonnage, producer1Results.Cat2Q2);
+                Assert.Equal(producer1Quarter1Category1Tonnage + producer1Quarter2Category2Tonnage, producer1Results.TotalTonnage);
+                Assert.Null(producer1Results.Cat1Q3);
+
+                Assert.Equal("test scheme name", producer2Results.SchemeName);
+                Assert.Equal("WEE/TE0000ST/SCH", producer2Results.ApprovalNumber);
+                Assert.Equal(prn2, producer2Results.PRN);
+                Assert.Null(producer2Results.Cat1Q2);
+                Assert.Equal(producer2Quarter2Category2Tonnage, producer2Results.Cat2Q2);
+                Assert.Equal(producer2Quarter2Category2Tonnage, producer2Results.TotalTonnage);
+                Assert.Null(producer2Results.Cat1Q3);
+            }
+        }
+
+        [Fact]
+        public async Task Execute_HappyPath_ReturnsProducerEeeWithSelectedYearAndObligationType_Where_ProducerDataHasBoth()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                //Arrange
+                ModelHelper helper = new ModelHelper(db.Model);
+                var scheme = helper.CreateScheme();
+                string approvalNumber = "WEE/TE0000ST/SCH";
+                scheme.ApprovalNumber = approvalNumber;
+                var memberUpload = helper.CreateSubmittedMemberUpload(scheme);
+                int complianceYear = DateTime.Now.Year;
+                memberUpload.ComplianceYear = complianceYear;
+                string prn = "PRN123";
+
+                string b2bObligationType = EnumHelper.GetDisplayName(ObligationType.B2B);
+                string b2cObligationType = EnumHelper.GetDisplayName(ObligationType.B2C);
+
+                var producer = helper.CreateProducerAsCompany(memberUpload, prn);
+
+                var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme, complianceYear, 1);
+                var dataReturnVersion2 = helper.CreateDataReturnVersion(scheme, complianceYear, 2);
+                var dataReturnVersion3 = helper.CreateDataReturnVersion(scheme, complianceYear, 3);
+                var dataReturnVersion4 = helper.CreateDataReturnVersion(scheme, complianceYear, 4);
+
+                var categories = EnumHelper.GetValues(typeof(WeeeCategory));
+                var maxCategoryId = categories.Max(x => x.Key);
+                int b2bQuarter1Tonnage = 0;
+                int b2bQuarter2Tonnage = 0;
+                int b2bQuarter3Tonnage = 0;
+                int b2bQuarter4Tonnage = 0;
+
+                int b2cQuarter1Tonnage = 0;
+                int b2cQuarter2Tonnage = 0;
+                int b2cQuarter3Tonnage = 0;
+                int b2cQuarter4Tonnage = 0;
+
+                for (int categoryId = 1; categoryId <= maxCategoryId; categoryId++)
+                {
+                    b2bQuarter1Tonnage = b2bQuarter1Tonnage + 1;
+                    b2bQuarter2Tonnage = b2bQuarter2Tonnage + 2;
+                    b2bQuarter3Tonnage = b2bQuarter3Tonnage + 3;
+                    b2bQuarter4Tonnage = b2bQuarter4Tonnage + 4;
+
+                    b2cQuarter1Tonnage = b2cQuarter1Tonnage + 5;
+                    b2cQuarter2Tonnage = b2cQuarter2Tonnage + 10;
+                    b2cQuarter3Tonnage = b2cQuarter3Tonnage + 15;
+                    b2cQuarter4Tonnage = b2cQuarter4Tonnage + 20;
+
+                    //Adding B2C Data for all quarters
+                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer.RegisteredProducer, b2cObligationType, categoryId, b2cQuarter1Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion2, producer.RegisteredProducer, b2cObligationType, categoryId, b2cQuarter2Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion3, producer.RegisteredProducer, b2cObligationType, categoryId, b2cQuarter3Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion4, producer.RegisteredProducer, b2cObligationType, categoryId, b2cQuarter4Tonnage);
+
+                    //Adding B2B Data for all quarters
+                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer.RegisteredProducer, b2bObligationType, categoryId, b2bQuarter1Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion2, producer.RegisteredProducer, b2bObligationType, categoryId, b2bQuarter2Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion3, producer.RegisteredProducer, b2bObligationType, categoryId, b2bQuarter3Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion4, producer.RegisteredProducer, b2bObligationType, categoryId, b2bQuarter4Tonnage);
+                }
+
+                db.Model.SaveChanges();
+                var results = new List<ProducerEeeCsvData>();
+                // Act
+                results = await db.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, b2bObligationType, false, false);
+
+                //Assert
+                Assert.NotNull(results);
+
+                ProducerEeeCsvData result = results[0];
+                Assert.Equal(approvalNumber, result.ApprovalNumber);
+
+                Assert.Equal(prn, result.PRN);
+                Assert.Equal(1, result.Cat1Q1);
+                Assert.Equal(2, result.Cat2Q1);
+                Assert.Equal(3, result.Cat3Q1);
+                Assert.Equal(4, result.Cat4Q1);
+                Assert.Equal(5, result.Cat5Q1);
+                Assert.Equal(6, result.Cat6Q1);
+                Assert.Equal(7, result.Cat7Q1);
+                Assert.Equal(8, result.Cat8Q1);
+                Assert.Equal(9, result.Cat9Q1);
+                Assert.Equal(10, result.Cat10Q1);
+                Assert.Equal(11, result.Cat11Q1);
+                Assert.Equal(12, result.Cat12Q1);
+                Assert.Equal(13, result.Cat13Q1);
+                Assert.Equal(14, result.Cat14Q1);
+                Assert.Equal(15, result.Cat15Q1);
+
+                Assert.Equal(2, result.Cat1Q2);
+                Assert.Equal(4, result.Cat2Q2);
+                Assert.Equal(6, result.Cat3Q2);
+                Assert.Equal(8, result.Cat4Q2);
+                Assert.Equal(10, result.Cat5Q2);
+                Assert.Equal(12, result.Cat6Q2);
+                Assert.Equal(14, result.Cat7Q2);
+                Assert.Equal(16, result.Cat8Q2);
+                Assert.Equal(18, result.Cat9Q2);
+                Assert.Equal(20, result.Cat10Q2);
+                Assert.Equal(22, result.Cat11Q2);
+                Assert.Equal(24, result.Cat12Q2);
+                Assert.Equal(26, result.Cat13Q2);
+                Assert.Equal(28, result.Cat14Q2);
+                Assert.Equal(30, result.Cat15Q2);
+
+                Assert.Equal(3, result.Cat1Q3);
+                Assert.Equal(6, result.Cat2Q3);
+                Assert.Equal(9, result.Cat3Q3);
+                Assert.Equal(12, result.Cat4Q3);
+                Assert.Equal(15, result.Cat5Q3);
+                Assert.Equal(18, result.Cat6Q3);
+                Assert.Equal(21, result.Cat7Q3);
+                Assert.Equal(24, result.Cat8Q3);
+                Assert.Equal(27, result.Cat9Q3);
+                Assert.Equal(30, result.Cat10Q3);
+                Assert.Equal(33, result.Cat11Q3);
+                Assert.Equal(36, result.Cat12Q3);
+                Assert.Equal(39, result.Cat13Q3);
+                Assert.Equal(42, result.Cat14Q3);
+                Assert.Equal(45, result.Cat15Q3);
+
+                Assert.Equal(4, result.Cat1Q4);
+                Assert.Equal(8, result.Cat2Q4);
+                Assert.Equal(12, result.Cat3Q4);
+                Assert.Equal(16, result.Cat4Q4);
+                Assert.Equal(20, result.Cat5Q4);
+                Assert.Equal(24, result.Cat6Q4);
+                Assert.Equal(28, result.Cat7Q4);
+                Assert.Equal(32, result.Cat8Q4);
+                Assert.Equal(36, result.Cat9Q4);
+                Assert.Equal(40, result.Cat10Q4);
+                Assert.Equal(44, result.Cat11Q4);
+                Assert.Equal(48, result.Cat12Q4);
+                Assert.Equal(52, result.Cat13Q4);
+                Assert.Equal(56, result.Cat14Q4);
+                Assert.Equal(60, result.Cat15Q4);
+
+                Assert.Equal(1200, result.TotalTonnage);
+            }
+        }
+
+        [Theory]
+        [InlineData(ObligationType.B2B, ObligationType.B2C)]
+        [InlineData(ObligationType.B2C, ObligationType.B2B)]
+        public async Task Execute_HappyPath_ReturnsOnlyProducerEeeWithSelectedYearAndObligationType_As_WithAllCategories(ObligationType obligationTypeProducer1, ObligationType obligationTypeProducer2)
+        {
+            // this test relies on the obligation types being different, and not set to Both
+            // the idea is we set producer 1 up with only the type we ask for, and producer 2 with the other type
+            // and then ask for producer 1's obligation type, and ensure that's all we get
+
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                //Arrange
+                ModelHelper helper = new ModelHelper(db.Model);
+                var scheme = helper.CreateScheme();
+                string approvalNumber = "WEE/TE0000ST/SCH";
+                scheme.ApprovalNumber = approvalNumber;
+                var memberUpload = helper.CreateSubmittedMemberUpload(scheme);
+                int complianceYear = DateTime.Now.Year;
+                memberUpload.ComplianceYear = complianceYear;
+                string prn1 = "PRN123";
+                string prn2 = "PRN456";
+                string producer1ObligationType = EnumHelper.GetDisplayName(obligationTypeProducer1);
+                string producer2ObligationType = EnumHelper.GetDisplayName(obligationTypeProducer2);
+
+                var producer1 = helper.CreateProducerAsCompany(memberUpload, prn1);
+                var producer2 = helper.CreateProducerAsCompany(memberUpload, prn2);
+
+                var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme, complianceYear, 1);
+                var dataReturnVersion2 = helper.CreateDataReturnVersion(scheme, complianceYear, 2);
+                var dataReturnVersion3 = helper.CreateDataReturnVersion(scheme, complianceYear, 3);
+                var dataReturnVersion4 = helper.CreateDataReturnVersion(scheme, complianceYear, 4);
+
+                var categories = EnumHelper.GetValues(typeof(WeeeCategory));
+                var maxCategoryId = categories.Max(x => x.Key);
+                int quarter1Tonnage = 0;
+                int quarter2Tonnage = 0;
+                int quarter3Tonnage = 0;
+                int quarter4Tonnage = 0;
+
+                for (int categoryId = 1; categoryId <= maxCategoryId; categoryId++)
+                {
+                    quarter1Tonnage = quarter1Tonnage + 1;
+                    quarter2Tonnage = quarter2Tonnage + 2;
+                    quarter3Tonnage = quarter3Tonnage + 3;
+                    quarter4Tonnage = quarter4Tonnage + 4;
+
+                    // Add Data for all quarters to producer 1
+                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer1.RegisteredProducer, producer1ObligationType, categoryId, quarter1Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion2, producer1.RegisteredProducer, producer1ObligationType, categoryId, quarter2Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion3, producer1.RegisteredProducer, producer1ObligationType, categoryId, quarter3Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion4, producer1.RegisteredProducer, producer1ObligationType, categoryId, quarter4Tonnage);
+
+                    // Add Data for all quarters to producer 2
+                    helper.CreateEeeOutputAmount(dataReturnVersion1, producer2.RegisteredProducer, producer2ObligationType, categoryId, quarter1Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion2, producer2.RegisteredProducer, producer2ObligationType, categoryId, quarter2Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion3, producer2.RegisteredProducer, producer2ObligationType, categoryId, quarter3Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion4, producer2.RegisteredProducer, producer2ObligationType, categoryId, quarter4Tonnage);
+                }
+
+                db.Model.SaveChanges();
+
+                // Act
+                var results = await db.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, producer1ObligationType, false, false);
+
+                // Assert
+                Assert.NotNull(results);
+
+                // ensure there are no results for producer 2
+                Assert.Null(results.Find(x => (x.PRN == prn2)));
+
+                ProducerEeeCsvData result = results[0];
+                Assert.Equal(approvalNumber, result.ApprovalNumber);
+
+                Assert.Equal(prn1, result.PRN);
+
+                Assert.Equal(1, result.Cat1Q1);
+                Assert.Equal(2, result.Cat2Q1);
+                Assert.Equal(3, result.Cat3Q1);
+                Assert.Equal(4, result.Cat4Q1);
+                Assert.Equal(5, result.Cat5Q1);
+                Assert.Equal(6, result.Cat6Q1);
+                Assert.Equal(7, result.Cat7Q1);
+                Assert.Equal(8, result.Cat8Q1);
+                Assert.Equal(9, result.Cat9Q1);
+                Assert.Equal(10, result.Cat10Q1);
+                Assert.Equal(11, result.Cat11Q1);
+                Assert.Equal(12, result.Cat12Q1);
+                Assert.Equal(13, result.Cat13Q1);
+                Assert.Equal(14, result.Cat14Q1);
+                Assert.Equal(15, result.Cat15Q1);
+
+                Assert.Equal(2, result.Cat1Q2);
+                Assert.Equal(4, result.Cat2Q2);
+                Assert.Equal(6, result.Cat3Q2);
+                Assert.Equal(8, result.Cat4Q2);
+                Assert.Equal(10, result.Cat5Q2);
+                Assert.Equal(12, result.Cat6Q2);
+                Assert.Equal(14, result.Cat7Q2);
+                Assert.Equal(16, result.Cat8Q2);
+                Assert.Equal(18, result.Cat9Q2);
+                Assert.Equal(20, result.Cat10Q2);
+                Assert.Equal(22, result.Cat11Q2);
+                Assert.Equal(24, result.Cat12Q2);
+                Assert.Equal(26, result.Cat13Q2);
+                Assert.Equal(28, result.Cat14Q2);
+                Assert.Equal(30, result.Cat15Q2);
+
+                Assert.Equal(3, result.Cat1Q3);
+                Assert.Equal(6, result.Cat2Q3);
+                Assert.Equal(9, result.Cat3Q3);
+                Assert.Equal(12, result.Cat4Q3);
+                Assert.Equal(15, result.Cat5Q3);
+                Assert.Equal(18, result.Cat6Q3);
+                Assert.Equal(21, result.Cat7Q3);
+                Assert.Equal(24, result.Cat8Q3);
+                Assert.Equal(27, result.Cat9Q3);
+                Assert.Equal(30, result.Cat10Q3);
+                Assert.Equal(33, result.Cat11Q3);
+                Assert.Equal(36, result.Cat12Q3);
+                Assert.Equal(39, result.Cat13Q3);
+                Assert.Equal(42, result.Cat14Q3);
+                Assert.Equal(45, result.Cat15Q3);
+
+                Assert.Equal(4, result.Cat1Q4);
+                Assert.Equal(8, result.Cat2Q4);
+                Assert.Equal(12, result.Cat3Q4);
+                Assert.Equal(16, result.Cat4Q4);
+                Assert.Equal(20, result.Cat5Q4);
+                Assert.Equal(24, result.Cat6Q4);
+                Assert.Equal(28, result.Cat7Q4);
+                Assert.Equal(32, result.Cat8Q4);
+                Assert.Equal(36, result.Cat9Q4);
+                Assert.Equal(40, result.Cat10Q4);
+                Assert.Equal(44, result.Cat11Q4);
+                Assert.Equal(48, result.Cat12Q4);
+                Assert.Equal(52, result.Cat13Q4);
+                Assert.Equal(56, result.Cat14Q4);
+                Assert.Equal(60, result.Cat15Q4);
+
+                Assert.Equal(1200, result.TotalTonnage);
             }
         }
 
@@ -849,7 +1241,7 @@
                 var results = await wrapper.WeeeContext.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, "B2C", false, false);
 
                 results.Should().NotBeNull();
-                
+
                 results.Count.Should().Be(1);
 
                 var expectedAmounts1 = new Dictionary<string, decimal> { { "Cat1Q4", 2m }, { "Cat4Q4", 3m } };
@@ -865,7 +1257,7 @@
                 var (_, country) = DirectRegistrantHelper.SetupCommonTestData(wrapper);
 
                 const int complianceYear = 2053;
-                
+
                 var (organisation1, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear);
 
                 var amounts1 = new List<DirectRegistrantHelper.EeeOutputAmountData>
@@ -942,7 +1334,7 @@
                 };
                 var submission = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant, registeredProducer, 1000, amounts, DirectProducerSubmissionStatus.Complete);
                 await DirectRegistrantHelper.SetSubmissionAsPaid(wrapper, submission);
-                
+
                 var results = await wrapper.WeeeContext.StoredProcedures.SpgProducerEeeCsvData(complianceYear, null, "B2C", false, false);
 
                 results.Should().NotBeNull();
@@ -963,7 +1355,7 @@
                 {
                     new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 123.456m, ObligationType = Domain.Obligation.ObligationType.B2C }
                 };
-                
+
                 var submission = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant, registeredProducer, complianceYear + 1, amounts, DirectProducerSubmissionStatus.Complete);
                 await DirectRegistrantHelper.SetSubmissionAsPaid(wrapper, submission);
 

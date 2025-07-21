@@ -4,6 +4,7 @@
     {
         DirectSellingToEndUser,
         IndirectSellingToEndUser,
-        Both
+        Both,
+        OnlineMarketplace
     }
 }

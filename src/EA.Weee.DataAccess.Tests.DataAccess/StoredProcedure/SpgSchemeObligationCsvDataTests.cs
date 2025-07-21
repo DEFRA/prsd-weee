@@ -1,5 +1,10 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
+    using EA.Prsd.Core.Helpers;
+    using EA.Weee.Core.DataReturns;
+    using EA.Weee.Core.Scheme.MemberUploadTesting;
+    using System;
+    using System.Linq;
     using System.Threading.Tasks;
     using Weee.DataAccess.StoredProcedure;
     using Weee.Tests.Core.Model;
@@ -59,6 +64,94 @@
                 Assert.Equal(100, result.Cat1B2CTotal);
                 Assert.Equal(1000, result.Cat2B2CTotal);
                 Assert.Null(result.Cat3B2CTotal);
+            }
+        }
+
+        [Fact]
+        public async Task Execute_ReturnsProducerEeeData_For_All_Categories()
+        {
+            using (DatabaseWrapper db = new DatabaseWrapper())
+            {
+                //Arrange
+                string prn1 = "PRN123";
+                string prn2 = "PRN456";
+                int complianceYear = DateTime.Now.Year;
+                string approvalNumber = "WEE/TE0000ST/SCH";
+                string b2bObligationType = EnumHelper.GetDisplayName(ObligationType.B2B);
+                string b2cObligationType = EnumHelper.GetDisplayName(ObligationType.B2C);
+
+                ModelHelper helper = new ModelHelper(db.Model);
+                var scheme = helper.CreateScheme();
+                scheme.ApprovalNumber = approvalNumber;
+
+                var categories = EnumHelper.GetValues(typeof(WeeeCategory));
+                var maxCategoryId = categories.Max(x => x.Key);
+                int quarter1Tonnage = 0;
+                int quarter2Tonnage = 0;
+
+                //Previous Year Data
+                var memberUploadPreviousYear = helper.CreateSubmittedMemberUpload(scheme);
+                memberUploadPreviousYear.ComplianceYear = complianceYear - 1;
+                var prodPrn1PreviousYear = helper.CreateProducerAsCompany(memberUploadPreviousYear, prn1, b2cObligationType);
+                var prodPrn2PreviousYear = helper.CreateProducerAsCompany(memberUploadPreviousYear, prn2, b2bObligationType);
+                var dataReturnVersion1 = helper.CreateDataReturnVersion(scheme, complianceYear - 1, 1);
+                var dataReturnVersion2 = helper.CreateDataReturnVersion(scheme, complianceYear - 1, 2);
+                for (int categoryId = 1; categoryId <= maxCategoryId; categoryId++)
+                {
+                    quarter1Tonnage = quarter1Tonnage + 10;
+                    quarter2Tonnage = quarter2Tonnage + 5;
+                    helper.CreateEeeOutputAmount(dataReturnVersion1, prodPrn1PreviousYear.RegisteredProducer, b2cObligationType, categoryId, quarter1Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion2, prodPrn1PreviousYear.RegisteredProducer, b2cObligationType, categoryId, quarter2Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion1, prodPrn2PreviousYear.RegisteredProducer, b2bObligationType, categoryId, quarter2Tonnage);
+                }
+
+                //Current Year Data
+                var memberUploadCurrentYear = helper.CreateSubmittedMemberUpload(scheme);
+                memberUploadCurrentYear.ComplianceYear = complianceYear;
+                var prodPrn1CurrentYear = helper.CreateProducerAsCompany(memberUploadCurrentYear, prn1, b2cObligationType);
+                var prodPrn2CurrentYear = helper.CreateProducerAsCompany(memberUploadCurrentYear, prn2, b2bObligationType);
+                var dataReturnVersion3 = helper.CreateDataReturnVersion(scheme, complianceYear, 1);
+                var dataReturnVersion4 = helper.CreateDataReturnVersion(scheme, complianceYear, 2);
+                for (int categoryId = 1; categoryId <= maxCategoryId; categoryId++)
+                {
+                    quarter1Tonnage = quarter1Tonnage + 100;
+                    quarter2Tonnage = quarter2Tonnage + 50;
+                    helper.CreateEeeOutputAmount(dataReturnVersion3, prodPrn1CurrentYear.RegisteredProducer, b2cObligationType, categoryId, quarter1Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion4, prodPrn1CurrentYear.RegisteredProducer, b2cObligationType, categoryId, quarter2Tonnage);
+                    helper.CreateEeeOutputAmount(dataReturnVersion3, prodPrn2CurrentYear.RegisteredProducer, b2bObligationType, categoryId, quarter2Tonnage);
+                }
+
+                db.Model.SaveChanges();
+
+                // Act
+                var results = await db.StoredProcedures.SpgSchemeObligationDataCsv(complianceYear);
+
+                //Assert
+                Assert.NotNull(results);
+
+                //Producer with only B2B (both years) should not be in data
+                SchemeObligationCsvData b2bProducer = results.Find(x => (x.PRN == prn2));
+                Assert.Null(b2bProducer);
+
+                Assert.Single(results);
+                SchemeObligationCsvData result = results[0];
+                Assert.Equal(approvalNumber, result.ApprovalNumber);
+                Assert.Equal(prn1, result.PRN);
+                Assert.Equal(15, result.Cat1B2CTotal);
+                Assert.Equal(30, result.Cat2B2CTotal);
+                Assert.Equal(45, result.Cat3B2CTotal);
+                Assert.Equal(60, result.Cat4B2CTotal);
+                Assert.Equal(75, result.Cat5B2CTotal);
+                Assert.Equal(90, result.Cat6B2CTotal);
+                Assert.Equal(105, result.Cat7B2CTotal);
+                Assert.Equal(120, result.Cat8B2CTotal);
+                Assert.Equal(135, result.Cat9B2CTotal);
+                Assert.Equal(150, result.Cat10B2CTotal);
+                Assert.Equal(165, result.Cat11B2CTotal);
+                Assert.Equal(180, result.Cat12B2CTotal);
+                Assert.Equal(195, result.Cat13B2CTotal);
+                Assert.Equal(210, result.Cat14B2CTotal);
+                Assert.Equal(225, result.Cat15B2CTotal);
             }
         }
 

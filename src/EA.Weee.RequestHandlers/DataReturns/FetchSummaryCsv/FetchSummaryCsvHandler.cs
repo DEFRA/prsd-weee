@@ -70,6 +70,7 @@
             writer.DefineColumn("Cat 12 (t)", r => string.Format("{0:F3}", r.Category12));
             writer.DefineColumn("Cat 13 (t)", r => string.Format("{0:F3}", r.Category13));
             writer.DefineColumn("Cat 14 (t)", r => string.Format("{0:F3}", r.Category14));
+            writer.DefineColumn("Cat 15 (t)", r => string.Format("{0:F3}", r.Category15));
 
             return writer;
         }

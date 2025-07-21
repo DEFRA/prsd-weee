@@ -42,19 +42,19 @@
                 csvReader.Read();
                 return csvReader.ReadHeader();
             }
-            catch (Exception re) when (re is ReaderException || re is HeaderValidationException)  
+            catch (Exception re) when (re is ReaderException || re is HeaderValidationException)
             {
                 throw new CsvReaderException(re.Message);
             }
         }
 
-        public void ValidateHeader<T>(int expectedColumnCount, string[] expectedOrder)
+        public void ValidateHeader<T>(string[] expectedOrder)
         {
             try
             {
                 csvReader.ValidateHeader<T>();
 
-                if (csvReader.HeaderRecord.Length != expectedColumnCount)
+                if (csvReader.HeaderRecord.Length != expectedOrder.Length)
                 {
                     throw new ReaderException(csvReader.Context, "Unexpected number of CSV columns");
                 }

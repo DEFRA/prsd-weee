@@ -433,6 +433,54 @@
             Assert.Equal("No", producer.HasAnnualCharge);
         }
 
+        [Theory]
+        [InlineData(0, 0.000)]
+        [InlineData(1, 1.111)]
+        [InlineData(2, 2.222)]
+        [InlineData(3, 3.333)]
+        public void ProducerMemberUpload_SellingTechniqueType_Returns_SellingTechniqueName_ChargeValue(int sellingTechniqueType, decimal chargeThisUpdate)
+        {
+            // Arrange
+            var sellingType = new CustomSellingTechniqueType(sellingTechniqueType);
+            Scheme scheme = new Scheme(A.Dummy<Guid>());
+
+            MemberUpload memberUpload = new MemberUpload(
+                A.Dummy<Guid>(),
+                A.Dummy<string>(),
+                A.Dummy<List<MemberUploadError>>(),
+                A.Dummy<decimal>(),
+                2019,
+                scheme,
+                A.Dummy<string>(),
+                A.Dummy<string>(),
+                false);
+
+            RegisteredProducer registeredProducer = new RegisteredProducer("WEE/AA1111AA", 2019, scheme);
+
+            var producer = new ProducerSubmission(
+               registeredProducer,
+               memberUpload,
+               A.Dummy<ProducerBusiness>(),
+               null,
+               new DateTime(2019, 3, 21),
+               0,
+               false,
+               null,
+               "Trading Name 1",
+               EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket,
+               sellingType,
+               ObligationType.Both,
+               AnnualTurnOverBandType.Greaterthanonemillionpounds,
+               new List<BrandName>(),
+               new List<SICCode>(),
+               A.Dummy<ChargeBandAmount>(),
+               chargeThisUpdate,
+                A.Dummy<StatusType>());
+
+            Assert.Equal(sellingTechniqueType, producer.SellingTechniqueType);
+            Assert.Equal(chargeThisUpdate, producer.ChargeThisUpdate);
+        }
+
         private class AlwaysEqualAuthorisedRepresentative : AuthorisedRepresentative
         {
             public override bool Equals(AuthorisedRepresentative other)
