@@ -62,16 +62,16 @@ The WEEE project uses [AliaSQL](https://github.com/ClearMeasure/AliaSQL) to mana
 USE [master]
 GO
 
-CREATE LOGIN [weeedeveloper] WITH PASSWORD = '<weee config password>';
+CREATE LOGIN [***REMOVED***] WITH PASSWORD = '<weee config password>';
 GO
 
 USE [EA.Weee];
 GO
 
-CREATE USER [weeedeveloper] FOR LOGIN [weeedeveloper];
+CREATE USER [***REMOVED***] FOR LOGIN [***REMOVED***];
 GO
 
-ALTER ROLE [db_owner] ADD MEMBER [weeedeveloper];
+ALTER ROLE [db_owner] ADD MEMBER [***REMOVED***];
 GO
 
 6. The EA.Weee.Integration.Tests project creates a EA.Weee.Integration database while executing. To enable this, run the following command within SQL Management studio against your .\SQLEXPRESS or (localdb)\MSSQLLocalDB instance to provide create database access.
@@ -79,7 +79,7 @@ GO
 <!-- End of list -->
 
 USE master;
-GRANT CREATE ANY DATABASE TO weeedeveloper;
+GRANT CREATE ANY DATABASE TO ***REMOVED***;
 
 
 #### Setup the API certificate
