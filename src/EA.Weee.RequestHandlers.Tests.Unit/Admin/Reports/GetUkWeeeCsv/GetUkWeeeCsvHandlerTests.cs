@@ -119,8 +119,8 @@
         }
 
         /// <summary>
-        /// This test ensures 28 CSV rows will be created representing each category and each obligation type (B2B or B2C).
-        /// The 14 rows for each obligation type should be listed together, with the B2B rows appearing before the B2C rows.
+        /// This test ensures 30 CSV rows will be created representing each category and each obligation type (B2B or B2C).
+        /// The 15 rows for each obligation type should be listed together, with the B2B rows appearing before the B2C rows.
         /// </summary>
         [Fact]
         public void CreateResults_Always_CreatesAResultForEachCategoryAndEachObligationType()
@@ -135,7 +135,7 @@
             IEnumerable<GetUkWeeeCsvHandler.CsvResult> results = handler.CreateResults(A.Dummy<IEnumerable<DataReturn>>());
 
             // Assert
-            Assert.Equal(28, results.Count());
+            Assert.Equal(30, results.Count());
             Assert.Collection(results,
                 r => { Assert.Equal(WeeeCategory.LargeHouseholdAppliances, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
                 r => { Assert.Equal(WeeeCategory.SmallHouseholdAppliances, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
@@ -151,6 +151,7 @@
                 r => { Assert.Equal(WeeeCategory.CoolingApplicancesContainingRefrigerants, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
                 r => { Assert.Equal(WeeeCategory.GasDischargeLampsAndLedLightSources, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
                 r => { Assert.Equal(WeeeCategory.PhotovoltaicPanels, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.VapesAndElectronicCigarettes, r.Category); Assert.Equal(DomainObligationType.B2B, r.ObligationType); },
                 r => { Assert.Equal(WeeeCategory.LargeHouseholdAppliances, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
                 r => { Assert.Equal(WeeeCategory.SmallHouseholdAppliances, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
                 r => { Assert.Equal(WeeeCategory.ITAndTelecommsEquipment, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
@@ -164,7 +165,8 @@
                 r => { Assert.Equal(WeeeCategory.DisplayEquipment, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
                 r => { Assert.Equal(WeeeCategory.CoolingApplicancesContainingRefrigerants, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
                 r => { Assert.Equal(WeeeCategory.GasDischargeLampsAndLedLightSources, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
-                r => { Assert.Equal(WeeeCategory.PhotovoltaicPanels, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); });
+                r => { Assert.Equal(WeeeCategory.PhotovoltaicPanels, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); },
+                r => { Assert.Equal(WeeeCategory.VapesAndElectronicCigarettes, r.Category); Assert.Equal(DomainObligationType.B2C, r.ObligationType); });
         }
 
         /// <summary>
