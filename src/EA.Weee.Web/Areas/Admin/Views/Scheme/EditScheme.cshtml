@@ -9,7 +9,7 @@
     ViewBag.Title = "Edit PCS";
 }
 
-@using (Html.BeginForm())
+@using (Html.BeginForm(null, null, FormMethod.Post, new { id = "editSchemeForm" }))
 {
     @Html.AntiForgeryToken()
     @Html.HiddenFor(m => m.IsChangeableStatus)
@@ -58,11 +58,11 @@
     <script>
         $("#Status").change(function () {
             if ($(this).val() === "3") /* Rejected status */ {
-                document.forms[1].submit(); // Submit the form immediately
+                $('#editSchemeForm').submit(); // Submit the form immediately
             }
 
             if ($(this).val() === "4") /* Withdrawn status */ {
-                document.forms[1].submit(); // Submit the form immediately
+                $('#editSchemeForm').submit(); // Submit the form immediately
             }
         });
     </script>
