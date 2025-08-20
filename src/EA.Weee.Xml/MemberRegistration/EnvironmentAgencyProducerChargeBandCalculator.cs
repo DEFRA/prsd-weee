@@ -88,7 +88,21 @@
                 }
             }
 
-            return await fetchProducerCharge.GetCharge(band);
+            var charge = await fetchProducerCharge.GetCharge(band);
+
+            // Apply additional fee for Online Marketplace for UK-England and Non-UK and has sellingTechnique of ‘Online marketplace’
+            bool isOnlineMarketplace = producer.sellingTechnique == sellingTechniqueType.OnlineMarketplace;
+            bool isEngland = producerCountry == countryType.UKENGLAND;
+            bool isNonUK = producerCountry != countryType.UKENGLAND &&
+                           producerCountry != countryType.UKSCOTLAND &&
+                           producerCountry != countryType.UKWALES &&
+                           producerCountry != countryType.UKNORTHERNIRELAND;
+            if (isOnlineMarketplace && (isEngland || isNonUK))
+            {
+                charge.Amount += 13631.00m; // Hard coded for now. 
+            }
+
+            return charge;
         }
 
         public bool IsMatch(schemeType scheme, producerType producer)
