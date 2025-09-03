@@ -361,6 +361,55 @@
             A.CallTo(() => fetchProducerCharge.GetCharge(ChargeBand.C)).MustHaveHappened(1, Times.Exactly);
         }
 
+        [Fact]
+        public async Task GetProducerChargeBand_OnlineMarketplace_UKEngland_AppliesAdditionalFee()
+        {
+            // Arrange
+            var countryType = new countryType();
+            countryType = countryType.UKENGLAND;
+            var eeePlacedOnMarketBandType = new eeePlacedOnMarketBandType();
+            eeePlacedOnMarketBandType = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket;
+
+            var annualTurnoverBandType = new annualTurnoverBandType();
+            annualTurnoverBandType = annualTurnoverBandType.Greaterthanonemillionpounds;
+            var producerCharge = new ProducerCharge { Amount = 100m };
+
+            var producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, true);
+            producer.sellingTechnique = sellingTechniqueType.OnlineMarketplace;
+            A.CallTo(() => fetchProducerCharge.GetCharge(A<ChargeBand>._)).Returns(producerCharge);
+
+            // Act
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+
+            // Assert
+            Assert.Equal(100m + 13631m, result.Amount);
+        }
+
+        [Fact]
+        public async Task GetProducerChargeBand_OnlineMarketplace_NonUK_AppliesAdditionalFee()
+        {
+            // Arrange
+            var countryType = new countryType();
+            countryType = countryType.FRANCE;
+
+            var eeePlacedOnMarketBandType = new eeePlacedOnMarketBandType();
+            eeePlacedOnMarketBandType = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket;
+
+            var annualTurnoverBandType = new annualTurnoverBandType();
+            annualTurnoverBandType = annualTurnoverBandType.Greaterthanonemillionpounds;
+            var producerCharge = new ProducerCharge { Amount = 200m };
+
+            var producer = SetUpProducer(countryType, eeePlacedOnMarketBandType, annualTurnoverBandType, true);
+            producer.sellingTechnique = sellingTechniqueType.OnlineMarketplace;
+            A.CallTo(() => fetchProducerCharge.GetCharge(A<ChargeBand>._)).Returns(producerCharge);
+
+            // Act
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(A.Dummy<schemeType>(), producer);
+
+            // Assert
+            Assert.Equal(200m + 13631m, result.Amount);
+        }
+
         [Theory]
         [InlineData("2018")]
         [InlineData("2017")]
