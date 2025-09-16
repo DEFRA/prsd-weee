@@ -1,8 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
     using Attributes;
+    using EA.Prsd.Core.Helpers;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
@@ -34,6 +36,9 @@
             using (IWeeeClient client = apiClient())
             {
                 ReturnData returnData = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
+                var categories = EnumHelper.GetValues(typeof(WeeeCategory));
+                var maxCategoryId = categories.Max(x => x.Key);
+
                 ObligatedSentOnValuesCopyPasteViewModel viewModel = new ObligatedSentOnValuesCopyPasteViewModel()
                 {
                     AatfId = aatfId,
@@ -41,6 +46,8 @@
                     OrganisationId = returnData.OrganisationData.Id,
                     WeeeSentOnId = weeeSentOnId,
                     SiteName = siteName,
+                    WeeeCategoryCount = categories.Count(),
+                    MaxWeeeCategoryId = maxCategoryId
                 };
 
                 viewModel.IsEditDetails = isEditDetails;

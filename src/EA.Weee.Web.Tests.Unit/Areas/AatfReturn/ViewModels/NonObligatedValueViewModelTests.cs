@@ -48,7 +48,7 @@
                 model.CategoryValues.ElementAt(count).Tonnage = (count + 1).ToString();
             }
 
-            model.Total.Should().Be("105.000");
+            model.Total.Should().Be("120.000");
         }
 
         [Fact]
@@ -59,7 +59,7 @@
                 model.CategoryValues.ElementAt(count).Tonnage = (count * 0.001m).ToString(CultureInfo.InvariantCulture);
             }
 
-            model.Total.Should().Be("0.091");
+            model.Total.Should().Be("0.105");
         }
 
         [Fact]

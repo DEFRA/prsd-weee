@@ -305,6 +305,7 @@
                 var quarter = dataReader.GetInt32(dataReader.GetOrdinal("Quarter"));
                 var date = dataReader.GetDateTime(dataReader.GetOrdinal("SubmittedDate"));
                 var latest = dataReader.GetString(dataReader.GetOrdinal("LatestData"));
+
                 //B2C categories
                 var cat1b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT1B2C"));
                 var cat2b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT2B2C"));
@@ -320,6 +321,8 @@
                 var cat12b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT12B2C"));
                 var cat13b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT13B2C"));
                 var cat14b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT14B2C"));
+                var cat15b2c = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT15B2C"));
+
                 //B2B categories
                 var cat1b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT1B2B"));
                 var cat2b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT2B2B"));
@@ -335,6 +338,7 @@
                 var cat12b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT12B2B"));
                 var cat13b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT13B2B"));
                 var cat14b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT14B2B"));
+                var cat15b2b = GetDecimalValue(dataReader, dataReader.GetOrdinal("CAT15B2B"));
 
                 result.ProducerReturnsHistoryData.Add(new ProducerEeeHistoryCsvData.ProducerInReturnsResult()
                 {
@@ -359,6 +363,7 @@
                     Cat12B2C = cat12b2c,
                     Cat13B2C = cat13b2c,
                     Cat14B2C = cat14b2c,
+                    Cat15B2C = cat15b2c,
                     Cat1B2B = cat1b2b,
                     Cat2B2B = cat2b2b,
                     Cat3B2B = cat3b2b,
@@ -372,7 +377,8 @@
                     Cat11B2B = cat11b2b,
                     Cat12B2B = cat12b2b,
                     Cat13B2B = cat13b2b,
-                    Cat14B2B = cat14b2b
+                    Cat14B2B = cat14b2b,
+                    Cat15B2B = cat15b2b
                 });
             }
 

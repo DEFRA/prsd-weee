@@ -31,7 +31,8 @@
                 "Cat11",
                 "Cat12",
                 "Cat13",
-                "Cat14"
+                "Cat14",
+                "Cat15"
             };
 
             if (request is PropertyInfo pi)

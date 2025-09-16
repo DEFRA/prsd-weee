@@ -537,6 +537,7 @@
                 Assert.Null(result.Category12);
                 Assert.Null(result.Category13);
                 Assert.Null(result.Category14);
+                Assert.Null(result.Category15);
             }
         }
 

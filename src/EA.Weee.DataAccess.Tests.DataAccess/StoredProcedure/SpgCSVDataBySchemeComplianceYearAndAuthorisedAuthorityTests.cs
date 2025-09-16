@@ -1,20 +1,21 @@
 ﻿namespace EA.Weee.DataAccess.Tests.DataAccess.StoredProcedure
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Threading.Tasks;
     using EA.Prsd.Core;
+    using EA.Prsd.Core.Helpers;
     using EA.Weee.Core.Shared;
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.Domain.Lookup;
+    using EA.Weee.Domain.Organisation;
     using EA.Weee.Domain.Producer;
     using EA.Weee.Domain.Producer.Classfication;
     using EA.Weee.Domain.Producer.Classification;
     using EA.Weee.Tests.Core;
     using FakeItEasy;
     using FluentAssertions;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using Weee.DataAccess.StoredProcedure;
     using Weee.Tests.Core.Model;
     using Xunit;
 
@@ -24,7 +25,7 @@
         public async Task Execute_HappyPath_ReturnsProducerWithSelectedSchemeAndAA()
         {
             using (var db = new DatabaseWrapper())
-            { 
+            {
                 // Arrange
                 var helper = new ModelHelper(db.Model);
 
@@ -546,18 +547,28 @@
 
                 var paidDate = new DateTime(2020, 1, 1);
                 var payment = await DirectRegistrantHelper.CreatePaymentSession(wrapper, submission, paidDate);
-                
+
                 submission.FinalPaymentSession = payment;
                 submission.PaymentFinished = true;
 
-                var authorisedRep = new Domain.Producer.AuthorisedRepresentative("authed rep name",
-                    new ProducerContact("rep title", "rep first name", "rep surname",
-                        "rep tel", "rep mob", "rep fax", "rep email", new ProducerAddress("rep address1",
-                            "rep secondary", "rep street",
-                            "rep town", "rep locality", "rep admin area", country, "rep postcode")));
+                var authorisedRep = new Domain.Producer.AuthorisedRepresentative("authed rep name", new ProducerContact("rep title",
+                                                                                                                        "rep first name",
+                                                                                                                        "rep surname",
+                                                                                                                        "rep tel",
+                                                                                                                        "rep mob",
+                                                                                                                        "rep fax",
+                                                                                                                        "rep email",
+                                                                                                                        new ProducerAddress("rep address1",
+                                                                                                                                            "rep secondary",
+                                                                                                                                            "rep street",
+                                                                                                                                            "rep town",
+                                                                                                                                            "rep locality",
+                                                                                                                                            "rep admin area",
+                                                                                                                                            country,
+                                                                                                                                            "rep postcode")));
 
                 var brandNames = new BrandName("brand name");
-                var (_, directRegistrant2, registeredProducer2) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 2", "WEE/AG48365JX", complianceYear,  "987654321", authorisedRep, brandNames);
+                var (_, directRegistrant2, registeredProducer2) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 2", "WEE/AG48365JX", complianceYear, "987654321", authorisedRep, brandNames);
 
                 var amounts2 = new List<DirectRegistrantHelper.EeeOutputAmountData>
                 {
@@ -569,7 +580,7 @@
 
                 // should include removed
                 registeredProducer2.Remove();
-                
+
                 await wrapper.WeeeContext.SaveChangesAsync();
 
                 // Create a scheme for test or ordering
@@ -608,19 +619,19 @@
 
                 var schemeSubmission1 = new Domain.Producer.ProducerSubmission(
                     schemeRegisteredProducer1, memberUpload1,
-                    new Domain.Producer.ProducerBusiness(),
+                    new ProducerBusiness(),
                     new Domain.Producer.AuthorisedRepresentative("Foo"),
                     new DateTime(complianceYear, 1, 1),
                     0,
                     true,
                     null,
                     "Trading Name 1",
-                    Domain.Producer.Classfication.EEEPlacedOnMarketBandType.Both,
-                    Domain.Producer.Classfication.SellingTechniqueType.Both,
+                    EEEPlacedOnMarketBandType.Both,
+                    SellingTechniqueType.Both,
                     Domain.Obligation.ObligationType.B2C,
-                    Domain.Producer.Classfication.AnnualTurnOverBandType.Lessthanorequaltoonemillionpounds,
-                    new List<Domain.Producer.BrandName>(),
-                    new List<Domain.Producer.SICCode>(),
+                    AnnualTurnOverBandType.Lessthanorequaltoonemillionpounds,
+                    new List<BrandName>(),
+                    new List<SICCode>(),
                     chargeBandAmount,
                     0,
                     A.Dummy<StatusType>());
@@ -668,17 +679,17 @@
                 result1.CompanyName.Should().Be("My company");
                 result1.SchemeName.Should().Be("Direct registrant");
                 result1.TradingName.Should().BeNullOrWhiteSpace();
-                result1.ProducerType.Should().Be("Registered company");
+                result1.ProducerType.Should().Be(EnumHelper.GetDisplayName(OrganisationType.RegisteredCompany));
                 result1.ProducerName.Should().Be("My company");
                 result1.PRN.Should().Be("WEE/AG48365JN");
                 result1.SICCodes.Should().BeNull();
                 result1.VATRegistered.Should().BeNull();
                 result1.AnnualTurnover.Should().BeNull();
                 result1.AnnualTurnoverBandType.Should().BeNull();
-                result1.EEEPlacedOnMarketBandType.Should().Be("Less than 5T EEE placed on market");
-                result1.ObligationType.Should().Be("B2C");
+                result1.EEEPlacedOnMarketBandType.Should().Be(EnumHelper.GetDisplayName(EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket));
+                result1.ObligationType.Should().Be(EnumHelper.GetDisplayName(ObligationType.B2C));
                 result1.ChargeBandType.Should().BeNull();
-                result1.SellingTechniqueType.Should().Be("Both");
+                result1.SellingTechniqueType.Should().Be(EnumHelper.GetDescription(SellingTechniqueType.Both));
                 result1.CeaseToExist.Should().BeNull();
                 result1.CNTitle.Should().BeNull();
                 result1.CNForename.Should().BeNull();
@@ -719,7 +730,7 @@
                 result1.PPOBContactTelephone.Should().BeNull();
                 result1.PPOBContactMobile.Should().BeNull();
                 result1.PPOBContactFax.Should().BeNull();
-                result1.PPOBContactEmail.Should().NotBeNull();
+                result1.PPOBContactEmail.Should().BeNull();
                 result1.PPOBContactPrimaryName.Should().BeNull();
                 result1.PPOBContactSecondaryName.Should().BeNull();
                 result1.PPOBContactStreet.Should().BeNull();
@@ -751,17 +762,17 @@
                 result2.CompanyName.Should().Be("My company 2");
                 result2.SchemeName.Should().Be("Direct registrant");
                 result2.TradingName.Should().BeNullOrWhiteSpace();
-                result2.ProducerType.Should().Be("Registered company");
+                result2.ProducerType.Should().Be(EnumHelper.GetDisplayName(OrganisationType.RegisteredCompany));
                 result2.ProducerName.Should().Be("My company 2");
                 result2.PRN.Should().Be("WEE/AG48365JX");
                 result2.SICCodes.Should().BeNull();
                 result2.VATRegistered.Should().BeNull();
                 result2.AnnualTurnover.Should().BeNull();
                 result2.AnnualTurnoverBandType.Should().BeNull();
-                result2.EEEPlacedOnMarketBandType.Should().Be("Less than 5T EEE placed on market");
-                result2.ObligationType.Should().Be("B2B");
+                result2.EEEPlacedOnMarketBandType.Should().Be(EnumHelper.GetDisplayName(EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket));
+                result2.ObligationType.Should().Be(EnumHelper.GetDisplayName(ObligationType.B2B));
                 result2.ChargeBandType.Should().BeNull();
-                result2.SellingTechniqueType.Should().Be("Indirect Selling to End User");
+                result2.SellingTechniqueType.Should().Be(EnumHelper.GetDescription(SellingTechniqueType.IndirectSellingtoEndUser));
                 result2.CeaseToExist.Should().BeNull();
                 result2.CNTitle.Should().BeNull();
                 result2.CNForename.Should().BeNull();
@@ -802,7 +813,7 @@
                 result2.PPOBContactTelephone.Should().BeNull();
                 result2.PPOBContactMobile.Should().BeNull();
                 result2.PPOBContactFax.Should().BeNull();
-                result2.PPOBContactEmail.Should().NotBeNull();
+                result2.PPOBContactEmail.Should().BeNull();
                 result2.PPOBContactPrimaryName.Should().BeNull();
                 result2.PPOBContactSecondaryName.Should().BeNull();
                 result2.PPOBContactStreet.Should().BeNull();
@@ -889,19 +900,19 @@
 
                 var schemeSubmission1 = new Domain.Producer.ProducerSubmission(
                     schemeRegisteredProducer1, memberUpload1,
-                    new Domain.Producer.ProducerBusiness(),
+                    new ProducerBusiness(),
                     new Domain.Producer.AuthorisedRepresentative("Foo"),
                     new DateTime(complianceYear, 1, 1),
                     0,
                     true,
                     null,
                     "Trading Name 1",
-                    Domain.Producer.Classfication.EEEPlacedOnMarketBandType.Both,
-                    Domain.Producer.Classfication.SellingTechniqueType.Both,
+                    EEEPlacedOnMarketBandType.Both,
+                    SellingTechniqueType.Both,
                     Domain.Obligation.ObligationType.B2C,
-                    Domain.Producer.Classfication.AnnualTurnOverBandType.Lessthanorequaltoonemillionpounds,
-                    new List<Domain.Producer.BrandName>(),
-                    new List<Domain.Producer.SICCode>(),
+                    AnnualTurnOverBandType.Lessthanorequaltoonemillionpounds,
+                    new List<BrandName>(),
+                    new List<SICCode>(),
                     chargeBandAmount,
                     0,
                     A.Dummy<StatusType>());
@@ -998,19 +1009,19 @@
 
                 var schemeSubmission1 = new Domain.Producer.ProducerSubmission(
                     schemeRegisteredProducer1, memberUpload1,
-                    new Domain.Producer.ProducerBusiness(),
+                    new ProducerBusiness(),
                     new Domain.Producer.AuthorisedRepresentative("Foo"),
                     new DateTime(complianceYear, 1, 1),
                     0,
                     true,
                     null,
                     "Trading Name 1",
-                    Domain.Producer.Classfication.EEEPlacedOnMarketBandType.Both,
-                    Domain.Producer.Classfication.SellingTechniqueType.Both,
+                    EEEPlacedOnMarketBandType.Both,
+                    SellingTechniqueType.Both,
                     Domain.Obligation.ObligationType.B2C,
-                    Domain.Producer.Classfication.AnnualTurnOverBandType.Lessthanorequaltoonemillionpounds,
-                    new List<Domain.Producer.BrandName>(),
-                    new List<Domain.Producer.SICCode>(),
+                    AnnualTurnOverBandType.Lessthanorequaltoonemillionpounds,
+                    new List<BrandName>(),
+                    new List<SICCode>(),
                     chargeBandAmount,
                     0,
                     A.Dummy<StatusType>());
@@ -1087,7 +1098,7 @@
 
                 const int complianceYear = 2082;
                 var (_, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG43365JN", complianceYear);
-                
+
                 // initially no EEE and selling technique type of both
                 var submission1 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete, SellingTechniqueType.Both.Value);
 
@@ -1107,31 +1118,28 @@
                 };
 
                 // resubmit with EEE and update the selling technique, this data should be the data returned as its most recent
-                await DirectRegistrantHelper.SubmitSubmission(wrapper, submission1,
-                    amounts1,
-                    SellingTechniqueType.DirectSellingtoEndUser.Value);
-
+                await DirectRegistrantHelper.SubmitSubmission(wrapper, submission1, amounts1, SellingTechniqueType.DirectSellingtoEndUser.Value);
                 await wrapper.WeeeContext.SaveChangesAsync();
 
                 var results = await wrapper.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(complianceYear, true, true, null, null, false);
 
                 results.Count.Should().Be(1);
-             
+
                 var result1 = results.ElementAt(0);
                 result1.CompanyName.Should().Be("My company");
                 result1.SchemeName.Should().Be("Direct registrant");
                 result1.TradingName.Should().BeNullOrWhiteSpace();
-                result1.ProducerType.Should().Be("Registered company");
+                result1.ProducerType.Should().Be(EnumHelper.GetDisplayName(OrganisationType.RegisteredCompany));
                 result1.ProducerName.Should().Be("My company");
                 result1.PRN.Should().Be("WEE/AG43365JN");
                 result1.SICCodes.Should().BeNull();
                 result1.VATRegistered.Should().BeNull();
                 result1.AnnualTurnover.Should().BeNull();
                 result1.AnnualTurnoverBandType.Should().BeNull();
-                result1.EEEPlacedOnMarketBandType.Should().Be("Less than 5T EEE placed on market");
-                result1.ObligationType.Should().Be("B2C");
+                result1.EEEPlacedOnMarketBandType.Should().Be(EnumHelper.GetDisplayName(EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket));
+                result1.ObligationType.Should().Be(EnumHelper.GetDisplayName(ObligationType.B2C));
                 result1.ChargeBandType.Should().BeNull();
-                result1.SellingTechniqueType.Should().Be("Direct Selling to End User");
+                result1.SellingTechniqueType.Should().Be(EnumHelper.GetDescription(SellingTechniqueType.DirectSellingtoEndUser));
                 result1.CeaseToExist.Should().BeNull();
                 result1.CNTitle.Should().BeNull();
                 result1.CNForename.Should().BeNull();
@@ -1172,7 +1180,7 @@
                 result1.PPOBContactTelephone.Should().BeNull();
                 result1.PPOBContactMobile.Should().BeNull();
                 result1.PPOBContactFax.Should().BeNull();
-                result1.PPOBContactEmail.Should().NotBeNull();
+                result1.PPOBContactEmail.Should().BeNull();
                 result1.PPOBContactPrimaryName.Should().BeNull();
                 result1.PPOBContactSecondaryName.Should().BeNull();
                 result1.PPOBContactStreet.Should().BeNull();
@@ -1239,17 +1247,17 @@
                 result1.CompanyName.Should().Be("My company");
                 result1.SchemeName.Should().Be("Direct registrant");
                 result1.TradingName.Should().BeNullOrWhiteSpace();
-                result1.ProducerType.Should().Be("Registered company");
+                result1.ProducerType.Should().Be(EnumHelper.GetDisplayName(OrganisationType.RegisteredCompany));
                 result1.ProducerName.Should().Be("My company");
                 result1.PRN.Should().Be("WEE/AG13365JN");
                 result1.SICCodes.Should().BeNull();
                 result1.VATRegistered.Should().BeNull();
                 result1.AnnualTurnover.Should().BeNull();
                 result1.AnnualTurnoverBandType.Should().BeNull();
-                result1.EEEPlacedOnMarketBandType.Should().Be("Less than 5T EEE placed on market");
+                result1.EEEPlacedOnMarketBandType.Should().Be(EnumHelper.GetDisplayName(EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket));
                 result1.ObligationType.Should().Be("Unknown");
                 result1.ChargeBandType.Should().BeNull();
-                result1.SellingTechniqueType.Should().Be("Both");
+                result1.SellingTechniqueType.Should().Be(EnumHelper.GetDescription(SellingTechniqueType.Both));
                 result1.CeaseToExist.Should().BeNull();
                 result1.CNTitle.Should().BeNull();
                 result1.CNForename.Should().BeNull();
@@ -1290,7 +1298,126 @@
                 result1.PPOBContactTelephone.Should().BeNull();
                 result1.PPOBContactMobile.Should().BeNull();
                 result1.PPOBContactFax.Should().BeNull();
-                result1.PPOBContactEmail.Should().NotBeNull();
+                result1.PPOBContactEmail.Should().BeNull();
+                result1.PPOBContactPrimaryName.Should().BeNull();
+                result1.PPOBContactSecondaryName.Should().BeNull();
+                result1.PPOBContactStreet.Should().BeNull();
+                result1.PPOBContactTown.Should().BeNull();
+                result1.PPOBContactLocality.Should().BeNull();
+                result1.PPOBContactAdministrativeArea.Should().BeNull();
+                result1.PPOBContactPostcode.Should().BeNull();
+                result1.OverseasProducerName.Should().BeNull();
+                result1.OverseasContactForename.Should().BeNull();
+                result1.OverseasContactSurname.Should().BeNull();
+                result1.OverseasContactTelephone.Should().BeNull();
+                result1.OverseasContactMobile.Should().BeNull();
+                result1.OverseasContactFax.Should().BeNull();
+                result1.OverseasContactEmail.Should().BeNull();
+                result1.OverseasContactPrimaryName.Should().BeNull();
+                result1.OverseasContactSecondaryName.Should().BeNull();
+                result1.OverseasContactStreet.Should().BeNull();
+                result1.OverseasContactTown.Should().BeNull();
+                result1.OverseasContactLocality.Should().BeNull();
+                result1.OverseasContactAdministrativeArea.Should().BeNull();
+                result1.OverseasContactPostcode.Should().BeNull();
+                result1.OverseasContactCountry.Should().BeNull();
+                result1.RemovedFromScheme.Should().Be("No");
+                result1.DateAmended.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
+                result1.DateRegistered.Should().Be(paidDate);
+                result1.BrandNames.Should().BeNullOrWhiteSpace();
+            }
+        }
+        [Fact]
+        public async Task Execute_WithDirectRegistrantSubmissions_WithReturnedSubmissionThatHasNotBeenReSubmitte_UsingOMP_ShouldUseRecentSubmittedData()
+        {
+            using (var wrapper = new DatabaseWrapper())
+            {
+                var (_, country) = DirectRegistrantHelper.SetupCommonTestData(wrapper);
+
+                var complianceYear = DateTime.Now.Year;
+                const string prn = "WEE/AG53365JN";
+                const string companyName = "My company";
+                var (_, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, companyName, prn, complianceYear);
+
+                // initially no EEE and selling technique type of both
+                var submission1 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear, new List<DirectRegistrantHelper.EeeOutputAmountData>(), DirectProducerSubmissionStatus.Complete, SellingTechniqueType.OnlineMarketplace.Value);
+
+                // return the submission update the amounts but is not submitted, should use original empty values
+                var amounts1 = new List<DirectRegistrantHelper.EeeOutputAmountData>
+                {
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 123.456m, ObligationType = Domain.Obligation.ObligationType.B2C },
+                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C }
+                };
+
+                var paidDate = new DateTime(2023, 1, 1);
+                await DirectRegistrantHelper.SetSubmissionAsPaid(wrapper, submission1, paidDate);
+
+                await DirectRegistrantHelper.ReturnSubmission(wrapper, submission1);
+
+                await DirectRegistrantHelper.UpdateEeeeAmounts(wrapper, submission1, amounts1);
+
+                await wrapper.WeeeContext.SaveChangesAsync();
+
+                var results = await wrapper.StoredProcedures.SpgCSVDataBySchemeComplianceYearAndAuthorisedAuthority(complianceYear, true, true, null, null, false);
+
+                results.Count.Should().Be(1);
+
+                var result1 = results.ElementAt(0);
+                result1.CompanyName.Should().Be(companyName);
+                result1.SchemeName.Should().Be("Direct registrant");
+                result1.TradingName.Should().BeNullOrWhiteSpace();
+                result1.ProducerType.Should().Be(EnumHelper.GetDisplayName(OrganisationType.RegisteredCompany));
+                result1.ProducerName.Should().Be(companyName);
+                result1.PRN.Should().Be(prn);
+                result1.SICCodes.Should().BeNull();
+                result1.VATRegistered.Should().BeNull();
+                result1.AnnualTurnover.Should().BeNull();
+                result1.AnnualTurnoverBandType.Should().BeNull();
+                result1.EEEPlacedOnMarketBandType.Should().Be(EnumHelper.GetDisplayName(EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket));
+                result1.ObligationType.Should().Be("Unknown");
+                result1.ChargeBandType.Should().BeNull();
+                result1.SellingTechniqueType.Should().Be(EnumHelper.GetDescription(SellingTechniqueType.OnlineMarketplace));
+                result1.CeaseToExist.Should().BeNull();
+                result1.CNTitle.Should().BeNull();
+                result1.CNForename.Should().BeNull();
+                result1.CNSurname.Should().BeNull();
+                result1.CNTelephone.Should().BeNull();
+                result1.CNMobile.Should().BeNull();
+                result1.CNFax.Should().BeNull();
+                result1.CNEmail.Should().BeNull();
+                result1.CNPrimaryName.Should().BeNull();
+                result1.CNSecondaryName.Should().BeNull();
+                result1.CNStreet.Should().BeNull();
+                result1.CNTown.Should().BeNull();
+                result1.CNLocality.Should().BeNull();
+                result1.CNAdministrativeArea.Should().BeNull();
+                result1.CNPostcode.Should().BeNull();
+                result1.CNCountry.Should().BeNull();
+                result1.CNCountry.Should().BeNull();
+                result1.CompanyNumber.Should().Be("123456789");
+                result1.CompanyContactTitle.Should().BeNull();
+                result1.CompanyContactForename.Should().Be("first name");
+                result1.CompanyContactSurname.Should().Be("last name");
+                result1.CompanyContactTelephone.Should().Be("12345678");
+                result1.CompanyContactMobile.Should().BeNull();
+                result1.CompanyContactFax.Should().BeNull();
+                result1.CompanyContactCountry.Should().Be("Azerbaijan");
+                result1.CompanyContactEmail.Should().Be("test@co.uk");
+                result1.CompanyContactPrimaryName.Should().Be("primary 1");
+                result1.CompanyContactSecondaryName.Should().BeNull();
+                result1.CompanyContactStreet.Should().Be("street");
+                result1.CompanyContactTown.Should().Be("Woking");
+                result1.CompanyContactLocality.Should().Be("Hampshire");
+                result1.CompanyContactAdministrativeArea.Should().BeNull();
+                result1.CompanyContactPostcode.Should().Be("GU21 5EE");
+                result1.CompanyContactCountry.Should().Be("Azerbaijan");
+                result1.PPOBContactTitle.Should().BeNull();
+                result1.PPOBContactForename.Should().BeNull();
+                result1.PPOBContactSurname.Should().BeNull();
+                result1.PPOBContactTelephone.Should().BeNull();
+                result1.PPOBContactMobile.Should().BeNull();
+                result1.PPOBContactFax.Should().BeNull();
+                result1.PPOBContactEmail.Should().BeNull();
                 result1.PPOBContactPrimaryName.Should().BeNull();
                 result1.PPOBContactSecondaryName.Should().BeNull();
                 result1.PPOBContactStreet.Should().BeNull();

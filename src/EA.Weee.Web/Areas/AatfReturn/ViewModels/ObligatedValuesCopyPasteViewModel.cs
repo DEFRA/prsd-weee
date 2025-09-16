@@ -23,5 +23,9 @@
         public String[] B2cPastedValues { get; set; }
 
         public ObligatedType Type { get; set; }
+
+        public int WeeeCategoryCount { get; internal set; }
+
+        public int MaxWeeeCategoryId { get; internal set; }
     }
 }

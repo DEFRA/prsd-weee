@@ -13,5 +13,9 @@
         public bool Dcf { get; set; }
 
         public string TypeHeading { get; internal set; }
+
+        public int WeeeCategoryCount { get; internal set; }
+
+        public int MaxWeeeCategoryId { get; internal set; }
     }
 }

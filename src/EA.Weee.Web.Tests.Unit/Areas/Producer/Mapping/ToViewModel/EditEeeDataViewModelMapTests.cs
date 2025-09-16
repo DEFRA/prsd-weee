@@ -116,8 +116,8 @@
             var result = map.Map(source);
 
             // Assert
-            result.CategoryValues.Should().HaveCount(14); 
-            result.CategoryValues.Select(cv => cv.CategoryId).Should().BeEquivalentTo(Enumerable.Range(1, 14));
+            result.CategoryValues.Should().HaveCount(15); 
+            result.CategoryValues.Select(cv => cv.CategoryId).Should().BeEquivalentTo(Enumerable.Range(1, 15));
         }
 
         [Fact]
