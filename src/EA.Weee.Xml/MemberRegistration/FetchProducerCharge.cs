@@ -2,6 +2,7 @@
 {
     using DataAccess.DataAccess;
     using Domain.Lookup;
+    using System;
     using System.Threading.Tasks;
 
     public class FetchProducerCharge : IFetchProducerCharge
@@ -13,15 +14,21 @@
             this.producerChargeCalculatorDataAccess = producerChargeCalculatorDataAccess;
         }
 
-        public async Task<ProducerCharge> GetCharge(ChargeBand chargeBand)
+        public async Task<ChargeBandAmount> GetChargeBandAmountAsync(
+            CompetentAuthorityType competentAuthority,
+            bool vatRegistered,
+            AnnualTurnoverBand annualTurnoverBand,
+            EEEPlacedOnMarketBand eeePlacedOnMarketBand,
+            int complianceYear,
+            DateTime asOfUtc)
         {
-            var currentChargeBandAmount = await producerChargeCalculatorDataAccess.FetchCurrentChargeBandAmount(chargeBand);
-
-            return new ProducerCharge()
-            {
-                ChargeBandAmount = currentChargeBandAmount,
-                Amount = currentChargeBandAmount.Amount
-            };
+            return await producerChargeCalculatorDataAccess.GetChargeBandAmountAsync(
+                competentAuthority,
+                vatRegistered,
+                annualTurnoverBand,
+                eeePlacedOnMarketBand,
+                complianceYear,
+                asOfUtc);
         }
     }
 }

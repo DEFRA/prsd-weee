@@ -1,8 +1,9 @@
 ﻿namespace EA.Weee.DataAccess.DataAccess
 {
     using Domain.Lookup;
-    using System.Collections.Generic;
+    using System;
     using System.Data.Entity;
+    using System.Linq;
     using System.Threading.Tasks;
     using Weee.DataAccess;
 
@@ -10,28 +11,45 @@
     {
         private readonly WeeeContext context;
 
-        private Dictionary<ChargeBand, ChargeBandAmount> currentProducerChargeBandAmounts;
-
         public ProducerChargeCalculatorDataAccess(WeeeContext context)
         {
             this.context = context;
         }
 
-        public async Task<ChargeBandAmount> FetchCurrentChargeBandAmount(ChargeBand chargeBandType)
+        /// <summary>
+        /// Fetch the charge band amount that applies for the given producer and date.
+        /// </summary>
+        /// <param name="competentAuthority"></param>
+        /// <param name="vatRegistered"></param>
+        /// <param name="annualTurnoverBand"></param>
+        /// <param name="eeePlacedOnMarketBand"></param>
+        /// <param name="complianceYear"></param>
+        /// <param name="asOfUtc"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public async Task<ChargeBandAmount> GetChargeBandAmountAsync(
+            CompetentAuthorityType competentAuthority,
+            bool vatRegistered,
+            AnnualTurnoverBand annualTurnoverBand,
+            EEEPlacedOnMarketBand eeePlacedOnMarketBand,
+            int complianceYear,
+            DateTime asOfUtc)
         {
-            if (currentProducerChargeBandAmounts == null)
-            {
-                /* For now we only have one charge band amount for each type, so
-                * we can fetch them all. When new charge band amounts are added,
-                * this query will need to select only latest charge band amount
-                * for each charge band type.
-                */
-                currentProducerChargeBandAmounts = await context
-                    .ChargeBandAmounts
-                    .ToDictionaryAsync(pcb => pcb.ChargeBand, pcb => pcb);
-            }
-
-            return currentProducerChargeBandAmounts[chargeBandType];
+            // Query the ChargeBandAmounts table for the first record that matches the given
+            // producer attributes (competent authority, VAT status, annualTurnoverBand, eeePlacedOnMarketBand, 
+            // and compliance year) where the EffectiveFrom date is on or before the asOfUtc date.
+            // Returns null if no matching record exists.
+            var chargeBandAmount = await context.ChargeBandAmounts
+                .Where(cba => cba.CompetentAuthority == competentAuthority &&
+                            cba.VatRegistered == vatRegistered &&
+                            cba.AnnualTurnoverBand == annualTurnoverBand &&
+                            cba.EEEPlacedOnMarketBand == eeePlacedOnMarketBand &&
+                            cba.ComplianceYear == complianceYear &&
+                            cba.EffectiveFrom <= asOfUtc)
+                .OrderByDescending(cba => cba.EffectiveFrom)
+                .FirstOrDefaultAsync();
+            
+            return chargeBandAmount;
         }
     }
 }
