@@ -20,43 +20,81 @@
             fetchProducerCharge = new FetchProducerCharge(producerChargeCalculatorDataAccess);
         }
 
-        [Theory]
-        [InlineData(ChargeBand.A)]
-        [InlineData(ChargeBand.B)]
-        [InlineData(ChargeBand.C)]
-        [InlineData(ChargeBand.D)]
-        [InlineData(ChargeBand.E)]
-        [InlineData(ChargeBand.A2)]
-        [InlineData(ChargeBand.C2)]
-        [InlineData(ChargeBand.D2)]
-        [InlineData(ChargeBand.D3)]
-        public async Task GetCharge_GivenChargeBand_ChargeBandAmountShouldBeRetrieved(ChargeBand band)
+        [Fact]
+        public async Task GetChargeBandAmountAsync_GivenEnhancedCriteria_ShouldCallDataAccessWithCorrectParameters()
         {
-            await fetchProducerCharge.GetCharge(band);
+            // Arrange
+            var competentAuthority = CompetentAuthorityType.England;
+            var vatRegistered = true;
+            var annualTurnoverBand = AnnualTurnoverBand.Greaterthanonemillionpounds;
+            var eeePlacedOnMarketBand = EEEPlacedOnMarketBand.Morethanorequalto5TEEEplacedonmarket;
+            var complianceYear = 2025;
+            var asOfUtc = new DateTime(2025, 6, 15);
 
-            A.CallTo(() => producerChargeCalculatorDataAccess.FetchCurrentChargeBandAmount(band)).MustHaveHappened(1, Times.Exactly);
+            var expectedChargeBandAmount = new ChargeBandAmount(
+                Guid.NewGuid(),
+                ChargeBand.A,
+                competentAuthority,
+                vatRegistered,
+                annualTurnoverBand,
+                eeePlacedOnMarketBand,
+                complianceYear,
+                150.00m,
+                asOfUtc);
+
+            A.CallTo(() => producerChargeCalculatorDataAccess.GetChargeBandAmountAsync(
+                competentAuthority, vatRegistered, annualTurnoverBand, 
+                eeePlacedOnMarketBand, complianceYear, asOfUtc))
+                .Returns(expectedChargeBandAmount);
+
+            // Act
+            var result = await fetchProducerCharge.GetChargeBandAmountAsync(
+                competentAuthority, vatRegistered, annualTurnoverBand, 
+                eeePlacedOnMarketBand, complianceYear, asOfUtc);
+
+            // Assert
+            Assert.Equal(expectedChargeBandAmount, result);
+            A.CallTo(() => producerChargeCalculatorDataAccess.GetChargeBandAmountAsync(
+                competentAuthority, vatRegistered, annualTurnoverBand, 
+                eeePlacedOnMarketBand, complianceYear, asOfUtc))
+                .MustHaveHappened(1, Times.Exactly);
         }
 
-        [Theory]
-        [InlineData(ChargeBand.A)]
-        [InlineData(ChargeBand.B)]
-        [InlineData(ChargeBand.C)]
-        [InlineData(ChargeBand.D)]
-        [InlineData(ChargeBand.E)]
-        [InlineData(ChargeBand.A2)]
-        [InlineData(ChargeBand.C2)]
-        [InlineData(ChargeBand.D2)]
-        [InlineData(ChargeBand.D3)]
-        public async Task GetCharge_GivenChargeBandAmount_ProducerChargeShouldBeReturned(ChargeBand band)
+        [Fact]
+        public async Task GetChargeBandAmountAsync_GivenDifferentCriteria_ShouldReturnCorrectChargeBandAmount()
         {
-            var chargeBandAmount = new ChargeBandAmount(Guid.NewGuid(), band, 1);
+            // Arrange
+            var competentAuthority = CompetentAuthorityType.Wales;
+            var vatRegistered = false;
+            var annualTurnoverBand = AnnualTurnoverBand.Lessthanorequaltoonemillionpounds;
+            var eeePlacedOnMarketBand = EEEPlacedOnMarketBand.Lessthan5TEEEplacedonmarket;
+            var complianceYear = 2025;
+            var asOfUtc = new DateTime(2025, 3, 1);
 
-            A.CallTo(() => producerChargeCalculatorDataAccess.FetchCurrentChargeBandAmount(band)).Returns(chargeBandAmount);
+            var expectedChargeBandAmount = new ChargeBandAmount(
+                Guid.NewGuid(),
+                ChargeBand.E,
+                competentAuthority,
+                vatRegistered,
+                annualTurnoverBand,
+                eeePlacedOnMarketBand,
+                complianceYear,
+                75.00m,
+                asOfUtc);
 
-            var result = await fetchProducerCharge.GetCharge(band);
+            A.CallTo(() => producerChargeCalculatorDataAccess.GetChargeBandAmountAsync(
+                competentAuthority, vatRegistered, annualTurnoverBand, 
+                eeePlacedOnMarketBand, complianceYear, asOfUtc))
+                .Returns(expectedChargeBandAmount);
 
-            Assert.Equal(result.Amount, chargeBandAmount.Amount);
-            Assert.Equal(result.ChargeBandAmount.ChargeBand, chargeBandAmount.ChargeBand);
+            // Act
+            var result = await fetchProducerCharge.GetChargeBandAmountAsync(
+                competentAuthority, vatRegistered, annualTurnoverBand, 
+                eeePlacedOnMarketBand, complianceYear, asOfUtc);
+
+            // Assert
+            Assert.Equal(expectedChargeBandAmount, result);
+            Assert.Equal(75.00m, result.Amount);
         }
     }
 }

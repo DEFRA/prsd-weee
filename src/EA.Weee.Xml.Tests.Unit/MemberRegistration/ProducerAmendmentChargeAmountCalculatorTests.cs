@@ -72,7 +72,7 @@
         {
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
             var producerType = new producerType() { registrationNo = "no", eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket };
-            var producerCharge = new ProducerCharge() { ChargeBandAmount = new ChargeBandAmount(Guid.NewGuid(), ChargeBand.A, 0) };
+            var producerCharge = new ProducerCharge() { ChargeBandAmount = CreateTestChargeBandAmount(ChargeBand.A, 0) };
 
             A.CallTo(() => registeredProducerDataAccess.GetProducerRegistration(producerType.registrationNo, ComplianceYear, schemeType.approvalNo))
                 .Returns(RegisteredProducer());
@@ -88,7 +88,7 @@
         {
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
             var producerType = new producerType() { registrationNo = "no", eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket };
-            var producerCharge = new ProducerCharge() { ChargeBandAmount = new ChargeBandAmount(Guid.NewGuid(), ChargeBand.A, 0) };
+            var producerCharge = new ProducerCharge() { ChargeBandAmount = CreateTestChargeBandAmount(ChargeBand.A, 0) };
 
             A.CallTo(() => environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schemeType, producerType)).Returns(producerCharge);
 
@@ -103,7 +103,7 @@
         {
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
             var producerType = new producerType() { registrationNo = "no", eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket };
-            var producerCharge = new ProducerCharge() { ChargeBandAmount = new ChargeBandAmount(Guid.NewGuid(), ChargeBand.A, 0) };
+            var producerCharge = new ProducerCharge() { ChargeBandAmount = CreateTestChargeBandAmount(ChargeBand.A, 0) };
 
             A.CallTo(() => registeredProducerDataAccess.GetProducerRegistration(producerType.registrationNo, ComplianceYear, schemeType.approvalNo))
                 .Returns(RegisteredProducer());
@@ -121,7 +121,7 @@
         {
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
             var producerType = new producerType() { registrationNo = "no", eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket };
-            var producerCharge = new ProducerCharge() { ChargeBandAmount = new ChargeBandAmount(Guid.NewGuid(), ChargeBand.A, 0) };
+            var producerCharge = new ProducerCharge() { ChargeBandAmount = CreateTestChargeBandAmount(ChargeBand.A, 0) };
 
             A.CallTo(() => environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schemeType, producerType)).Returns(producerCharge);
             A.CallTo(() => registeredProducerDataAccess.HasPreviousAmendmentCharge(A<string>._, A<int>._, A<string>._)).Returns(false);
@@ -137,7 +137,7 @@
         {
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
             var producerType = new producerType() { registrationNo = "no", eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket };
-            var producerCharge = new ProducerCharge() { ChargeBandAmount = new ChargeBandAmount(Guid.NewGuid(), ChargeBand.A, 0) };
+            var producerCharge = new ProducerCharge() { ChargeBandAmount = CreateTestChargeBandAmount(ChargeBand.A, 0) };
 
             A.CallTo(() => environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schemeType, producerType)).Returns(producerCharge);
             A.CallTo(() => registeredProducerDataAccess.GetProducerRegistration(A<string>._, A<int>._, A<string>._)).Returns((RegisteredProducer)null);
@@ -154,7 +154,7 @@
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
             var producerType = new producerType() { registrationNo = "no", eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket };
             var producer = new RegisteredProducer(A.Dummy<string>(), A.Dummy<int>(), A.Dummy<Scheme>());
-            var producerCharge = new ProducerCharge() { ChargeBandAmount = new ChargeBandAmount(Guid.NewGuid(), ChargeBand.A, 0) };
+            var producerCharge = new ProducerCharge() { ChargeBandAmount = CreateTestChargeBandAmount(ChargeBand.A, 0) };
 
             A.CallTo(() => registeredProducerDataAccess.GetProducerRegistration(A<string>._, A<int>._, A<string>._)).Returns(producer);
             A.CallTo(() => environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schemeType, producerType)).Returns(producerCharge);
@@ -226,12 +226,29 @@
                 A.Dummy<AnnualTurnOverBandType>(),
                 A.Dummy<List<BrandName>>(),
                 A.Dummy<List<SICCode>>(),
-                A.Dummy<ChargeBandAmount>(),
+                CreateTestChargeBandAmount(ChargeBand.A, 0),
                 A.Dummy<decimal>(),
                 A.Dummy<StatusType>());
 
             A.CallTo(() => registeredProducer.CurrentSubmission).Returns(producerSubmission);
             return registeredProducer;
+        }
+
+        /// <summary>
+        /// Helper method to create a test ChargeBandAmount with the correct constructor signature.
+        /// </summary>
+        private static ChargeBandAmount CreateTestChargeBandAmount(ChargeBand chargeBand, decimal amount)
+        {
+            return new ChargeBandAmount(
+                Guid.NewGuid(),
+                chargeBand,
+                CompetentAuthorityType.England,
+                true,
+                AnnualTurnoverBand.NotApplicable,
+                EEEPlacedOnMarketBand.Morethanorequalto5TEEEplacedonmarket,
+                ComplianceYear,
+                amount,
+                new DateTime(ComplianceYear, 1, 1));
         }
     }
 }

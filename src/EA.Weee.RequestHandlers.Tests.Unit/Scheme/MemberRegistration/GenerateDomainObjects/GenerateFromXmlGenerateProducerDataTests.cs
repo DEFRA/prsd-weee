@@ -76,7 +76,7 @@
         {
             var builder = new GenerateProducerDataTestsBuilder();
 
-            var chargeBoundAmound = new ChargeBandAmount(Guid.NewGuid(), ChargeBand.A, 20);
+            var chargeBoundAmound = new ChargeBandAmount(Guid.NewGuid(), ChargeBand.A, CompetentAuthorityType.England, false, AnnualTurnoverBand.Lessthanorequaltoonemillionpounds, EEEPlacedOnMarketBand.Lessthan5TEEEplacedonmarket, 2016, 20, DateTime.Now);
             builder.ProducerCharges[builder.TradingName] = new ProducerCharge()
             {
                 Amount = 100,
