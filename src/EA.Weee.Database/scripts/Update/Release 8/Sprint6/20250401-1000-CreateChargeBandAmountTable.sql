@@ -97,6 +97,10 @@ BEGIN
     PRINT N'EffectiveFrom column already exists in [Lookup].[ChargeBandAmount] table.';
 END
 
+PRINT N'Column structure updates completed. Continuing with indexes and data...';
+GO
+
+-- Separate batch to ensure column changes are committed before proceeding
 PRINT N'Creating performance indexes on [Lookup].[ChargeBandAmount]...';
 
 -- Create indexes for efficient querying (only if they don't exist)
@@ -128,8 +132,48 @@ PRINT N'Existing records in table before migration: ' + CAST(@ExistingCount AS N
 
 PRINT N'Adding new charging system data while preserving existing records...';
 
-DECLARE @src TABLE
-(
+-- Build INSERT statement dynamically based on available columns
+DECLARE @InsertSQL NVARCHAR(MAX);
+DECLARE @ColumnList NVARCHAR(MAX) = '';
+DECLARE @ValuesList NVARCHAR(MAX) = '';
+
+-- Check which columns exist and build the column list
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'Lookup' AND TABLE_NAME = 'ChargeBandAmount' AND COLUMN_NAME = 'Id')
+    SET @ColumnList = @ColumnList + '[Id],';
+    
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'Lookup' AND TABLE_NAME = 'ChargeBandAmount' AND COLUMN_NAME = 'Amount')
+    SET @ColumnList = @ColumnList + '[Amount],';
+    
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'Lookup' AND TABLE_NAME = 'ChargeBandAmount' AND COLUMN_NAME = 'ChargeBand')
+    SET @ColumnList = @ColumnList + '[ChargeBand],';
+    
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'Lookup' AND TABLE_NAME = 'ChargeBandAmount' AND COLUMN_NAME = 'CompetentAuthority')
+    SET @ColumnList = @ColumnList + '[CompetentAuthority],';
+    
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'Lookup' AND TABLE_NAME = 'ChargeBandAmount' AND COLUMN_NAME = 'VatRegistered')
+    SET @ColumnList = @ColumnList + '[VatRegistered],';
+    
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'Lookup' AND TABLE_NAME = 'ChargeBandAmount' AND COLUMN_NAME = 'AnnualTurnoverBand')
+    SET @ColumnList = @ColumnList + '[AnnualTurnoverBand],';
+    
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'Lookup' AND TABLE_NAME = 'ChargeBandAmount' AND COLUMN_NAME = 'EEEPlacedOnMarketBand')
+    SET @ColumnList = @ColumnList + '[EEEPlacedOnMarketBand],';
+    
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'Lookup' AND TABLE_NAME = 'ChargeBandAmount' AND COLUMN_NAME = 'ComplianceYear')
+    SET @ColumnList = @ColumnList + '[ComplianceYear],';
+    
+IF EXISTS (SELECT * FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_SCHEMA = 'Lookup' AND TABLE_NAME = 'ChargeBandAmount' AND COLUMN_NAME = 'EffectiveFrom')
+    SET @ColumnList = @ColumnList + '[EffectiveFrom],';
+
+-- Remove trailing comma
+SET @ColumnList = LEFT(@ColumnList, LEN(@ColumnList) - 1);
+
+PRINT N'Available columns for insert: ' + @ColumnList;
+
+-- Create a temp table with all the new data
+IF OBJECT_ID('tempdb..#NewChargeBandData') IS NOT NULL DROP TABLE #NewChargeBandData;
+
+CREATE TABLE #NewChargeBandData (
     [Id] UNIQUEIDENTIFIER NOT NULL,
     [Amount] DECIMAL(18,2) NOT NULL,
     [ChargeBand] INT NOT NULL,
@@ -142,8 +186,8 @@ DECLARE @src TABLE
 );
 
 -- Load new data for 2025 and 2026 compliance years
-INSERT INTO @src ([Id],[Amount],[ChargeBand],[CompetentAuthority],[VatRegistered],
-                  [AnnualTurnoverBand],[EEEPlacedOnMarketBand],[ComplianceYear],[EffectiveFrom])
+INSERT INTO #NewChargeBandData ([Id],[Amount],[ChargeBand],[CompetentAuthority],[VatRegistered],
+                               [AnnualTurnoverBand],[EEEPlacedOnMarketBand],[ComplianceYear],[EffectiveFrom])
 VALUES
 -- 2025 Data (Effective from 2025-01-01)
 ('BAF18F7B-494D-4032-B327-A4D2CBB84413',445.00,0,2,1,1,0,2025,'2025-01-01'),
@@ -214,18 +258,24 @@ VALUES
 ('DD58DDE1-8A72-4331-AD2B-DF43C361CD7B',403.00,8,0,1,2,0,2026,'2025-10-01');
 
 -- Insert only new records that don't already exist (preserves existing data)
-INSERT INTO [Lookup].[ChargeBandAmount] 
-([Id],[Amount],[ChargeBand],[CompetentAuthority],[VatRegistered],[AnnualTurnoverBand],[EEEPlacedOnMarketBand],[ComplianceYear],[EffectiveFrom])
-SELECT [Id],[Amount],[ChargeBand],[CompetentAuthority],[VatRegistered],[AnnualTurnoverBand],[EEEPlacedOnMarketBand],[ComplianceYear],[EffectiveFrom]
-FROM @src
+SET @InsertSQL = N'
+INSERT INTO [Lookup].[ChargeBandAmount] (' + @ColumnList + N')
+SELECT ' + @ColumnList + N'
+FROM #NewChargeBandData
 WHERE NOT EXISTS (
     SELECT 1 FROM [Lookup].[ChargeBandAmount] 
-    WHERE [Lookup].[ChargeBandAmount].[Id] = [@src].[Id]
-);
+    WHERE [Lookup].[ChargeBandAmount].[Id] = #NewChargeBandData.[Id]
+);';
+
+PRINT N'Executing insert with dynamic column list...';
+EXEC sp_executesql @InsertSQL;
 
 DECLARE @NewRecordsAdded INT;
 SELECT @NewRecordsAdded = @@ROWCOUNT;
 PRINT N'New records added: ' + CAST(@NewRecordsAdded AS NVARCHAR(10));
+
+-- Clean up temp table
+DROP TABLE #NewChargeBandData;
 
 PRINT N'Successfully enhanced [Lookup].[ChargeBandAmount] table with new charging system structure and data.';
 
@@ -235,14 +285,14 @@ SELECT @FinalCount = COUNT(*) FROM [Lookup].[ChargeBandAmount];
 PRINT N'Total records in table after enhancement: ' + CAST(@FinalCount AS NVARCHAR(10));
 
 -- Verify all required columns exist
-DECLARE @ColumnList NVARCHAR(MAX) = '';
-SELECT @ColumnList = @ColumnList + COLUMN_NAME + ', '
+DECLARE @FinalColumnList NVARCHAR(MAX) = '';
+SELECT @FinalColumnList = @FinalColumnList + COLUMN_NAME + ', '
 FROM INFORMATION_SCHEMA.COLUMNS 
 WHERE TABLE_SCHEMA = 'Lookup' 
 AND TABLE_NAME = 'ChargeBandAmount'
 ORDER BY ORDINAL_POSITION;
 
-PRINT N'Final table structure: ' + LEFT(@ColumnList, LEN(@ColumnList) - 1);
+PRINT N'Final table structure: ' + LEFT(@FinalColumnList, LEN(@FinalColumnList) - 1);
 
 -- Verify we have data for both compliance years
 DECLARE @Year2025Count INT, @Year2026Count INT;
