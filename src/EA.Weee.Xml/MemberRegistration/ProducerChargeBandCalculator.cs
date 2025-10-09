@@ -21,6 +21,14 @@
         {
             var producerCountry = producer.GetProducerCountry();
             var complianceYear = int.Parse(scheme.complianceYear);
+            
+            // If the compliance year is less than 2025, set it to 2025
+            // This ensures compatibility with the enhanced charge band data structure
+            if (complianceYear < 2025)
+            {
+                complianceYear = 2025;
+            }
+            
             var competentAuthority = ConvertToCompetentAuthorityType(producerCountry);
             var annualTurnoverBand = ConvertToAnnualTurnoverBand(producer.annualTurnoverBand);
             var eeePlacedOnMarketBand = ConvertToEEEPlacedOnMarketBand(producer.eeePlacedOnMarketBand);
