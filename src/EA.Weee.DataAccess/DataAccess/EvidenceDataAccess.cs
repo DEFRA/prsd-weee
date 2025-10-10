@@ -4,6 +4,7 @@
     using Domain.Organisation;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.Evidence;
+    using EA.Weee.Domain.User;
     using Prsd.Core.Domain;
     using System;
     using System.Collections.Generic;
@@ -55,9 +56,17 @@
 
             foreach (var noteTonnage in tonnages)
             {
-                var tonnage = note.NoteTonnage.First(t => t.CategoryId.Equals(noteTonnage.CategoryId));
+                var tonnage = note.NoteTonnage.FirstOrDefault(t => t.CategoryId.Equals(noteTonnage.CategoryId));
 
-                tonnage.UpdateValues(noteTonnage.Received, noteTonnage.Reused);
+                if (tonnage == null)
+                {
+                    var noteTonnageCategory = new NoteTonnage(noteTonnage.CategoryId, noteTonnage.Received, noteTonnage.Reused);
+                    note.NoteTonnage.Add(noteTonnageCategory);
+                }
+                else
+                {
+                    tonnage.UpdateValues(noteTonnage.Received, noteTonnage.Reused);
+                }
             }
 
             await context.SaveChangesAsync();
