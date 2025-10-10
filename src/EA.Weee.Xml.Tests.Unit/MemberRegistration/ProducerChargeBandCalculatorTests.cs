@@ -49,7 +49,7 @@
                 true,
                 AnnualTurnoverBand.Greaterthanonemillionpounds,
                 EEEPlacedOnMarketBand.Morethanorequalto5TEEEplacedonmarket,
-                2018,
+                2025, // Compliance year < 2025 is now using 2025 compliance year
                 A<DateTime>._)).MustHaveHappened(1, Times.Exactly);
         }
 
@@ -102,7 +102,7 @@
                 true,
                 AnnualTurnoverBand.Lessthanorequaltoonemillionpounds,
                 EEEPlacedOnMarketBand.Morethanorequalto5TEEEplacedonmarket,
-                2018,
+                2025, // Compliance year < 2025 is now using 2025 compliance year
                 A<DateTime>._)).MustHaveHappened(1, Times.Exactly);
         }
 
@@ -155,7 +155,7 @@
                 false,
                 AnnualTurnoverBand.Lessthanorequaltoonemillionpounds,
                 EEEPlacedOnMarketBand.Morethanorequalto5TEEEplacedonmarket,
-                2018,
+                2025, // Compliance year < 2025 is now using 2025 compliance year
                 A<DateTime>._)).MustHaveHappened(1, Times.Exactly);
         }
 
@@ -208,7 +208,7 @@
                 false,
                 AnnualTurnoverBand.Greaterthanonemillionpounds,
                 EEEPlacedOnMarketBand.Morethanorequalto5TEEEplacedonmarket,
-                2018,
+                2025, // Compliance year < 2025 is now using 2025 compliance year
                 A<DateTime>._)).MustHaveHappened(1, Times.Exactly);
         }
 
@@ -261,7 +261,7 @@
                 false,
                 AnnualTurnoverBand.Lessthanorequaltoonemillionpounds,
                 EEEPlacedOnMarketBand.Lessthan5TEEEplacedonmarket,
-                2018,
+                2025, // Compliance year < 2025 is now using 2025 compliance year
                 A<DateTime>._)).MustHaveHappened(1, Times.Exactly);
         }
 
@@ -352,7 +352,7 @@
                 true,
                 AnnualTurnoverBand.NotApplicable, // England - should be NotApplicable
                 EEEPlacedOnMarketBand.Morethanorequalto5TEEEplacedonmarket,
-                2018,
+                2025, // Compliance year < 2025 is now using 2025 compliance year
                 A<DateTime>._)).MustHaveHappened(1, Times.Exactly);
         }
 
@@ -382,7 +382,7 @@
                 true,
                 AnnualTurnoverBand.NotApplicable, // Non-UK - should be NotApplicable
                 EEEPlacedOnMarketBand.Morethanorequalto5TEEEplacedonmarket,
-                2018,
+                2025, // Compliance year < 2025 is now using 2025 compliance year
                 A<DateTime>._)).MustHaveHappened(1, Times.Exactly);
         }
 
