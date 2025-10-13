@@ -14,6 +14,17 @@
             this.producerChargeCalculatorDataAccess = producerChargeCalculatorDataAccess;
         }
 
+        public async Task<ProducerCharge> GetChargeBandAmountAsyncLegacy(ChargeBand chargeBand)
+        {
+            var currentChargeBandAmount = await producerChargeCalculatorDataAccess.GetChargeBandAmountAsyncLegacy(chargeBand);
+
+            return new ProducerCharge()
+            {
+                ChargeBandAmount = currentChargeBandAmount,
+                Amount = currentChargeBandAmount.Amount
+            };
+        }
+
         public async Task<ChargeBandAmount> GetChargeBandAmountAsync(
             CompetentAuthorityType competentAuthority,
             bool vatRegistered,

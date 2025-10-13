@@ -21,39 +21,75 @@
         {
             var producerCountry = producer.GetProducerCountry();
             var complianceYear = int.Parse(scheme.complianceYear);
-            
-            // If the compliance year is less than 2025, set it to 2025
-            // This ensures compatibility with the enhanced charge band data structure
-            if (complianceYear < 2025)
-            {
-                complianceYear = 2025;
-            }
-            
             var competentAuthority = ConvertToCompetentAuthorityType(producerCountry);
             var annualTurnoverBand = ConvertToAnnualTurnoverBand(producer.annualTurnoverBand);
             var eeePlacedOnMarketBand = ConvertToEEEPlacedOnMarketBand(producer.eeePlacedOnMarketBand);
             var asOfUtc = DateTime.UtcNow;
 
-            // For producers based in England or outside the UK, the annual turnover band is not applicable
-            if (producerCountry == countryType.UKENGLAND || !IsUKCountry(producerCountry))
+            ProducerCharge charge;
+
+            // If the compliance year is less than 2025, use legacy charge band calculation
+            if (complianceYear < 2025)
             {
-                annualTurnoverBand = AnnualTurnoverBand.NotApplicable;
+                ChargeBand band;
+
+                if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket)
+                {
+                    band = ChargeBand.E;
+                }
+                else
+                {
+                    if (producer.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds
+                    && producer.VATRegistered
+                    && producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
+                    {
+                        band = ChargeBand.A;
+                    }
+                    else if (producer.annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds
+                             && producer.VATRegistered
+                             && producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
+                    {
+                        band = ChargeBand.B;
+                    }
+                    else if (producer.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds
+                             && !producer.VATRegistered
+                             && producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket)
+                    {
+                        band = ChargeBand.D;
+                    }
+                    else
+                    {
+                        band = ChargeBand.C;
+                    }
+                }
+
+                charge = await fetchProducerCharge.GetChargeBandAmountAsyncLegacy(band);
+            }
+            else
+            {
+                // For producers based in England or outside the UK, the annual turnover band is not applicable
+                if (producerCountry == countryType.UKENGLAND || !IsUKCountry(producerCountry))
+                {
+                    annualTurnoverBand = AnnualTurnoverBand.NotApplicable;
+                }
+
+                // Use the enhanced data-driven method to get the complete charge band amount record
+                var chargeBandAmount = await fetchProducerCharge.GetChargeBandAmountAsync(
+                    competentAuthority,
+                    producer.VATRegistered,
+                    annualTurnoverBand,
+                    eeePlacedOnMarketBand,
+                    complianceYear,
+                    asOfUtc);
+
+                charge = new ProducerCharge()
+                {
+                    ChargeBandAmount = chargeBandAmount,
+                    Amount = chargeBandAmount.Amount
+                };
             }
 
-            // Use the enhanced data-driven method to get the complete charge band amount record
-            var chargeBandAmount = await fetchProducerCharge.GetChargeBandAmountAsync(
-                competentAuthority,
-                producer.VATRegistered,
-                annualTurnoverBand,
-                eeePlacedOnMarketBand,
-                complianceYear,
-                asOfUtc);
-
-            return new ProducerCharge()
-            {
-                ChargeBandAmount = chargeBandAmount,
-                Amount = chargeBandAmount.Amount
-            };
+            return charge;
         }
 
         public bool IsMatch(schemeType scheme, producerType producer)

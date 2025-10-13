@@ -2,6 +2,7 @@
 {
     using Domain.Lookup;
     using System;
+    using System.Collections.Generic;
     using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
@@ -11,9 +12,43 @@
     {
         private readonly WeeeContext context;
 
+        private Dictionary<ChargeBand, ChargeBandAmount> currentProducerChargeBandAmounts;
+
         public ProducerChargeCalculatorDataAccess(WeeeContext context)
         {
             this.context = context;
+        }
+
+        /// <summary>
+        /// Fetch the legacy charge band amount that applies for the given producer and date
+        /// </summary>
+        /// <param name="chargeBandType"></param>
+        /// <returns></returns>
+        /// <exception cref="InvalidOperationException"></exception>
+        public async Task<ChargeBandAmount> GetChargeBandAmountAsyncLegacy(ChargeBand chargeBandType)
+        {
+            if (currentProducerChargeBandAmounts == null)
+            {
+                /* Fetch only legacy charge band amounts (those with ComplianceYear = 2000)
+                 * to maintain backward compatibility with the existing legacy charge band calculation logic.
+                 * This ensures the legacy method continues to work with the enhanced table structure.
+                 * When new charge band amounts are added, this query will select only legacy charge band amounts
+                 * for each charge band type by filtering on ComplianceYear = 2000.
+                 */
+                try
+                {
+                    currentProducerChargeBandAmounts = await context
+                        .ChargeBandAmounts
+                        .Where(pcb => pcb.ComplianceYear == 2000)
+                        .ToDictionaryAsync(pcb => pcb.ChargeBand, pcb => pcb);
+                }
+                catch (Exception e)
+                {
+                    throw new InvalidOperationException("Error fetching legacy charge band amounts", e);
+                }
+            }
+
+            return currentProducerChargeBandAmounts[chargeBandType];
         }
 
         /// <summary>

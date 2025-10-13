@@ -21,39 +21,115 @@
         {
             var producerCountry = producer.GetProducerCountry();
             var complianceYear = int.Parse(scheme.complianceYear);
-            
-            // If the compliance year is less than 2025, set it to 2025
-            // This ensures compatibility with the enhanced charge band data structure
-            if (complianceYear < 2025)
-            {
-                complianceYear = 2025;
-            }
-            
             var competentAuthority = ConvertToCompetentAuthorityType(producerCountry);
             var annualTurnoverBand = ConvertToAnnualTurnoverBand(producer.annualTurnoverBand);
             var eeePlacedOnMarketBand = ConvertToEEEPlacedOnMarketBand(producer.eeePlacedOnMarketBand);
             var asOfUtc = DateTime.UtcNow;
 
-            // For producers based in England or outside the UK, the annual turnover band is not applicable
-            if (producerCountry == countryType.UKENGLAND || !IsUKCountry(producerCountry))
+            ProducerCharge charge;
+
+            // If the compliance year is less than 2025, use legacy charge band calculation
+            if (complianceYear < 2025)
             {
-                annualTurnoverBand = AnnualTurnoverBand.NotApplicable;
+                ChargeBand band;
+
+                if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
+                    producer.VATRegistered && producerCountry == countryType.UKENGLAND)
+                {
+                    band = ChargeBand.A2;
+                }
+                else if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
+                         producer.VATRegistered &&
+                (producerCountry != countryType.UKENGLAND &&
+                 producerCountry != countryType.UKSCOTLAND &&
+                 producerCountry != countryType.UKWALES &&
+                 producerCountry != countryType.UKNORTHERNIRELAND))
+                {
+                    band = ChargeBand.D3;
+                }
+                else if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
+                    producer.VATRegistered &&
+                    (producerCountry == countryType.UKSCOTLAND ||
+                    producerCountry == countryType.UKWALES ||
+                    producerCountry == countryType.UKNORTHERNIRELAND) &&
+                    producer.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds)
+                {
+                    band = ChargeBand.A;
+                }
+                else if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
+                         producer.VATRegistered &&
+                        (producerCountry == countryType.UKSCOTLAND ||
+                         producerCountry == countryType.UKWALES ||
+                         producerCountry == countryType.UKNORTHERNIRELAND) &&
+                         producer.annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds)
+                {
+                    band = ChargeBand.B;
+                }
+                else if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
+                producerCountry == countryType.UKENGLAND &&
+                !producer.VATRegistered)
+                {
+                    band = ChargeBand.C2;
+                }
+                else if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
+                !producer.VATRegistered &&
+                (producerCountry != countryType.UKENGLAND &&
+                 producerCountry != countryType.UKSCOTLAND &&
+                 producerCountry != countryType.UKWALES &&
+                 producerCountry != countryType.UKNORTHERNIRELAND))
+                {
+                    band = ChargeBand.D2;
+                }
+                else if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
+                         !producer.VATRegistered &&
+                        (producerCountry == countryType.UKSCOTLAND ||
+                         producerCountry == countryType.UKWALES ||
+                         producerCountry == countryType.UKNORTHERNIRELAND) &&
+                         producer.annualTurnoverBand == annualTurnoverBandType.Greaterthanonemillionpounds)
+                {
+                    band = ChargeBand.D;
+                }
+                else if (producer.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
+                         !producer.VATRegistered &&
+                        (producerCountry == countryType.UKSCOTLAND ||
+                         producerCountry == countryType.UKWALES ||
+                         producerCountry == countryType.UKNORTHERNIRELAND) &&
+                         producer.annualTurnoverBand == annualTurnoverBandType.Lessthanorequaltoonemillionpounds)
+                {
+                    band = ChargeBand.C;
+                }
+                else
+                {
+                    // Default to E for all other cases (primarily < 5T scenarios)
+                    band = ChargeBand.E;
+                }
+
+                // Use legacy method which returns ProducerCharge directly
+                charge = await fetchProducerCharge.GetChargeBandAmountAsyncLegacy(band);
             }
+            else
+            {
+                // For producers based in England or outside the UK, the annual turnover band is not applicable
+                if (producerCountry == countryType.UKENGLAND || !IsUKCountry(producerCountry))
+                {
+                    annualTurnoverBand = AnnualTurnoverBand.NotApplicable;
+                }
 
-            // Use the enhanced data-driven method to get the complete charge band amount record
-            var chargeBandAmount = await fetchProducerCharge.GetChargeBandAmountAsync(
-                competentAuthority,
-                producer.VATRegistered,
-                annualTurnoverBand,
-                eeePlacedOnMarketBand,
-                complianceYear,
-                asOfUtc);
+                // Use the enhanced data-driven method to get the complete charge band amount record
+                var chargeBandAmount = await fetchProducerCharge.GetChargeBandAmountAsync(
+                    competentAuthority,
+                    producer.VATRegistered,
+                    annualTurnoverBand,
+                    eeePlacedOnMarketBand,
+                    complianceYear,
+                    asOfUtc);
 
-            var charge = new ProducerCharge() 
-            { 
-                ChargeBandAmount = chargeBandAmount,
-                Amount = chargeBandAmount.Amount 
-            };
+                charge = new ProducerCharge() 
+                { 
+                    ChargeBandAmount = chargeBandAmount,
+                    Amount = chargeBandAmount.Amount 
+                };
+            }
 
             // Apply additional fee for Online Marketplace
             ApplyOnlineMarketplaceFee(producer, producerCountry, charge);
