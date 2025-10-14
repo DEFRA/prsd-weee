@@ -47,28 +47,8 @@ END
 
 GO
 
--- ===============================
---   BATCH 2: Update existing data
--- ===============================
-PRINT N'=== Updating existing records ===';
-
-UPDATE [Lookup].[ChargeBandAmount]
-SET [ComplianceYear] = 2000,
-    [EffectiveFrom] = '2000-01-01',
-    [CompetentAuthority] = 0,      -- NonUK (appropriate for legacy data that doesn't differentiate by authority)
-    [VatRegistered] = 0,           -- False (conservative default for legacy data)
-    [AnnualTurnoverBand] = 2,      -- NotApplicable (appropriate for legacy data)
-    [EEEPlacedOnMarketBand] = 0    -- Morethanorequalto5TEEEplacedonmarket (most common scenario)
-WHERE [ComplianceYear] IS NULL OR [EffectiveFrom] IS NULL
-   OR [CompetentAuthority] IS NULL OR [VatRegistered] IS NULL
-   OR [AnnualTurnoverBand] IS NULL OR [EEEPlacedOnMarketBand] IS NULL;
-
-PRINT N'Updated existing records with historical values and appropriate defaults for legacy data';
-
-GO
-
 -- =============================
---   BATCH 3: Insert new data
+--   BATCH 2: Insert new data
 -- =============================
 PRINT N'=== Inserting new charge band data ===';
 
@@ -173,7 +153,7 @@ PRINT N'New records added: ' + CAST(@@ROWCOUNT AS NVARCHAR(10));
 GO
 
 -- =============================
---   BATCH 4: Create indexes
+--   BATCH 3: Create indexes
 -- =============================
 PRINT N'=== Creating performance indexes ===';
 
