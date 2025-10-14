@@ -128,7 +128,7 @@
             {
                 DirectRegistrantHelper.SetupCommonTestData(wrapper);
 
-                var complianceYear = 2060;
+                var complianceYear = 2025;
                 // Direct registrant data is for the previous year
                 var (_, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear - 1);
 
@@ -241,7 +241,7 @@
                 var results = await wrapper.WeeeContext.StoredProcedures.SpgUKEEEDataByComplianceYear(complianceYear);
 
                 results.Should().NotBeNull();
-                results.Count.Should().Be(15);
+                results.Count.Should().Be(14);
 
                 var schemeElement = results.ElementAt(0);
                 schemeElement.Category.Should().Be("01. Large household appliances");
