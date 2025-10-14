@@ -241,7 +241,7 @@
                 var results = await wrapper.WeeeContext.StoredProcedures.SpgUKEEEDataByComplianceYear(complianceYear);
 
                 results.Should().NotBeNull();
-                results.Count.Should().Be(14);
+                results.Count.Should().Be(15);
 
                 var schemeElement = results.ElementAt(0);
                 schemeElement.Category.Should().Be("01. Large household appliances");
