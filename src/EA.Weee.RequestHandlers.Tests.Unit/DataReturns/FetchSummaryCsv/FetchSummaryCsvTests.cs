@@ -86,7 +86,7 @@
         /// <summary>
         /// This test ensures that the CsvWriter will define columns for "Quarter",
         /// "EEE or WEEE in tonnes (t)", "Obligation type" and a column for each
-        /// of the fourteen categories; i.e. "Cat 1 (t)", "Cat 2 (t)", etc.
+        /// of the categories; i.e. "Cat 1 (t)", "Cat 2 (t)", etc.
         /// </summary>
         [Fact]
         public void CreateWriter_Always_CreatesExpectedColumns()
@@ -119,7 +119,8 @@
                 c => Assert.Equal("Cat 11 (t)", c),
                 c => Assert.Equal("Cat 12 (t)", c),
                 c => Assert.Equal("Cat 13 (t)", c),
-                c => Assert.Equal("Cat 14 (t)", c));
+                c => Assert.Equal("Cat 14 (t)", c),
+                c => Assert.Equal("Cat 15 (t)", c));
         }
     }
 }

@@ -111,5 +111,9 @@
         string AddressLookupScope { get; set; }
 
         DateTime SmallProducerFeatureEnabledFrom { get; set; }
+
+        int SessionTimeoutInMinutes { get; set; }
+
+        int SessionTimeoutWarningInMinutes { get; set; }
     }
 }

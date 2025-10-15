@@ -12,5 +12,8 @@
 
         [Display(Name = "3.0.7")]
         Version_3_07,
+
+        [Display(Name = "3.0.8")]
+        Version_3_08,
     }
 }

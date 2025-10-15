@@ -91,6 +91,7 @@
                         var tonnage12 = NextTonnage(tonnageRandom);
                         var tonnage13 = NextTonnage(tonnageRandom);
                         var tonnage14 = NextTonnage(tonnageRandom);
+                        var tonnage15 = NextTonnage(tonnageRandom);
 
                         var justSomeExtraYears = new List<ObligationSchemeAmount>()
                         {
@@ -108,6 +109,7 @@
                             new ObligationSchemeAmount(WeeeCategory.ITAndTelecommsEquipment, tonnage12),
                             new ObligationSchemeAmount(WeeeCategory.LightingEquipment, tonnage13),
                             new ObligationSchemeAmount(WeeeCategory.MonitoringAndControlInstruments, tonnage14),
+                            new ObligationSchemeAmount(WeeeCategory.VapesAndElectronicCigarettes, tonnage15),
                         };
 
                         ObligationSchemeDbSetup.Init().WithScheme(scheme.Id)
@@ -136,6 +138,7 @@
                             var tonnage12 = NextTonnage(tonnageRandom);
                             var tonnage13 = NextTonnage(tonnageRandom);
                             var tonnage14 = NextTonnage(tonnageRandom);
+                            var tonnage15 = NextTonnage(tonnageRandom);
 
                             var tonnages2 = new List<NoteTonnage>()
                             {
@@ -153,6 +156,7 @@
                                 new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, tonnage12, NextTonnage(tonnageRandom, tonnage12 - 5)),
                                 new NoteTonnage(WeeeCategory.LightingEquipment, tonnage13, NextTonnage(tonnageRandom, tonnage13 - 5)),
                                 new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, tonnage14, NextTonnage(tonnageRandom, tonnage14 - 5)),
+                                new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, tonnage15, NextTonnage(tonnageRandom, tonnage15 - 5)),
                             };
 
                             var aatf = aatfs.ElementAt(randomAatf.Next(0, 49));
@@ -187,6 +191,7 @@
                             var tonnage12 = NextTonnage(tonnageRandom);
                             var tonnage13 = NextTonnage(tonnageRandom);
                             var tonnage14 = NextTonnage(tonnageRandom);
+                            var tonnage15 = NextTonnage(tonnageRandom);
 
                             var tonnages2 = new List<NoteTonnage>()
                             {
@@ -204,6 +209,7 @@
                                 new NoteTonnage(WeeeCategory.ITAndTelecommsEquipment, tonnage12, NextTonnage(tonnageRandom, tonnage12)),
                                 new NoteTonnage(WeeeCategory.LightingEquipment, tonnage13, NextTonnage(tonnageRandom, tonnage13)),
                                 new NoteTonnage(WeeeCategory.MonitoringAndControlInstruments, tonnage14, NextTonnage(tonnageRandom, tonnage14)),
+                                new NoteTonnage(WeeeCategory.VapesAndElectronicCigarettes, tonnage15, NextTonnage(tonnageRandom, tonnage15)),
                             };
 
                             var status = noteStatuses.ElementAt(randomStatus.Next(noteStatuses.Count - 1));
@@ -253,6 +259,8 @@
                                 nt.CategoryId.Equals(WeeeCategory.LightingEquipment));
                             var noteTonnage14 = noteToTransfer.NoteTonnage.First(nt =>
                                 nt.CategoryId.Equals(WeeeCategory.MonitoringAndControlInstruments));
+                            var noteTonnage15 = noteToTransfer.NoteTonnage.First(nt =>
+                                nt.CategoryId.Equals(WeeeCategory.VapesAndElectronicCigarettes));
 
                             var newTransferNoteTonnage1 = new List<NoteTransferTonnage>()
                             {
@@ -284,6 +292,8 @@
                                     noteTonnage13.Id, NextTonnage(tonnageRandom, noteTonnage13.Received - 3), NextTonnage(tonnageRandom, noteTonnage13.Reused - 2)),
                                 new NoteTransferTonnage(
                                     noteTonnage14.Id, NextTonnage(tonnageRandom, noteTonnage14.Received - 3), NextTonnage(tonnageRandom, noteTonnage14.Reused - 2)),
+                                new NoteTransferTonnage(
+                                    noteTonnage15.Id, NextTonnage(tonnageRandom, noteTonnage15.Received - 3), NextTonnage(tonnageRandom, noteTonnage15.Reused - 2)),
                             };
 
                             var filterSchemes = schemesList.Where(s => s.OrganisationId != organisation.Id).ToList();
@@ -338,6 +348,8 @@
                                 nt.CategoryId.Equals(WeeeCategory.LightingEquipment));
                             var noteTonnage14 = noteToTransfer.NoteTonnage.First(nt =>
                                 nt.CategoryId.Equals(WeeeCategory.MonitoringAndControlInstruments));
+                            var noteTonnage15 = noteToTransfer.NoteTonnage.First(nt =>
+                                nt.CategoryId.Equals(WeeeCategory.VapesAndElectronicCigarettes));
 
                             var newTransferNoteTonnage1 = new List<NoteTransferTonnage>()
                             {
@@ -369,6 +381,8 @@
                                     noteTonnage13.Id, NextTonnage(tonnageRandom, noteTonnage13.Received - 3), NextTonnage(tonnageRandom, noteTonnage13.Reused - 2)),
                                 new NoteTransferTonnage(
                                     noteTonnage14.Id, NextTonnage(tonnageRandom, noteTonnage14.Received - 3), NextTonnage(tonnageRandom, noteTonnage14.Reused - 2)),
+                                new NoteTransferTonnage(
+                                    noteTonnage15.Id, NextTonnage(tonnageRandom, noteTonnage15.Received - 3), NextTonnage(tonnageRandom, noteTonnage15.Reused - 2)),
                             };
 
                             var filterSchemes = schemesList.Where(s => s.OrganisationId != organisation.Id).ToList();

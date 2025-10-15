@@ -83,7 +83,7 @@
                 await db.WeeeContext.SaveChangesAsync();
 
                 var results = await db.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
-                results.Rows.Count.Should().Be(28);
+                results.Rows.Count.Should().Be(30);
 
                 results.Columns[TotalReceivedHeading].Should().BeNull();
                 results.Columns[TotalSentOnHeading].Should().BeNull();
@@ -112,7 +112,7 @@
                 await db.WeeeContext.SaveChangesAsync();
 
                 var results = await db.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
-                results.Rows.Count.Should().Be(28);
+                results.Rows.Count.Should().Be(30);
 
                 results.Columns[TotalReceivedHeading].Should().NotBeNull();
                 results.Columns[TotalSentOnHeading].Should().NotBeNull();
@@ -142,7 +142,7 @@
                 await db.WeeeContext.SaveChangesAsync();
 
                 var results = await db.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
-                results.Rows.Count.Should().Be(28);
+                results.Rows.Count.Should().Be(30);
 
                 for (var countValue = 0; countValue < CategoryValues().Count(); countValue++)
                 {
@@ -175,7 +175,7 @@
                 await db.WeeeContext.SaveChangesAsync();
 
                 var results = await db.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
-                results.Rows.Count.Should().Be(28);
+                results.Rows.Count.Should().Be(30);
 
                 for (var countValue = 0; countValue < CategoryValues().Count(); countValue++)
                 {
@@ -204,9 +204,9 @@
                 await db.WeeeContext.SaveChangesAsync();
 
                 var results = await db.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
-                results.Rows.Count.Should().Be(28);
+                results.Rows.Count.Should().Be(30);
 
-                results.Select($"AatfKey='{aatf.Id}'").Length.Should().Be(28);
+                results.Select($"AatfKey='{aatf.Id}'").Length.Should().Be(30);
                 results.Select($"AatfKey='{aatfNotReporting.Id}'").Length.Should().Be(0);
 
                 results.Dispose();
@@ -255,7 +255,7 @@
                 await db.WeeeContext.SaveChangesAsync();
 
                 var results = await db.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
-                results.Rows.Count.Should().Be(56);
+                results.Rows.Count.Should().Be(60);
 
                 foreach (var categoryValue in CategoryValues())
                 {
@@ -321,7 +321,7 @@
                 await db.WeeeContext.SaveChangesAsync();
 
                 var results = await db.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
-                results.Rows.Count.Should().Be(56);
+                results.Rows.Count.Should().Be(60);
 
                 foreach (var categoryValue in CategoryValues())
                 {
@@ -390,7 +390,7 @@
                 await db.WeeeContext.SaveChangesAsync();
 
                 var results = await db.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
-                results.Rows.Count.Should().Be(56);
+                results.Rows.Count.Should().Be(60);
 
                 foreach (var categoryValue in CategoryValues())
                 {
@@ -454,7 +454,7 @@
                 await db.WeeeContext.SaveChangesAsync();
 
                 var results = await db.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
-                results.Rows.Count.Should().Be(56);
+                results.Rows.Count.Should().Be(60);
 
                 foreach (var categoryValue in CategoryValues())
                 {
@@ -514,7 +514,7 @@
                 await db.WeeeContext.SaveChangesAsync();
 
                 var results = await db.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
-                results.Rows.Count.Should().Be(56);
+                results.Rows.Count.Should().Be(60);
 
                 foreach (var categoryValue in CategoryValues())
                 {
@@ -562,7 +562,7 @@
                 await db.WeeeContext.SaveChangesAsync();
 
                 var results = await db.StoredProcedures.GetReturnObligatedCsvData(@return.Id);
-                results.Rows.Count.Should().Be(56);
+                results.Rows.Count.Should().Be(60);
 
                 foreach (var categoryValue in CategoryValues())
                 {

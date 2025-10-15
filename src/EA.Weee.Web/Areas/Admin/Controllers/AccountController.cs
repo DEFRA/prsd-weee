@@ -228,6 +228,12 @@
             return RedirectToAction("SignIn");
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public void ExtendSession()
+        {
+        }
+
         [HttpGet]
         public ActionResult InternalUserAuthorisationRequired(UserStatus? userStatus)
         {

@@ -369,7 +369,31 @@ input[type="file"].form-control {
     border: 0;
 }
 
-#link-sign-out {
+
+
+.link-submit-automation-ignored {
+    @extend %govuk-link;
+    background: none;
+    border: none;
+    font-family: $govuk-font-family;
+    @include govuk-font(19);
+    color: govuk-colour('blue');
+    padding: 0;
+    cursor: pointer;
+}
+
+.link-submit-automation-ignored div {
+    position: relative;
+    top: 0;
+    left: 0;
+    border: 0;
+}
+
+#link-sign-out, #session-link-sign-out {
+    @include govuk-font(16);
+}
+
+.session-link-sign-out {
     @include govuk-font(16);
 }
 

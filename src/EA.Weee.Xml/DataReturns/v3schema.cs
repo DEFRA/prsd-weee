@@ -312,6 +312,10 @@ namespace EA.Weee.Xml.DataReturns
         /// <remarks/>
         [System.Xml.Serialization.XmlEnumAttribute("Photovoltaic Panels")]
         PhotovoltaicPanels,
+
+        /// <remarks/>
+        [System.Xml.Serialization.XmlEnumAttribute("Vapes and electronic cigarettes")]
+        VapesAndElectronicCigarettes,
     }
 
     /// <remarks/>

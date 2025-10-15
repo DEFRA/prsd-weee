@@ -1112,6 +1112,7 @@
     <Content Include="Scripts\lookup\contact-details-address-lookup.js" />
     <Content Include="Scripts\lookup\lookup-search.js" />
     <Content Include="Scripts\lookup\org-details-company-lookup.js" />
+    <Content Include="Scripts\weee-session-timeout.js" />
     <Content Include="Views\Shared\EditorTemplates\RecipientFiltersViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ObligationTypeFiltersViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\StatusFiltersViewModel.cshtml" />
@@ -1186,6 +1187,8 @@
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\ProducersIncSmallProducersDataViewModel.cshtml" />
     <Content Include="Areas\Admin\Views\Shared\EditorTemplates\ProducersDataViewModel.cshtml" />
     <Content Include="Views\Shared\Producer\ViewOrganisation\_OrganisationDetailsTabsBottomButtons.cshtml" />
+    <Content Include="Views\Account\SessionSignedOut.cshtml" />
+    <Content Include="Content\weee\_session-timeout.scss" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
@@ -2010,6 +2013,7 @@
     <Content Include="Views\Shared\EditorTemplates\SubmittedDatesFiltersViewModel.cshtml" />
     <Content Include="Views\Shared\_OrganisationAddressCountryPartial.cshtml" />
     <Content Include="Views\Shared\_RepresentingCompanyPartial.cshtml" />
+    <Content Include="Views\Shared\_SessionTimeout.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

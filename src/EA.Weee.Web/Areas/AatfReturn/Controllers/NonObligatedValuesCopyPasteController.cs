@@ -1,7 +1,9 @@
 ﻿namespace EA.Weee.Web.Areas.AatfReturn.Controllers
 {
     using Attributes;
+    using EA.Prsd.Core.Helpers;
     using EA.Weee.Api.Client;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Requests.AatfReturn;
     using EA.Weee.Web.Areas.AatfReturn.ViewModels;
     using EA.Weee.Web.Constant;
@@ -35,13 +37,17 @@
                 var @return = await client.SendAsync(User.GetAccessToken(), new GetReturn(returnId, false));
 
                 var typeHeading = dcf == false ? "Non-obligated WEEE" : "Non-obligated WEEE kept / retained by a DCF";
+                var categories = EnumHelper.GetValues(typeof(WeeeCategory));
+                var maxCategoryId = categories.Max(x => x.Key);
 
                 var viewModel = new NonObligatedValuesCopyPasteViewModel()
                 {
                     ReturnId = returnId,
                     OrganisationId = @return.OrganisationData.Id,
                     Dcf = dcf,
-                    TypeHeading = typeHeading
+                    TypeHeading = typeHeading,
+                    WeeeCategoryCount = categories.Count(),
+                    MaxWeeeCategoryId = maxCategoryId
                 };
 
                 await SetBreadcrumb(@return.OrganisationData.Id, BreadCrumbConstant.AatfReturn, DisplayHelper.YearQuarterPeriodFormat(@return.Quarter, @return.QuarterWindow));
