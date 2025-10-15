@@ -35,14 +35,20 @@
             var fakeProducer = A.Fake<ProducerSubmission>();
             var producerCharge = new ProducerCharge()
             {
-                ChargeBandAmount = new ChargeBandAmount(Guid.Empty, ChargeBand.E, 0),
+                ChargeBandAmount = new ChargeBandAmount(Guid.Empty, ChargeBand.E, CompetentAuthorityType.England, false, AnnualTurnoverBand.Lessthanorequaltoonemillionpounds, EEEPlacedOnMarketBand.Lessthan5TEEEplacedonmarket, 2016, 0, DateTime.Now),
                 Amount = 0
             };
 
             ChargeBandAmount producerChargeBand = new ChargeBandAmount(
                 new Guid("0B513437-2971-4C6C-B633-75216FAB6757"),
                 ChargeBand.E,
-                123);
+                CompetentAuthorityType.England,
+                false,
+                AnnualTurnoverBand.Lessthanorequaltoonemillionpounds,
+                EEEPlacedOnMarketBand.Lessthan5TEEEplacedonmarket,
+                2016,
+                123,
+                DateTime.Now);
 
             A.CallTo(() => fakeProducer.ChargeBandAmount).Returns(producerChargeBand);
             A.CallTo(() => evaluator.QuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
@@ -62,14 +68,20 @@
             var fakeProducer = A.Fake<ProducerSubmission>();
             var producerCharge = new ProducerCharge()
             {
-                ChargeBandAmount = new ChargeBandAmount(Guid.Empty, ChargeBand.B, 0),
+                ChargeBandAmount = new ChargeBandAmount(Guid.Empty, ChargeBand.B, CompetentAuthorityType.England, false, AnnualTurnoverBand.Lessthanorequaltoonemillionpounds, EEEPlacedOnMarketBand.Lessthan5TEEEplacedonmarket, 2016, 0, DateTime.Now),
                 Amount = 0
             };
 
             ChargeBandAmount chargeBandAmount = new ChargeBandAmount(
                 new Guid("0B513437-2971-4C6C-B633-75216FAB6757"),
                 ChargeBand.E,
-                123);
+                CompetentAuthorityType.England,
+                false,
+                AnnualTurnoverBand.Lessthanorequaltoonemillionpounds,
+                EEEPlacedOnMarketBand.Lessthan5TEEEplacedonmarket,
+                2016,
+                123,
+                DateTime.Now);
 
             A.CallTo(() => fakeProducer.ChargeBandAmount)
                 .Returns(chargeBandAmount);
@@ -93,7 +105,7 @@
             var evaluator = new ProducerChargeBandChangeEvaluator(producerChargeBandCalculatorChooser);
             var producerCharge = new ProducerCharge()
             {
-                ChargeBandAmount = new ChargeBandAmount(Guid.Empty, ChargeBand.B, 0),
+                ChargeBandAmount = new ChargeBandAmount(Guid.Empty, ChargeBand.B, CompetentAuthorityType.England, false, AnnualTurnoverBand.Lessthanorequaltoonemillionpounds, EEEPlacedOnMarketBand.Lessthan5TEEEplacedonmarket, 2016, 0, DateTime.Now),
                 Amount = 0
             };
             var fakeProducer = A.Fake<ProducerSubmission>();
@@ -101,7 +113,13 @@
             ChargeBandAmount chargeBandAmount = new ChargeBandAmount(
                 new Guid("0B513437-2971-4C6C-B633-75216FAB6757"),
                 existingChargeBand,
-                123);
+                CompetentAuthorityType.England,
+                false,
+                AnnualTurnoverBand.Lessthanorequaltoonemillionpounds,
+                EEEPlacedOnMarketBand.Lessthan5TEEEplacedonmarket,
+                2016,
+                123,
+                DateTime.Now);
 
             A.CallTo(() => fakeProducer.ChargeBandAmount).Returns(chargeBandAmount);
             A.CallTo(() => fakeProducer.OrganisationName).Returns(producerName);

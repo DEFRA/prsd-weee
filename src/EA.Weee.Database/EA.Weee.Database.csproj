@@ -468,6 +468,7 @@
     <Content Include="scripts\Update\Release 8\Sprint6\20250325-0930-alter-Producer-spgProducerEeeHistoryCsvDataByPRN.sql" />
     <Content Include="scripts\Update\Release 8\Sprint6\20250327-1012-alter-Producer-spgProducerEeeCsvData.sql" />
     <Content Include="scripts\Update\Release 8\Sprint6\20250327-1437-alter-Producer-spgSchemeObligationCsvData.sql" />
+    <Content Include="scripts\Update\Release 8\Sprint6\20251010-1700-alter-ChargeBandAmountTable-Rewritten.sql" />
     <Content Include="scripts\Update\Release 8\Sprint6\20251006-1715-alter-spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority.sql">
       <SubType>Component</SubType>
     </Content>
