@@ -50,6 +50,7 @@
             csvWriter.DefineColumn("Cat12 B2C (t)", i => i.Cat12B2C);
             csvWriter.DefineColumn("Cat13 B2C (t)", i => i.Cat13B2C);
             csvWriter.DefineColumn("Cat14 B2C (t)", i => i.Cat14B2C);
+            csvWriter.DefineColumn("Cat15 B2C (t)", i => i.Cat15B2C);
 
             csvWriter.DefineColumn("Cat1 B2B (t)", i => i.Cat1B2B);
             csvWriter.DefineColumn("Cat2 B2B (t)", i => i.Cat2B2B);
@@ -65,6 +66,7 @@
             csvWriter.DefineColumn("Cat12 B2B (t)", i => i.Cat12B2B);
             csvWriter.DefineColumn("Cat13 B2B (t)", i => i.Cat13B2B);
             csvWriter.DefineColumn("Cat14 B2B (t)", i => i.Cat14B2B);
+            csvWriter.DefineColumn("Cat15 B2B (t)", i => i.Cat15B2B);
 
             var fileContent = csvWriter.Write(changes.CsvData);
 

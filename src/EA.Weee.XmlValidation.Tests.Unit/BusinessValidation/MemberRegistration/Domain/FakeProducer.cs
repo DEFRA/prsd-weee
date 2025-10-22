@@ -54,7 +54,7 @@
                 AnnualTurnOverBandType.Greaterthanonemillionpounds,
                 brandNames.Select(bn => new BrandName(bn)).ToList(),
                 new List<SICCode>(),
-                new ChargeBandAmount(Guid.NewGuid(), ChargeBand.A, 123),
+                new ChargeBandAmount(Guid.NewGuid(), ChargeBand.A, CompetentAuthorityType.England, false, AnnualTurnoverBand.Lessthanorequaltoonemillionpounds, EEEPlacedOnMarketBand.Lessthan5TEEEplacedonmarket, complianceYear ?? 2016, 123, DateTime.Now),
                 999,
                 A.Dummy<StatusType>());
         }

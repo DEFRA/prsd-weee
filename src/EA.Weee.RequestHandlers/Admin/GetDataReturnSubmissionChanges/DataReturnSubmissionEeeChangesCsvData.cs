@@ -30,6 +30,7 @@
         public decimal? Cat12B2C { get; set; }
         public decimal? Cat13B2C { get; set; }
         public decimal? Cat14B2C { get; set; }
+        public decimal? Cat15B2C { get; set; }
         public decimal? Cat1B2B { get; set; }
         public decimal? Cat2B2B { get; set; }
         public decimal? Cat3B2B { get; set; }
@@ -44,5 +45,6 @@
         public decimal? Cat12B2B { get; set; }
         public decimal? Cat13B2B { get; set; }
         public decimal? Cat14B2B { get; set; }
+        public decimal? Cat15B2B { get; set; }
     }
 }
