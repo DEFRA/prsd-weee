@@ -31,6 +31,7 @@
         private readonly ICompanyAlreadyRegistered companyAlreadyRegistered;
         private readonly ICompanyRegistrationNumberChange companyRegistrationNumberChange;
         private readonly IProducerObligationTypeChange producerObligationTypeChange;
+        private readonly IProducerSellingTechniqueChange producerSellingTechniqueChange;
 
         public MemberRegistrationBusinessValidatorTests()
         {
@@ -50,6 +51,7 @@
             companyAlreadyRegistered = A.Fake<ICompanyAlreadyRegistered>();
             companyRegistrationNumberChange = A.Fake<ICompanyRegistrationNumberChange>();
             producerObligationTypeChange = A.Fake<IProducerObligationTypeChange>();
+            producerSellingTechniqueChange = A.Fake<IProducerSellingTechniqueChange>();
         }
 
         [Fact]
@@ -328,7 +330,8 @@
                 producerChargeBandChangeWarning,
                 companyAlreadyRegistered,
                 companyRegistrationNumberChange,
-                (x, y) => producerObligationTypeChange);
+                (x, y) => producerObligationTypeChange,
+                producerSellingTechniqueChange);
         }
 
         private schemeType SchemeWithXProducers(int numberOfProducers)
