@@ -12,6 +12,8 @@
     @Html.HiddenFor(m => m.OrganisationId)
     @Html.HiddenFor(m => m.DirectRegistrantId)
 
+    <p class="govuk-hint">For registered companies some of the details provided (email address, phone number and fax number) will be published on the Public Register as detailed in Schedule 13 of The Waste Electrical and Electronic Equipment Regulations 2013.</p>
+
     <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CompanyName)">
         @Html.Gds().LabelFor(m => m.CompanyName)
         @Html.Gds().ValidationMessageFor(m => m.CompanyName)

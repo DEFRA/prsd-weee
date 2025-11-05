@@ -18,6 +18,9 @@
                 WebAddress = source.WebsiteAddress,
                 Postcode = source.Postcode,
                 CountryName = source.CountryName,
+                Email = source.Email,
+                Telephone = source.Telephone,
+                Fax = source.Fax
             };
         }
     }
