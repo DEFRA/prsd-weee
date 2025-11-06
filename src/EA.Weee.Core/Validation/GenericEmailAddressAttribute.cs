@@ -27,7 +27,7 @@
 
             if (value is string email)
             {
-                string pattern = @"^[^@\s]+@[^@\s]+\.[^@\s]+$";
+                string pattern = @"^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$";
                 return Regex.IsMatch(email, pattern, RegexOptions.IgnoreCase);
             }
 
