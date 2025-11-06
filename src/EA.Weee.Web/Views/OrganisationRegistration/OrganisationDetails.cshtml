@@ -25,6 +25,8 @@
 
         @Html.Partial("_OrganisationHeadingAndCountryPartial", Model)
 
+        <p class="govuk-hint">For registered companies some of the details provided (email address, phone number and fax number) will be published on the Public Register as detailed in Schedule 13 of The Waste Electrical and Electronic Equipment Regulations 2013.</p>
+
         @Html.EditorFor(model => model)
 
         @Html.Partial("_OrganisationDetailsPartial", Model)
