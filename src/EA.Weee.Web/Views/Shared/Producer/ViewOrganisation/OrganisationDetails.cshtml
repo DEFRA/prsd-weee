@@ -46,6 +46,21 @@
                     </tr>
 
                     <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: @width;" scope="row">Email address</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.Address.Email</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: @width;" scope="row">Phone number</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.Address.Telephone</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
+                        <th class="govuk-table__header" style="width: @width;" scope="row">Fax number</th>
+                        <td class="govuk-table__cell">@Model.OrganisationViewModel.Address.Fax</td>
+                    </tr>
+
+                    <tr class="govuk-table__row">
                         <th class="govuk-table__header" style="width: @width;" scope="row">Address line 1</th>
                         <td class="govuk-table__cell">@Model.OrganisationViewModel.Address.Address1</td>
                     </tr>
@@ -79,7 +94,7 @@
                         <th class="govuk-table__header" style="width: @width;" scope="row">Website address</th>
                         <td class="govuk-table__cell">@Model.OrganisationViewModel.Address.WebsiteAddress</td>
                     </tr>
-                    
+
                     @if (Model.Year.HasValue)
                     {
                         <tr class="govuk-table__row">

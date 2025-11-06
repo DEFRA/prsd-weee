@@ -3,6 +3,26 @@
 
 @Html.HiddenFor(m => m.OrganisationType)
 
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Email)">
+    @Html.Gds().LabelFor(m => m.Address.Email)
+    @Html.Gds().ValidationMessageFor(m => m.Address.Email)
+    @Html.Gds().TextBoxFor(m => m.Address.Email, new { @maxlength = CommonMaxFieldLengths.EmailAddress })
+</div>
+
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Telephone)">
+    @Html.Gds().LabelFor(m => m.Address.Telephone)
+    <p class="govuk-hint">For international numbers include the country code</p>
+    @Html.Gds().ValidationMessageFor(m => m.Address.Telephone)
+    @Html.Gds().TextBoxFor(m => m.Address.Telephone, new { @maxlength = CommonMaxFieldLengths.Telephone })
+</div>
+
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Fax)">
+    @Html.Gds().LabelFor(m => m.Address.Fax)
+    <p class="govuk-hint">For international numbers include the country code</p>
+    @Html.Gds().ValidationMessageFor(m => m.Address.Fax)
+    @Html.Gds().TextBoxFor(m => m.Address.Fax, new { @maxlength = CommonMaxFieldLengths.Fax })
+</div>
+
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.WebsiteAddress)">
     @Html.Gds().LabelFor(m => m.Address.WebsiteAddress)
     @Html.Gds().ValidationMessageFor(m => m.Address.WebsiteAddress)

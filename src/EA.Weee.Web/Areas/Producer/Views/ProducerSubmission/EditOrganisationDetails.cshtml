@@ -68,13 +68,37 @@
             </div>
         }
 
+        <p class="govuk-hint">For registered companies some of the details provided (email address, phone number and fax number) will be published on the Public Register as detailed in Schedule 13 of The Waste Electrical and Electronic Equipment Regulations 2013.</p>
+
         @Html.EditorForAs(model => model.Organisation)
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.Address.Email)">
+            @Html.Gds().LabelFor(m => m.Organisation.Address.Email)
+            @Html.Gds().ValidationMessageFor(m => m.Organisation.Address.Email)
+            @Html.Gds().TextBoxFor(m => m.Organisation.Address.Email, new { @maxlength = CommonMaxFieldLengths.EmailAddress })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.Address.Telephone)">
+            @Html.Gds().LabelFor(m => m.Organisation.Address.Telephone)
+            <p class="govuk-hint">For international numbers include the country code</p>
+            @Html.Gds().ValidationMessageFor(m => m.Organisation.Address.Telephone)
+            @Html.Gds().TextBoxFor(m => m.Organisation.Address.Telephone, new { @maxlength = CommonMaxFieldLengths.Telephone })
+        </div>
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.Address.Fax)">
+            @Html.Gds().LabelFor(m => m.Organisation.Address.Fax)
+            <p class="govuk-hint">For international numbers include the country code</p>
+            @Html.Gds().ValidationMessageFor(m => m.Organisation.Address.Fax)
+            @Html.Gds().TextBoxFor(m => m.Organisation.Address.Fax, new { @maxlength = CommonMaxFieldLengths.Fax })
+        </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.Address.WebsiteAddress)">
             @Html.Gds().LabelFor(m => m.Organisation.Address.WebsiteAddress)
             @Html.Gds().ValidationMessageFor(m => m.Organisation.Address.WebsiteAddress)
             @Html.Gds().TextBoxFor(m => m.Organisation.Address.WebsiteAddress, new { @maxlength = CommonMaxFieldLengths.WebsiteAddress })
         </div>
+
+        <p class="govuk-hint">The address details provided will published on the Public Register as detailed in Schedule 13 of The Waste Electrical and Electronic Equipment Regulations 2013.</p>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Organisation.Address.Address1)">
             @Html.Gds().LabelFor(m => m.Organisation.Address.Address1)
