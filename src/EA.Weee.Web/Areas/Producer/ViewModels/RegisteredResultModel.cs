@@ -10,6 +10,6 @@
 
         public int ComplianceYear { get; set; }
 
-        public int TotalAmount { get; set; }
+        public decimal TotalAmount { get; set; }
     }
 }

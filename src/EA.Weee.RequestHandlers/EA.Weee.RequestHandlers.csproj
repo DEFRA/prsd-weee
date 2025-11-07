@@ -181,6 +181,7 @@
     <Compile Include="Organisations\DirectRegistrants\CompleteMigratedOrganisationTransactionHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\CompleteOrganisationTransactionHandlerBase.cs" />
     <Compile Include="Organisations\DirectRegistrants\ContinueOrganisationRegistrationRequestHandler.cs" />
+    <Compile Include="Organisations\DirectRegistrants\GetSmallProducerDirectRegistrantChargeRequestHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\ProducerRegistrationNumberRequestHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddSignatoryAndCompleteRequestHandler.cs" />
     <Compile Include="Organisations\DirectRegistrants\AddPaymentSessionRequestHandler.cs" />

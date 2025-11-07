@@ -12,5 +12,7 @@
         public Guid OrganisationId { get; set; }
 
         public bool HasAuthorisedRepresentitive { get; set; }
+
+        public decimal DirectRegistrantChargeAmount { get; set; }
     }
 }
