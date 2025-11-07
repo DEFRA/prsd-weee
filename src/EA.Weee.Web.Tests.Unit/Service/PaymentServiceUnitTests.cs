@@ -51,15 +51,16 @@
             var returnUrl = fixture.Create<string>();
             var paymentReference = fixture.Create<string>();
             var paymentId = fixture.Create<string>();
-            var amount = fixture.Create<int>();
+            var amount = fixture.Create<decimal>();
             var description = fixture.Create<string>();
 
+            amount = (DateTime.UtcNow.Year == 2025 ? (decimal)30.00 : (decimal)35.00);
             A.CallTo(() => secureReturnUrlHelper.GenerateSecureRandomString(directRegistrantId, 16))
                 .Returns(secureId);
             A.CallTo(() => configurationService.CurrentConfiguration.GovUkPayReturnBaseUrl)
                 .Returns(returnUrl);
-            A.CallTo(() => configurationService.CurrentConfiguration.GovUkPayAmountInPence)
-                .Returns(amount);
+            //A.CallTo(() => configurationService.CurrentConfiguration.GovUkPayAmountInPence)
+            //    .Returns(amount);
             A.CallTo(() => configurationService.CurrentConfiguration.GovUkPayDescription)
                 .Returns(description);
             A.CallTo(() => paymentReferenceGenerator.GeneratePaymentReferenceWithSeparators(20))
