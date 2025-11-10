@@ -96,6 +96,7 @@
     <Compile Include="Lookup\AnnualTurnoverBand.cs" />
     <Compile Include="Lookup\AreaBase.cs" />
     <Compile Include="Lookup\CompetentAuthorityType.cs" />
+    <Compile Include="Lookup\DirectRegistrantCharge.cs" />
     <Compile Include="Lookup\EEEPlacedOnMarketBand.cs" />
     <Compile Include="Lookup\LocalArea.cs" />
     <Compile Include="Lookup\PanArea.cs" />

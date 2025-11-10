@@ -35,5 +35,10 @@
         public int CurrentSystemYear { get; set; }
 
         public string EeeBrandNames { get; set; }
+
+        /// <summary>
+        /// Direct Registrant Charge
+        /// </summary>
+        public decimal DirectRegistrantChargeAmount { get; set; }
     }
 }

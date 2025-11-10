@@ -92,8 +92,6 @@
 
         string GovUkPayDescription { get; set; }
 
-        int GovUkPayAmountInPence { get; set; }
-
         string GovUkPayTokenSecret { get; set; }
 
         string GovUkPayTokenSalt { get; set; }

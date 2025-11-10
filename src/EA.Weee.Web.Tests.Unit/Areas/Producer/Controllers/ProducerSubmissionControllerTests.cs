@@ -837,14 +837,16 @@
         public async Task PaymentSuccess_ShouldReturnViewWithCorrectModel()
         {
             // Arrange
-            configurationService.CurrentConfiguration.GovUkPayAmountInPence = 3000;
+            //configurationService.CurrentConfiguration.GovUkPayAmountInPence = 3000;
 
             var reference = TestFixture.Create<string>();
             var organisationId = Guid.NewGuid();
+            var currentSystemYear = DateTime.UtcNow.Year;
             controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
             {
                 OrganisationData = new OrganisationData { Id = organisationId },
-                CurrentSubmission = new SmallProducerSubmissionHistoryData { ComplianceYear = SystemTime.UtcNow.Year }
+                CurrentSubmission = new SmallProducerSubmissionHistoryData { ComplianceYear = SystemTime.UtcNow.Year },
+                DirectRegistrantChargeAmount = (currentSystemYear == 2025 ? (decimal)30.00 : (decimal)32.00)
             };
 
             // Act
@@ -857,8 +859,8 @@
             model.PaymentReference.Should().Be(reference);
             model.OrganisationId.Should().Be(organisationId);
             model.ComplianceYear.Should().Be(controller.SmallProducerSubmissionData.CurrentSubmission.ComplianceYear);
-            model.TotalAmount.Should().Be(configurationService.CurrentConfiguration.GovUkPayAmountInPence / 100);
-            model.TotalAmount.ToString("0.00").Should().Be("30.00");
+            model.TotalAmount.Should().Be(controller.SmallProducerSubmissionData.DirectRegistrantChargeAmount);
+            //model.TotalAmount.ToString("0.00").Should().Be("30.00");
         }
 
         [Fact]

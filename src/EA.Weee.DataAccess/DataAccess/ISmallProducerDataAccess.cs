@@ -2,6 +2,7 @@
 {
     using System;
     using System.Threading.Tasks;
+    using EA.Weee.Domain.Lookup;
     using EA.Weee.Domain.Producer;
 
     public interface ISmallProducerDataAccess
@@ -13,5 +14,7 @@
         Task<DirectRegistrant> GetById(Guid directRegistrantId);
 
         Task<DirectProducerSubmission> GetCurrentDirectRegistrantSubmissionById(Guid directProducerSubmissionId);
+
+        Task<DirectRegistrantCharge> GetDirectRegistrantChargeByComplianceYear(int complianceYear);
     }
 }

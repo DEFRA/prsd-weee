@@ -1,12 +1,11 @@
 ﻿namespace EA.Weee.Api.Client.Models.Pay
 {
-    using System.Collections.Generic;
     using System.Text.Json.Serialization;
 
     public class CreateCardPaymentRequest
     {
         [JsonPropertyName("amount")]
-        public int Amount { get; set; }
+        public decimal Amount { get; set; }
 
         [JsonPropertyName("reference")]
         public string Reference { get; set; }

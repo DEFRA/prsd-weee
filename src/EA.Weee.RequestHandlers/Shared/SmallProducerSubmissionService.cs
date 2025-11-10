@@ -1,18 +1,17 @@
 ﻿namespace EA.Weee.RequestHandlers.Shared
 {
+    using EA.Prsd.Core;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
+    using EA.Weee.Core.Shared;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.Organisation;
     using EA.Weee.Domain.Producer;
     using EA.Weee.RequestHandlers.Mappings;
-    using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Text;
     using System.Threading.Tasks;
-    using EA.Weee.Core.Shared;
 
     public class SmallProducerSubmissionService : ISmallProducerSubmissionService
     {
@@ -32,6 +31,7 @@
             var organisation = mapper.Map<Organisation, OrganisationData>(directRegistrant.Organisation);
             var systemTime = await systemDataDataAccess.GetSystemDateTime();
             var currentYearSubmission = await smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(directRegistrant.Id, systemTime.Year);
+            var directRegistrantCharge = await smallProducerDataAccess.GetDirectRegistrantChargeByComplianceYear(SystemTime.UtcNow.Year);
 
             var submissionHistory = directRegistrant.DirectProducerSubmissions;
 
@@ -58,6 +58,7 @@
                 ProducerRegistrationNumber = submissionHistory.Any() ? submissionHistory.First().RegisteredProducer.ProducerRegistrationNumber : string.Empty,
                 CurrentSystemYear = systemTime.Year,
                 EeeBrandNames = directRegistrant.BrandNameId.HasValue ? directRegistrant.BrandName.Name : string.Empty,
+                DirectRegistrantChargeAmount = directRegistrantCharge.ChargeAmount,
             };
 
             foreach (var directProducerSubmission in submissionHistory)
