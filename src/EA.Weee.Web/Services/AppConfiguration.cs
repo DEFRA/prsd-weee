@@ -123,9 +123,6 @@
 
         public string GovUkPayDescription { get; set; }
 
-        [DefaultValue(3000)]
-        public int GovUkPayAmountInPence { get; set; }
-
         public string GovUkPayTokenSecret { get; set; }
 
         public string GovUkPayTokenSalt { get; set; }
