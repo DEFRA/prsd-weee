@@ -54,20 +54,23 @@
             var amount = fixture.Create<decimal>();
             var description = fixture.Create<string>();
 
-            amount = (DateTime.UtcNow.Year == 2025 ? (decimal)30.00 : (decimal)35.00);
+            amount = (DateTime.UtcNow.Year == 2025 ? 30 : 35);
             A.CallTo(() => secureReturnUrlHelper.GenerateSecureRandomString(directRegistrantId, 16))
                 .Returns(secureId);
             A.CallTo(() => configurationService.CurrentConfiguration.GovUkPayReturnBaseUrl)
                 .Returns(returnUrl);
-            //A.CallTo(() => configurationService.CurrentConfiguration.GovUkPayAmountInPence)
-            //    .Returns(amount);
             A.CallTo(() => configurationService.CurrentConfiguration.GovUkPayDescription)
                 .Returns(description);
             A.CallTo(() => paymentReferenceGenerator.GeneratePaymentReferenceWithSeparators(20))
                 .Returns(paymentReference);
 
+            var smallProducerDirectRegistrantChargeData = new SmallProducerDirectRegistrantChargeData { ComplianceYear = DateTime.UtcNow.Year, ChargeAmount = amount };
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetSmallProducerDirectRegistrantChargeRequest>.That.Matches(p => p.ComplianceYear == DateTime.UtcNow.Year)))
+                .Returns(smallProducerDirectRegistrantChargeData);
+
             var expectedPaymentResult = new CreatePaymentResult { PaymentId = paymentId };
-            A.CallTo(() => payClient.CreatePaymentAsync(A<string>._, A<CreateCardPaymentRequest>.That.Matches(c => c.Amount == amount && 
+            A.CallTo(() => payClient.CreatePaymentAsync(A<string>._, A<CreateCardPaymentRequest>.That.Matches(c => 
+                    c.Amount == amount && 
                     c.Description == description &&
                     c.ReturnUrl == returnUrl && 
                     c.Reference == paymentReference)))
