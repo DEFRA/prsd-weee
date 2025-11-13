@@ -5,7 +5,7 @@
     public class CreateCardPaymentRequest
     {
         [JsonPropertyName("amount")]
-        public decimal Amount { get; set; }
+        public int Amount { get; set; }
 
         [JsonPropertyName("reference")]
         public string Reference { get; set; }

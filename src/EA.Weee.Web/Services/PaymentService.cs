@@ -6,6 +6,7 @@
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using System;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Threading.Tasks;
 
     public class PaymentService : IPaymentService
@@ -34,10 +35,15 @@
                 var secureId = secureReturnUrlHelper.GenerateSecureRandomString(directRegistrantId);
                 var returnUrl = string.Format(configurationService.CurrentConfiguration.GovUkPayReturnBaseUrl, secureId);
                 var directRegistrantChargeData = await client.SendAsync(accessToken, new GetSmallProducerDirectRegistrantChargeRequest(DateTime.UtcNow.Year));
+                int amountInPence = 0;
+                if (directRegistrantChargeData != null)
+                {
+                    amountInPence = (int)Math.Round(directRegistrantChargeData.ChargeAmount * 100);
+                }
 
                 var paymentRequest = new CreateCardPaymentRequest
                 {
-                    Amount = directRegistrantChargeData.ChargeAmount,
+                    Amount = amountInPence,
                     Description = configurationService.CurrentConfiguration.GovUkPayDescription,
                     Reference = paymentReferenceGenerator.GeneratePaymentReferenceWithSeparators(),
                     ReturnUrl = returnUrl,
