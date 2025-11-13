@@ -83,7 +83,7 @@
             // Assert
             result.Should().BeEquivalentTo(expectedPaymentResult);
             A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddPaymentSessionRequest>.That.Matches(a => a.PaymentReturnToken == secureId &&
-                    a.Amount == amount &&
+                    a.Amount == amountInPence &&
                     a.DirectRegistrantId == directRegistrantId &&
                     a.PaymentId == expectedPaymentResult.PaymentId &&
                     a.PaymentReference == paymentReference)))
