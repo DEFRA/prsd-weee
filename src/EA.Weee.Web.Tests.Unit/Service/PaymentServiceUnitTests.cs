@@ -55,6 +55,7 @@
             var description = fixture.Create<string>();
 
             amount = (DateTime.UtcNow.Year == 2025 ? 30 : 35);
+            int amountInPence = (int)Math.Round(amount * 100);
             A.CallTo(() => secureReturnUrlHelper.GenerateSecureRandomString(directRegistrantId, 16))
                 .Returns(secureId);
             A.CallTo(() => configurationService.CurrentConfiguration.GovUkPayReturnBaseUrl)
@@ -70,7 +71,7 @@
 
             var expectedPaymentResult = new CreatePaymentResult { PaymentId = paymentId };
             A.CallTo(() => payClient.CreatePaymentAsync(A<string>._, A<CreateCardPaymentRequest>.That.Matches(c => 
-                    c.Amount == amount && 
+                    c.Amount == amountInPence && 
                     c.Description == description &&
                     c.ReturnUrl == returnUrl && 
                     c.Reference == paymentReference)))
