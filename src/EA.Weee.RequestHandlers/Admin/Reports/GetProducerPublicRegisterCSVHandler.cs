@@ -18,8 +18,7 @@
         private readonly WeeeContext context;
         private readonly CsvWriterFactory csvWriterFactory;
 
-        public GetProducerPublicRegisterCSVHandler(IWeeeAuthorization authorization, WeeeContext context,
-            CsvWriterFactory csvWriterFactory)
+        public GetProducerPublicRegisterCSVHandler(IWeeeAuthorization authorization, WeeeContext context, CsvWriterFactory csvWriterFactory)
         {
             this.authorization = authorization;
             this.context = context;
@@ -35,11 +34,9 @@
                 throw new ArgumentException(message);
             }
 
-            var items = await context.StoredProcedures.SpgProducerPublicRegisterCSVDataByComplianceYear(
-                request.ComplianceYear);
+            var items = await context.StoredProcedures.SpgProducerPublicRegisterCSVDataByComplianceYear(request.ComplianceYear);
 
-            CsvWriter<ProducerPublicRegisterCSVData> csvWriter =
-                csvWriterFactory.Create<ProducerPublicRegisterCSVData>();
+            CsvWriter<ProducerPublicRegisterCSVData> csvWriter = csvWriterFactory.Create<ProducerPublicRegisterCSVData>();
 
             csvWriter.DefineColumn(@"Producer name", i => i.ProducerName);
             csvWriter.DefineColumn(@"Producer trading name", i => i.TradingName);
@@ -55,6 +52,7 @@
             }));
             csvWriter.DefineColumn(@"Registered office phone number", i => !string.IsNullOrEmpty(i.CompanyName) ? i.ROATelephone : string.Empty, true);
             csvWriter.DefineColumn(@"Registered office email address", i => !string.IsNullOrEmpty(i.CompanyName) ? i.ROAEmail : string.Empty);
+            csvWriter.DefineColumn(@"Registered office fax number", i => !string.IsNullOrEmpty(i.CompanyName) ? i.ROAFax : string.Empty);
             csvWriter.DefineColumn(@"Producer registration number (PRN)", i => i.PRN);
             csvWriter.DefineColumn(@"Producer compliance scheme (PCS) name or direct registrant", i => i.SchemeName);
             csvWriter.DefineColumn(@"PCS operator name", i => i.SchemeOperator);

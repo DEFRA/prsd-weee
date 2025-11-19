@@ -30,6 +30,8 @@
 
         public string ROAEmail { get; set; }
 
+        public string ROAFax { get; set; }
+
         public string PRN { get; set; }
 
         public string SchemeName { get; set; }
