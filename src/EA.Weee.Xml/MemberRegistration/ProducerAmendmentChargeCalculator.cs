@@ -32,7 +32,13 @@
                 if (!previousAmendmentCharge && (producerType.eeePlacedOnMarketBand == eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket &&
                                                  previousProducerSubmission.CurrentSubmission.EEEPlacedOnMarketBandType == (int)eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket))
                 {
-                    return chargeband;
+                    // For Band E upgrades, return only the base charge band amount without any OMP charge
+                    // OMP charges should be manually assessed and invoiced separately
+                    return new ProducerCharge
+                    {
+                        ChargeBandAmount = chargeband.ChargeBandAmount,
+                        Amount = chargeband.ChargeBandAmount.Amount
+                    };
                 }
             }
 
