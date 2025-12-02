@@ -17,5 +17,7 @@
         bool ProducerNameAlreadyRegisteredForComplianceYear(string producerName, string schemeComplianceYear);
 
         List<ProducerSubmission> GetLatestCompanyProducers();
+
+        ProducerSubmission GetLatestProducerDetails(string registrationNo, Guid organisationId);
     }
 }
