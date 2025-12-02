@@ -8,11 +8,11 @@
 
     public class ProducerSellingTechniqueChange : IProducerSellingTechniqueChange
     {
-        private readonly IProducerQuerySet querySet;
+        private readonly IProducerQuerySet producerQuerySet;
 
-        public ProducerSellingTechniqueChange(IProducerQuerySet querySet)
+        public ProducerSellingTechniqueChange(IProducerQuerySet producerQuerySet)
         {
-            this.querySet = querySet;
+            this.producerQuerySet = producerQuerySet;
         }
 
         public RuleResult Evaluate(schemeType root, producerType element, Guid organisationId)
@@ -21,7 +21,7 @@
 
             if (element.status == statusType.A)
             {
-                var existingProducer = querySet.GetLatestProducerForComplianceYearAndScheme(element.registrationNo, root.complianceYear, organisationId);
+                var existingProducer = producerQuerySet.GetLatestProducerDetails(element.registrationNo, organisationId);
 
                 if (existingProducer != null)
                 {
