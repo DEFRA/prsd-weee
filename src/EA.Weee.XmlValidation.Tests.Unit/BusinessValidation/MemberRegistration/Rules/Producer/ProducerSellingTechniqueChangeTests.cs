@@ -47,7 +47,7 @@
         [Fact]
         public void Amendment_ProducerExistsWithMatchingSellingTechniqueType_ReturnsFailAsWarning()
         {
-            A.CallTo(() => producerQuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
+            A.CallTo(() => producerQuerySet.GetLatestProducerDetails(A<string>._, A<Guid>._))
                                            .Returns(FakeProducer.Create(ObligationType.Both, "ABC12345"));
 
             var result = Rule().Evaluate(new schemeType(), new producerType
