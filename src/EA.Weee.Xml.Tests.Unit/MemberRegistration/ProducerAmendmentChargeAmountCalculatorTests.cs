@@ -72,15 +72,21 @@
         {
             var schemeType = new schemeType() { approvalNo = "app", complianceYear = ComplianceYear.ToString() };
             var producerType = new producerType() { registrationNo = "no", eeePlacedOnMarketBand = eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket };
-            var producerCharge = new ProducerCharge() { ChargeBandAmount = CreateTestChargeBandAmount(ChargeBand.A, 0) };
+
+            var chargeBandAmount = CreateTestChargeBandAmount(ChargeBand.E, 1234.56m);
+            var producerCharge = new ProducerCharge() { ChargeBandAmount = chargeBandAmount };
 
             A.CallTo(() => registeredProducerDataAccess.GetProducerRegistration(producerType.registrationNo, ComplianceYear, schemeType.approvalNo))
                 .Returns(RegisteredProducer());
-            A.CallTo(() => environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schemeType, producerType)).Returns(producerCharge);
+            A.CallTo(() => registeredProducerDataAccess.HasPreviousAmendmentCharge(producerType.registrationNo, ComplianceYear, schemeType.approvalNo))
+                .Returns(false);
+            A.CallTo(() => environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(schemeType, producerType))
+                .Returns(producerCharge);
 
             var result = await calculator.GetProducerChargeBand(schemeType, producerType);
 
-            Assert.Equal(producerCharge, result);
+            Assert.Equal(producerCharge.ChargeBandAmount, result.ChargeBandAmount);
+            Assert.Equal(chargeBandAmount.Amount, result.Amount);
         }
 
         [Fact]
