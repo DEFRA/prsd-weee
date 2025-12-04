@@ -18,9 +18,7 @@
                     "~/Scripts/custom-validation.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/govuk_frontend").Include(
-                    "~/Scripts/govuk_frontend/govuk-frontend-4.0.1.min.js",
-                    "~/Scripts/govuk_frontend/govuk-frontend-legacy-cookie.js",
-                    "~/Scripts/setup-govuk-frontend.js"));
+                    "~/Scripts/govuk_frontend/govuk-frontend-legacy-cookie.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/govuk_weee").Include(
                     "~/Scripts/vendor/modernizr.custom.77028.js",
@@ -85,6 +83,9 @@
 
             bundles.Add(new StyleBundle("~/Content/weee-returns-ae-mobile").Include(
                 "~/Content/weee-returns-ae-mobile.css"));
+
+            bundles.Add(new StyleBundle("~/Content/govuk-frontend").Include(
+                "~/Content/govuk-frontend.min.css"));
 
             // Set EnableOptimizations to false for debugging. For more information,
             // visit http://go.microsoft.com/fwlink/?LinkId=301862
