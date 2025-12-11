@@ -31,6 +31,7 @@
 
 <h2 class="govuk-heading-s">Enter the registered office or principal place of business address.</h2>
 @Html.Gds().HintParagraph("For registered companies this should be the registered office address.")
+@Html.Gds().HintParagraph("The address details provided will be published on the Public Register as detailed in Schedule 13 of The Waste Electrical and Electronic Equipment Regulations 2013.")
 
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Address1)">
     @Html.Gds().LabelFor(m => m.Address.Address1)
@@ -65,7 +66,7 @@
 
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.EEEBrandNames)">
     <h2 class="govuk-heading-s">@Resources.ProducerSubmission.ProducerSubmission.BrandNamesDescription</h2>
-    @Html.Gds().LabelFor(m => m.EEEBrandNames, showOptionalLabel:false)
+    @Html.Gds().LabelFor(m => m.EEEBrandNames, showOptionalLabel: false)
     @Html.Gds().ValidationMessageFor(m => m.EEEBrandNames)
     @Html.Gds().TextAreaFor(m => m.EEEBrandNames)
 </div>

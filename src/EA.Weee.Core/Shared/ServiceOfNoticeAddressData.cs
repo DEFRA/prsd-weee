@@ -48,8 +48,13 @@
         [Required]
         [StringLength(CommonMaxFieldLengths.Telephone)]
         [Display(Name = "Phone number")]
-        [GenericPhoneNumber(ErrorMessage = "The phone number can use numbers, spaces and some special characters (-+). It must be no longer than 20 characters.")]
+        [GenericPhoneNumber(ErrorMessage = "The phone number can use numbers, spaces and some special characters (-+). It must be no longer than 20 characters")]
         public string Telephone { get; set; }
+
+        [StringLength(CommonMaxFieldLengths.Fax)]
+        [Display(Name = "Fax number")]
+        [GenericFaxNumber(ErrorMessage = "The fax number can use numbers, spaces and some special characters (-+). It must be no longer than 20 characters")]
+        public string Fax { get; set; }
 
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
