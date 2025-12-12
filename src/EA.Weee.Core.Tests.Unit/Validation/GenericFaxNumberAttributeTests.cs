@@ -6,11 +6,9 @@
     public class GenericFaxNumberAttributeTests
     {
         [Theory]
-        [InlineData("15551234567")]        // Missing +
-        [InlineData("+1-555-123-4567")]    // Contains invalid chars
-        [InlineData("+12")]                // Too short
-        [InlineData("+12345678901234567")] // Too long
-        [InlineData("+1ABC12345")]         // Letters
+        [InlineData("1234 1233 123456&")]
+        [InlineData("1234 %^")]
+        [InlineData("+ext 1234#")]
         public void ValidateFaxNumberRegex_ReturnsFalse(string faxNumber)
         {
             //Arrange

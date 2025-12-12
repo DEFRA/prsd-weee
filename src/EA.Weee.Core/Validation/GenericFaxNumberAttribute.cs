@@ -27,8 +27,8 @@
 
             if (value is string faxNumber)
             {
-                string pattern = @"^\+[1-9]\d{7,14}$";
-                return Regex.IsMatch(faxNumber, pattern);
+                Regex validRegex = new Regex(@"^[0-9+.()\s-]+$");
+                return validRegex.IsMatch(faxNumber);
             }
 
             return false;
