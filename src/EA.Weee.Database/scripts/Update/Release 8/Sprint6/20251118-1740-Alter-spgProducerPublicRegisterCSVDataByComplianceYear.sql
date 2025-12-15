@@ -32,9 +32,18 @@ SELECT
     ROC_A_C.Name AS 'ROACountry',
 
     -- Registered Office Contact Details
-    ROC.Telephone AS 'ROATelephone',
-    ROC.Email AS 'ROAEmail',
-    ROC.Fax AS 'ROAFax',
+    CASE
+		WHEN ORG.OrganisationType = 4 THEN NULL
+		ELSE ROC.Telephone
+	END AS 'ROATelephone',
+	CASE
+		WHEN ORG.OrganisationType = 4 THEN NULL
+		ELSE ROC.Email
+	END AS 'ROAEmail',
+	CASE
+		WHEN ORG.OrganisationType = 4 THEN 	NULL
+		ELSE ROC.Fax
+	END AS 'ROAFax',
 
     -- Producer Registration Number
     RP.ProducerRegistrationNumber AS 'PRN',
@@ -158,9 +167,21 @@ UNION ALL
         NULL as 'ROAAdministrativeArea',
         oa.PostCode as 'ROAPostCode',
         loc.Name as 'ROACountry',
-        oa.Telephone as 'ROATelephone',
-        oa.Email as 'ROAEmail',
-        oa.Fax as 'ROAFax',
+
+        -- Registered Office Contact Details
+		CASE
+			WHEN o.OrganisationType = 4 THEN NULL
+			ELSE oa.Telephone
+		END AS 'ROATelephone',
+		CASE
+			WHEN o.OrganisationType = 4 THEN NULL
+			ELSE oa.Email
+		END AS 'ROAEmail',
+		CASE
+			WHEN o.OrganisationType = 4 THEN NULL
+			ELSE oa.Fax
+		END AS 'ROAFax',
+
         rp.ProducerRegistrationNumber AS 'PRN',
         'Direct registrant' AS SchemeName,
         NULL AS 'SchemeOperator',
