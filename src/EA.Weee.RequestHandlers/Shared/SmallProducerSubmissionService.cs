@@ -31,14 +31,13 @@
             var organisation = mapper.Map<Organisation, OrganisationData>(directRegistrant.Organisation);
             var systemTime = await systemDataDataAccess.GetSystemDateTime();
             var currentYearSubmission = await smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(directRegistrant.Id, systemTime.Year);
-            var directRegistrantCharge = await smallProducerDataAccess.GetDirectRegistrantChargeByComplianceYear(SystemTime.UtcNow.Year);
 
             var submissionHistory = directRegistrant.DirectProducerSubmissions;
 
             var submissionData = new SmallProducerSubmissionData
             {
                 DirectRegistrantId = directRegistrant.Id,
-                
+
                 OrganisationData = organisation,
                 ContactData = directRegistrant.Contact != null
                     ? mapper.Map<Contact, ContactData>(directRegistrant.Contact)
@@ -57,14 +56,26 @@
                 SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>(),
                 ProducerRegistrationNumber = submissionHistory.Any() ? submissionHistory.First().RegisteredProducer.ProducerRegistrationNumber : string.Empty,
                 CurrentSystemYear = systemTime.Year,
-                EeeBrandNames = directRegistrant.BrandNameId.HasValue ? directRegistrant.BrandName.Name : string.Empty,
-                DirectRegistrantChargeAmount = directRegistrantCharge.ChargeAmount,
+                EeeBrandNames = directRegistrant.BrandNameId.HasValue ? directRegistrant.BrandName.Name : string.Empty
             };
 
             foreach (var directProducerSubmission in submissionHistory)
             {
                 var history = mapper.Map<SmallProducerSubmissionHistoryData>(new DirectProducerSubmissionSource(directRegistrant, directProducerSubmission));
                 submissionData.SubmissionHistory.Add(directProducerSubmission.ComplianceYear, history);
+            }
+
+            if (submissionData != null &&
+                submissionData.CurrentSubmission != null &&
+                submissionData.CurrentSubmission.BusinessAddressData.CountryName.Equals("UK - England"))
+            {
+                var directRegistrantCharge = await smallProducerDataAccess.GetDirectRegistrantChargeByComplianceYear(SystemTime.UtcNow.Year, true);
+                submissionData.DirectRegistrantChargeAmount = directRegistrantCharge.ChargeAmount;
+            }
+            else
+            {
+                var directRegistrantCharge = await smallProducerDataAccess.GetDirectRegistrantChargeByComplianceYear(SystemTime.UtcNow.Year, false);
+                submissionData.DirectRegistrantChargeAmount = directRegistrantCharge.ChargeAmount;
             }
 
             return submissionData;
