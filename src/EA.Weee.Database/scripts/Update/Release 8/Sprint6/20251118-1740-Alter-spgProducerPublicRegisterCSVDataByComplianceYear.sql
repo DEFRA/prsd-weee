@@ -33,16 +33,16 @@ SELECT
 
     -- Registered Office Contact Details
     CASE
-		WHEN ORG.OrganisationType = 4 THEN NULL
-		ELSE ROC.Telephone
+		WHEN ORG.OrganisationType = 1 THEN ROC.Telephone
+		ELSE NULL
 	END AS 'ROATelephone',
 	CASE
-		WHEN ORG.OrganisationType = 4 THEN NULL
-		ELSE ROC.Email
+		WHEN ORG.OrganisationType = 1 THEN ROC.Email
+		ELSE NULL
 	END AS 'ROAEmail',
 	CASE
-		WHEN ORG.OrganisationType = 4 THEN 	NULL
-		ELSE ROC.Fax
+		WHEN ORG.OrganisationType = 1 THEN ROC.Fax
+		ELSE NULL
 	END AS 'ROAFax',
 
     -- Producer Registration Number
@@ -170,16 +170,16 @@ UNION ALL
 
         -- Registered Office Contact Details
 		CASE
-			WHEN o.OrganisationType = 4 THEN NULL
-			ELSE oa.Telephone
+			WHEN o.OrganisationType = 1 THEN oa.Telephone
+			ELSE NULL
 		END AS 'ROATelephone',
 		CASE
-			WHEN o.OrganisationType = 4 THEN NULL
-			ELSE oa.Email
+			WHEN o.OrganisationType = 1 THEN oa.Email
+			ELSE NULL
 		END AS 'ROAEmail',
 		CASE
-			WHEN o.OrganisationType = 4 THEN NULL
-			ELSE oa.Fax
+			WHEN o.OrganisationType = 1 THEN oa.Fax
+			ELSE NULL
 		END AS 'ROAFax',
 
         rp.ProducerRegistrationNumber AS 'PRN',
