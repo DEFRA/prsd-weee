@@ -67,14 +67,16 @@
 
             if (submissionData != null && submissionData.CurrentSubmission != null && submissionData.CurrentSubmission.BusinessAddressData != null)
             {
-                if (submissionData.CurrentSubmission.BusinessAddressData.CountryName.Equals("UK - England"))
+                if (submissionData.CurrentSubmission.BusinessAddressData.CountryName.Equals("UK - Northern Ireland") ||
+                    submissionData.CurrentSubmission.BusinessAddressData.CountryName.Equals("UK - Scotland") ||
+                    submissionData.CurrentSubmission.BusinessAddressData.CountryName.Equals("UK - Wales"))
                 {
-                    var directRegistrantCharge = await smallProducerDataAccess.GetDirectRegistrantChargeByComplianceYear(SystemTime.UtcNow.Year, true);
+                    var directRegistrantCharge = await smallProducerDataAccess.GetDirectRegistrantChargeByComplianceYear(SystemTime.UtcNow.Year, false);
                     submissionData.DirectRegistrantChargeAmount = directRegistrantCharge.ChargeAmount;
                 }
                 else
                 {
-                    var directRegistrantCharge = await smallProducerDataAccess.GetDirectRegistrantChargeByComplianceYear(SystemTime.UtcNow.Year, false);
+                    var directRegistrantCharge = await smallProducerDataAccess.GetDirectRegistrantChargeByComplianceYear(SystemTime.UtcNow.Year, true);
                     submissionData.DirectRegistrantChargeAmount = directRegistrantCharge.ChargeAmount;
                 }
             }

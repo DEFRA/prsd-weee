@@ -66,9 +66,9 @@
             return directRegistrant;
         }
 
-        public async Task<DirectRegistrantCharge> GetDirectRegistrantChargeByComplianceYear(int complianceYear, bool isEngland)
+        public async Task<DirectRegistrantCharge> GetDirectRegistrantChargeByComplianceYear(int complianceYear, bool isNonUk)
         {
-            return await context.DirectRegistrantCharges.Where(d => d.ComplianceYear == complianceYear && d.IsEngland == isEngland)
+            return await context.DirectRegistrantCharges.Where(d => d.ComplianceYear == complianceYear && d.IsNonUk == isNonUk)
                                                         .FirstOrDefaultAsync();
         }
     }

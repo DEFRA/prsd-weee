@@ -12,7 +12,7 @@
 
         public decimal ChargeAmount { get; private set; }
 
-        public bool IsEngland { get; private set; }
+        public bool IsNonUk { get; private set; }
 
         /// <summary>
         /// This constructor should only be used by Entity Framework.

@@ -6,7 +6,7 @@ BEGIN
     [ComplianceYear]    INT                 NOT NULL,
     [EffectiveFrom]     DATE                NOT NULL,
     [ChargeAmount]      DECIMAL(10,2)       NOT NULL,
-    [IsEngland]        BIT NOT NULL);
+    [IsNonUk]        BIT NOT NULL);
     PRINT 'Table "DirectRegistrantCharge" created successfully.';
 END
 ELSE
@@ -20,7 +20,7 @@ INSERT INTO [Lookup].[DirectRegistrantCharge]
             ,[ComplianceYear]
             ,[EffectiveFrom]
             ,[ChargeAmount]
-            ,[IsEngland])
+            ,[IsNonUk])
      VALUES
            (NEWID()
            ,2025
@@ -33,7 +33,7 @@ INSERT INTO [Lookup].[DirectRegistrantCharge]
             ,[ComplianceYear]
             ,[EffectiveFrom]
             ,[ChargeAmount]
-            ,[IsEngland])
+            ,[IsNonUk])
      VALUES
            (NEWID()
            ,2025
@@ -46,7 +46,7 @@ INSERT INTO [Lookup].[DirectRegistrantCharge]
             ,[ComplianceYear]
             ,[EffectiveFrom]
             ,[ChargeAmount]
-            ,[IsEngland])
+            ,[IsNonUk])
     VALUES
            (NEWID()
            ,2026
@@ -59,7 +59,7 @@ INSERT INTO [Lookup].[DirectRegistrantCharge]
             ,[ComplianceYear]
             ,[EffectiveFrom]
             ,[ChargeAmount]
-            ,[IsEngland])
+            ,[IsNonUk])
     VALUES
            (NEWID()
            ,2026
