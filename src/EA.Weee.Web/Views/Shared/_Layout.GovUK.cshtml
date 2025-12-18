@@ -87,7 +87,13 @@
         </p>
     </div>
     <!--end global-cookie-message-->
+
     <script type="module" src="@Url.Content("~/Scripts/govuk_frontend/govuk-frontend-5.13.0.min.js")"></script>
+    <script type="module">
+        import { initAll } from '/Scripts/govuk_frontend/govuk-frontend-5.13.0.min.js'
+        initAll()
+    </script>
+
     <header class="govuk-header @Html.Raw(ViewBag.HeaderClass ?? string.Empty)" role="banner" data-module="govuk-header">
         <div class="govuk-header__container govuk-width-container">
             <div class="govuk-header__logo govuk-!-width-one-quarter">
