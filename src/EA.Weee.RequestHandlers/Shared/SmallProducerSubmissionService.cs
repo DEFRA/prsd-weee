@@ -71,12 +71,12 @@
                     submissionData.CurrentSubmission.BusinessAddressData.CountryName.Equals("UK - Scotland") ||
                     submissionData.CurrentSubmission.BusinessAddressData.CountryName.Equals("UK - Wales"))
                 {
-                    var directRegistrantCharge = await smallProducerDataAccess.GetDirectRegistrantChargeByComplianceYear(SystemTime.UtcNow.Year, false);
+                    var directRegistrantCharge = await smallProducerDataAccess.GetDirectRegistrantChargeByComplianceYear(SystemTime.UtcNow.Year + 1, false);
                     submissionData.DirectRegistrantChargeAmount = directRegistrantCharge.ChargeAmount;
                 }
                 else
                 {
-                    var directRegistrantCharge = await smallProducerDataAccess.GetDirectRegistrantChargeByComplianceYear(SystemTime.UtcNow.Year, true);
+                    var directRegistrantCharge = await smallProducerDataAccess.GetDirectRegistrantChargeByComplianceYear(SystemTime.UtcNow.Year + 1, true);
                     submissionData.DirectRegistrantChargeAmount = directRegistrantCharge.ChargeAmount;
                 }
             }
