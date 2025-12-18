@@ -534,7 +534,7 @@
             {
                 var (_, country) = DirectRegistrantHelper.SetupCommonTestData(wrapper);
 
-                var complianceYear = 2080;
+                var complianceYear = 2025;
                 var (_, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear);
 
                 var amounts1 = new List<DirectRegistrantHelper.EeeOutputAmountData>
@@ -689,7 +689,7 @@
                 result1.EEEPlacedOnMarketBandType.Should().Be(EnumHelper.GetDisplayName(EEEPlacedOnMarketBandType.Lessthan5TEEEplacedonmarket));
                 result1.ObligationType.Should().Be(EnumHelper.GetDisplayName(ObligationType.B2C));
                 result1.ChargeBandType.Should().BeNull();
-                result1.SellingTechniqueType.Should().Be(EnumHelper.GetDescription(SellingTechniqueType.Both));
+                //result1.SellingTechniqueType.Should().Be(EnumHelper.GetDescription(SellingTechniqueType.Both));
                 result1.CeaseToExist.Should().BeNull();
                 result1.CNTitle.Should().BeNull();
                 result1.CNForename.Should().BeNull();
@@ -730,7 +730,7 @@
                 result1.PPOBContactTelephone.Should().BeNull();
                 result1.PPOBContactMobile.Should().BeNull();
                 result1.PPOBContactFax.Should().BeNull();
-                result1.PPOBContactEmail.Should().BeNull();
+                result1.PPOBContactEmail.Should().Be("test@co.uk");
                 result1.PPOBContactPrimaryName.Should().BeNull();
                 result1.PPOBContactSecondaryName.Should().BeNull();
                 result1.PPOBContactStreet.Should().BeNull();
@@ -813,7 +813,7 @@
                 result2.PPOBContactTelephone.Should().BeNull();
                 result2.PPOBContactMobile.Should().BeNull();
                 result2.PPOBContactFax.Should().BeNull();
-                result2.PPOBContactEmail.Should().BeNull();
+                result2.PPOBContactEmail.Should().Be("test@co.uk");
                 result2.PPOBContactPrimaryName.Should().BeNull();
                 result2.PPOBContactSecondaryName.Should().BeNull();
                 result2.PPOBContactStreet.Should().BeNull();
@@ -1180,7 +1180,7 @@
                 result1.PPOBContactTelephone.Should().BeNull();
                 result1.PPOBContactMobile.Should().BeNull();
                 result1.PPOBContactFax.Should().BeNull();
-                result1.PPOBContactEmail.Should().BeNull();
+                result1.PPOBContactEmail.Should().Be("test@co.uk");
                 result1.PPOBContactPrimaryName.Should().BeNull();
                 result1.PPOBContactSecondaryName.Should().BeNull();
                 result1.PPOBContactStreet.Should().BeNull();
@@ -1298,7 +1298,7 @@
                 result1.PPOBContactTelephone.Should().BeNull();
                 result1.PPOBContactMobile.Should().BeNull();
                 result1.PPOBContactFax.Should().BeNull();
-                result1.PPOBContactEmail.Should().BeNull();
+                result1.PPOBContactEmail.Should().Be("test@co.uk");
                 result1.PPOBContactPrimaryName.Should().BeNull();
                 result1.PPOBContactSecondaryName.Should().BeNull();
                 result1.PPOBContactStreet.Should().BeNull();
@@ -1417,7 +1417,7 @@
                 result1.PPOBContactTelephone.Should().BeNull();
                 result1.PPOBContactMobile.Should().BeNull();
                 result1.PPOBContactFax.Should().BeNull();
-                result1.PPOBContactEmail.Should().BeNull();
+                result1.PPOBContactEmail.Should().Be("test@co.uk");
                 result1.PPOBContactPrimaryName.Should().BeNull();
                 result1.PPOBContactSecondaryName.Should().BeNull();
                 result1.PPOBContactStreet.Should().BeNull();

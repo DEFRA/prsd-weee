@@ -2,7 +2,7 @@
 <Project ToolsVersion="Current" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-	  <LangVersion>11.0</LangVersion>
+    <LangVersion>11.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -93,7 +93,10 @@
     <Compile Include="Evidence\NoteStatus.cs" />
     <Compile Include="Evidence\NoteType.cs" />
     <Compile Include="Evidence\WasteType.cs" />
+    <Compile Include="Lookup\AnnualTurnoverBand.cs" />
     <Compile Include="Lookup\AreaBase.cs" />
+    <Compile Include="Lookup\CompetentAuthorityType.cs" />
+    <Compile Include="Lookup\EEEPlacedOnMarketBand.cs" />
     <Compile Include="Lookup\LocalArea.cs" />
     <Compile Include="Lookup\PanArea.cs" />
     <Compile Include="Charges\InvoiceRun.cs" />

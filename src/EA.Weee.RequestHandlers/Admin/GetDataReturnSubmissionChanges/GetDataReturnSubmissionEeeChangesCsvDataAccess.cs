@@ -179,6 +179,7 @@
                 data.Cat12B2B = GetEeeDataTonnes(producerAmounts, ObligationType.B2B, 12);
                 data.Cat13B2B = GetEeeDataTonnes(producerAmounts, ObligationType.B2B, 13);
                 data.Cat14B2B = GetEeeDataTonnes(producerAmounts, ObligationType.B2B, 14);
+                data.Cat15B2B = GetEeeDataTonnes(producerAmounts, ObligationType.B2B, 15);
 
                 data.Cat1B2C = GetEeeDataTonnes(producerAmounts, ObligationType.B2C, 1);
                 data.Cat2B2C = GetEeeDataTonnes(producerAmounts, ObligationType.B2C, 2);
@@ -194,6 +195,7 @@
                 data.Cat12B2C = GetEeeDataTonnes(producerAmounts, ObligationType.B2C, 12);
                 data.Cat13B2C = GetEeeDataTonnes(producerAmounts, ObligationType.B2C, 13);
                 data.Cat14B2C = GetEeeDataTonnes(producerAmounts, ObligationType.B2C, 14);
+                data.Cat15B2C = GetEeeDataTonnes(producerAmounts, ObligationType.B2C, 15);
             }
 
             return data;

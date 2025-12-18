@@ -128,7 +128,7 @@
             {
                 DirectRegistrantHelper.SetupCommonTestData(wrapper);
 
-                var complianceYear = 2060;
+                var complianceYear = 2025;
                 // Direct registrant data is for the previous year
                 var (_, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear - 1);
 
