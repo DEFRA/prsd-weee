@@ -28,22 +28,16 @@
             this.weeeClient = weeeClient;
         }
 
-        public async Task<CreatePaymentResult> CreatePaymentAsync(Guid directRegistrantId, string email, string accessToken)
+        public async Task<CreatePaymentResult> CreatePaymentAsync(Guid directRegistrantId, string email, string accessToken, decimal amount)
         {
             using (var client = weeeClient())
             {
                 var secureId = secureReturnUrlHelper.GenerateSecureRandomString(directRegistrantId);
                 var returnUrl = string.Format(configurationService.CurrentConfiguration.GovUkPayReturnBaseUrl, secureId);
-                var directRegistrantChargeData = await client.SendAsync(accessToken, new GetSmallProducerDirectRegistrantChargeRequest(DateTime.UtcNow.Year));
-                int amountInPence = 0;
-                if (directRegistrantChargeData != null)
-                {
-                    amountInPence = (int)Math.Round(directRegistrantChargeData.ChargeAmount * 100);
-                }
 
                 var paymentRequest = new CreateCardPaymentRequest
                 {
-                    Amount = amountInPence,
+                    Amount = (int)Math.Round(amount * 100),
                     Description = configurationService.CurrentConfiguration.GovUkPayDescription,
                     Reference = paymentReferenceGenerator.GeneratePaymentReferenceWithSeparators(),
                     ReturnUrl = returnUrl,

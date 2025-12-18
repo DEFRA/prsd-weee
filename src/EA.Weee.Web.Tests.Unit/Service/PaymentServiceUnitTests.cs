@@ -78,7 +78,7 @@
                 .Returns(expectedPaymentResult);
 
             // Act
-            var result = await paymentService.CreatePaymentAsync(directRegistrantId, email, accessToken);
+            var result = await paymentService.CreatePaymentAsync(directRegistrantId, email, accessToken, smallProducerDirectRegistrantChargeData.ChargeAmount);
 
             // Assert
             result.Should().BeEquivalentTo(expectedPaymentResult);
