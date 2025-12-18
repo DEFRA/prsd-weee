@@ -415,7 +415,7 @@
             if (existingPaymentInProgress == null)
             {
                 var result = await paymentService.CreatePaymentAsync(SmallProducerSubmissionData.DirectRegistrantId,
-                    User.GetEmailAddress(), User.GetAccessToken());
+                    User.GetEmailAddress(), User.GetAccessToken(), SmallProducerSubmissionData.DirectRegistrantChargeAmount);
 
                 nextUrl = result.Links.NextUrl.Href;
             }
@@ -446,7 +446,7 @@
                 PaymentReference = reference,
                 OrganisationId = SmallProducerSubmissionData.OrganisationData.Id,
                 ComplianceYear = SmallProducerSubmissionData.CurrentSubmission.ComplianceYear,
-                TotalAmount = configurationService.CurrentConfiguration.GovUkPayAmountInPence / 100
+                TotalAmount = SmallProducerSubmissionData.DirectRegistrantChargeAmount
             };
 
             await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);

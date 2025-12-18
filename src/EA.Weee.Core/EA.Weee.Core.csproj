@@ -314,6 +314,7 @@
     <Compile Include="DirectRegistrant\ProducerSubmissionCategoryValue.cs" />
     <Compile Include="DirectRegistrant\ProducerSubmissionCategoryValues.cs" />
     <Compile Include="DirectRegistrant\SellingTechniqueType.cs" />
+    <Compile Include="DirectRegistrant\SmallProducerDirectRegistrantChargeData.cs" />
     <Compile Include="DirectRegistrant\SubmissionsYearDetails.cs" />
     <Compile Include="DirectRegistrant\SmallProducerSubmissionHistoryData.cs" />
     <Compile Include="DirectRegistrant\SmallProducerSubmissionData.cs" />
@@ -561,6 +562,8 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Shared\UserStatus.cs" />
     <Compile Include="Validation\CompaniesRegistrationNumberStringLengthAttribute.cs" />
+    <Compile Include="Validation\GenericEmailAddressAttribute.cs" />
+    <Compile Include="Validation\GenericFaxNumberAttribute.cs" />
     <Compile Include="Validation\RequiredWhenUKAttribute.cs" />
     <Compile Include="Validation\AtLeastOneCheckedAttribute.cs" />
     <Compile Include="Validation\ProducerCategoryValuesValidationAttribute.cs" />

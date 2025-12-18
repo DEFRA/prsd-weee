@@ -151,6 +151,8 @@
 
         public virtual DbSet<ChargeBandAmount> ChargeBandAmounts { get; set; }
 
+        public virtual DbSet<DirectRegistrantCharge> DirectRegistrantCharges { get; set; }
+
         public virtual DbSet<CompetentAuthorityUser> CompetentAuthorityUsers { get; set; }
 
         public virtual DbSet<DataReturnUpload> DataReturnsUploads { get; set; }

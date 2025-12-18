@@ -243,6 +243,8 @@
     <Compile Include="Shared\NoFormulaeExcelSanitizerTests.cs" />
     <Compile Include="Shared\ObligationCsvUploadTests.cs" />
     <Compile Include="Shared\PasteProcessorTests.cs" />
+    <Compile Include="Validation\GenericEmailAddressAttributeTests.cs" />
+    <Compile Include="Validation\GenericFaxNumberAttributeTests.cs" />
     <Compile Include="Validation\RequiredWhenUKAttributeTests.cs" />
     <Compile Include="Validation\DecimalPlaceHelperTests.cs" />
     <Compile Include="Validation\ExternalEmailValidatorUnitTests.cs" />

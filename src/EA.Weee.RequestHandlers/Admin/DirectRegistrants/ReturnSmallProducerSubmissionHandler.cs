@@ -111,7 +111,8 @@
                 address.Country,
                 address.Telephone,
                 address.Email,
-                address.WebAddress);
+                address.WebAddress,
+                address.Fax);
 
         private static void CopyContacts(DirectProducerSubmissionHistory source, DirectProducerSubmissionHistory target)
         {

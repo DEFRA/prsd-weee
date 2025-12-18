@@ -3,6 +3,26 @@
 
 @Html.HiddenFor(m => m.OrganisationType)
 
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Email)">
+    @Html.Gds().LabelFor(m => m.Address.Email)
+    @Html.Gds().ValidationMessageFor(m => m.Address.Email)
+    @Html.Gds().TextBoxFor(m => m.Address.Email, new { @maxlength = CommonMaxFieldLengths.EmailAddress })
+</div>
+
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Telephone)">
+    @Html.Gds().LabelFor(m => m.Address.Telephone)
+    <p class="govuk-hint">For international numbers include the country code</p>
+    @Html.Gds().ValidationMessageFor(m => m.Address.Telephone)
+    @Html.Gds().TextBoxFor(m => m.Address.Telephone, new { @maxlength = CommonMaxFieldLengths.Telephone })
+</div>
+
+<div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Fax)">
+    @Html.Gds().LabelFor(m => m.Address.Fax)
+    <p class="govuk-hint">For international numbers include the country code</p>
+    @Html.Gds().ValidationMessageFor(m => m.Address.Fax)
+    @Html.Gds().TextBoxFor(m => m.Address.Fax, new { @maxlength = CommonMaxFieldLengths.Fax })
+</div>
+
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.WebsiteAddress)">
     @Html.Gds().LabelFor(m => m.Address.WebsiteAddress)
     @Html.Gds().ValidationMessageFor(m => m.Address.WebsiteAddress)
@@ -11,6 +31,7 @@
 
 <h2 class="govuk-heading-s">Enter the registered office or principal place of business address.</h2>
 @Html.Gds().HintParagraph("For registered companies this should be the registered office address.")
+@Html.Gds().HintParagraph("The address details provided will be published on the Public Register as detailed in Schedule 13 of The Waste Electrical and Electronic Equipment Regulations 2013.")
 
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Address.Address1)">
     @Html.Gds().LabelFor(m => m.Address.Address1)
@@ -45,7 +66,7 @@
 
 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.EEEBrandNames)">
     <h2 class="govuk-heading-s">@Resources.ProducerSubmission.ProducerSubmission.BrandNamesDescription</h2>
-    @Html.Gds().LabelFor(m => m.EEEBrandNames, showOptionalLabel:false)
+    @Html.Gds().LabelFor(m => m.EEEBrandNames, showOptionalLabel: false)
     @Html.Gds().ValidationMessageFor(m => m.EEEBrandNames)
     @Html.Gds().TextAreaFor(m => m.EEEBrandNames)
 </div>

@@ -31,6 +31,7 @@
         private readonly ICompanyAlreadyRegistered companyAlreadyRegistered;
         private readonly ICompanyRegistrationNumberChange companyRegistrationNumberChange;
         private readonly IProducerObligationTypeChange producerObligationTypeChange;
+        private readonly IProducerSellingTechniqueChange producerSellingTechniqueChangeWarning;
 
         public MemberRegistrationBusinessValidatorTests()
         {
@@ -50,6 +51,7 @@
             companyAlreadyRegistered = A.Fake<ICompanyAlreadyRegistered>();
             companyRegistrationNumberChange = A.Fake<ICompanyRegistrationNumberChange>();
             producerObligationTypeChange = A.Fake<IProducerObligationTypeChange>();
+            producerSellingTechniqueChangeWarning = A.Fake<IProducerSellingTechniqueChange>();
         }
 
         [Fact]
@@ -229,6 +231,26 @@
         }
 
         [Fact]
+        public async Task ProducerSellingTechniqueChange_ShouldReturnRuleResult()
+        {
+            var scheme = SchemeWithXProducers(1);
+            var schemeId = Guid.NewGuid();
+            var errorMessage = string.Format("The Selling technique of {0} {1} will change from '{2}' to '{3}'.",
+                                                              "Test Organisation",
+                                                              "WEE/EWRWER43",
+                                                              "Direct Selling to End User",
+                                                              "Online marketplace");
+            var error = RuleResult.Fail(errorMessage, ErrorLevel.Warning);
+
+            A.CallTo(() => producerSellingTechniqueChangeWarning.Evaluate(scheme, scheme.producerList.Single(), schemeId)).Returns(error);
+
+            var result = await XmlBusinessValidator().Validate(scheme, schemeId);
+
+            Assert.Single(result);
+            Assert.Equal(error, result.Single());
+        }
+
+        [Fact]
         public async Task CompanyAlreadyRegistered_ShouldReturnRuleResult()
         {
             var scheme = SchemeWithXProducers(1);
@@ -292,6 +314,7 @@
             A.CallTo(() => companyAlreadyRegistered.Evaluate(A<producerType>._)).Returns(RuleResult.Pass());
             A.CallTo(() => companyRegistrationNumberChange.Evaluate(A<producerType>._)).Returns(RuleResult.Pass());
             A.CallTo(() => producerObligationTypeChange.Evaluate(A<producerType>._)).Returns(RuleResult.Pass());
+            A.CallTo(() => producerSellingTechniqueChangeWarning.Evaluate(A<schemeType>._, A<producerType>._, A<Guid>._)).Returns(RuleResult.Pass());
 
             var scheme = new schemeType
             {
@@ -328,7 +351,8 @@
                 producerChargeBandChangeWarning,
                 companyAlreadyRegistered,
                 companyRegistrationNumberChange,
-                (x, y) => producerObligationTypeChange);
+                (x, y) => producerObligationTypeChange,
+                producerSellingTechniqueChangeWarning);
         }
 
         private schemeType SchemeWithXProducers(int numberOfProducers)

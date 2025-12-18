@@ -1,12 +1,13 @@
 ﻿namespace EA.Weee.Core.DirectRegistrant
 {
     using System.ComponentModel.DataAnnotations;
+
     public enum SellingTechniqueType
     {
-        [Display(Name = "Direct selling to end user (mail, order, internet etc)")]
+        [Display(Name = "Direct Selling to End User")]
         DirectSellingToEndUser = 0,
 
-        [Display(Name = "Indirect selling (other)")]
+        [Display(Name = "Indirect Selling to End User")]
         IndirectSellingToEndUser = 1,
 
         [Display(Name = "Both Direct and Indirect Selling to End User")]

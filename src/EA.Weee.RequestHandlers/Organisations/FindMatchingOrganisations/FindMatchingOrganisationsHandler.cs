@@ -148,7 +148,8 @@
                         Postcode = o.BusinessAddress.Postcode,
                         CountryId = o.BusinessAddress.Country.Id,
                         Telephone = o.BusinessAddress.Telephone,
-                        Email = o.BusinessAddress.Email
+                        Email = o.BusinessAddress.Email,
+                        Fax = o.BusinessAddress.Fax
                     },
                 }).ToList();
 

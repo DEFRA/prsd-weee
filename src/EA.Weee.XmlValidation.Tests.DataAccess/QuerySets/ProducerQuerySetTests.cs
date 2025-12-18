@@ -3,6 +3,7 @@
     using EA.Weee.DataAccess;
     using EA.Weee.Domain.Obligation;
     using EA.Weee.Domain.Producer;
+    using EA.Weee.Domain.Producer.Classfication;
     using EA.Weee.Tests.Core;
     using EA.Weee.Tests.Core.Model;
     using EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.QuerySets;
@@ -402,6 +403,43 @@
                 Assert.DoesNotContain(result, p => p.Id == companyProducer1.Id);
                 Assert.Contains(result, p => p.Id == companyProducer2.Id);
                 Assert.Contains(result, p => p.Id == companyProducer3.Id);
+            }
+        }
+
+        [Fact]
+        public void GetLatestProducerDetails_TwoProducerEntriesInConsecutiveYears_ReturnsLatestProducerByComplianceYear()
+        {
+            using (DatabaseWrapper database = new DatabaseWrapper())
+            {
+                ModelHelper helper = new ModelHelper(database.Model);
+
+                // Arrange
+                Scheme scheme = helper.CreateScheme();
+
+                MemberUpload memberUpload1 = helper.CreateMemberUpload(scheme);
+                memberUpload1.ComplianceYear = DateTime.UtcNow.Year;
+                memberUpload1.IsSubmitted = true;
+
+                Weee.Tests.Core.Model.ProducerSubmission producer1 = helper.CreateProducerAsCompany(memberUpload1, "Reg12345");
+                producer1.SellingTechniqueType = SellingTechniqueType.DirectSellingtoEndUser.Value;
+
+                MemberUpload memberUpload2 = helper.CreateMemberUpload(scheme);
+                memberUpload2.ComplianceYear = DateTime.UtcNow.AddYears(1).Year;
+                memberUpload2.IsSubmitted = true;
+
+                Weee.Tests.Core.Model.ProducerSubmission producer2 = helper.CreateProducerAsCompany(memberUpload2, "Reg98765");
+                producer2.SellingTechniqueType = SellingTechniqueType.IndirectSellingtoEndUser.Value;
+
+                database.Model.SaveChanges();
+
+                ProducerQuerySet querySet = ProducerQuerySet(database.WeeeContext);
+
+                // Act
+                var result = querySet.GetLatestProducerDetails("Reg98765", scheme.OrganisationId);
+
+                // Assert
+                Assert.NotNull(result);
+                Assert.Equal(producer2.Id, result.Id);
             }
         }
 

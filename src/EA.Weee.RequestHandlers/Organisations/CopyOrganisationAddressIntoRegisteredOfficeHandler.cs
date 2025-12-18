@@ -49,7 +49,9 @@
                 address.Postcode,
                 address.Country,
                 address.Telephone,
-                address.Email);
+                address.Email,
+                address.WebAddress,
+                address.Fax);
 
             organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, businessAddress);
 

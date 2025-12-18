@@ -8,7 +8,6 @@
     using BusinessValidation.MemberRegistration.Rules.Producer;
     using BusinessValidation.MemberRegistration.Rules.Scheme;
     using EA.Prsd.Core.Autofac;
-    using EA.Weee.Xml.MemberRegistration;
     using Errors;
     using SchemaValidation;
 
@@ -63,6 +62,7 @@
             builder.RegisterTypeByEnvironment<XmlErrorTranslator, IXmlErrorTranslator>(environment);
             builder.RegisterTypeByEnvironment<SchemaValidator, ISchemaValidator>(environment);
             builder.RegisterTypeByEnvironment<NamespaceValidator, INamespaceValidator>(environment);
+            builder.RegisterTypeByEnvironment<ProducerSellingTechniqueChange, IProducerSellingTechniqueChange>(environment);
         }
     }
 }

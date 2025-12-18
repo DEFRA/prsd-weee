@@ -23,7 +23,8 @@
                     CountryName = source.Country.Name,
                     Telephone = source.Telephone,
                     Email = source.Email,
-                    WebAddress = source.WebAddress
+                    WebAddress = source.WebAddress,
+                    Fax = source.Fax
                 };
             }
             else

@@ -4,9 +4,7 @@
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Organisations.Base;
-    using EA.Weee.Core.Shared;
     using EA.Weee.Web.Areas.Producer.ViewModels;
-    using System;
 
     public class CheckAnswersMap : IMap<SubmissionsYearDetails, CheckAnswersViewModel>
     {
@@ -20,23 +18,18 @@
         public CheckAnswersViewModel Map(SubmissionsYearDetails source, int year)
         {
             var submissionData = source.SmallProducerSubmissionData;
-
-            var organisationDetailsmodel =
-                            mapper.Map<SubmissionsYearDetails, OrganisationViewModel>(source);
-            var contactDetailsmodel =
-                            mapper.Map<SubmissionsYearDetails, ContactDetailsViewModel>(source);
-            var serviceOfNoticemodel =
-                            mapper.Map<SubmissionsYearDetails, ServiceOfNoticeViewModel>(source);
+            var organisationDetailsmodel = mapper.Map<SubmissionsYearDetails, OrganisationViewModel>(source);
+            var contactDetailsmodel = mapper.Map<SubmissionsYearDetails, ContactDetailsViewModel>(source);
+            var serviceOfNoticemodel = mapper.Map<SubmissionsYearDetails, ServiceOfNoticeViewModel>(source);
 
             RepresentingCompanyDetailsViewModel representingCompanyDetailsmodel = null;
 
             if (submissionData.HasAuthorisedRepresentitive)
             {
-                representingCompanyDetailsmodel =
-                            mapper.Map<SubmissionsYearDetails, RepresentingCompanyDetailsViewModel>(source);
+                representingCompanyDetailsmodel = mapper.Map<SubmissionsYearDetails, RepresentingCompanyDetailsViewModel>(source);
             }
-            var editEeeDatamodel =
-                            mapper.Map<SubmissionsYearDetails, EditEeeDataViewModel>(source);
+
+            var editEeeDatamodel = mapper.Map<SubmissionsYearDetails, EditEeeDataViewModel>(source);
 
             var viewModel = new CheckAnswersViewModel()
             {
