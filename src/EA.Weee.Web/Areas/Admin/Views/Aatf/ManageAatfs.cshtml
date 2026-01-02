@@ -54,6 +54,11 @@
                         @Html.Gds().LabelFor(m => m.Filter.ApprovalNumber, false)
                         @Html.TextBoxFor(m => m.Filter.ApprovalNumber, new { @class = "govuk-!-width-three-quarters form-control govuk-input" })
                     </td>
+
+                    <td>
+                        @Html.Gds().LabelFor(m => m.Filter.SelectedComplianceYear, false)
+                        @Html.Gds().DropDownListFor(m => m.Filter.SelectedComplianceYear, new SelectList(Model.Filter.ComplianceYearList), "All years", new { autocomplete = "false", @class = "govuk-!-width-three-quarters" }, false, false)
+                    </td>
                 </tr>
                 <tr><td colspan="2">&nbsp;</td></tr>
                 <tr class="govuk-table__row">
@@ -186,6 +191,7 @@
     @Html.HiddenFor(m => m.Filter.SelectApproved)
     @Html.HiddenFor(m => m.Filter.SelectCancelled)
     @Html.HiddenFor(m => m.Filter.SelectSuspended)
+    @Html.HiddenFor(m => m.Filter.SelectedComplianceYear)
     @Html.HiddenFor(m => m.FacilityType)
 
     for (int i = 0; i < Model.Filter.CompetentAuthorityOptions.Count; i++)
