@@ -790,7 +790,7 @@
 
             A.CallTo(() => addSignatoryAndCompleteRequestCreator.ViewModelToRequest(model)).Returns(request);
             A.CallTo(() => paymentService.CheckInProgressPaymentAsync(A<string>._, request.DirectRegistrantId)).Returns(Task.FromResult((PaymentWithAllLinks)null));
-            A.CallTo(() => paymentService.CreatePaymentAsync(request.DirectRegistrantId, A<string>._, A<string>._)).Returns(createPaymentResult);
+            A.CallTo(() => paymentService.CreatePaymentAsync(request.DirectRegistrantId, A<string>._, A<string>._, A<decimal>._)).Returns(createPaymentResult);
             A.CallTo(() => paymentService.ValidateExternalUrl(createPaymentResult.Links.NextUrl.Href)).Returns(true);
 
             // Act
@@ -800,7 +800,7 @@
             result.Should().NotBeNull();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappenedOnceExactly();
             A.CallTo(() => paymentService.CheckInProgressPaymentAsync(A<string>._, request.DirectRegistrantId)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => paymentService.CreatePaymentAsync(request.DirectRegistrantId, A<string>._, A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => paymentService.CreatePaymentAsync(request.DirectRegistrantId, A<string>._, A<string>._, A<decimal>._)).MustHaveHappenedOnceExactly();
             A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
             A.CallTo(() => weeeCache.InvalidateOrganisationNameCache(model.OrganisationId))
                 .MustHaveHappenedOnceExactly();
@@ -961,7 +961,7 @@
 
             A.CallTo(() => addSignatoryAndCompleteRequestCreator.ViewModelToRequest(model)).Returns(request);
             A.CallTo(() => paymentService.CheckInProgressPaymentAsync(A<string>._, request.DirectRegistrantId)).Returns(Task.FromResult((PaymentWithAllLinks)null));
-            A.CallTo(() => paymentService.CreatePaymentAsync(request.DirectRegistrantId, A<string>._, A<string>._)).Returns(createPaymentResult);
+            A.CallTo(() => paymentService.CreatePaymentAsync(request.DirectRegistrantId, A<string>._, A<string>._, A<decimal>._)).Returns(createPaymentResult);
             A.CallTo(() => paymentService.ValidateExternalUrl(createPaymentResult.Links.NextUrl.Href)).Returns(true);
 
             // Act
@@ -971,7 +971,7 @@
             result.Should().NotBeNull();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappenedOnceExactly();
             A.CallTo(() => paymentService.CheckInProgressPaymentAsync(A<string>._, request.DirectRegistrantId)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => paymentService.CreatePaymentAsync(request.DirectRegistrantId, A<string>._, A<string>._)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => paymentService.CreatePaymentAsync(request.DirectRegistrantId, A<string>._, A<string>._, A<decimal>._)).MustHaveHappenedOnceExactly();
             A.CallTo(() => weeeCache.InvalidateOrganisationSearch()).MustHaveHappenedOnceExactly();
             A.CallTo(() => weeeCache.InvalidateOrganisationNameCache(model.OrganisationId))
                 .MustHaveHappenedOnceExactly();
@@ -1075,7 +1075,7 @@
             result.Url.Should().Be(existingPayment.Links.NextUrl.Href);
             A.CallTo(() => weeeClient.SendAsync(A<string>._, request)).MustHaveHappenedOnceExactly();
             A.CallTo(() => paymentService.CheckInProgressPaymentAsync(A<string>._, request.DirectRegistrantId)).MustHaveHappenedOnceExactly();
-            A.CallTo(() => paymentService.CreatePaymentAsync(A<Guid>._, A<string>._, A<string>._)).MustNotHaveHappened();
+            A.CallTo(() => paymentService.CreatePaymentAsync(A<Guid>._, A<string>._, A<string>._, A<decimal>._)).MustNotHaveHappened();
             A.CallTo(() => paymentService.ValidateExternalUrl(existingPayment.Links.NextUrl.Href)).MustHaveHappenedOnceExactly();
         }
 
@@ -1097,7 +1097,7 @@
 
             A.CallTo(() => addSignatoryAndCompleteRequestCreator.ViewModelToRequest(model)).Returns(request);
             A.CallTo(() => paymentService.CheckInProgressPaymentAsync(A<string>._, request.DirectRegistrantId)).Returns(Task.FromResult((PaymentWithAllLinks)null));
-            A.CallTo(() => paymentService.CreatePaymentAsync(request.DirectRegistrantId, A<string>._, A<string>._)).Returns(createPaymentResult);
+            A.CallTo(() => paymentService.CreatePaymentAsync(request.DirectRegistrantId, A<string>._, A<string>._, A<decimal>._)).Returns(createPaymentResult);
             A.CallTo(() => paymentService.ValidateExternalUrl(createPaymentResult.Links.NextUrl.Href)).Returns(false);
 
             // Act & Assert

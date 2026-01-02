@@ -5,7 +5,8 @@ BEGIN
     [Id]                UNIQUEIDENTIFIER    NOT NULL,
     [ComplianceYear]    INT                 NOT NULL,
     [EffectiveFrom]     DATE                NOT NULL,
-    [ChargeAmount]      DECIMAL(10,2)       NOT NULL);
+    [ChargeAmount]      DECIMAL(10,2)       NOT NULL,
+    [IsNonUk]        BIT NOT NULL);
     PRINT 'Table "DirectRegistrantCharge" created successfully.';
 END
 ELSE
@@ -18,20 +19,50 @@ INSERT INTO [Lookup].[DirectRegistrantCharge]
             ([Id]
             ,[ComplianceYear]
             ,[EffectiveFrom]
-            ,[ChargeAmount])
+            ,[ChargeAmount]
+            ,[IsNonUk])
      VALUES
            (NEWID()
            ,2025
            ,'01-01-2025',
-           '30.00');
+           '30.00',
+           1);
 
 INSERT INTO [Lookup].[DirectRegistrantCharge]
             ([Id]
             ,[ComplianceYear]
             ,[EffectiveFrom]
-            ,[ChargeAmount])
+            ,[ChargeAmount]
+            ,[IsNonUk])
+     VALUES
+           (NEWID()
+           ,2025
+           ,'01-01-2025',
+           '30.00',
+           0);
+
+INSERT INTO [Lookup].[DirectRegistrantCharge]
+            ([Id]
+            ,[ComplianceYear]
+            ,[EffectiveFrom]
+            ,[ChargeAmount]
+            ,[IsNonUk])
     VALUES
            (NEWID()
            ,2026
            ,'01-01-2026',
-           '32.00');
+           '32.00',
+           1);
+
+INSERT INTO [Lookup].[DirectRegistrantCharge]
+            ([Id]
+            ,[ComplianceYear]
+            ,[EffectiveFrom]
+            ,[ChargeAmount]
+            ,[IsNonUk])
+    VALUES
+           (NEWID()
+           ,2026
+           ,'01-01-2026',
+           '30.00',
+           0);

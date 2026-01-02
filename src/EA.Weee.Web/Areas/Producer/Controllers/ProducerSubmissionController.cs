@@ -415,7 +415,7 @@
             if (existingPaymentInProgress == null)
             {
                 var result = await paymentService.CreatePaymentAsync(SmallProducerSubmissionData.DirectRegistrantId,
-                    User.GetEmailAddress(), User.GetAccessToken());
+                    User.GetEmailAddress(), User.GetAccessToken(), SmallProducerSubmissionData.DirectRegistrantChargeAmount);
 
                 nextUrl = result.Links.NextUrl.Href;
             }

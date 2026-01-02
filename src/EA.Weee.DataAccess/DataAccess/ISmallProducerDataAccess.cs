@@ -15,6 +15,6 @@
 
         Task<DirectProducerSubmission> GetCurrentDirectRegistrantSubmissionById(Guid directProducerSubmissionId);
 
-        Task<DirectRegistrantCharge> GetDirectRegistrantChargeByComplianceYear(int complianceYear);
+        Task<DirectRegistrantCharge> GetDirectRegistrantChargeByComplianceYear(int complianceYear, bool isNonuk);
     }
 }

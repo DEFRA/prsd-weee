@@ -28,7 +28,7 @@
             this.weeeClient = weeeClient;
         }
 
-        public async Task<CreatePaymentResult> CreatePaymentAsync(Guid directRegistrantId, string email, string accessToken)
+        public async Task<CreatePaymentResult> CreatePaymentAsync(Guid directRegistrantId, string email, string accessToken, decimal amount)
         {
             using (var client = weeeClient())
             {
@@ -60,6 +60,8 @@
                 {
                     Amount = amountInPence,
                     Description = description,
+                    Amount = (int)Math.Round(amount * 100),
+                    Description = configurationService.CurrentConfiguration.GovUkPayDescription,
                     Reference = paymentReferenceGenerator.GeneratePaymentReferenceWithSeparators(),
                     ReturnUrl = returnUrl,
                     Email = email
