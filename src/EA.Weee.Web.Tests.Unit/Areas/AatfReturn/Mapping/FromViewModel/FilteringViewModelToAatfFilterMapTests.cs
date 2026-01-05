@@ -39,5 +39,50 @@
             Assert.Equal(viewModel.SelectedAuthority, result.SelectedAuthority);
             Assert.Equal(viewModel.SelectedStatus, result.SelectedStatus);
         }
+
+        [Fact]
+        public void Map_GivenValidSourceWithComplianceYear_ComplianceYearShouldBeMapped()
+        {
+            var complianceYear = 2024;
+            var viewModel = fixture.Build<FilteringViewModel>()
+                .With(a => a.FacilityType, FacilityType.Aatf)
+                .With(a => a.SelectedComplianceYear, complianceYear)
+                .Create();
+
+            var result = map.Map(viewModel);
+
+            result.ComplianceYear.Should().Be(complianceYear);
+        }
+
+        [Fact]
+        public void Map_GivenValidSourceWithNullComplianceYear_ComplianceYearShouldBeNull()
+        {
+            var viewModel = fixture.Build<FilteringViewModel>()
+                .With(a => a.FacilityType, FacilityType.Aatf)
+                .With(a => a.SelectedComplianceYear, (int?)null)
+                .Create();
+
+            var result = map.Map(viewModel);
+
+            result.ComplianceYear.Should().BeNull();
+        }
+
+        [Theory]
+        [InlineData(2019)]
+        [InlineData(2020)]
+        [InlineData(2021)]
+        [InlineData(2024)]
+        [InlineData(2025)]
+        public void Map_GivenVariousComplianceYears_ComplianceYearShouldBeMappedCorrectly(int year)
+        {
+            var viewModel = fixture.Build<FilteringViewModel>()
+                .With(a => a.FacilityType, FacilityType.Aatf)
+                .With(a => a.SelectedComplianceYear, year)
+                .Create();
+
+            var result = map.Map(viewModel);
+
+            result.ComplianceYear.Should().Be(year);
+        }
     }
 }
