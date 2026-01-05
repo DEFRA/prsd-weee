@@ -34,16 +34,9 @@
             {
                 var secureId = secureReturnUrlHelper.GenerateSecureRandomString(directRegistrantId);
                 var returnUrl = string.Format(configurationService.CurrentConfiguration.GovUkPayReturnBaseUrl, secureId);
-                var directRegistrantChargeData = await client.SendAsync(accessToken, new GetSmallProducerDirectRegistrantChargeRequest(DateTime.UtcNow.Year));
 
                 // Get producer details
                 var submissionData = await client.SendAsync(accessToken, new GetSmallProducerSubmission(directRegistrantId));
-
-                int amountInPence = 0;
-                if (directRegistrantChargeData != null)
-                {
-                    amountInPence = (int)Math.Round(directRegistrantChargeData.ChargeAmount * 100);
-                }
 
                 // Build description with PRN and producer name
                 var description = configurationService.CurrentConfiguration.GovUkPayDescription;
@@ -58,10 +51,8 @@
 
                 var paymentRequest = new CreateCardPaymentRequest
                 {
-                    Amount = amountInPence,
-                    Description = description,
                     Amount = (int)Math.Round(amount * 100),
-                    Description = configurationService.CurrentConfiguration.GovUkPayDescription,
+                    Description = description,
                     Reference = paymentReferenceGenerator.GeneratePaymentReferenceWithSeparators(),
                     ReturnUrl = returnUrl,
                     Email = email
