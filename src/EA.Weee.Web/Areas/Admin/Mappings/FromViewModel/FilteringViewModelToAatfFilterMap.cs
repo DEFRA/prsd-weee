@@ -20,7 +20,8 @@
                 ApprovalNumber = source.ApprovalNumber,
                 Name = source.Name,
                 SelectedAuthority = source.SelectedAuthority,
-                SelectedStatus = source.SelectedStatus
+                SelectedStatus = source.SelectedStatus,
+                ComplianceYear = source.SelectedComplianceYear
             };
         }
     }
