@@ -4,6 +4,7 @@
     using EA.Weee.Api.Client;
     using EA.Weee.Api.Client.Models.Pay;
     using EA.Weee.Core.DirectRegistrant;
+    using EA.Weee.Core.Organisations;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using EA.Weee.Tests.Core;
     using EA.Weee.Web.Services;
@@ -48,41 +49,61 @@
             var email = fixture.Create<string>();
             var accessToken = fixture.Create<string>();
             var secureId = fixture.Create<string>();
-            var returnUrl = fixture.Create<string>();
+            var returnUrlFormat = "https://example.com/return?token={0}"; // Format string with placeholder
             var paymentReference = fixture.Create<string>();
             var paymentId = fixture.Create<string>();
-            var amount = fixture.Create<decimal>();
-            var description = fixture.Create<string>();
+            var amount = 30m; // Use decimal for amount in pounds
+            var description = "Test Description";
+            var producerRegistrationNumber = "PRN123456";
+            var organisationName = "Test Organisation";
 
-            amount = (DateTime.UtcNow.Year == 2025 ? 30 : 35);
             int amountInPence = (int)Math.Round(amount * 100);
+
             A.CallTo(() => secureReturnUrlHelper.GenerateSecureRandomString(directRegistrantId, 16))
                 .Returns(secureId);
             A.CallTo(() => configurationService.CurrentConfiguration.GovUkPayReturnBaseUrl)
-                .Returns(returnUrl);
+                .Returns(returnUrlFormat);
             A.CallTo(() => configurationService.CurrentConfiguration.GovUkPayDescription)
                 .Returns(description);
             A.CallTo(() => paymentReferenceGenerator.GeneratePaymentReferenceWithSeparators(20))
                 .Returns(paymentReference);
 
-            var smallProducerDirectRegistrantChargeData = new SmallProducerDirectRegistrantChargeData { ComplianceYear = DateTime.UtcNow.Year, ChargeAmount = amount };
-            A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetSmallProducerDirectRegistrantChargeRequest>.That.Matches(p => p.ComplianceYear == DateTime.UtcNow.Year)))
-                .Returns(smallProducerDirectRegistrantChargeData);
+            // Mock the GetSmallProducerSubmission request
+            var submissionData = new SmallProducerSubmissionData
+            {
+                DirectRegistrantId = directRegistrantId,
+                ProducerRegistrationNumber = producerRegistrationNumber,
+                OrganisationData = new OrganisationData
+                {
+                    OrganisationName = organisationName
+                }
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<GetSmallProducerSubmission>.That.Matches(p =>
+                    p != null && p.DirectRegistrantId == directRegistrantId)))
+                .Returns(submissionData);
 
             var expectedPaymentResult = new CreatePaymentResult { PaymentId = paymentId };
-            A.CallTo(() => payClient.CreatePaymentAsync(A<string>._, A<CreateCardPaymentRequest>.That.Matches(c => 
-                    c.Amount == amountInPence && 
-                    c.Description == description &&
-                    c.ReturnUrl == returnUrl && 
-                    c.Reference == paymentReference)))
+            var expectedDescription = $"{description} - PRN: {producerRegistrationNumber} - {organisationName}";
+            var expectedReturnUrl = string.Format(returnUrlFormat, secureId);
+
+            A.CallTo(() => payClient.CreatePaymentAsync(A<string>._, A<CreateCardPaymentRequest>.That.Matches(c =>
+                    c != null &&
+                    c.Amount == amountInPence &&
+                    c.Description == expectedDescription &&
+                    c.ReturnUrl == expectedReturnUrl &&
+                    c.Reference == paymentReference &&
+                    c.Email == email)))
                 .Returns(expectedPaymentResult);
 
             // Act
-            var result = await paymentService.CreatePaymentAsync(directRegistrantId, email, accessToken, smallProducerDirectRegistrantChargeData.ChargeAmount);
+            var result = await paymentService.CreatePaymentAsync(directRegistrantId, email, accessToken, amount);
 
             // Assert
             result.Should().BeEquivalentTo(expectedPaymentResult);
-            A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddPaymentSessionRequest>.That.Matches(a => a.PaymentReturnToken == secureId &&
+            A.CallTo(() => weeeClient.SendAsync(accessToken, A<AddPaymentSessionRequest>.That.Matches(a =>
+                    a != null &&
+                    a.PaymentReturnToken == secureId &&
                     a.Amount == amountInPence &&
                     a.DirectRegistrantId == directRegistrantId &&
                     a.PaymentId == expectedPaymentResult.PaymentId &&
