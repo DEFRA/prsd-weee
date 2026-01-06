@@ -7,7 +7,7 @@
 
     public interface IPaymentService
     {
-        Task<CreatePaymentResult> CreatePaymentAsync(Guid directRegistrantId, string email, string accessToken);
+        Task<CreatePaymentResult> CreatePaymentAsync(Guid directRegistrantId, string email, string accessToken, decimal amount);
 
         Task<PaymentResult> HandlePaymentReturnAsync(string accessToken, string token);
 

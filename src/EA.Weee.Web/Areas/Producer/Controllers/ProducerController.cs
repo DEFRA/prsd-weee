@@ -8,7 +8,6 @@
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Producer.Filters;
-    using EA.Weee.Web.Areas.Producer.Mappings.ToViewModel;
     using EA.Weee.Web.Areas.Producer.ViewModels;
     using EA.Weee.Web.Constant;
     using EA.Weee.Web.Controllers.Base;
@@ -86,6 +85,7 @@
             var model = new TaskListViewModel()
             {
                 OrganisationId = SmallProducerSubmissionData.OrganisationData.Id,
+                DirectRegistrantChargeAmount = SmallProducerSubmissionData.DirectRegistrantChargeAmount,
                 ProducerTaskModels = new List<ProducerTaskModel>
                 {
                     new ProducerTaskModel

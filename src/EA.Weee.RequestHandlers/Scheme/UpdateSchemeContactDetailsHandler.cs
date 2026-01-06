@@ -63,7 +63,9 @@
                 message.SchemeData.Address.Postcode,
                 country,
                 message.SchemeData.Address.Telephone,
-                message.SchemeData.Address.Email);
+                message.SchemeData.Address.Email,
+                message.SchemeData.Address.WebAddress,
+                message.SchemeData.Address.Fax);
 
             var schemeAddressChanged = !address.Equals(scheme.Address);
 

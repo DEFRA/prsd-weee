@@ -26,6 +26,7 @@
         private readonly ICompanyAlreadyRegistered companyAlreadyRegistered;
         private readonly ICompanyRegistrationNumberChange companyRegistrationNumberChange;
         private readonly Func<Guid, string, IProducerObligationTypeChange> producerObligationTypeChangeDelegate;
+        private readonly IProducerSellingTechniqueChange producerSellingTechniqueChangeWarning;
 
         public MemberRegistrationBusinessValidator(IProducerNameChange producerNameWarning,
             IAnnualTurnoverMismatch annualTurnoverMismatch,
@@ -42,7 +43,8 @@
             IProducerChargeBandChange producerChargeBandChangeWarning,
             ICompanyAlreadyRegistered companyAlreadyRegistered,
             ICompanyRegistrationNumberChange companyRegistrationNumberChange,
-            Func<Guid, string, IProducerObligationTypeChange> producerObligationTypeChangeDelegate)
+            Func<Guid, string, IProducerObligationTypeChange> producerObligationTypeChangeDelegate,
+            IProducerSellingTechniqueChange producerSellingTechniqueChangeWarning)
         {
             this.producerNameWarning = producerNameWarning;
             this.annualTurnoverMismatch = annualTurnoverMismatch;
@@ -60,6 +62,7 @@
             this.companyAlreadyRegistered = companyAlreadyRegistered;
             this.companyRegistrationNumberChange = companyRegistrationNumberChange;
             this.producerObligationTypeChangeDelegate = producerObligationTypeChangeDelegate;
+            this.producerSellingTechniqueChangeWarning = producerSellingTechniqueChangeWarning;
         }
 
         public async Task<IEnumerable<RuleResult>> Validate(schemeType scheme, Guid organisationId)
@@ -91,6 +94,7 @@
                 result.Add(producerAlreadyRegistered.Evaluate(scheme, producer, organisationId));
                 result.Add(producerNameAlreadyRegistered.Evaluate());
                 result.Add(producerChargeBandChangeWarning.Evaluate(scheme, producer, organisationId));
+                result.Add(producerSellingTechniqueChangeWarning.Evaluate(scheme, producer, organisationId));
                 result.Add(companyAlreadyRegistered.Evaluate(producer));
                 result.Add(companyRegistrationNumberChange.Evaluate(producer));
                 result.Add(await producerObligationTypeChange.Evaluate(producer));

@@ -1105,8 +1105,11 @@
     <Compile Include="Areas\Admin\ViewModels\Submissions\SubmissionHistoryViewModel.cs" />
     <Compile Include="Areas\AatfReturn\ViewModels\ObligatedValuesCopyPasteViewModel.cs" />
     <Compile Include="Areas\AatfReturn\Mappings\ToViewModel\ReturnAndSchemeDataToReceivedPcsViewModelMap.cs" />
+    <Content Include="Content\govuk_frontend\assets\images\govuk-crest.svg" />
     <Content Include="Content\govuk_frontend\components\task-list\accessibility.puppeteer.test.mjs" />
     <Content Include="Content\govuk_frontend\components\task-list\template.jsdom.test.js" />
+    <Content Include="Content\govuk_frontend\govuk-frontend.min.css" />
+    <Content Include="Scripts\govuk_frontend\govuk-frontend-5.13.0.min.js" />
     <Content Include="Scripts\jquery-ui-1-13.3.js" />
     <Content Include="Scripts\jquery-ui-1.13.3.min.js" />
     <Content Include="Scripts\lookup\contact-details-address-lookup.js" />
@@ -1331,7 +1334,6 @@
     <Content Include="Areas\Admin\Views\Shared\_SchemeDetails.cshtml" />
     <Content Include="Scripts\govuk_frontend\govuk-frontend-legacy-cookie.js" />
     <Content Include="Scripts\jquery-ui-date-picker.js" />
-    <Content Include="Scripts\govuk_frontend\govuk-frontend-4.0.1.min.js" />
     <Content Include="Areas\Admin\Views\AddOrganisation\OrgAlreadyHasScheme.cshtml" />
     <Content Include="Scripts\search-an-aatf.js" />
     <Content Include="Areas\Admin\Views\AatfReports\AatfAePublicRegister.cshtml" />
@@ -1817,7 +1819,6 @@
     <Content Include="Scripts\hide-classes-when-competent-authory-is-not-ea.js" />
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\sent-on-operator-address.js" />
-    <Content Include="Scripts\setup-govuk-frontend.js" />
     <Content Include="Scripts\show-warning.js" />
     <Content Include="Scripts\weee-collapsible-link.js" />
     <Content Include="Scripts\weee-application.js" />

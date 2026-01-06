@@ -16,5 +16,7 @@
                 return ProducerTaskModels.TrueForAll(a => a.Complete);
             }
         }
+
+        public decimal DirectRegistrantChargeAmount { get; set; }
     }
 }

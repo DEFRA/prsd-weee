@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.DataAccess.DataAccess
 {
+    using EA.Weee.Domain.Lookup;
     using EA.Weee.Domain.Producer;
     using System;
     using System.Data.Entity;
@@ -63,6 +64,12 @@
             }
 
             return directRegistrant;
+        }
+
+        public async Task<DirectRegistrantCharge> GetDirectRegistrantChargeByComplianceYear(int complianceYear, bool isNonUk)
+        {
+            return await context.DirectRegistrantCharges.Where(d => d.ComplianceYear == complianceYear && d.IsNonUk == isNonUk)
+                                                        .FirstOrDefaultAsync();
         }
     }
 }

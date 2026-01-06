@@ -90,5 +90,18 @@
         {
             return currentCompanyProducers.Run();
         }
+
+        public ProducerSubmission GetLatestProducerDetails(string registrationNo, Guid organisationId)
+        {
+            if (!currentProducersByRegistrationNumber.Run().ContainsKey(registrationNo))
+            {
+                return null;
+            }
+
+            return currentProducersByRegistrationNumber.Run()[registrationNo]
+                                                       .Where(p => p.RegisteredProducer.Scheme.OrganisationId == organisationId)
+                                                       .OrderByDescending(p => p.MemberUpload.ComplianceYear)
+                                                       .FirstOrDefault();
+        }
     }
 }

@@ -3,7 +3,7 @@
   <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-	  <LangVersion>11.0</LangVersion>
+    <LangVersion>11.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -103,9 +103,11 @@
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\IProducerChargeBandChange.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ICompanyAlreadyRegistered.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\IProducerObligationTypeChange.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\IProducerSellingTechniqueChange.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ProducerChargeBandChange.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\CompanyAlreadyRegistered.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ProducerObligationTypeChange.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ProducerSellingTechniqueChange.cs" />
     <Compile Include="Errors\XmlErrorType.cs" />
     <Compile Include="Errors\XmlValidationError.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

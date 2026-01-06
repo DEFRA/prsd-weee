@@ -17,6 +17,7 @@
                 Postcode = source.Postcode,
                 Telephone = source.Telephone,
                 CountryName = source.CountryName,
+                Fax = source.Fax
             };
         }
     }

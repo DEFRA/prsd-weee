@@ -22,9 +22,10 @@
         }
 
         public Address(string address1, string address2, string townOrCity, string countyOrRegion, string postcode,
-            Country country, string telephone, string email, string webAddress) : this(address1, address2, townOrCity, countyOrRegion, postcode, country, telephone, email)
+            Country country, string telephone, string email, string webAddress, string fax) : this(address1, address2, townOrCity, countyOrRegion, postcode, country, telephone, email)
         {
             WebAddress = webAddress;
+            Fax = fax;
         }
 
         protected Address()
@@ -39,6 +40,7 @@
         private string telephone;
         private string email;
         private string webAddress;
+        private string fax;
 
         public virtual Country Country { get; set; }
 
@@ -126,6 +128,19 @@
             }
         }
 
+        public string Fax
+        {
+            get => fax;
+            private set
+            {
+                if (value != null && value.Length > 20)
+                {
+                    throw new InvalidOperationException(string.Format(("Fax cannot be greater than 20 characters")));
+                }
+                fax = value;
+            }
+        }
+
         public string Email
         {
             get => email;
@@ -177,6 +192,8 @@
             otherAddress.Telephone = Telephone;
             otherAddress.Email = Email;
             otherAddress.WebAddress = WebAddress;
+            otherAddress.Fax = Fax;
+
             return otherAddress;
         }
 
@@ -196,6 +213,7 @@
             this.Telephone = otherAddress.Telephone;
             this.Email = otherAddress.Email;
             this.WebAddress = otherAddress.WebAddress;
+            this.Fax = otherAddress.Fax;
         }
 
         public bool Equals(Address other)
@@ -213,6 +231,8 @@
                    Telephone == other.Telephone &&
                    Email == other.Email &&
                    WebAddress == other.WebAddress &&
+                   Fax == other.Fax &&
+
                    Equals(Country, other.Country);
         }
 

@@ -306,7 +306,7 @@
             }
 
             var directRegistrantAddress = new Address("address1", "address2", "town", "county", "gu21",
-                new Country(Guid.NewGuid(), "country"), "1245", "email@email.com", "http://");
+                new Country(Guid.NewGuid(), "country"), "1245", "email@email.com", "http://", "456789");
 
             var directRegistrant = new DirectRegistrant(Organisation.CreateDirectRegistrantCompany(Domain.Organisation.OrganisationType.Partnership, "companyName", "tradingName", "1231234"),
                 brandName, new Contact("First", "Last", "Position"), directRegistrantAddress,
@@ -327,7 +327,7 @@
             directProducerSubmissionCurrentYear.CurrentSubmission.AddOrUpdateContact(contact);
 
             var submissionAddress = new Address("address2", "address2", "town", "county", "gu21",
-                new Country(Guid.NewGuid(), "country"), "1245", "email@email.com", "http://");
+                new Country(Guid.NewGuid(), "country"), "1245", "email@email.com", "http://", "456789");
 
             directProducerSubmissionCurrentYear.CurrentSubmission.AddOrUpdateContactAddress(submissionAddress);
 

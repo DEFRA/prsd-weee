@@ -4,7 +4,7 @@
   <Import Project="..\packages\xunit.core.2.4.2\build\xunit.core.props" Condition="Exists('..\packages\xunit.core.2.4.2\build\xunit.core.props')" />
   <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
   <PropertyGroup>
-	  <LangVersion>11.0</LangVersion>
+    <LangVersion>11.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -190,6 +190,7 @@
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ProducerNameAlreadyRegisteredTests.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ProducerObligationTypeChangeTests.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ProducerRegistrationNumberValidityTests.cs" />
+    <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\ProducerSellingTechniqueChangeTests.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Producer\UkBasedAuthorisedRepresentativeTests.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Scheme\CorrectSchemeApprovalNumberTests.cs" />
     <Compile Include="BusinessValidation\MemberRegistration\Rules\Scheme\DuplicateProducerNamesTests.cs" />

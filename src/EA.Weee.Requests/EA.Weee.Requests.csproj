@@ -97,6 +97,7 @@
     <Compile Include="Admin\Reports\GetSchemesWithObligationOrEvidence.cs" />
     <Compile Include="Organisations\DirectRegistrant\CompleteMigratedOrganisationTransaction.cs" />
     <Compile Include="Organisations\DirectRegistrant\ContinueOrganisationRegistrationRequest.cs" />
+    <Compile Include="Organisations\DirectRegistrant\GetSmallProducerDirectRegistrantChargeRequest.cs" />
     <Compile Include="Organisations\DirectRegistrant\ProducerRegistrationNumberRequest.cs" />
     <Compile Include="Organisations\DirectRegistrant\AddSignatoryAndCompleteRequest.cs" />
     <Compile Include="Organisations\DirectRegistrant\AddPaymentSessionRequest.cs" />

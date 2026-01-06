@@ -2,10 +2,6 @@
 {
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Organisations;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Web;
     using EA.Weee.Core.Shared;
 
     public class ReverseAddressMap : IMap<AddressData, ExternalAddressData>
@@ -22,6 +18,9 @@
                 TownOrCity = source.TownOrCity,
                 WebsiteAddress = source.WebAddress,
                 Postcode = source.Postcode,
+                Email = source.Email,
+                Telephone = source.Telephone,
+                Fax = source.Fax
             };
         }
     }

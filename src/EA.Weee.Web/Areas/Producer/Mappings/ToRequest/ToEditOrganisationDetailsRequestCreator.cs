@@ -2,7 +2,6 @@
 {
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Organisations;
-    using EA.Weee.Core.Organisations.Base;
     using EA.Weee.Core.Shared;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using EA.Weee.Web.Areas.Producer.ViewModels;

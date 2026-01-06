@@ -6,6 +6,7 @@
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using System;
     using System.Linq;
+    using System.Runtime.InteropServices;
     using System.Threading.Tasks;
 
     public class PaymentService : IPaymentService
@@ -27,8 +28,7 @@
             this.weeeClient = weeeClient;
         }
 
-        public async Task<CreatePaymentResult> CreatePaymentAsync(Guid directRegistrantId, string email,
-            string accessToken)
+        public async Task<CreatePaymentResult> CreatePaymentAsync(Guid directRegistrantId, string email, string accessToken, decimal amount)
         {
             using (var client = weeeClient())
             {
@@ -37,7 +37,7 @@
 
                 var paymentRequest = new CreateCardPaymentRequest
                 {
-                    Amount = configurationService.CurrentConfiguration.GovUkPayAmountInPence,
+                    Amount = (int)Math.Round(amount * 100),
                     Description = configurationService.CurrentConfiguration.GovUkPayDescription,
                     Reference = paymentReferenceGenerator.GeneratePaymentReferenceWithSeparators(),
                     ReturnUrl = returnUrl,
@@ -48,10 +48,8 @@
 
                 var result = await paymentClient.CreatePaymentAsync(idempotencyKey, paymentRequest);
 
-                await client.SendAsync(accessToken, new AddPaymentSessionRequest(directRegistrantId,
-                    paymentRequest.Reference,
-                    secureId, result.PaymentId, paymentRequest.Amount));
-         
+                await client.SendAsync(accessToken, new AddPaymentSessionRequest(directRegistrantId, paymentRequest.Reference, secureId, result.PaymentId, paymentRequest.Amount));
+
                 return result;
             }
         }
@@ -120,9 +118,7 @@
 
                 if (result != null)
                 {
-                    await client.SendAsync(accessToken,
-                        new UpdateSubmissionPaymentDetailsRequest(payment.DirectRegistrantId, result.State.Status,
-                            payment.PaymentSessionId, result.State.IsInFinalState()));
+                    await client.SendAsync(accessToken, new UpdateSubmissionPaymentDetailsRequest(payment.DirectRegistrantId, result.State.Status, payment.PaymentSessionId, result.State.IsInFinalState()));
 
                     return new PaymentResult()
                     {
