@@ -3,7 +3,7 @@
   <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-	  <LangVersion>11.0</LangVersion>
+    <LangVersion>11.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -140,6 +140,7 @@
     <Compile Include="Mappings\DirectProducerSubmissionMapping.cs" />
     <Compile Include="Mappings\DirectRegistrantChargeMapping.cs" />
     <Compile Include="Mappings\DirectRegistrantMapping.cs" />
+    <Compile Include="Mappings\MessageBannerMapping.cs" />
     <Compile Include="Mappings\ObligationSchemeAmountMapping.cs" />
     <Compile Include="Mappings\ObligationUploadErrorTypeMapping.cs" />
     <Compile Include="Mappings\ObligationUploadErrorMapping.cs" />
