@@ -29,21 +29,7 @@
                 var messageBannerData = await client.User.GetMessageBannerAsync(access.AccessToken);
 
                 return Json(messageBannerData, JsonRequestBehavior.AllowGet);
-
-                //if (messageBannerData != null)
-                //{
-                //    var messageBannerViewModel = new MessageBannerViewModel()
-                //    {
-                //        Title = messageBannerData.Title,
-                //        Description = messageBannerData.Description,
-                //        IsActive = true
-                //    };
-
-                //    return Json(messageBannerViewModel, JsonRequestBehavior.AllowGet);
-                //}
             }
-
-            //return Json(new MessageBannerViewModel() { IsActive = false }, JsonRequestBehavior.AllowGet);
         }
     }
 }
