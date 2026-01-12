@@ -995,5 +995,27 @@
                 Id = Guid.NewGuid()
             };
         }
+
+        public MessageBanner CreateMessageBanner()
+        {
+            return new MessageBanner()
+            {
+                StartTime = DateTime.Now,
+                EndTime = DateTime.Now.AddDays(1),
+                Title = "Test Title",
+                Description = "Test Description"
+            };
+        }
+
+        public MessageBanner CreateOldMessageBanner()
+        {
+            return new MessageBanner()
+            {
+                StartTime = DateTime.Now.AddDays(-1),
+                EndTime = DateTime.Now,
+                Title = "Test Title",
+                Description = "Test Description"
+            };
+        }
     }
 }

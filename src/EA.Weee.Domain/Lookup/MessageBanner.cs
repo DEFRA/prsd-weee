@@ -4,7 +4,7 @@
 
     public class MessageBanner
     {
-        protected MessageBanner()
+        public MessageBanner()
         {
         }
 
