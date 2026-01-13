@@ -998,24 +998,32 @@
 
         public MessageBanner CreateMessageBanner()
         {
-            return new MessageBanner()
+            var messageBanner = new MessageBanner()
             {
-                StartTime = DateTime.Now,
+                StartTime = DateTime.Now.AddHours(-1),
                 EndTime = DateTime.Now.AddDays(1),
                 Title = "Test Title",
-                Description = "Test Description"
+                Description = "Test Description",
             };
+
+            model.MessageBanners.Add(messageBanner);
+
+            return messageBanner;
         }
 
         public MessageBanner CreateOldMessageBanner()
         {
-            return new MessageBanner()
+            var messageBanner = new MessageBanner()
             {
                 StartTime = DateTime.Now.AddDays(-1),
-                EndTime = DateTime.Now,
+                EndTime = DateTime.Now.AddHours(-1),
                 Title = "Test Title",
-                Description = "Test Description"
+                Description = "Test Description",
             };
+
+            model.MessageBanners.Add(messageBanner);
+
+            return messageBanner;
         }
     }
 }
