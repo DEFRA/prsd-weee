@@ -10,7 +10,9 @@
     using EA.Weee.Api.Identity;
     using EA.Weee.DataAccess.Identity;
     using EA.Weee.Email;
+    using EA.Weee.RequestHandlers.Shared;
     using FakeItEasy;
+    using FluentAssertions;
     using Microsoft.AspNet.Identity;
     using RequestHandlers.Admin;
     using Security;
@@ -20,7 +22,6 @@
     using System.Threading.Tasks;
     using System.Web.Http;
     using System.Web.Http.Results;
-    using FluentAssertions;
     using Weee.Tests.Core;
     using Xunit;
 
@@ -56,12 +57,14 @@
             IUserContext userContext = A.Fake<IUserContext>();
             IWeeeEmailService emailService = A.Fake<IWeeeEmailService>();
             IGetAdminUserDataAccess getAdminUserDataAccess = A.Dummy<IGetAdminUserDataAccess>();
+            IGetMessageBannerDataAccess messageBannerDataAccess = A.Dummy<IGetMessageBannerDataAccess>();
 
             UnauthenticatedUserController controller = new UnauthenticatedUserController(
                 userManager,
                 userContext,
                 emailService,
-                getAdminUserDataAccess);
+                getAdminUserDataAccess,
+                messageBannerDataAccess);
 
             InternalUserCreationData model = new InternalUserCreationData()
             {
@@ -104,12 +107,14 @@
             IUserContext userContext = A.Fake<IUserContext>();
             IWeeeEmailService emailService = A.Fake<IWeeeEmailService>();
             IGetAdminUserDataAccess getAdminUserDataAccess = A.Dummy<IGetAdminUserDataAccess>();
+            IGetMessageBannerDataAccess messageBannerDataAccess = A.Dummy<IGetMessageBannerDataAccess>();
 
             UnauthenticatedUserController controller = new UnauthenticatedUserController(
                 userManager,
                 userContext,
                 emailService,
-                getAdminUserDataAccess);
+                getAdminUserDataAccess,
+                messageBannerDataAccess);
 
             ExternalUserCreationData model = new ExternalUserCreationData()
             {
@@ -438,6 +443,7 @@
             public IUserContext UserContext { get; private set; }
             public IWeeeEmailService EmailService { get; private set; }
             public IGetAdminUserDataAccess GetAdminUserDataAccess { get; private set; }
+            public IGetMessageBannerDataAccess MessageBannerDataAccess = A.Dummy<IGetMessageBannerDataAccess>();
 
             public UnauthenticatedUserControllerBuilder()
             {
@@ -445,11 +451,12 @@
                 UserContext = A.Fake<IUserContext>();
                 EmailService = A.Fake<IWeeeEmailService>();
                 GetAdminUserDataAccess = A.Fake<IGetAdminUserDataAccess>();
+                MessageBannerDataAccess = A.Fake<IGetMessageBannerDataAccess>();
             }
 
             public UnauthenticatedUserController Build()
             {
-                return new UnauthenticatedUserController(UserManager, UserContext, EmailService, GetAdminUserDataAccess);
+                return new UnauthenticatedUserController(UserManager, UserContext, EmailService, GetAdminUserDataAccess, MessageBannerDataAccess);
             }
         }
     }

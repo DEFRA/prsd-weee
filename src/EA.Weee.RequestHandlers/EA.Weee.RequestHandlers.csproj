@@ -206,6 +206,7 @@
     <Compile Include="Search\FetchSmallProducerSearchResultsForCache\FetchSmallProducerSearchResultsForCacheDataAccess.cs" />
     <Compile Include="Search\FetchSmallProducerSearchResultsForCache\FetchSmallProducerSearchResultsForCacheHandler.cs" />
     <Compile Include="Search\FetchSmallProducerSearchResultsForCache\IFetchSmallProducerSearchResultsForCacheDataAccess.cs" />
+    <Compile Include="Shared\GetMessageBannerDataAccess.cs" />
     <Compile Include="Shared\GetObligationSummaryRequestHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationHandler.cs" />
     <Compile Include="Admin\Obligations\GetSchemeObligationUploadHandler.cs" />
@@ -608,6 +609,7 @@
     <Compile Include="Shared\GetUKCompetentAuthorityByIdHandler.cs" />
     <Compile Include="DataReturns\IDataReturnSubmissionsDataAccess.cs" />
     <Compile Include="Shared\IGetDataReturnSubmissionsHistoryResultsDataAccess.cs" />
+    <Compile Include="Shared\IGetMessageBannerDataAccess.cs" />
     <Compile Include="Shared\IGetSubmissionsHistoryResultsDataAccess.cs" />
     <Compile Include="Scheme\MemberRegistration\GenerateDomainObjects\GenerateFromXml.cs" />
     <Compile Include="Scheme\Interfaces\IGenerateFromXml.cs" />
