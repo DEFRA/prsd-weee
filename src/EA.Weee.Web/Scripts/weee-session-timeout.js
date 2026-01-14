@@ -11,9 +11,7 @@
     let countdownTimer;
     let urlPrefix = "";
     let eventBound = false;
-    let sessionStartTime; // Keep track of the session start time
-
-    // Generate URL based on the environment and URL prefix
+    let sessionStartTime;
     function getUrl(endpoint) {
         const baseUrl = location.protocol + '//' + location.host;
         const prefix = urlPrefix || '';
@@ -28,32 +26,38 @@
         clearTimeout(sessionWarningTimer);
         clearTimeout(sessionLogoutTimer);
 
-        sessionStartTime = Date.now(); // Record the actual start time of the session
-        sessionWarningTimer = setTimeout(showSessionWarning, (sessionTimeoutInSeconds - warningTimeInSeconds) * 1000);
-        sessionLogoutTimer = setTimeout(logout, sessionTimeoutInSeconds * 1000);
+        sessionStartTime = Date.now();
 
-        startCountdown();
+        sessionWarningTimer = setTimeout(showSessionWarning,
+            (sessionTimeoutInSeconds - warningTimeInSeconds) * 1000
+        );
+
+        sessionLogoutTimer = setTimeout(logout,
+            sessionTimeoutInSeconds * 1000
+        );
     }
 
     function showSessionWarning() {
-        clearTimeout(countdownTimer);
-        setTimeValue(warningTimeInSeconds - 1);
+        sessionStartTime = Date.now(); // reset start for warning countdown
+        setTimeValue(warningTimeInSeconds);
         $sessionDialog.show();
+        startCountdown() // ✅ start countdown
     }
 
     function startCountdown() {
-        countdownTimer = setInterval(function () {
-            // Calculate the remaining time by comparing current time with session start time
-            const elapsedTimeInSeconds = Math.floor((Date.now() - sessionStartTime) / 1000);
-            const remainingTimeInSeconds = sessionTimeoutInSeconds - elapsedTimeInSeconds;
+        clearInterval(countdownTimer);
 
-            if (remainingTimeInSeconds <= 0) {
-                clearInterval(countdownTimer); // Stop the countdown once the session expires
-                logout(); // Trigger logout
+        countdownTimer = setInterval(function () {
+            const elapsed = Math.floor((Date.now() - sessionStartTime) / 1000);
+            const remaining = warningTimeInSeconds - elapsed;
+
+            if (remaining <= 0) {
+                clearInterval(countdownTimer);
+                logout();
             } else {
-                setTimeValue(remainingTimeInSeconds);
+                setTimeValue(remaining);
             }
-        }, 1000); // Update every second
+        }, 1000);
     }
 
     function setTimeValue(remainingTimeInSeconds) {
@@ -61,7 +65,7 @@
     }
 
     function closeSessionWarning() {
-        clearTimeout(countdownTimer);
+        clearInterval(countdownTimer);
         $sessionDialog.hide();
     }
 
@@ -103,10 +107,11 @@
     }
 
     function start(timeoutInMinutes, warningBeforeInMinutes, authenticated, isInternal) {
-        if (authenticated === "False") return;
+        if (!authenticated || authenticated === "False") return;
 
         isInternal = isInternal === "True";
         setTimeWith(timeoutInMinutes, warningBeforeInMinutes);
+
         startSessionTimeout();
 
         $("#signoutForm").toggle(!isInternal);
@@ -119,10 +124,9 @@
 
                 clearTimeout(sessionWarningTimer);
                 clearTimeout(sessionLogoutTimer);
-                clearInterval(countdownTimer); // Clear the old countdown
+                clearInterval(countdownTimer);
 
-                sessionStartTime = Date.now(); // Reset session start time
-                startSessionTimeout();
+                startSessionTimeout(); // restart everything cleanly
                 closeSessionWarning();
             });
 
