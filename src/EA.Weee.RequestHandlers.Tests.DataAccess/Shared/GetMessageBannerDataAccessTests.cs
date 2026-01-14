@@ -17,8 +17,6 @@
                 // Arrange
                 ModelHelper modelHelper = new ModelHelper(database.Model);
 
-                var messageBanner = modelHelper.CreateOldMessageBanner();
-
                 // Act
                 var result = await dataAccess.GetMessageBannerData();
 
