@@ -46,12 +46,15 @@ BEGIN
 END
 GO
 
--- Insert historical and current data for EA
+-- Use hardcoded GUIDs from 0004-InsertCompetentAuthorityData.sql
 DECLARE @EAId UNIQUEIDENTIFIER = 'A3C2D0DD-53A1-4F6A-99D0-1CCFC87611A8';
+DECLARE @SEPAId UNIQUEIDENTIFIER = '78F37814-364B-4FAE-BEB5-DB0439CBF177';
+DECLARE @NIEAId UNIQUEIDENTIFIER = '4EEE5942-01B2-4A4D-855A-34DEE1BBBF26';
+DECLARE @NRWId UNIQUEIDENTIFIER = '44C2F368-AA66-48F0-BBC9-A0ED34AD0951';
 
 PRINT N'Inserting annual charge data for EA (Environment Agency)...';
 
--- Insert data for compliance years 2019-2026
+-- Insert data for compliance years 2019-2026 for EA
 INSERT INTO [Lookup].[AnnualChargeByYear] ([Id], [CompetentAuthorityId], [ComplianceYear], [AnnualChargeAmount], [EffectiveFrom])
 SELECT * FROM (VALUES
     (NEWID(), @EAId, 2019, 12500.00, '2019-01-01'),
@@ -74,17 +77,6 @@ DECLARE @RowsInserted INT = @@ROWCOUNT;
 PRINT N'Inserted ' + CAST(@RowsInserted AS NVARCHAR(10)) + ' annual charge records for EA.';
 PRINT N'  2019-2025: £12,500.00';
 PRINT N'  2026: £13,438.00 (7.5% increase)';
-
-GO
-
--- Insert placeholder data for other authorities (SEPA, NRW, NIEA) with £0 charge
-DECLARE @SEPAId UNIQUEIDENTIFIER;
-DECLARE @NRWId UNIQUEIDENTIFIER;
-DECLARE @NIEAId UNIQUEIDENTIFIER;
-
-SELECT @SEPAId = Id FROM [Lookup].[CompetentAuthority] WHERE Abbreviation = 'SEPA';
-SELECT @NRWId = Id FROM [Lookup].[CompetentAuthority] WHERE Abbreviation = 'NRW';
-SELECT @NIEAId = Id FROM [Lookup].[CompetentAuthority] WHERE Abbreviation = 'NIEA';
 
 PRINT N'Inserting annual charge data for SEPA, NRW, NIEA (£0 charge)...';
 
