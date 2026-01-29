@@ -1,33 +1,28 @@
-﻿$(document).ready(function () {
+﻿$(async function () {
+    try {
+        const url = buildBannerUrl();
+        const result = await $.get(url);
 
-    getMessageBanner();
+        const $banner = $('#dvMessageBanner');
 
-    async function getMessageBanner() {
-
-        let url = null;
-
-        if (location.host.includes('uat')) {
-            url = location.protocol + '//' + location.host + '/' + location.pathname.split('/')[1] + '/Banner/MessageBannerAsync';
+        if (result?.IsActive) {
+            $('#title').html(result.Title);
+            $('#spDescription').html(result.Description);
+            $banner.show();
+        } else {
+            $banner.hide();
         }
-        else {
-            url = location.protocol + '//' + location.host + '/Banner/MessageBannerAsync';
-        }
-
-        await $.ajax({
-            url: url,
-            type: "Get",
-            data: '',
-            contentType: 'application/x-www-form-urlencoded;charset=UTF-8',
-            success: function (result) {
-                if (result.IsActive) {
-                    $('#title').html(result.Title);
-                    $('#spDescription').html(result.Description);
-                    $('#dvMessageBanner').show();
-                }
-                else {
-                    $('#dvMessageBanner').hide();
-                }
-            }
-        });
+    } catch (err) {
+        console.error('Failed to load message banner', err);
     }
 });
+
+function buildBannerUrl() {
+    const { protocol, host, pathname } = location;
+    const segments = pathname.split('/').filter(Boolean);
+
+    // If UAT, include the app segment
+    const basePath = host.includes('uat') && segments.length ? `/${segments[0]}` : '';
+
+    return `${protocol}//${host}${basePath}/Banner/MessageBannerAsync`;
+}
