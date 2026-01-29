@@ -63,6 +63,7 @@
     <Content Include="scripts\Everytime\0014-InsertEvidenceNoteWasteType.sql" />
     <Content Include="scripts\Everytime\0013-InsertEvidenceNoteStatus.sql" />
     <Content Include="scripts\Everytime\0012-InsertBalancingScheme.sql" />
+    <Content Include="scripts\Everytime\0016-AnnualChargeByYearData.sql" />
     <Content Include="scripts\Everytime\placeholder.txt" />
     <Content Include="scripts\TestData\placeholder.txt" />
     <Content Include="scripts\Update\placeholder.txt" />
