@@ -6,12 +6,6 @@
  * - In the future we just need to create new records for the new compliance year onwards
  */
 
-SET NOCOUNT ON;
-SET XACT_ABORT ON;
-
-
-BEGIN TRANSACTION;
-
 -- England + Non-UK (IsNonUk = 1) - £33
 IF NOT EXISTS (
     SELECT 1 FROM [Lookup].[DirectRegistrantCharge]
@@ -23,12 +17,7 @@ BEGIN
     INSERT INTO [Lookup].[DirectRegistrantCharge]
         ([Id], [ComplianceYear], [EffectiveFrom], [ChargeAmount], [IsNonUk])
     VALUES
-        (NEWID(), 2026, '2026-04-01', 33.00, 1);
-    PRINT N'Added England + Non-UK April 2026 fee: £33.00';
-END
-ELSE
-BEGIN
-    PRINT N'England + Non-UK April 2026 fee record already exists';
+        ('D24429EB-50A0-43AB-8D50-FDBC6085AE92', 2026, '2026-04-01', 33.00, 1);
 END
 
 -- Scotland + Wales + Northern Ireland (IsNonUk = 0) - £30
@@ -42,12 +31,7 @@ BEGIN
     INSERT INTO [Lookup].[DirectRegistrantCharge]
         ([Id], [ComplianceYear], [EffectiveFrom], [ChargeAmount], [IsNonUk])
     VALUES
-        (NEWID(), 2026, '2026-04-01', 30.00, 0);
-    PRINT N'Added Scotland/Wales/Northern Ireland April 2026 fee: £30.00';
-END
-ELSE
-BEGIN
-    PRINT N'Scotland/Wales/Northern Ireland April 2026 fee record already exists';
+        ('1BEE68EC-D70D-4578-AEA8-27047A9A122E', 2026, '2026-04-01', 30.00, 0);
 END
 
 -- Add primary key constraint if it doesn't exist
@@ -60,11 +44,6 @@ IF NOT EXISTS (
 BEGIN
     ALTER TABLE [Lookup].[DirectRegistrantCharge]
     ADD CONSTRAINT [PK_DirectRegistrantCharge] PRIMARY KEY CLUSTERED ([Id] ASC);
-    PRINT N'Added primary key constraint on DirectRegistrantCharge.Id';
-END
-ELSE
-BEGIN
-    PRINT N'Primary key constraint already exists';
 END
 
 -- Create performance index if not exists
@@ -84,12 +63,5 @@ BEGIN
     WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, SORT_IN_TEMPDB = OFF, 
           IGNORE_DUP_KEY = OFF, DROP_EXISTING = OFF, ONLINE = OFF, 
           ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON);
-    PRINT N'Created performance index: IX_DirectRegistrantCharge_ComplianceYear_IsNonUk_EffectiveFrom';
 END
-ELSE
-BEGIN
-    PRINT N'Performance index already exists';
-END
-
-COMMIT TRANSACTION;
 GO
