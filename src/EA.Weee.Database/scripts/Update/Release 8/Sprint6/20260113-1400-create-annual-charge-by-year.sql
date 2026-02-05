@@ -57,15 +57,15 @@ BEGIN
     -- Insert data for compliance years 2019-2026 for EA
     INSERT INTO [Lookup].[AnnualChargeByYear] ([Id], [CompetentAuthorityId], [ComplianceYear], [AnnualChargeAmount], [EffectiveFrom])
     SELECT * FROM (VALUES
-        (NEWID(), @EAId, 2019, 12500.00, '2019-01-01'),
-        (NEWID(), @EAId, 2020, 12500.00, '2020-01-01'),
-        (NEWID(), @EAId, 2021, 12500.00, '2021-01-01'),
-        (NEWID(), @EAId, 2022, 12500.00, '2022-01-01'),
-        (NEWID(), @EAId, 2023, 12500.00, '2023-01-01'),
-        (NEWID(), @EAId, 2024, 12500.00, '2024-01-01'),
-        (NEWID(), @EAId, 2025, 12500.00, '2025-01-01'),
+        ('5CE3679C-7B53-479D-AFB8-DD0DD921E5A5', @EAId, 2019, 12500.00, '2019-01-01'),
+        ('7B993DD9-3DA1-4209-A53D-D367D5D5AE68', @EAId, 2020, 12500.00, '2020-01-01'),
+        ('13C5F5A1-79AA-4207-B6BF-4BB5B40BBA4C', @EAId, 2021, 12500.00, '2021-01-01'),
+        ('33EC6A2A-BC1B-4B6C-9CE8-47DFFC05B39F', @EAId, 2022, 12500.00, '2022-01-01'),
+        ('A67EAC3B-8165-423E-8EF9-ABC2FF597B0C', @EAId, 2023, 12500.00, '2023-01-01'),
+        ('6E8C4720-FDA1-4F23-8320-038D5000954E', @EAId, 2024, 12500.00, '2024-01-01'),
+        ('26BC0040-4375-49F0-838B-1C9957DA1E6B', @EAId, 2025, 12500.00, '2025-01-01'),
         -- New 2026 uplifted charge (7.5% increase = £938)
-        (NEWID(), @EAId, 2026, 13438.00, '2026-01-01')
+        ('DEB42CB9-3250-4971-8C3D-E5475415AABB', @EAId, 2026, 13438.00, '2026-01-01')
     ) AS NewData ([Id], [CompetentAuthorityId], [ComplianceYear], [AnnualChargeAmount], [EffectiveFrom])
     WHERE NOT EXISTS (
         SELECT 1 FROM [Lookup].[AnnualChargeByYear] 
@@ -93,34 +93,34 @@ BEGIN
     INSERT INTO [Lookup].[AnnualChargeByYear] ([Id], [CompetentAuthorityId], [ComplianceYear], [AnnualChargeAmount], [EffectiveFrom])
     SELECT * FROM (VALUES
         -- SEPA (Scotland)
-        (NEWID(), @SEPAId, 2019, 0.00, '2019-01-01'),
-        (NEWID(), @SEPAId, 2020, 0.00, '2020-01-01'),
-        (NEWID(), @SEPAId, 2021, 0.00, '2021-01-01'),
-        (NEWID(), @SEPAId, 2022, 0.00, '2022-01-01'),
-        (NEWID(), @SEPAId, 2023, 0.00, '2023-01-01'),
-        (NEWID(), @SEPAId, 2024, 0.00, '2024-01-01'),
-        (NEWID(), @SEPAId, 2025, 0.00, '2025-01-01'),
-        (NEWID(), @SEPAId, 2026, 0.00, '2026-01-01'),
+        ('3070F540-24F5-4C3B-93F3-739CB997E768', @SEPAId, 2019, 0.00, '2019-01-01'),
+        ('26FA5850-42F7-49D4-9347-B5CA77568991', @SEPAId, 2020, 0.00, '2020-01-01'),
+        ('9C040A08-619B-4A93-BA4B-4D3E149AFF2C', @SEPAId, 2021, 0.00, '2021-01-01'),
+        ('6C3ECF1A-6783-47B4-9992-A69712B25598', @SEPAId, 2022, 0.00, '2022-01-01'),
+        ('B29BD0AA-FD16-4EBF-8F63-51A0FD9E7BE9', @SEPAId, 2023, 0.00, '2023-01-01'),
+        ('5BB2F79D-E33E-42BB-B7C8-227BE740EDC9', @SEPAId, 2024, 0.00, '2024-01-01'),
+        ('7E5E9C81-7219-4B0C-81FB-FF865469AC24', @SEPAId, 2025, 0.00, '2025-01-01'),
+        ('6690C347-DE49-46F1-B4AD-9901D365BD9E', @SEPAId, 2026, 0.00, '2026-01-01'),
         
         -- NRW (Wales)
-        (NEWID(), @NRWId, 2019, 0.00, '2019-01-01'),
-        (NEWID(), @NRWId, 2020, 0.00, '2020-01-01'),
-        (NEWID(), @NRWId, 2021, 0.00, '2021-01-01'),
-        (NEWID(), @NRWId, 2022, 0.00, '2022-01-01'),
-        (NEWID(), @NRWId, 2023, 0.00, '2023-01-01'),
-        (NEWID(), @NRWId, 2024, 0.00, '2024-01-01'),
-        (NEWID(), @NRWId, 2025, 0.00, '2025-01-01'),
-        (NEWID(), @NRWId, 2026, 0.00, '2026-01-01'),
+        ('803352A4-BAF2-4E3D-B620-50606BFD3A21', @NRWId, 2019, 0.00, '2019-01-01'),
+        ('7BE15AD4-6D01-4E93-83F9-DB1271C7AF5A', @NRWId, 2020, 0.00, '2020-01-01'),
+        ('09182CF6-3F6E-4D22-872C-CB68C9242A6D', @NRWId, 2021, 0.00, '2021-01-01'),
+        ('3306CF13-2C4C-4543-859C-422D918B84EE', @NRWId, 2022, 0.00, '2022-01-01'),
+        ('14E6A41D-8A4D-493D-B386-8E061059F0FC', @NRWId, 2023, 0.00, '2023-01-01'),
+        ('9D36CD28-4B52-4660-8923-5297A024C116', @NRWId, 2024, 0.00, '2024-01-01'),
+        ('A6F39098-A6C5-4BAF-B168-54B713D68E36', @NRWId, 2025, 0.00, '2025-01-01'),
+        ('07C7DDE2-95B1-423D-A6C4-DB88AF85F3F9', @NRWId, 2026, 0.00, '2026-01-01'),
         
         -- NIEA (Northern Ireland)
-        (NEWID(), @NIEAId, 2019, 0.00, '2019-01-01'),
-        (NEWID(), @NIEAId, 2020, 0.00, '2020-01-01'),
-        (NEWID(), @NIEAId, 2021, 0.00, '2021-01-01'),
-        (NEWID(), @NIEAId, 2022, 0.00, '2022-01-01'),
-        (NEWID(), @NIEAId, 2023, 0.00, '2023-01-01'),
-        (NEWID(), @NIEAId, 2024, 0.00, '2024-01-01'),
-        (NEWID(), @NIEAId, 2025, 0.00, '2025-01-01'),
-        (NEWID(), @NIEAId, 2026, 0.00, '2026-01-01')
+        ('31F05828-A2B9-4747-AD82-48898BD88CA8', @NIEAId, 2019, 0.00, '2019-01-01'),
+        ('AD7C6DA5-819E-48D4-A8D5-78AC834C9F06', @NIEAId, 2020, 0.00, '2020-01-01'),
+        ('BBC5FA6E-72A4-4FF9-9EC9-F9965E3BD316', @NIEAId, 2021, 0.00, '2021-01-01'),
+        ('BD878B7F-6BD9-425D-9990-EEFDDEFF5095', @NIEAId, 2022, 0.00, '2022-01-01'),
+        ('B83B3978-B29A-446E-BA96-EB7E25096904', @NIEAId, 2023, 0.00, '2023-01-01'),
+        ('FD38FBFF-CF00-4C99-B7E8-9E402F41945B', @NIEAId, 2024, 0.00, '2024-01-01'),
+        ('2A9D9C68-4528-4C87-972A-65FFB5C4C29A', @NIEAId, 2025, 0.00, '2025-01-01'),
+        ('71CC9860-E829-44AF-A0B8-7296F136EE12', @NIEAId, 2026, 0.00, '2026-01-01')
     ) AS NewData ([Id], [CompetentAuthorityId], [ComplianceYear], [AnnualChargeAmount], [EffectiveFrom])
     WHERE NOT EXISTS (
         SELECT 1 FROM [Lookup].[AnnualChargeByYear] 
