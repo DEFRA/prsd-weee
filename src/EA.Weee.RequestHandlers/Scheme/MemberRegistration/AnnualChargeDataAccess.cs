@@ -23,17 +23,7 @@
                 .OrderByDescending(a => a.EffectiveFrom)
                 .FirstOrDefaultAsync();
 
-            if (annualCharge != null)
-            {
-                return annualCharge.AnnualChargeAmount;
-            }
-
-            // Fallback to the legacy AnnualChargeAmount from CompetentAuthority table
-            var competentAuthority = await context.UKCompetentAuthorities
-                .Where(c => c.Id == competentAuthorityId)
-                .FirstOrDefaultAsync();
-
-            return competentAuthority?.AnnualChargeAmount;
+            return annualCharge?.AnnualChargeAmount;
         }
     }
 }
