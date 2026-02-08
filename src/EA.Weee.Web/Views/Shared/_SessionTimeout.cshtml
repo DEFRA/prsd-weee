@@ -17,19 +17,15 @@
                 Stay signed in
             </button>
 
-            @using (Html.BeginForm("SignOut", "Account", new { area = string.Empty }, method: FormMethod.Post, new { id = "signoutForm" }))
-            {
+            <form id="signoutForm" method="post" action="/Account/SignOut">
                 @Html.AntiForgeryToken()
-
                 <input class="link-submit-automation-ignored session-link-sign-out" id="link-sign-out-external" type="submit" value="Sign out" />
-            }
+            </form>
 
-            @using (Html.BeginForm("SignOut", "Account", new { @area = "Admin" }, FormMethod.Post, new { id = "signoutFormAdmin" }))
-            {
+            <form id="signoutFormAdmin" method="post" action="/Admin/Account/SignOut">
                 @Html.AntiForgeryToken()
-
                 <input class="link-submit-automation-ignored session-link-sign-out" id="session-link-sign-out-internal" type="submit" value="Sign out" />
-            }
+            </form>
         </div>
     </div>
 </div>
