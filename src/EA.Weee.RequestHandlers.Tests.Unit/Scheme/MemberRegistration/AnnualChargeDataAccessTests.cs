@@ -85,7 +85,7 @@
         }
 
         [Fact]
-        public async Task GetAnnualChargeForComplianceYear_WrongComplianceYear_FallsBackToLegacy()
+        public async Task GetAnnualChargeForComplianceYear_NoRecordFound_ReturnsNull()
         {
             // Arrange
             var competentAuthorityId = Guid.NewGuid();
@@ -97,29 +97,15 @@
             var dbSet = helper.GetAsyncEnabledDbSet(annualCharges);
             A.CallTo(() => context.AnnualChargesByYear).Returns(dbSet);
 
-            // Create a real UKCompetentAuthority instance instead of faking
-            var country = A.Fake<Country>();
-            var competentAuthority = new UKCompetentAuthority(
-                competentAuthorityId,
-                "Environment Agency",
-                "EA",
-                country,
-                "test@ea.gov.uk",
-                12500.00m);
-
-            var calist = new List<UKCompetentAuthority> { competentAuthority };
-            var cadbSet = helper.GetAsyncEnabledDbSet(calist);
-            A.CallTo(() => context.UKCompetentAuthorities).Returns(cadbSet);
-
-            // Act
+            // Act - Request year that doesn't exist
             var result = await dataAccess.GetAnnualChargeForComplianceYear(competentAuthorityId, 2027);
 
             // Assert
-            Assert.Equal(12500.00m, result); // Falls back to legacy
+            Assert.Null(result);
         }
 
         [Fact]
-        public async Task GetAnnualChargeForComplianceYear_WrongCompetentAuthorityId_FallsBackToLegacy()
+        public async Task GetAnnualChargeForComplianceYear_WrongCompetentAuthorityId_ReturnsNull()
         {
             // Arrange
             var competentAuthorityId = Guid.NewGuid();
@@ -132,55 +118,11 @@
             var dbSet = helper.GetAsyncEnabledDbSet(annualCharges);
             A.CallTo(() => context.AnnualChargesByYear).Returns(dbSet);
 
-            // Create a real UKCompetentAuthority instance instead of faking
-            var country = A.Fake<Country>();
-            var competentAuthority = new UKCompetentAuthority(
-                competentAuthorityId,
-                "Environment Agency",
-                "EA",
-                country,
-                "test@ea.gov.uk",
-                12500.00m);
-
-            var calist = new List<UKCompetentAuthority> { competentAuthority };
-            var cadbSet = helper.GetAsyncEnabledDbSet(calist);
-            A.CallTo(() => context.UKCompetentAuthorities).Returns(cadbSet);
-
             // Act
             var result = await dataAccess.GetAnnualChargeForComplianceYear(competentAuthorityId, 2026);
 
             // Assert
-            Assert.Equal(12500.00m, result); // Falls back to legacy
-        }
-
-        [Fact]
-        public async Task GetAnnualChargeForComplianceYear_FallsBackToLegacy_WhenNoDataFound()
-        {
-            // Arrange
-            var competentAuthorityId = Guid.NewGuid();
-            var emptyList = new List<AnnualChargeByYear>();
-            var dbSet = helper.GetAsyncEnabledDbSet(emptyList);
-            A.CallTo(() => context.AnnualChargesByYear).Returns(dbSet);
-
-            // Create a real UKCompetentAuthority instance instead of faking
-            var country = A.Fake<Country>();
-            var competentAuthority = new UKCompetentAuthority(
-                competentAuthorityId,
-                "Environment Agency",
-                "EA",
-                country,
-                "test@ea.gov.uk",
-                12500.00m);
-
-            var calist = new List<UKCompetentAuthority> { competentAuthority };
-            var cadbSet = helper.GetAsyncEnabledDbSet(calist);
-            A.CallTo(() => context.UKCompetentAuthorities).Returns(cadbSet);
-
-            // Act
-            var result = await dataAccess.GetAnnualChargeForComplianceYear(competentAuthorityId, 2025);
-
-            // Assert
-            Assert.Equal(12500.00m, result);
+            Assert.Null(result);
         }
 
         [Fact]
