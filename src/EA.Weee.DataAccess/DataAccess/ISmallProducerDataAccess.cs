@@ -15,6 +15,20 @@
 
         Task<DirectProducerSubmission> GetCurrentDirectRegistrantSubmissionById(Guid directProducerSubmissionId);
 
+        /// <summary>
+        /// Gets the Direct Registrant charge for the specified compliance year and location,
+        /// using only the latest record (backwards compatible method).
+        /// </summary>
         Task<DirectRegistrantCharge> GetDirectRegistrantChargeByComplianceYear(int complianceYear, bool isNonuk);
+
+        /// <summary>
+        /// Gets the applicable Direct Registrant charge based on compliance year, 
+        /// location (IsNonUk flag), and the effective date.
+        /// Returns the charge with the latest EffectiveFrom date that is on or before the asOfDate.
+        /// </summary>
+        Task<DirectRegistrantCharge> GetDirectRegistrantChargeAsync(
+            int complianceYear,
+            bool isNonUk,
+            DateTime asOfDate);
     }
 }

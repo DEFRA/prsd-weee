@@ -1105,6 +1105,284 @@
         }
 
         [Fact]
+        public async Task PaymentSuccess_WithProducerRegistrationNumberAndName_ShouldReturnModelWithPrnAndName()
+        {
+            // Arrange
+            var reference = TestFixture.Create<string>();
+            var organisationId = Guid.NewGuid();
+            var currentSystemYear = DateTime.UtcNow.Year;
+            var prn = "WEE/AA1234BB";
+            var producerName = "Test Producer Ltd";
+            var chargeAmount = 30.00m;
+
+            controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
+            {
+                OrganisationData = new OrganisationData
+                {
+                    Id = organisationId,
+                    OrganisationName = producerName
+                },
+                CurrentSubmission = new SmallProducerSubmissionHistoryData
+                {
+                    ComplianceYear = currentSystemYear
+                },
+                ProducerRegistrationNumber = prn,
+                DirectRegistrantChargeAmount = chargeAmount
+            };
+
+            // Act
+            var result = await controller.PaymentSuccess(reference) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Model.Should().BeOfType<RegisteredResultModel>();
+
+            var model = (RegisteredResultModel)result.Model;
+            model.PaymentReference.Should().Be(reference);
+            model.OrganisationId.Should().Be(organisationId);
+            model.ComplianceYear.Should().Be(currentSystemYear);
+            model.TotalAmount.Should().Be(chargeAmount);
+            model.ProducerRegistrationNumber.Should().Be(prn);
+            model.ProducerName.Should().Be(producerName);
+        }
+
+        [Fact]
+        public async Task PaymentSuccess_WithNullProducerRegistrationNumber_ShouldReturnModelWithNullPrn()
+        {
+            // Arrange
+            var reference = TestFixture.Create<string>();
+            var organisationId = Guid.NewGuid();
+            var producerName = "Test Producer Ltd";
+
+            controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
+            {
+                OrganisationData = new OrganisationData
+                {
+                    Id = organisationId,
+                    OrganisationName = producerName
+                },
+                CurrentSubmission = new SmallProducerSubmissionHistoryData
+                {
+                    ComplianceYear = SystemTime.UtcNow.Year
+                },
+                ProducerRegistrationNumber = null,
+                DirectRegistrantChargeAmount = 30.00m
+            };
+
+            // Act
+            var result = await controller.PaymentSuccess(reference) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var model = (RegisteredResultModel)result.Model;
+            model.ProducerRegistrationNumber.Should().BeNull();
+            model.ProducerName.Should().Be(producerName);
+        }
+
+        [Fact]
+        public async Task PaymentSuccess_WithEmptyProducerRegistrationNumber_ShouldReturnModelWithEmptyPrn()
+        {
+            // Arrange
+            var reference = TestFixture.Create<string>();
+            var organisationId = Guid.NewGuid();
+            var producerName = "Test Producer Ltd";
+
+            controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
+            {
+                OrganisationData = new OrganisationData
+                {
+                    Id = organisationId,
+                    OrganisationName = producerName
+                },
+                CurrentSubmission = new SmallProducerSubmissionHistoryData
+                {
+                    ComplianceYear = SystemTime.UtcNow.Year
+                },
+                ProducerRegistrationNumber = string.Empty,
+                DirectRegistrantChargeAmount = 30.00m
+            };
+
+            // Act
+            var result = await controller.PaymentSuccess(reference) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var model = (RegisteredResultModel)result.Model;
+            model.ProducerRegistrationNumber.Should().BeEmpty();
+            model.ProducerName.Should().Be(producerName);
+        }
+
+        [Fact]
+        public async Task PaymentSuccess_WithNullOrganisationName_ShouldReturnModelWithNullProducerName()
+        {
+            // Arrange
+            var reference = TestFixture.Create<string>();
+            var organisationId = Guid.NewGuid();
+            var prn = "WEE/AA1234BB";
+
+            controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
+            {
+                OrganisationData = new OrganisationData
+                {
+                    Id = organisationId,
+                    OrganisationName = null
+                },
+                CurrentSubmission = new SmallProducerSubmissionHistoryData
+                {
+                    ComplianceYear = SystemTime.UtcNow.Year
+                },
+                ProducerRegistrationNumber = prn,
+                DirectRegistrantChargeAmount = 30.00m
+            };
+
+            // Act
+            var result = await controller.PaymentSuccess(reference) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var model = (RegisteredResultModel)result.Model;
+            model.ProducerName.Should().BeNull();
+            model.ProducerRegistrationNumber.Should().Be(prn);
+        }
+
+        [Fact]
+        public async Task PaymentSuccess_WithMultipleProducers_ShouldDistinguishByPrnAndName()
+        {
+            // Arrange
+            var reference1 = "REF-001";
+            var prn1 = "WEE/AA1234BB";
+            var producerName1 = "Producer One Ltd";
+
+            controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
+            {
+                OrganisationData = new OrganisationData
+                {
+                    Id = Guid.NewGuid(),
+                    OrganisationName = producerName1
+                },
+                CurrentSubmission = new SmallProducerSubmissionHistoryData
+                {
+                    ComplianceYear = SystemTime.UtcNow.Year
+                },
+                ProducerRegistrationNumber = prn1,
+                DirectRegistrantChargeAmount = 30.00m
+            };
+
+            // Act
+            var result1 = await controller.PaymentSuccess(reference1) as ViewResult;
+
+            // Assert - First producer
+            result1.Should().NotBeNull();
+            var model1 = (RegisteredResultModel)result1.Model;
+            model1.ProducerRegistrationNumber.Should().Be(prn1);
+            model1.ProducerName.Should().Be(producerName1);
+
+            // Arrange - Second producer
+            var reference2 = "REF-002";
+            var prn2 = "WEE/CC5678DD";
+            var producerName2 = "Producer Two Ltd";
+
+            controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
+            {
+                OrganisationData = new OrganisationData
+                {
+                    Id = Guid.NewGuid(),
+                    OrganisationName = producerName2
+                },
+                CurrentSubmission = new SmallProducerSubmissionHistoryData
+                {
+                    ComplianceYear = SystemTime.UtcNow.Year
+                },
+                ProducerRegistrationNumber = prn2,
+                DirectRegistrantChargeAmount = 30.00m
+            };
+
+            // Act - Second producer
+            var result2 = await controller.PaymentSuccess(reference2) as ViewResult;
+
+            // Assert - Second producer
+            result2.Should().NotBeNull();
+            var model2 = (RegisteredResultModel)result2.Model;
+            model2.ProducerRegistrationNumber.Should().Be(prn2);
+            model2.ProducerName.Should().Be(producerName2);
+
+            // Assert - Models are different
+            model1.ProducerRegistrationNumber.Should().NotBe(model2.ProducerRegistrationNumber);
+            model1.ProducerName.Should().NotBe(model2.ProducerName);
+        }
+
+        [Theory]
+        [InlineData("WEE/AA1234BB", "Small Producer Ltd")]
+        [InlineData("WEE/ZZ9999YY", "Another Producer Name")]
+        [InlineData("WEE/MM5555NN", "Third Producer Company")]
+        public async Task PaymentSuccess_WithVariousPrnAndNames_ShouldReturnCorrectData(string prn, string producerName)
+        {
+            // Arrange
+            var reference = TestFixture.Create<string>();
+            var organisationId = Guid.NewGuid();
+
+            controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
+            {
+                OrganisationData = new OrganisationData
+                {
+                    Id = organisationId,
+                    OrganisationName = producerName
+                },
+                CurrentSubmission = new SmallProducerSubmissionHistoryData
+                {
+                    ComplianceYear = SystemTime.UtcNow.Year
+                },
+                ProducerRegistrationNumber = prn,
+                DirectRegistrantChargeAmount = 30.00m
+            };
+
+            // Act
+            var result = await controller.PaymentSuccess(reference) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var model = (RegisteredResultModel)result.Model;
+            model.ProducerRegistrationNumber.Should().Be(prn);
+            model.ProducerName.Should().Be(producerName);
+        }
+
+        [Fact]
+        public async Task PaymentSuccess_ShouldMaintainBackwardCompatibility_WithExistingFields()
+        {
+            // Arrange
+            var reference = TestFixture.Create<string>();
+            var organisationId = Guid.NewGuid();
+            var complianceYear = 2024;
+            var totalAmount = 32.00m;
+
+            controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
+            {
+                OrganisationData = new OrganisationData
+                {
+                    Id = organisationId,
+                    OrganisationName = "Test Producer"
+                },
+                CurrentSubmission = new SmallProducerSubmissionHistoryData
+                {
+                    ComplianceYear = complianceYear
+                },
+                ProducerRegistrationNumber = "WEE/AA1234BB",
+                DirectRegistrantChargeAmount = totalAmount
+            };
+
+            // Act
+            var result = await controller.PaymentSuccess(reference) as ViewResult;
+
+            // Assert - Verify all original fields still work
+            result.Should().NotBeNull();
+            var model = (RegisteredResultModel)result.Model;
+            model.PaymentReference.Should().Be(reference);
+            model.OrganisationId.Should().Be(organisationId);
+            model.ComplianceYear.Should().Be(complianceYear);
+            model.TotalAmount.Should().Be(totalAmount);
+        }
+
+        [Fact]
         public void EditOrganisationDetails_Get_ShouldHaveSmallProducerSubmissionSubmittedAttribute1()
         {
             // Arrange

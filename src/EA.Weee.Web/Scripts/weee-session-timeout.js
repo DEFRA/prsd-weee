@@ -88,6 +88,7 @@
     async function logout() {
         const logOffUrl = getUrl('Account/SignOut');
         const signOutUrl = getUrl('Account/SessionSignedOut');
+
         await post(logOffUrl);
         document.location.href = signOutUrl;
     }

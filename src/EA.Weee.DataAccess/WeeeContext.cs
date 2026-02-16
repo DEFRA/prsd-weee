@@ -86,6 +86,10 @@
 
         public virtual DbSet<ProducerBalancingScheme> ProducerBalancingSchemes { get; set; }
 
+        public virtual DbSet<MessageBanner> MessageBanners { get; set; }
+
+        public virtual DbSet<AnnualChargeByYear> AnnualChargesByYear { get; set; }
+
         /// <summary>
         /// Registered producers including items marked as removed.
         /// </summary>

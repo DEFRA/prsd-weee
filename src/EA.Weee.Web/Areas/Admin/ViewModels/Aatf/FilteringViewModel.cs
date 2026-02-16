@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
     using EA.Prsd.Core.Helpers;
@@ -22,6 +23,11 @@
         public bool SelectCancelled { get; set; }
 
         public bool SelectSuspended { get; set; }
+
+        [DisplayName("Compliance year")]
+        public int? SelectedComplianceYear { get; set; }
+
+        public IEnumerable<int> ComplianceYearList { get; set; }
 
         public List<UKCompetentAuthorityData> CompetentAuthorityOptions { get; set; }
 

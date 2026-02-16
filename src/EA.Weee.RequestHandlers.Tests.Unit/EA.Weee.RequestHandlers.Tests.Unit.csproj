@@ -463,6 +463,7 @@
     <Compile Include="Scheme\AddSchemeHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemePublicInfoHandlerTests.cs" />
     <Compile Include="Scheme\GetOrganisationSchemeHandlerTests.cs" />
+    <Compile Include="Scheme\MemberRegistration\AnnualChargeDataAccessTests.cs" />
     <Compile Include="Scheme\UpdateSchemeContactDetailsHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemePublicInfoBySchemeIdHandlerTests.cs" />
     <Compile Include="Scheme\GetSchemeByIdHandlerTests.cs" />

@@ -66,10 +66,41 @@
             return directRegistrant;
         }
 
+        /// <summary>
+        /// Gets the Direct Registrant charge for the specified compliance year and location,
+        /// using only the latest record (backwards compatible method).
+        /// </summary>
         public async Task<DirectRegistrantCharge> GetDirectRegistrantChargeByComplianceYear(int complianceYear, bool isNonUk)
         {
             return await context.DirectRegistrantCharges.Where(d => d.ComplianceYear == complianceYear && d.IsNonUk == isNonUk)
                                                         .FirstOrDefaultAsync();
+        }
+
+        /// <summary>
+        /// Gets the applicable Direct Registrant charge based on compliance year, 
+        /// location (IsNonUk flag), and the effective date.
+        /// Returns the charge with the latest EffectiveFrom date that is on or before the asOfDate.
+        /// </summary>
+        public async Task<DirectRegistrantCharge> GetDirectRegistrantChargeAsync(
+            int complianceYear,
+            bool isNonUk,
+            DateTime asOfDate)
+        {
+            var charge = await context.DirectRegistrantCharges
+                .Where(c => c.ComplianceYear == complianceYear)
+                .Where(c => c.IsNonUk == isNonUk)
+                .Where(c => c.EffectiveFrom <= asOfDate)
+                .OrderByDescending(c => c.EffectiveFrom)
+                .FirstOrDefaultAsync();
+
+            if (charge == null)
+            {
+                throw new InvalidOperationException(
+                    $"No Direct Registrant charge found for compliance year {complianceYear}, " +
+                    $"IsNonUk={isNonUk}, as of {asOfDate:yyyy-MM-dd}");
+            }
+
+            return charge;
         }
     }
 }

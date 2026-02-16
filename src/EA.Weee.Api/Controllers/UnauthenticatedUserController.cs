@@ -4,6 +4,7 @@
     using DataAccess.Identity;
     using Domain.User;
     using EA.Weee.Email;
+    using EA.Weee.RequestHandlers.Shared;
     using Identity;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
@@ -24,17 +25,20 @@
         private readonly IUserContext userContext;
         private readonly IWeeeEmailService emailService;
         private readonly IGetAdminUserDataAccess getAdminUserDataAccess;
+        private readonly IGetMessageBannerDataAccess messageBannerDataAccess;
 
         public UnauthenticatedUserController(
             ApplicationUserManager userManager,
             IUserContext userContext,
             IWeeeEmailService emailService,
-            IGetAdminUserDataAccess getAdminUserDataAccess)
+            IGetAdminUserDataAccess getAdminUserDataAccess,
+            IGetMessageBannerDataAccess messageBannerDataAccess)
         {
             this.userManager = userManager;
             this.userContext = userContext;
             this.emailService = emailService;
             this.getAdminUserDataAccess = getAdminUserDataAccess;
+            this.messageBannerDataAccess = messageBannerDataAccess;
         }
 
         [HttpPost]
@@ -288,6 +292,26 @@
             }
 
             return null;
+        }
+
+        [HttpPost]
+        [Route("GetMessageBannerData")]
+        public async Task<IHttpActionResult> GetMessageBannerData()
+        {
+            var messageBannerData = await messageBannerDataAccess.GetMessageBannerData();
+            var messageBannerDataResult = new MessageBannerDataResult()
+            {
+                IsActive = false
+            };
+
+            if (messageBannerData != null)
+            {
+                messageBannerDataResult.IsActive = true;
+                messageBannerDataResult.Title = messageBannerData.Title;
+                messageBannerDataResult.Description = messageBannerData.Description;
+            }
+
+            return Ok(messageBannerDataResult);
         }
     }
 }

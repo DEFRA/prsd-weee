@@ -43,6 +43,7 @@
 
 <div class="govuk-width-container">
     @Html.Partial("_FeedbackBanner")
+    @Html.Partial("_MessageBanner")
     <main class="govuk-main-wrapper app-main-class" id="content" role="main">
         @{ Html.RenderAction("_WeeeTitle", "Home", new { area = string.Empty });}
         @RenderBody()
