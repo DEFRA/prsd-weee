@@ -1,16 +1,14 @@
-﻿@using EA.Weee.Web.Controllers
-@using EA.Weee.Web.RazorHelpers
-@using MvcNavigationHelpers
+﻿<header class="hgroup">
+    <h1 class="govuk-heading-l">
+        You have been signed out
+    </h1>
+</header>
 
-@section main_content {
-    <header class="hgroup">
-        <h1 class="govuk-heading-l">
-            You have been signed out
-        </h1>
-    </header>
+<div class="govuk-body">
+    <p>You have been signed out and any information you have not saved has been deleted. This is to protect your account information.</p>
+</div>
 
-    <div class="govuk-body">
-        <p>You have been signed out and any information you have not saved has been deleted. This is to protect your account information.</p>
-    </div>
-    <a href="@Url.Action("SignIn", "Account")" class="govuk-button">Sign back in</a>
-}
+<form id="signoutForm" method="get" action="/Account/SignIn">
+    @Html.AntiForgeryToken()
+    <input class="govuk-button_automation-ignored" id="link-sign-in" type="submit" value="Sign back in" />
+</form>
