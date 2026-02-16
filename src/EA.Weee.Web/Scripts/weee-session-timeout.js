@@ -86,8 +86,9 @@
     }
 
     async function logout() {
-        const logOffUrl = getUrl('/Account/SignOut');
-        const signOutUrl = getUrl('/Account/SessionSignedOut');
+        const logOffUrl = getUrl('Account/SignOut');
+        const signOutUrl = getUrl('Account/SessionSignedOut');
+
         await post(logOffUrl);
         document.location.href = signOutUrl;
     }
@@ -119,7 +120,7 @@
 
         if (!eventBound) {
             $("#prsd-timeout-keep-signin-btn").click(async () => {
-                const extendSessionUrl = getUrl('/Account/ExtendSession');
+                const extendSessionUrl = getUrl('Account/ExtendSession');
                 await post(extendSessionUrl);
 
                 clearTimeout(sessionWarningTimer);
