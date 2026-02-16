@@ -136,6 +136,7 @@
     <Compile Include="Mappings\AatfReportOnQuestionMapping.cs" />
     <Compile Include="Mappings\AatfReturnAmountsMapping.cs" />
     <Compile Include="Mappings\AdditionalCompanyDetailsMapping.cs" />
+    <Compile Include="Mappings\AnnualChargeByYearMap.cs" />
     <Compile Include="Mappings\DirectProducerSubmissionHistoryMapping.cs" />
     <Compile Include="Mappings\DirectProducerSubmissionMapping.cs" />
     <Compile Include="Mappings\DirectRegistrantChargeMapping.cs" />
