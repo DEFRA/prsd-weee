@@ -5,7 +5,6 @@
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
     using System.Linq;
-    using EA.Prsd.Core.Helpers;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared;
 
@@ -24,7 +23,7 @@
 
         public bool SelectSuspended { get; set; }
 
-        [DisplayName("Compliance year")]
+        [DisplayName("Latest compliance year")]
         public int? SelectedComplianceYear { get; set; }
 
         public IEnumerable<int> ComplianceYearList { get; set; }
