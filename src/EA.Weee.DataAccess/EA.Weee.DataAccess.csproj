@@ -109,6 +109,7 @@
     <Compile Include="DataAccess\IGenericDataAccess.cs" />
     <Compile Include="DataAccess\IGetDirectProducerSubmissionActiveComplianceYearsDataAccess.cs" />
     <Compile Include="DataAccess\IObligationDataAccess.cs" />
+    <Compile Include="DataAccess\IOnlineMarketPlaceChargeDataAccess.cs" />
     <Compile Include="DataAccess\IOrganisationTransactionDataAccess.cs" />
     <Compile Include="DataAccess\IPaymentSessionDataAccess.cs" />
     <Compile Include="DataAccess\IProducerChargeCalculatorDataAccess.cs" />
@@ -119,6 +120,7 @@
     <Compile Include="DataAccess\ISmallProducerDataAccess.cs" />
     <Compile Include="DataAccess\ISystemDataDataAccess.cs" />
     <Compile Include="DataAccess\ObligationDataAccess.cs" />
+    <Compile Include="DataAccess\OnlineMarketPlaceChargeDataAccess.cs" />
     <Compile Include="DataAccess\OrganisationTransactionDataAccess.cs" />
     <Compile Include="DataAccess\PaymentSessionDataAccess.cs" />
     <Compile Include="DataAccess\ProducerChargeCalculatorDataAccess.cs" />
@@ -169,6 +171,7 @@
     <Compile Include="Mappings\EeeOutputReturnVersionMapping.cs" />
     <Compile Include="Mappings\IbisFileDataMapping.cs" />
     <Compile Include="Mappings\InvoiceRunMapping.cs" />
+    <Compile Include="Mappings\OnlineMarketPlaceChargeMapping.cs" />
     <Compile Include="Mappings\OrganisationCompletionMapping.cs" />
     <Compile Include="Mappings\OrganisationAdditionalDetailsTypeMapping.cs" />
     <Compile Include="Mappings\DirectProducerSubmissionStatusMapping.cs" />

@@ -24,5 +24,12 @@
             EEEPlacedOnMarketBand eeePlacedOnMarketBand,
             int complianceYear,
             DateTime asOfUtc);
+
+        /// <summary>
+        /// Retrieves the Online Marketplace charge amount effective as of the specified date.
+        /// </summary>
+        /// <param name="asOfUtc">The date to check against effective dates</param>
+        /// <returns>The charge amount, or null if no charge is configured</returns>
+        Task<decimal?> GetOnlineMarketplaceChargeAsync(DateTime asOfUtc);
     }
 }

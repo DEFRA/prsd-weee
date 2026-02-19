@@ -8,10 +8,13 @@
     public class FetchProducerCharge : IFetchProducerCharge
     {
         private readonly IProducerChargeCalculatorDataAccess producerChargeCalculatorDataAccess;
+        private readonly IOnlineMarketplaceChargeDataAccess onlineMarketplaceChargeDataAccess;
 
-        public FetchProducerCharge(IProducerChargeCalculatorDataAccess producerChargeCalculatorDataAccess)
+        public FetchProducerCharge(IProducerChargeCalculatorDataAccess producerChargeCalculatorDataAccess,
+                                   IOnlineMarketplaceChargeDataAccess onlineMarketplaceChargeDataAccess)
         {
             this.producerChargeCalculatorDataAccess = producerChargeCalculatorDataAccess;
+            this.onlineMarketplaceChargeDataAccess = onlineMarketplaceChargeDataAccess;
         }
 
         public async Task<ProducerCharge> GetChargeBandAmountAsyncLegacy(ChargeBand chargeBand)
@@ -40,6 +43,12 @@
                 eeePlacedOnMarketBand,
                 complianceYear,
                 asOfUtc);
+        }
+
+        public async Task<decimal?> GetOnlineMarketplaceChargeAsync(DateTime asOfUtc)
+        {
+            var charge = await onlineMarketplaceChargeDataAccess.GetChargeAmountAsync(asOfUtc);
+            return charge?.Amount;
         }
     }
 }
