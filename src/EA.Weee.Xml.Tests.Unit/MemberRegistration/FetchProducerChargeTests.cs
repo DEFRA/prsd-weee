@@ -11,13 +11,15 @@
     public class FetchProducerChargeTests
     {
         private readonly IProducerChargeCalculatorDataAccess producerChargeCalculatorDataAccess;
+        private readonly IOnlineMarketplaceChargeDataAccess onlineMarketplaceChargeDataAccess;
         private readonly FetchProducerCharge fetchProducerCharge;
 
         public FetchProducerChargeTests()
         {
             producerChargeCalculatorDataAccess = A.Fake<IProducerChargeCalculatorDataAccess>();
+            onlineMarketplaceChargeDataAccess = A.Fake<IOnlineMarketplaceChargeDataAccess>();
 
-            fetchProducerCharge = new FetchProducerCharge(producerChargeCalculatorDataAccess);
+            fetchProducerCharge = new FetchProducerCharge(producerChargeCalculatorDataAccess, onlineMarketplaceChargeDataAccess);
         }
 
         [Fact]

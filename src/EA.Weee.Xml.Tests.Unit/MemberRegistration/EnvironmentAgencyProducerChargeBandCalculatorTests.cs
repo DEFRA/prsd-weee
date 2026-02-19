@@ -16,6 +16,10 @@
         private readonly IFetchProducerCharge fetchProducerCharge;
         private readonly IRegisteredProducerDataAccess registeredProducerDataAccess;
 
+        // Online Marketplace charge amounts
+        private const decimal OmpCharge2025 = 13631m;
+        private const decimal OmpCharge2026 = 14653m;
+
         public EnvironmentAgencyProducerChargeBandCalculatorTests()
         {
             fetchProducerCharge = A.Fake<IFetchProducerCharge>();
@@ -276,36 +280,93 @@
         public async Task GetProducerChargeBand_OnlineMarketplace_UKEngland_AppliesAdditionalFee()
         {
             // Arrange
-            var chargeBandAmount = CreateTestChargeBandAmount(ChargeBand.A, 100m);
+            var chargeBandAmount = CreateTestChargeBandAmount(ChargeBand.A2, 750.00m);
 
             var producer = SetUpProducer(countryType.UKENGLAND, eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket, annualTurnoverBandType.Greaterthanonemillionpounds, true);
             producer.sellingTechnique = sellingTechniqueType.OnlineMarketplace;
             var scheme = new schemeType() { complianceYear = "2025" };
-            
+
             A.CallTo(() => fetchProducerCharge.GetChargeBandAmountAsync(
-                A<CompetentAuthorityType>._, A<bool>._, A<AnnualTurnoverBand>._, 
+                A<CompetentAuthorityType>._, A<bool>._, A<AnnualTurnoverBand>._,
                 A<EEEPlacedOnMarketBand>._, A<int>._, A<DateTime>._))
                 .Returns(chargeBandAmount);
+
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<DateTime>._))
+                .Returns(OmpCharge2025);
 
             // Act
             var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(scheme, producer);
 
             // Assert
-            Assert.Equal(100m + 13631m, result.Amount); // Base charge + Online Marketplace fee
+            Assert.Equal(750.00m + OmpCharge2025, result.Amount);
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<DateTime>._))
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
         public async Task GetProducerChargeBand_OnlineMarketplace_NonUK_AppliesAdditionalFee()
         {
             // Arrange
-            var chargeBandAmount = CreateTestChargeBandAmount(ChargeBand.D, 200m);
+            var chargeBandAmount = CreateTestChargeBandAmount(ChargeBand.D3, 375.00m);
 
             var producer = SetUpProducer(countryType.FRANCE, eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket, annualTurnoverBandType.Greaterthanonemillionpounds, true);
             producer.sellingTechnique = sellingTechniqueType.OnlineMarketplace;
             var scheme = new schemeType() { complianceYear = "2025" };
-            
+
             A.CallTo(() => fetchProducerCharge.GetChargeBandAmountAsync(
-                A<CompetentAuthorityType>._, A<bool>._, A<AnnualTurnoverBand>._, 
+                A<CompetentAuthorityType>._, A<bool>._, A<AnnualTurnoverBand>._,
+                A<EEEPlacedOnMarketBand>._, A<int>._, A<DateTime>._))
+                .Returns(chargeBandAmount);
+
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<DateTime>._))
+                .Returns(OmpCharge2025);
+
+            // Act
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(scheme, producer);
+
+            // Assert
+            Assert.Equal(375.00m + OmpCharge2025, result.Amount);
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<DateTime>._))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task GetProducerChargeBand_OnlineMarketplace_2026_AppliesUpliftedFee()
+        {
+            // Arrange
+            var chargeBandAmount = CreateTestChargeBandAmount(ChargeBand.A2, 806.00m, 2026);
+
+            var producer = SetUpProducer(countryType.UKENGLAND, eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket, annualTurnoverBandType.Greaterthanonemillionpounds, true);
+            producer.sellingTechnique = sellingTechniqueType.OnlineMarketplace;
+            var scheme = new schemeType() { complianceYear = "2026" };
+
+            A.CallTo(() => fetchProducerCharge.GetChargeBandAmountAsync(
+                A<CompetentAuthorityType>._, A<bool>._, A<AnnualTurnoverBand>._,
+                A<EEEPlacedOnMarketBand>._, A<int>._, A<DateTime>._))
+                .Returns(chargeBandAmount);
+
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<DateTime>._))
+                .Returns(OmpCharge2026);
+
+            // Act
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(scheme, producer);
+
+            // Assert
+            Assert.Equal(806.00m + OmpCharge2026, result.Amount);
+        }
+
+        [Fact]
+        public async Task GetProducerChargeBand_OnlineMarketplace_Wales_DoesNotApplyAdditionalFee()
+        {
+            // Arrange - Wales producers should NOT get OMP fee (only England and NonUK)
+            var chargeBandAmount = CreateTestChargeBandAmount(ChargeBand.A, 445.00m);
+
+            var producer = SetUpProducer(countryType.UKWALES, eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket, annualTurnoverBandType.Greaterthanonemillionpounds, true);
+            producer.sellingTechnique = sellingTechniqueType.OnlineMarketplace;
+            var scheme = new schemeType() { complianceYear = "2025" };
+
+            A.CallTo(() => fetchProducerCharge.GetChargeBandAmountAsync(
+                A<CompetentAuthorityType>._, A<bool>._, A<AnnualTurnoverBand>._,
                 A<EEEPlacedOnMarketBand>._, A<int>._, A<DateTime>._))
                 .Returns(chargeBandAmount);
 
@@ -313,7 +374,106 @@
             var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(scheme, producer);
 
             // Assert
-            Assert.Equal(200m + 13631m, result.Amount); // Base charge + Online Marketplace fee
+            Assert.Equal(445.00m, result.Amount); // No OMP fee added
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<DateTime>._))
+                .MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task GetProducerChargeBand_OnlineMarketplace_Scotland_DoesNotApplyAdditionalFee()
+        {
+            // Arrange - Scotland producers should NOT get OMP fee (only England and NonUK)
+            var chargeBandAmount = CreateTestChargeBandAmount(ChargeBand.A, 445.00m);
+
+            var producer = SetUpProducer(countryType.UKSCOTLAND, eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket, annualTurnoverBandType.Greaterthanonemillionpounds, true);
+            producer.sellingTechnique = sellingTechniqueType.OnlineMarketplace;
+            var scheme = new schemeType() { complianceYear = "2025" };
+
+            A.CallTo(() => fetchProducerCharge.GetChargeBandAmountAsync(
+                A<CompetentAuthorityType>._, A<bool>._, A<AnnualTurnoverBand>._,
+                A<EEEPlacedOnMarketBand>._, A<int>._, A<DateTime>._))
+                .Returns(chargeBandAmount);
+
+            // Act
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(scheme, producer);
+
+            // Assert
+            Assert.Equal(445.00m, result.Amount); // No OMP fee added
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<DateTime>._))
+                .MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task GetProducerChargeBand_OnlineMarketplace_NorthernIreland_DoesNotApplyAdditionalFee()
+        {
+            // Arrange - Northern Ireland producers should NOT get OMP fee (only England and NonUK)
+            var chargeBandAmount = CreateTestChargeBandAmount(ChargeBand.A, 445.00m);
+
+            var producer = SetUpProducer(countryType.UKNORTHERNIRELAND, eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket, annualTurnoverBandType.Greaterthanonemillionpounds, true);
+            producer.sellingTechnique = sellingTechniqueType.OnlineMarketplace;
+            var scheme = new schemeType() { complianceYear = "2025" };
+
+            A.CallTo(() => fetchProducerCharge.GetChargeBandAmountAsync(
+                A<CompetentAuthorityType>._, A<bool>._, A<AnnualTurnoverBand>._,
+                A<EEEPlacedOnMarketBand>._, A<int>._, A<DateTime>._))
+                .Returns(chargeBandAmount);
+
+            // Act
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(scheme, producer);
+
+            // Assert
+            Assert.Equal(445.00m, result.Amount); // No OMP fee added
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<DateTime>._))
+                .MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task GetProducerChargeBand_NotOnlineMarketplace_DoesNotApplyAdditionalFee()
+        {
+            // Arrange - Direct selling should NOT get OMP fee
+            var chargeBandAmount = CreateTestChargeBandAmount(ChargeBand.A2, 750.00m);
+
+            var producer = SetUpProducer(countryType.UKENGLAND, eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket, annualTurnoverBandType.Greaterthanonemillionpounds, true);
+            producer.sellingTechnique = sellingTechniqueType.DirectSellingtoEndUser;
+            var scheme = new schemeType() { complianceYear = "2025" };
+
+            A.CallTo(() => fetchProducerCharge.GetChargeBandAmountAsync(
+                A<CompetentAuthorityType>._, A<bool>._, A<AnnualTurnoverBand>._,
+                A<EEEPlacedOnMarketBand>._, A<int>._, A<DateTime>._))
+                .Returns(chargeBandAmount);
+
+            // Act
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(scheme, producer);
+
+            // Assert
+            Assert.Equal(750.00m, result.Amount); // No OMP fee added
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<DateTime>._))
+                .MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task GetProducerChargeBand_OnlineMarketplace_NoChargeInDatabase_DoesNotAddFee()
+        {
+            // Arrange
+            var chargeBandAmount = CreateTestChargeBandAmount(ChargeBand.A2, 750.00m);
+
+            var producer = SetUpProducer(countryType.UKENGLAND, eeePlacedOnMarketBandType.Morethanorequalto5TEEEplacedonmarket, annualTurnoverBandType.Greaterthanonemillionpounds, true);
+            producer.sellingTechnique = sellingTechniqueType.OnlineMarketplace;
+            var scheme = new schemeType() { complianceYear = "2025" };
+
+            A.CallTo(() => fetchProducerCharge.GetChargeBandAmountAsync(
+                A<CompetentAuthorityType>._, A<bool>._, A<AnnualTurnoverBand>._,
+                A<EEEPlacedOnMarketBand>._, A<int>._, A<DateTime>._))
+                .Returns(chargeBandAmount);
+
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<DateTime>._))
+                .Returns((decimal?)null);
+
+            // Act
+            var result = await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(scheme, producer);
+
+            // Assert
+            Assert.Equal(750.00m, result.Amount); // No OMP fee added when null returned
         }
 
         [Theory]
@@ -427,6 +587,20 @@
                 2025,
                 amount,
                 new DateTime(2025, 1, 1));
+        }
+
+        private static ChargeBandAmount CreateTestChargeBandAmount(ChargeBand chargeBand, decimal amount, int complianceYear = 2025)
+        {
+            return new ChargeBandAmount(
+                Guid.NewGuid(),
+                chargeBand,
+                CompetentAuthorityType.England,
+                true,
+                AnnualTurnoverBand.NotApplicable,
+                EEEPlacedOnMarketBand.Morethanorequalto5TEEEplacedonmarket,
+                complianceYear,
+                amount,
+                new DateTime(complianceYear, 1, 1));
         }
     }
 }
