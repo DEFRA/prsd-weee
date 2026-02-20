@@ -14,6 +14,8 @@
 
         public int ComplianceYear { get; set; }
 
+        public string ProducerType { get; set; }
+
         public string ProducerName { get; set; }
 
         public string Partners { get; set; }
