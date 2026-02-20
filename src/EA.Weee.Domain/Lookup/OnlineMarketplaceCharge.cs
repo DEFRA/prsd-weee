@@ -10,14 +10,16 @@
     public class OnlineMarketplaceCharge
     {
         public Guid Id { get; private set; }
+        public CompetentAuthorityType CompetentAuthority { get; private set; }
 
         public decimal Amount { get; private set; }
 
         public DateTime EffectiveFrom { get; private set; }
 
-        public OnlineMarketplaceCharge(Guid id, decimal amount, DateTime effectiveFrom)
+        public OnlineMarketplaceCharge(Guid id, CompetentAuthorityType competentAuthority, decimal amount, DateTime effectiveFrom)
         {
             Id = id;
+            CompetentAuthority = competentAuthority;
             Amount = amount;
             EffectiveFrom = effectiveFrom;
         }

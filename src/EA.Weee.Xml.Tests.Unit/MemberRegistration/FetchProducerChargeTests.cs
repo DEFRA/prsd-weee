@@ -100,25 +100,52 @@
         }
 
         [Fact]
-        public async Task GetOnlineMarketplaceChargeAsync_GivenChargeExists_ShouldReturnChargeAmount()
+        public async Task GetOnlineMarketplaceChargeAsync_GivenChargeExistsForEngland_ShouldReturnChargeAmount()
         {
             // Arrange
+            var competentAuthority = CompetentAuthorityType.England;
             var asOfUtc = new DateTime(2025, 6, 15);
             var expectedCharge = new OnlineMarketplaceCharge(
                 Guid.NewGuid(),
+                competentAuthority,
                 13631.00m,
                 new DateTime(2025, 1, 1));
 
-            A.CallTo(() => onlineMarketplaceChargeDataAccess.GetChargeAmountAsync(asOfUtc))
+            A.CallTo(() => onlineMarketplaceChargeDataAccess.GetChargeAmountAsync(competentAuthority, asOfUtc))
                 .Returns(expectedCharge);
 
             // Act
-            var result = await fetchProducerCharge.GetOnlineMarketplaceChargeAsync(asOfUtc);
+            var result = await fetchProducerCharge.GetOnlineMarketplaceChargeAsync(competentAuthority, asOfUtc);
 
             // Assert
             Assert.NotNull(result);
             Assert.Equal(13631.00m, result.Value);
-            A.CallTo(() => onlineMarketplaceChargeDataAccess.GetChargeAmountAsync(asOfUtc))
+            A.CallTo(() => onlineMarketplaceChargeDataAccess.GetChargeAmountAsync(competentAuthority, asOfUtc))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task GetOnlineMarketplaceChargeAsync_GivenChargeExistsForNonUK_ShouldReturnChargeAmount()
+        {
+            // Arrange
+            var competentAuthority = CompetentAuthorityType.NonUK;
+            var asOfUtc = new DateTime(2025, 6, 15);
+            var expectedCharge = new OnlineMarketplaceCharge(
+                Guid.NewGuid(),
+                competentAuthority,
+                13631.00m,
+                new DateTime(2025, 1, 1));
+
+            A.CallTo(() => onlineMarketplaceChargeDataAccess.GetChargeAmountAsync(competentAuthority, asOfUtc))
+                .Returns(expectedCharge);
+
+            // Act
+            var result = await fetchProducerCharge.GetOnlineMarketplaceChargeAsync(competentAuthority, asOfUtc);
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(13631.00m, result.Value);
+            A.CallTo(() => onlineMarketplaceChargeDataAccess.GetChargeAmountAsync(competentAuthority, asOfUtc))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -126,13 +153,14 @@
         public async Task GetOnlineMarketplaceChargeAsync_GivenNoChargeExists_ShouldReturnNull()
         {
             // Arrange
+            var competentAuthority = CompetentAuthorityType.England;
             var asOfUtc = new DateTime(2020, 1, 1);
 
-            A.CallTo(() => onlineMarketplaceChargeDataAccess.GetChargeAmountAsync(asOfUtc))
+            A.CallTo(() => onlineMarketplaceChargeDataAccess.GetChargeAmountAsync(competentAuthority, asOfUtc))
                 .Returns((OnlineMarketplaceCharge)null);
 
             // Act
-            var result = await fetchProducerCharge.GetOnlineMarketplaceChargeAsync(asOfUtc);
+            var result = await fetchProducerCharge.GetOnlineMarketplaceChargeAsync(competentAuthority, asOfUtc);
 
             // Assert
             Assert.Null(result);
@@ -142,17 +170,19 @@
         public async Task GetOnlineMarketplaceChargeAsync_Given2026EffectiveDate_ShouldReturnUpliftedCharge()
         {
             // Arrange
+            var competentAuthority = CompetentAuthorityType.England;
             var asOfUtc = new DateTime(2025, 10, 15);
             var expectedCharge = new OnlineMarketplaceCharge(
                 Guid.NewGuid(),
+                competentAuthority,
                 14653.00m, // 2026 uplifted rate
                 new DateTime(2025, 10, 1));
 
-            A.CallTo(() => onlineMarketplaceChargeDataAccess.GetChargeAmountAsync(asOfUtc))
+            A.CallTo(() => onlineMarketplaceChargeDataAccess.GetChargeAmountAsync(competentAuthority, asOfUtc))
                 .Returns(expectedCharge);
 
             // Act
-            var result = await fetchProducerCharge.GetOnlineMarketplaceChargeAsync(asOfUtc);
+            var result = await fetchProducerCharge.GetOnlineMarketplaceChargeAsync(competentAuthority, asOfUtc);
 
             // Assert
             Assert.NotNull(result);
@@ -160,59 +190,49 @@
         }
 
         [Fact]
-        public async Task GetOnlineMarketplaceChargeAsync_ShouldCallDataAccessWithCorrectDate()
+        public async Task GetOnlineMarketplaceChargeAsync_ShouldCallDataAccessWithCorrectParameters()
         {
             // Arrange
+            var competentAuthority = CompetentAuthorityType.England;
             var asOfUtc = new DateTime(2025, 8, 20, 14, 30, 0);
 
-            A.CallTo(() => onlineMarketplaceChargeDataAccess.GetChargeAmountAsync(asOfUtc))
+            A.CallTo(() => onlineMarketplaceChargeDataAccess.GetChargeAmountAsync(competentAuthority, asOfUtc))
                 .Returns((OnlineMarketplaceCharge)null);
 
             // Act
-            await fetchProducerCharge.GetOnlineMarketplaceChargeAsync(asOfUtc);
+            await fetchProducerCharge.GetOnlineMarketplaceChargeAsync(competentAuthority, asOfUtc);
 
             // Assert
-            A.CallTo(() => onlineMarketplaceChargeDataAccess.GetChargeAmountAsync(asOfUtc))
+            A.CallTo(() => onlineMarketplaceChargeDataAccess.GetChargeAmountAsync(competentAuthority, asOfUtc))
                 .MustHaveHappenedOnceExactly();
         }
 
         [Theory]
-        [InlineData("2025-01-01", 13631.00)]
-        [InlineData("2025-06-15", 13631.00)]
-        [InlineData("2025-10-01", 14653.00)]
-        [InlineData("2026-01-15", 14653.00)]
-        public async Task GetOnlineMarketplaceChargeAsync_GivenVariousDates_ShouldReturnCorrectCharge(string dateString, decimal expectedAmount)
+        [InlineData(CompetentAuthorityType.England, "2025-01-01", 13631.00)]
+        [InlineData(CompetentAuthorityType.England, "2025-06-15", 13631.00)]
+        [InlineData(CompetentAuthorityType.England, "2025-10-01", 14653.00)]
+        [InlineData(CompetentAuthorityType.NonUK, "2025-01-01", 13631.00)]
+        [InlineData(CompetentAuthorityType.NonUK, "2025-10-01", 14653.00)]
+        public async Task GetOnlineMarketplaceChargeAsync_GivenVariousCompetentAuthoritiesAndDates_ShouldReturnCorrectCharge(
+            CompetentAuthorityType competentAuthority, string dateString, decimal expectedAmount)
         {
             // Arrange
             var asOfUtc = DateTime.Parse(dateString);
             var expectedCharge = new OnlineMarketplaceCharge(
                 Guid.NewGuid(),
+                competentAuthority,
                 expectedAmount,
                 asOfUtc);
 
-            A.CallTo(() => onlineMarketplaceChargeDataAccess.GetChargeAmountAsync(asOfUtc))
+            A.CallTo(() => onlineMarketplaceChargeDataAccess.GetChargeAmountAsync(competentAuthority, asOfUtc))
                 .Returns(expectedCharge);
 
             // Act
-            var result = await fetchProducerCharge.GetOnlineMarketplaceChargeAsync(asOfUtc);
+            var result = await fetchProducerCharge.GetOnlineMarketplaceChargeAsync(competentAuthority, asOfUtc);
 
             // Assert
             Assert.NotNull(result);
             Assert.Equal(expectedAmount, result.Value);
-        }
-
-        private static ChargeBandAmount CreateLegacyChargeBandAmount(ChargeBand chargeBand, decimal amount)
-        {
-            return new ChargeBandAmount(
-                Guid.NewGuid(),
-                chargeBand,
-                CompetentAuthorityType.England,
-                false,
-                AnnualTurnoverBand.NotApplicable,
-                EEEPlacedOnMarketBand.Morethanorequalto5TEEEplacedonmarket,
-                2000, // Legacy compliance year
-                amount,
-                new DateTime(2000, 1, 1));
         }
     }
 }

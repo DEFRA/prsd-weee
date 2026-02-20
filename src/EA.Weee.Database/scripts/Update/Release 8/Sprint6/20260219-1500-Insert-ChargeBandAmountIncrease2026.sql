@@ -1,5 +1,5 @@
 ﻿/* ===========================
-   2027 CHARGEBANDAMOUNT INSERT
+   2026 CHARGEBANDAMOUNT INSERT
    =========================== */
 
 SET NOCOUNT ON;
@@ -8,8 +8,8 @@ INSERT INTO [Lookup].[ChargeBandAmount] (
     [Id], [Amount], [ChargeBand], [CompetentAuthority], [VatRegistered],
     [AnnualTurnoverBand], [EEEPlacedOnMarketBand], [ComplianceYear], [EffectiveFrom]
 )
-SELECT * FROM (VALUES
-    -- 2027 Data (Effective from 2026-04-01)
+VALUES
+    -- 2026 Data (Effective from 2026-04-01)
     -- Non-UK (0) - AnnualTurnoverBand = 2 (N/A) - INCREASED
     ('F1A2B3C4-D5E6-47F8-A9B0-1C2D3E4F5A6B',108.00,7,0,0,2,0,2026,'2026-04-01'), -- D2, VAT=FALSE, N/A turnover, ≥5T
     ('A7B8C9D0-E1F2-43A4-B5C6-7D8E9F0A1B2C',403.00,8,0,1,2,0,2026,'2026-04-01'), -- D3, VAT=TRUE,  N/A turnover, ≥5T
@@ -50,11 +50,6 @@ SELECT * FROM (VALUES
     ('F2A3B4C5-D6E7-4F8A-9B0C-1D2E3F4A5B6C', 30.00,4,4,1,1,1,2026,'2026-04-01'), -- E, VAT=TRUE, >£1m, <5T
     ('A5B6C7D8-E9F0-4A1B-2C3D-4E5F6A7B8C9D', 30.00,4,4,1,0,1,2026,'2026-04-01'), -- E, VAT=TRUE, <=£1m, <5T
     ('B8C9D0E1-F2A3-4B4C-5D6E-7F8A9B0C1D2E', 30.00,4,4,0,1,1,2026,'2026-04-01'), -- E, VAT=FALSE, >£1m, <5T
-    ('C1D2E3F4-A5B6-4C7D-8E9F-0A1B2C3D4E5F', 30.00,4,4,0,0,1,2026,'2026-04-01')  -- E, VAT=FALSE, <=£1m, <5T
-) AS NewData ([Id],[Amount],[ChargeBand],[CompetentAuthority],[VatRegistered],[AnnualTurnoverBand],[EEEPlacedOnMarketBand],[ComplianceYear],[EffectiveFrom])
-WHERE NOT EXISTS (
-    SELECT 1 FROM [Lookup].[ChargeBandAmount] 
-    WHERE [Lookup].[ChargeBandAmount].[Id] = NewData.[Id]
-);
+    ('C1D2E3F4-A5B6-4C7D-8E9F-0A1B2C3D4E5F', 30.00,4,4,0,0,1,2026,'2026-04-01'); -- E, VAT=FALSE, <=£1m, <5T
 
 GO

@@ -291,7 +291,7 @@
                 A<EEEPlacedOnMarketBand>._, A<int>._, A<DateTime>._))
                 .Returns(chargeBandAmount);
 
-            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<DateTime>._))
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(CompetentAuthorityType.England, A<DateTime>._))
                 .Returns(OmpCharge2025);
 
             // Act
@@ -299,7 +299,7 @@
 
             // Assert
             Assert.Equal(750.00m + OmpCharge2025, result.Amount);
-            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<DateTime>._))
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(CompetentAuthorityType.England, A<DateTime>._))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -318,7 +318,7 @@
                 A<EEEPlacedOnMarketBand>._, A<int>._, A<DateTime>._))
                 .Returns(chargeBandAmount);
 
-            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<DateTime>._))
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(CompetentAuthorityType.NonUK, A<DateTime>._))
                 .Returns(OmpCharge2025);
 
             // Act
@@ -326,7 +326,7 @@
 
             // Assert
             Assert.Equal(375.00m + OmpCharge2025, result.Amount);
-            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<DateTime>._))
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(CompetentAuthorityType.NonUK, A<DateTime>._))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -345,7 +345,7 @@
                 A<EEEPlacedOnMarketBand>._, A<int>._, A<DateTime>._))
                 .Returns(chargeBandAmount);
 
-            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<DateTime>._))
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(CompetentAuthorityType.England, A<DateTime>._))
                 .Returns(OmpCharge2026);
 
             // Act
@@ -375,7 +375,7 @@
 
             // Assert
             Assert.Equal(445.00m, result.Amount); // No OMP fee added
-            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<DateTime>._))
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<CompetentAuthorityType>._, A<DateTime>._))
                 .MustNotHaveHappened();
         }
 
@@ -399,7 +399,7 @@
 
             // Assert
             Assert.Equal(445.00m, result.Amount); // No OMP fee added
-            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<DateTime>._))
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<CompetentAuthorityType>._, A<DateTime>._))
                 .MustNotHaveHappened();
         }
 
@@ -423,7 +423,7 @@
 
             // Assert
             Assert.Equal(445.00m, result.Amount); // No OMP fee added
-            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<DateTime>._))
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<CompetentAuthorityType>._, A<DateTime>._))
                 .MustNotHaveHappened();
         }
 
@@ -447,7 +447,7 @@
 
             // Assert
             Assert.Equal(750.00m, result.Amount); // No OMP fee added
-            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<DateTime>._))
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<CompetentAuthorityType>._, A<DateTime>._))
                 .MustNotHaveHappened();
         }
 
@@ -466,7 +466,7 @@
                 A<EEEPlacedOnMarketBand>._, A<int>._, A<DateTime>._))
                 .Returns(chargeBandAmount);
 
-            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<DateTime>._))
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(A<CompetentAuthorityType>._, A<DateTime>._))
                 .Returns((decimal?)null);
 
             // Act

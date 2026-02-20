@@ -26,10 +26,11 @@
             DateTime asOfUtc);
 
         /// <summary>
-        /// Retrieves the Online Marketplace charge amount effective as of the specified date.
+        /// Retrieves the Online Marketplace charge for the specified competent authority and date.
         /// </summary>
+        /// <param name="competentAuthority">The competent authority type</param>
         /// <param name="asOfUtc">The date to check against effective dates</param>
         /// <returns>The charge amount, or null if no charge is configured</returns>
-        Task<decimal?> GetOnlineMarketplaceChargeAsync(DateTime asOfUtc);
+        Task<decimal?> GetOnlineMarketplaceChargeAsync(CompetentAuthorityType competentAuthority, DateTime asOfUtc);
     }
 }

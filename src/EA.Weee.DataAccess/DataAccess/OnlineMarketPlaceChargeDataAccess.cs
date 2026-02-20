@@ -19,21 +19,13 @@
         /// Retrieves the Online Marketplace charge amount that is effective as of the specified date.
         /// Returns the most recent charge where EffectiveFrom is on or before the asOfUtc date.
         /// </summary>
-        public async Task<OnlineMarketplaceCharge> GetChargeAmountAsync(DateTime asOfUtc)
+        public async Task<OnlineMarketplaceCharge> GetChargeAmountAsync(CompetentAuthorityType competentAuthority, DateTime asOfUtc)
         {
-            try
-            {
-                return await context.OnlineMarketplaceCharges
-                .Where(o => o.EffectiveFrom <= asOfUtc)
-                .OrderByDescending(o => o.EffectiveFrom)
-                .FirstOrDefaultAsync();
-            }
-            catch (Exception ex)
-            {
-                throw new InvalidOperationException(
-                    $"Error retrieving Online Marketplace charge for date {asOfUtc}. " +
-                    $"Exception: {ex.Message}", ex);
-            }
+            return await context.OnlineMarketplaceCharges
+                    .Where(o => o.CompetentAuthority == competentAuthority)
+                    .Where(o => o.EffectiveFrom <= asOfUtc)
+                    .OrderByDescending(o => o.EffectiveFrom)
+                    .FirstOrDefaultAsync();
         }
     }
 }

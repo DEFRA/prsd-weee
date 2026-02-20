@@ -45,9 +45,9 @@
                 asOfUtc);
         }
 
-        public async Task<decimal?> GetOnlineMarketplaceChargeAsync(DateTime asOfUtc)
+        public async Task<decimal?> GetOnlineMarketplaceChargeAsync(CompetentAuthorityType competentAuthority, DateTime asOfUtc)
         {
-            var charge = await onlineMarketplaceChargeDataAccess.GetChargeAmountAsync(asOfUtc);
+            var charge = await onlineMarketplaceChargeDataAccess.GetChargeAmountAsync(competentAuthority, asOfUtc);
             return charge?.Amount;
         }
     }

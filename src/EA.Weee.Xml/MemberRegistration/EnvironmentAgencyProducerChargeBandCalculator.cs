@@ -148,7 +148,8 @@
 
             if (isOnlineMarketplace && (isEngland || isNonUK))
             {
-                var ompCharge = await fetchProducerCharge.GetOnlineMarketplaceChargeAsync(asOfUtc);
+                var competentAuthority = ConvertToCompetentAuthorityType(producerCountry);
+                var ompCharge = await fetchProducerCharge.GetOnlineMarketplaceChargeAsync(competentAuthority, asOfUtc);
                 if (ompCharge.HasValue)
                 {
                     charge.Amount += ompCharge.Value;
