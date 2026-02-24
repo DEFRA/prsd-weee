@@ -90,6 +90,8 @@
 
         public virtual DbSet<AnnualChargeByYear> AnnualChargesByYear { get; set; }
 
+        public virtual DbSet<OnlineMarketplaceCharge> OnlineMarketplaceCharges { get; set; }
+
         /// <summary>
         /// Registered producers including items marked as removed.
         /// </summary>

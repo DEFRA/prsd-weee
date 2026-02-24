@@ -54,6 +54,8 @@
 
             builder.RegisterType<ProducerChargeCalculatorDataAccess>().As<IProducerChargeCalculatorDataAccess>()
                 .InstancePerRequest();
+            builder.RegisterType<OnlineMarketplaceChargeDataAccess>().As<IOnlineMarketplaceChargeDataAccess>()
+                .InstancePerRequest();
         }
     }
 }

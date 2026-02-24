@@ -66,10 +66,12 @@
                 submissionData.SubmissionHistory.Add(directProducerSubmission.ComplianceYear, history);
             }
 
-            // Determine the charge amount based on the organization's business address
+            // Determine the charge amount based on the business address
+            // Use submission's business address if available, otherwise fall back to organisation's address
             // The fee is determined by the organisation's registered office or principal place of business
             // Default to IsNonUk = true (higher fee) if business address or country is not available
-            var countryName = directRegistrant.Organisation?.BusinessAddress?.Country?.Name;
+            var countryName = currentYearSubmission?.CurrentSubmission?.BusinessAddress?.Country?.Name
+                              ?? directRegistrant.Organisation?.BusinessAddress?.Country?.Name;
             bool isNonUk = !IsScotlandWalesOrNorthernIreland(countryName);
 
             // Get the charge based on current UTC date to ensure date-based pricing
