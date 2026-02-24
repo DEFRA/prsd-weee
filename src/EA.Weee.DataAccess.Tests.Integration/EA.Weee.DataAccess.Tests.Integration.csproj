@@ -5,7 +5,7 @@
   <Import Project="..\packages\EntityFramework.6.5.1\build\EntityFramework.props" Condition="Exists('..\packages\EntityFramework.6.5.1\build\EntityFramework.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-	  <LangVersion>11.0</LangVersion>
+    <LangVersion>11.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -180,6 +180,7 @@
   <ItemGroup>
     <Compile Include="AatfContactIntegration.cs" />
     <Compile Include="Base\EvidenceNoteBaseDataAccess.cs" />
+    <Compile Include="DataAccess\OnlineMarketplaceChargeDataAccessTests.cs" />
     <Compile Include="DataAccess\SmallProducerDataAccessTests.cs" />
     <Compile Include="EvidenceNote\NotesDataAccessGetTonnageByIdsIntegration.cs" />
     <Compile Include="EvidenceNote\TransferNotesDataAccessIntegration.cs" />

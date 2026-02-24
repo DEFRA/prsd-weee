@@ -479,7 +479,9 @@
     <Content Include="scripts\Update\Release 8\Sprint6\20260106-1727-Message_Banner-Changes.sql" />
     <Content Include="scripts\Update\Release 8\Sprint6\20260113-1400-Create-AnnualChargebyYear.sql" />
     <Content Include="scripts\Update\Release 8\Sprint6\20260201-1400-DirectRegistrantChargeIncreaseFees.sql" />
+    <Content Include="scripts\Update\Release 8\Sprint6\20260219-1500-Insert-ChargeBandAmountIncrease2026.sql" />
     <Content Include="scripts\Update\Release 8\Sprint6\20260218-1400-UpdateDirectRegistrantCharge2026.sql" />
+    <Content Include="scripts\Update\Release 8\Sprint6\20260219-1000-Create-OnlineMarketplaceCharge.sql" />
     <Content Include="scripts\Update\Release 8\Sprint6\20260220-1600-alter-PCS-spgSubmissionChangesCsvData.sql" />
     <Content Include="scripts\Update\Release 8\Sprint6\20260220-1600-alter-Producer-spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority.sql" />
     <Content Include="scripts\Update\Release 8\Sprint6\20260220-1600-alter-Producer-spgProducerAmendmentsCSVDataByPRN.sql" />
