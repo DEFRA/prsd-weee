@@ -57,7 +57,8 @@
                 PaymentReference = MapPaymentReference(source.DirectProducerSubmission),
                 ProducerRegistrationNumber = source.DirectProducerSubmission.RegisteredProducer.ProducerRegistrationNumber,
                 RegisteredProducerId = source.DirectProducerSubmission.RegisteredProducer.Id,
-                DirectProducerSubmissionId = source.DirectProducerSubmission.Id
+                DirectProducerSubmissionId = source.DirectProducerSubmission.Id,
+                SignatoryData = MapSignatory(currentSubmission)
             };
         }
 
@@ -150,6 +151,13 @@
             return currentSubmission.EeeOutputReturnVersion != null
                 ? mapper.Map<EeeOutputReturnVersion, IList<Eee>>(currentSubmission.EeeOutputReturnVersion)
                 : new List<Eee>();
+        }
+
+        private ContactData MapSignatory(DirectProducerSubmissionHistory currentSubmission)
+        {
+            return currentSubmission.AppropriateSignatoryId.HasValue
+                ? mapper.Map<Contact, ContactData>(currentSubmission.AppropriateSignatory)
+                : null;
         }
     }
 }

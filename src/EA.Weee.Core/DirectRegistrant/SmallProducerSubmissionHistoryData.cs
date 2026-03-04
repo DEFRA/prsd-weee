@@ -57,5 +57,7 @@
         public Guid RegisteredProducerId { get; set; }
 
         public Guid DirectProducerSubmissionId { get; set; }
+
+        public ContactData SignatoryData { get; set; }
     }
 }

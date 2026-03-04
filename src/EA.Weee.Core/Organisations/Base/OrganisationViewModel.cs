@@ -62,6 +62,8 @@
 
         public bool NpwdMigrated { get; set; }
 
+        public ContactData SignatoryData { get; set; }
+       
         public IEnumerable<ValidationResult> Validate(ValidationContext validationContext)
         {
             var results = new List<ValidationResult>();
