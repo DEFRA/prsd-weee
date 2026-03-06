@@ -58,7 +58,7 @@
                 ProducerRegistrationNumber = source.DirectProducerSubmission.RegisteredProducer.ProducerRegistrationNumber,
                 RegisteredProducerId = source.DirectProducerSubmission.RegisteredProducer.Id,
                 DirectProducerSubmissionId = source.DirectProducerSubmission.Id,
-                AppropriateSignatoryData = currentSubmission.AppropriateSignatory != null ? mapper.Map<Contact, ContactData>(currentSubmission.AppropriateSignatory)    : null
+                AppropriateSignatoryData = currentSubmission.AppropriateSignatory != null ? mapper.Map<Contact, ContactData>(currentSubmission.AppropriateSignatory) : null
             };
         }
 
