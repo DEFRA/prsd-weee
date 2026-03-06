@@ -64,6 +64,14 @@
             csvWriter.DefineColumn(@"Partnership names", i => i.Partners);
             csvWriter.DefineColumn(@"Trading name", i => i.TradingName);
             csvWriter.DefineColumn(@"PRN", i => i.PRN);
+            csvWriter.DefineColumn(@"Registration Status", i =>
+            {
+                if (i.RegistrationStatus == "Registered" && i.PaymentStatus == "Paid")
+                { 
+                    return "Registered"; 
+                }
+                return string.Empty;
+            });
             csvWriter.DefineColumn(@"Date & time (GMT) registered", i => i.DateRegistered.HasValue ? i.DateRegistered.Value.ToString("dd/MM/yyyy HH:mm:ss") : string.Empty);
             csvWriter.DefineColumn(@"Date & time (GMT) last updated", i => 
             {
@@ -76,7 +84,9 @@
                 }
                 
                 return i.DateAmended.ToString("dd/MM/yyyy HH:mm:ss");
-            }); 
+            });
+            csvWriter.DefineColumn(@"Payment Status", i => i.PaymentStatus);
+            csvWriter.DefineColumn(@"Payment Reference", i => i.PaymentReference);
             csvWriter.DefineColumn(@"Charge band", i => i.ChargeBandType);
             csvWriter.DefineColumn(@"VAT registered", (i => i.VATRegistered.HasValue ? (i.VATRegistered.Value ? "Yes" : "No") : string.Empty));
             csvWriter.DefineColumn(@"Annual turnover", i => i.AnnualTurnover.HasValue ? i.AnnualTurnover.Value.ToString(CultureInfo.InvariantCulture) : string.Empty);
@@ -107,6 +117,18 @@
             csvWriter.DefineColumn(@"Correspondent for notices post code", i => i.CNPostcode);
             csvWriter.DefineColumn(@"Correspondent for notices country", i => i.CNCountry);
 
+            csvWriter.DefineColumn(@"PrimaryContactForename", i => i.PrimaryContactForename);
+            csvWriter.DefineColumn(@"PrimaryContactSurname", i => i.PrimaryContactSurname);
+            csvWriter.DefineColumn(@"PrimaryContactPosition", i => i.PrimaryContactPosition);
+            csvWriter.DefineColumn(@"PrimaryContactTelephone", i => i.PrimaryContactTelephone);
+            csvWriter.DefineColumn(@"PrimaryContactEmail", i => i.PrimaryContactEmail);
+            csvWriter.DefineColumn(@"PrimaryContactAddressLine1", i => i.PrimaryContactAddressLine1);
+            csvWriter.DefineColumn(@"PrimaryContactAddressLine2", i => i.PrimaryContactAddressLine2);
+            csvWriter.DefineColumn(@"PrimaryContactTown", i => i.PrimaryContactTown);
+            csvWriter.DefineColumn(@"PrimaryContactCounty", i => i.PrimaryContactCounty);
+            csvWriter.DefineColumn(@"PrimaryContactPostcode", i => i.PrimaryContactPostcode);
+            csvWriter.DefineColumn(@"PrimaryContactCountry", i => i.PrimaryContactCountry);
+
             //company or partnership details based on organisation type
             csvWriter.DefineColumn(@"Reg. Off. or PPoB title", i => !string.IsNullOrEmpty(i.CompanyName) ? i.CompanyContactTitle : i.PPOBContactTitle);
             csvWriter.DefineColumn(@"Reg. Off. or PPoB forename", i => !string.IsNullOrEmpty(i.CompanyName) ? i.CompanyContactForename : i.PPOBContactForename);
@@ -115,7 +137,8 @@
             csvWriter.DefineColumn(@"Reg. Off. or PPoB telephone", i => !string.IsNullOrEmpty(i.CompanyName) ? i.CompanyContactTelephone : i.PPOBContactTelephone, true);
             csvWriter.DefineColumn(@"Reg. Off. or PPoB mobile", i => !string.IsNullOrEmpty(i.CompanyName) ? i.CompanyContactMobile : i.PPOBContactMobile, true);
             csvWriter.DefineColumn(@"Reg. Off. or PPoB fax", i => !string.IsNullOrEmpty(i.CompanyName) ? i.CompanyContactFax : i.PPOBContactFax, true);
-            csvWriter.DefineColumn(@"Reg. Off. or PPoB email", i => !string.IsNullOrEmpty(i.CompanyContactEmail) ? i.CompanyContactEmail : string.Empty);
+            csvWriter.DefineColumn(@"Reg. Off. or PPoB email", i => !string.IsNullOrEmpty(i.CompanyContactEmail) ? i.CompanyContactEmail : i.PPOBContactEmail);
+            csvWriter.DefineColumn(@"Reg. Off. or PPoB website", i => !string.IsNullOrEmpty(i.CompanyContactWebsite) ? i.CompanyContactWebsite : i.PPOBContactWebsite);
 
             //address
             csvWriter.DefineColumn(@"Reg. Off. or PPoB address line1", i => !string.IsNullOrEmpty(i.CompanyName) ? i.CompanyContactPrimaryName : i.PPOBContactPrimaryName);
@@ -148,6 +171,9 @@
             csvWriter.DefineColumn(@"Overseas producer administrative area", i => i.OverseasContactAdministrativeArea);
             csvWriter.DefineColumn(@"Overseas producer post code", i => i.OverseasContactPostcode);
             csvWriter.DefineColumn(@"Overseas producer country", i => i.OverseasContactCountry);
+            csvWriter.DefineColumn(@"Signatory forename", i => i.SignatoryForename);
+            csvWriter.DefineColumn(@"Signatory surname", i => i.SignatorySurname);
+            csvWriter.DefineColumn(@"Signatory position", i => i.SignatoryPosition);
 
             if (request.IncludeRemovedProducer)
             {

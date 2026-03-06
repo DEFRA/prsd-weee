@@ -57,7 +57,8 @@
                 PaymentReference = MapPaymentReference(source.DirectProducerSubmission),
                 ProducerRegistrationNumber = source.DirectProducerSubmission.RegisteredProducer.ProducerRegistrationNumber,
                 RegisteredProducerId = source.DirectProducerSubmission.RegisteredProducer.Id,
-                DirectProducerSubmissionId = source.DirectProducerSubmission.Id
+                DirectProducerSubmissionId = source.DirectProducerSubmission.Id,
+                AppropriateSignatoryData = currentSubmission.AppropriateSignatory != null ? mapper.Map<Contact, ContactData>(currentSubmission.AppropriateSignatory)    : null
             };
         }
 
