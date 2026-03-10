@@ -949,6 +949,7 @@
         {
             // Arrange
             var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            submissionData.CurrentSubmission.HasPaid = false;
             controller.SmallProducerSubmissionData = submissionData;
 
             var model = TestFixture.Create<AppropriateSignatoryViewModel>();
