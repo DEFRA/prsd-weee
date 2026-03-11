@@ -485,6 +485,7 @@
     <Content Include="scripts\Update\Release 8\Sprint6\20260220-1600-alter-PCS-spgSubmissionChangesCsvData.sql" />
     <Content Include="scripts\Update\Release 8\Sprint6\20260220-1600-alter-Producer-spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority.sql" />
     <Content Include="scripts\Update\Release 8\Sprint6\20260220-1600-alter-Producer-spgProducerAmendmentsCSVDataByPRN.sql" />
+    <Content Include="scripts\Update\Release 8\Sprint6\20260309-1600-create-AnnualChargeByYear.sql" />
     <None Include="rebuild-development.bat" />
     <Content Include="scripts\Update\Release 4\20220311-1315-sent-on-for-treatment-report.sql" />
     <Content Include="scripts\Update\Release 4\20220923-1751-remove-weeesenton-table-relation.sql" />
