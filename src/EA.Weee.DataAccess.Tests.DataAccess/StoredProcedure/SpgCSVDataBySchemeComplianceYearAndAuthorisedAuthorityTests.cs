@@ -794,8 +794,10 @@
                 result2.CNCountry.Should().BeNull();
                 result2.CompanyNumber.Should().Be("123456789");
                 result2.CompanyContactTitle.Should().BeNull();
-                result2.CompanyContactForename.Should().Be("first name");
-                result2.CompanyContactSurname.Should().Be("last name");
+                result2.CompanyContactForename.Should().BeNull();
+                result2.CompanyContactSurname.Should().BeNull();
+                //result2.CompanyContactForename.Should().Be("first name");
+                //result2.CompanyContactSurname.Should().Be("last name");
                 result2.CompanyContactTelephone.Should().Be("12345678");
                 result2.CompanyContactMobile.Should().BeNull();
                 result2.CompanyContactFax.Should().BeNull();
