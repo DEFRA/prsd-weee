@@ -124,6 +124,8 @@
 
         public string PPOBContactEmail { get; set; }
 
+        public string PPOBContactWebsite { get; set; }
+
         public string PPOBContactPrimaryName { get; set; }
 
         public string PPOBContactSecondaryName { get; set; }
@@ -176,5 +178,41 @@
         public string RemovedFromScheme { get; set; }
 
         public string BrandNames { get; set; }
+
+        public string RegistrationStatus { get; set; }
+
+        public string PaymentStatus { get; set; }
+
+        public string PaymentReference { get; set; }
+
+        public string PrimaryContactForename { get; set; }
+
+        public string PrimaryContactSurname { get; set; }
+
+        public string PrimaryContactPosition { get; set; }
+
+        public string PrimaryContactTelephone{ get; set; }
+
+        public string PrimaryContactEmail { get; set; }
+
+        public string PrimaryContactAddressLine1 { get; set; }
+
+        public string PrimaryContactAddressLine2 { get; set; }
+
+        public string PrimaryContactTown { get; set; }
+
+        public string PrimaryContactCounty { get; set; }
+
+        public string PrimaryContactPostcode { get; set; }
+
+        public string PrimaryContactCountry { get; set; }
+
+        public string CompanyContactWebsite { get; set; }
+
+        public string SignatoryForename { get; set; }
+
+        public string SignatorySurname { get; set; }
+
+        public string SignatoryPosition { get; set; } 
     }
 }
