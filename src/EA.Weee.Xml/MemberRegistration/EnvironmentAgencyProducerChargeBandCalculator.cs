@@ -10,13 +10,11 @@
     {
         private readonly IFetchProducerCharge fetchProducerCharge;
         private readonly IRegisteredProducerDataAccess registeredProducerDataAccess;
-        private readonly ISystemDataDataAccess systemDataDataAccess;
 
-        public EnvironmentAgencyProducerChargeBandCalculator(IFetchProducerCharge fetchProducerCharge, IRegisteredProducerDataAccess registeredProducerDataAccess, ISystemDataDataAccess systemDataDataAccess)
+        public EnvironmentAgencyProducerChargeBandCalculator(IFetchProducerCharge fetchProducerCharge, IRegisteredProducerDataAccess registeredProducerDataAccess)
         {
             this.fetchProducerCharge = fetchProducerCharge;
             this.registeredProducerDataAccess = registeredProducerDataAccess;
-            this.systemDataDataAccess = systemDataDataAccess;
         }
 
         public async Task<ProducerCharge> GetProducerChargeBand(schemeType scheme, producerType producer)
@@ -26,7 +24,7 @@
             var competentAuthority = ConvertToCompetentAuthorityType(producerCountry);
             var annualTurnoverBand = ConvertToAnnualTurnoverBand(producer.annualTurnoverBand);
             var eeePlacedOnMarketBand = ConvertToEEEPlacedOnMarketBand(producer.eeePlacedOnMarketBand);
-            var asOfUtc = await systemDataDataAccess.GetSystemDateTime();
+            var asOfUtc = DateTime.UtcNow;
 
             ProducerCharge charge;
 
