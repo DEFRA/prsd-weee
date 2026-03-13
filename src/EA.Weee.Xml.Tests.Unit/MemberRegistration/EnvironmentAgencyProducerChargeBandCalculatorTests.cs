@@ -15,7 +15,6 @@
         private readonly EnvironmentAgencyProducerChargeBandCalculator environmentAgencyProducerChargeBandCalculator;
         private readonly IFetchProducerCharge fetchProducerCharge;
         private readonly IRegisteredProducerDataAccess registeredProducerDataAccess;
-        private readonly ISystemDataDataAccess systemDataDataAccess;
 
         // Online Marketplace charge amounts
         private const decimal OmpCharge2025 = 13631m;
@@ -27,14 +26,10 @@
         {
             fetchProducerCharge = A.Fake<IFetchProducerCharge>();
             registeredProducerDataAccess = A.Fake<IRegisteredProducerDataAccess>();
-            systemDataDataAccess = A.Fake<ISystemDataDataAccess>();
-
-            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(testSystemDate);
 
             environmentAgencyProducerChargeBandCalculator = new EnvironmentAgencyProducerChargeBandCalculator(
                 fetchProducerCharge,
-                registeredProducerDataAccess,
-                systemDataDataAccess);
+                registeredProducerDataAccess);
         }
 
         [Fact]
@@ -84,7 +79,7 @@
                 A<AnnualTurnoverBand>._,
                 EEEPlacedOnMarketBand.Lessthan5TEEEplacedonmarket,
                 2025,
-                testSystemDate)).MustHaveHappened(1, Times.Exactly);
+                A<DateTime>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -134,7 +129,7 @@
                 AnnualTurnoverBand.NotApplicable, // England - annual turnover not applicable
                 EEEPlacedOnMarketBand.Morethanorequalto5TEEEplacedonmarket,
                 2025,
-                testSystemDate)).MustHaveHappened(1, Times.Exactly);
+                A<DateTime>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -182,7 +177,7 @@
                 AnnualTurnoverBand.NotApplicable, // Non-UK - annual turnover not applicable
                 EEEPlacedOnMarketBand.Morethanorequalto5TEEEplacedonmarket,
                 2025,
-                testSystemDate)).MustHaveHappened(1, Times.Exactly);
+                A<DateTime>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -232,7 +227,7 @@
                 AnnualTurnoverBand.Greaterthanonemillionpounds,
                 EEEPlacedOnMarketBand.Morethanorequalto5TEEEplacedonmarket,
                 2025,
-                testSystemDate)).MustHaveHappened(1, Times.Exactly);
+                A<DateTime>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -282,7 +277,7 @@
                 AnnualTurnoverBand.Lessthanorequaltoonemillionpounds,
                 EEEPlacedOnMarketBand.Morethanorequalto5TEEEplacedonmarket,
                 2025,
-                testSystemDate)).MustHaveHappened(1, Times.Exactly);
+                A<DateTime>._)).MustHaveHappened(1, Times.Exactly);
         }
 
         [Fact]
@@ -300,7 +295,7 @@
                 A<EEEPlacedOnMarketBand>._, A<int>._, A<DateTime>._))
                 .Returns(chargeBandAmount);
 
-            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(CompetentAuthorityType.England, testSystemDate))
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(CompetentAuthorityType.England, A<DateTime>._))
                 .Returns(OmpCharge2025);
 
             // Act
@@ -308,7 +303,7 @@
 
             // Assert
             Assert.Equal(750.00m + OmpCharge2025, result.Amount);
-            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(CompetentAuthorityType.England, testSystemDate))
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(CompetentAuthorityType.England, A<DateTime>._))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -327,7 +322,7 @@
                 A<EEEPlacedOnMarketBand>._, A<int>._, A<DateTime>._))
                 .Returns(chargeBandAmount);
 
-            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(CompetentAuthorityType.NonUK, testSystemDate))
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(CompetentAuthorityType.NonUK, A<DateTime>._))
                 .Returns(OmpCharge2025);
 
             // Act
@@ -335,7 +330,7 @@
 
             // Assert
             Assert.Equal(375.00m + OmpCharge2025, result.Amount);
-            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(CompetentAuthorityType.NonUK, testSystemDate))
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(CompetentAuthorityType.NonUK, A<DateTime>._))
                 .MustHaveHappenedOnceExactly();
         }
 
@@ -354,7 +349,7 @@
                 A<EEEPlacedOnMarketBand>._, A<int>._, A<DateTime>._))
                 .Returns(chargeBandAmount);
 
-            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(CompetentAuthorityType.England, testSystemDate))
+            A.CallTo(() => fetchProducerCharge.GetOnlineMarketplaceChargeAsync(CompetentAuthorityType.England, A<DateTime>._))
                 .Returns(OmpCharge2026);
 
             // Act
@@ -484,37 +479,7 @@
             // Assert
             Assert.Equal(750.00m, result.Amount); // No OMP fee added when null returned
         }
-
-        [Fact]
-        public async Task GetProducerChargeBand_UsesSystemDateTime()
-        {
-            // Arrange
-            var expectedSystemDate = new DateTime(2025, 6, 1);
-            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(expectedSystemDate);
-
-            var chargeBandAmount = CreateTestChargeBandAmount(ChargeBand.E, 30.00m);
-            var producer = SetUpProducer(countryType.UKENGLAND, eeePlacedOnMarketBandType.Lessthan5TEEEplacedonmarket, annualTurnoverBandType.Lessthanorequaltoonemillionpounds, false);
-            var scheme = new schemeType() { complianceYear = "2025" };
-
-            A.CallTo(() => fetchProducerCharge.GetChargeBandAmountAsync(
-                A<CompetentAuthorityType>._, A<bool>._, A<AnnualTurnoverBand>._,
-                A<EEEPlacedOnMarketBand>._, A<int>._, A<DateTime>._))
-                .Returns(chargeBandAmount);
-
-            // Act
-            await environmentAgencyProducerChargeBandCalculator.GetProducerChargeBand(scheme, producer);
-
-            // Assert
-            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).MustHaveHappenedOnceExactly();
-            A.CallTo(() => fetchProducerCharge.GetChargeBandAmountAsync(
-                A<CompetentAuthorityType>._,
-                A<bool>._,
-                A<AnnualTurnoverBand>._,
-                A<EEEPlacedOnMarketBand>._,
-                A<int>._,
-                expectedSystemDate)).MustHaveHappened();
-        }
-
+              
         [Theory]
         [InlineData("2018")]
         [InlineData("2017")]
