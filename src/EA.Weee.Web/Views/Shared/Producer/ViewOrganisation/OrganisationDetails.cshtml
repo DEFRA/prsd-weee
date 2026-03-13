@@ -154,6 +154,27 @@
                                 }
                             </td>
                         </tr>
+
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="width: @width;" scope="row">Appropriate signatory first name</th>
+                            <td class="govuk-table__cell">                      
+                                    @(Model.OrganisationViewModel.AppropriateSignatoryData?.FirstName)
+                            </td>
+                        </tr>
+
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="width: @width;" scope="row">Appropriate signatory last name</th>
+                            <td class="govuk-table__cell">
+                                @(Model.OrganisationViewModel.AppropriateSignatoryData?.LastName)
+                            </td>
+                        </tr>
+
+                        <tr class="govuk-table__row">
+                            <th class="govuk-table__header" style="width: @width;" scope="row">Appropriate signatory position</th>
+                            <td class="govuk-table__cell">
+                                @(Model.OrganisationViewModel.AppropriateSignatoryData?.Position)
+                            </td>
+                        </tr>
                     }
 
                 </tbody>

@@ -777,6 +777,7 @@
         {
             // Arrange
             var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            submissionData.CurrentSubmission.HasPaid = false;
             controller.SmallProducerSubmissionData = submissionData;
 
             var model = TestFixture.Create<AppropriateSignatoryViewModel>();
@@ -948,6 +949,7 @@
         {
             // Arrange
             var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            submissionData.CurrentSubmission.HasPaid = false;
             controller.SmallProducerSubmissionData = submissionData;
 
             var model = TestFixture.Create<AppropriateSignatoryViewModel>();
@@ -1052,6 +1054,7 @@
         {
             // Arrange
             var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            submissionData.CurrentSubmission.HasPaid = false;
             controller.SmallProducerSubmissionData = submissionData;
 
             var model = TestFixture.Create<AppropriateSignatoryViewModel>();
@@ -1084,8 +1087,9 @@
         {
             // Arrange
             var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            submissionData.CurrentSubmission.HasPaid = false;
             controller.SmallProducerSubmissionData = submissionData;
-
+           
             var model = TestFixture.Create<AppropriateSignatoryViewModel>();
             var request = TestFixture.Create<AddSignatoryAndCompleteRequest>();
             request.DirectRegistrantId = model.DirectRegistrantId = submissionData.DirectRegistrantId;
@@ -1437,6 +1441,7 @@
         {
             // Arrange
             var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
+            submissionData.CurrentSubmission.HasPaid = false;
             controller.SmallProducerSubmissionData = submissionData;
 
             var model = TestFixture.Create<AppropriateSignatoryViewModel>();
