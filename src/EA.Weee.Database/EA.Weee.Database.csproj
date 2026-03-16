@@ -55,6 +55,7 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Content Include="scripts\Update\Release 8\Sprint6\20260316-0900-Update-Lookup-OnlineMarketplaceCharge.sql" />
     <Content Include="scripts\Create\0001-Permissions-AppRole.sql" />
     <Content Include="Readme.txt" />
     <Content Include="scripts\AliaSQL.exe" />
