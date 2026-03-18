@@ -1,6 +1,4 @@
-﻿USE [EA.Weee]
-GO
-/****** Object:  StoredProcedure [Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority]    Script Date: 18/03/2026 15:41:53 ******/
+﻿/****** Object:  StoredProcedure [Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority]    Script Date: 18/03/2026 15:41:53 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
