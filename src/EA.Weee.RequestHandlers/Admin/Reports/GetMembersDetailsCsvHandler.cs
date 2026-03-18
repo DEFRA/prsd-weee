@@ -64,16 +64,9 @@
             csvWriter.DefineColumn(@"Partnership names", i => i.Partners);
             csvWriter.DefineColumn(@"Trading name", i => i.TradingName);
             csvWriter.DefineColumn(@"PRN", i => i.PRN);
-            csvWriter.DefineColumn(@"Registration status", i =>
-            {
-                if (i.RegistrationStatus == "Registered" && i.PaymentStatus == "Paid")
-                { 
-                    return "Registered"; 
-                }
-                return string.Empty;
-            });
+            csvWriter.DefineColumn(@"Registration status", i => i.RegistrationStatus);
             csvWriter.DefineColumn(@"Date & time (GMT) registered", i => i.DateRegistered.HasValue ? i.DateRegistered.Value.ToString("dd/MM/yyyy HH:mm:ss") : string.Empty);
-            csvWriter.DefineColumn(@"Date & time (GMT) last updated", i => 
+            csvWriter.DefineColumn(@"Date & time (GMT) last updated", i =>
             {
                 if (i.DateRegistered.HasValue)
                 {
@@ -82,7 +75,7 @@
                         return string.Empty;
                     }
                 }
-                
+
                 return i.DateAmended.ToString("dd/MM/yyyy HH:mm:ss");
             });
             csvWriter.DefineColumn(@"Payment status", i => i.PaymentStatus);
