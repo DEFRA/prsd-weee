@@ -1,11 +1,8 @@
-﻿/****** Object:  StoredProcedure [Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority]  *****/
-
+﻿/****** Object:  StoredProcedure [Producer].[spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority]    Script Date: 18/03/2026 15:41:53 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-
--- =============================================================================================================
 -- Description:	This stored procedure is used to provide data by scheme compliance year and Authorised Authority
 -- Modified Date: 06/03/2026 15:11:00 
 -- =============================================================================================================
@@ -301,15 +298,11 @@ BEGIN
 
 	-- Query for the direct registrant dataset
 	SELECT
-		--CASE
-		--	WHEN o.OrganisationStatus = 2 OR o.OrganisationStatus = 3 THEN 'Registered'
-		--	ELSE NULL
-		--END AS 'RegistrationStatus',
 		CASE
-			WHEN dps.[Status] = 1 THEN 'Incomplete'
-			WHEN dps.[Status] = 2 THEN 'Submitted'
-			WHEN dps.[Status] = 3 THEN 'Returned'
-			ELSE NULL
+			WHEN ((dps.[Status] = 3 AND dps.PaymentFinished = 1) AND (dps.FinalPaymentSessionId IS NOT NULL OR dps.ManualPaymentReceivedDate IS NOT NULL)) THEN 'Returned'
+			WHEN ((dps.[Status] = 2 AND dps.PaymentFinished = 1) AND (dps.FinalPaymentSessionId IS NOT NULL OR dps.ManualPaymentReceivedDate IS NOT NULL)) THEN 'Registered'
+			WHEN ((dps.[Status] = 2 AND dps.PaymentFinished = 0) AND (dps.FinalPaymentSessionId IS NULL OR dps.ManualPaymentReceivedDate IS NULL)) THEN 'Submitted'
+			ELSE ''
 		END AS 'RegistrationStatus',
 
 		CASE
@@ -433,56 +426,56 @@ BEGIN
 		NULL as 'PPOBContactPostcode',
 		NULL as 'PPOBContactCountry',
 
-        -- Overseas Contact Details / Auth rep
-        ap.OverseasProducerName as 'OverseasProducerName',
-        pc.Title as 'OverseasContactTitle',
-        pc.Forename as 'OverseasContactForename',
-        pc.Surname as 'OverseasContactSurname',
-        pc.Telephone as 'OverseasContactTelephone',
-        pc.Mobile as 'OverseasContactMobile',
-        pc.Fax as 'OverseasContactFax',
-        pc.Email as 'OverseasContactEmail',
-        pa.PrimaryName as 'OverseasContactPrimaryName',
-        pa.SecondaryName as 'OverseasContactSecondaryName',
-        pa.Street as 'OverseasContactStreet',
-        pa.Town as 'OverseasContactTown',
-        pa.Locality as 'OverseasContactLocality',
-        pa.AdministrativeArea as 'OverseasContactAdministrativeArea',
-        pa.PostCode as 'OverseasContactPostcode',
-        ac.Name as 'OverseasContactCountry',
+		-- Overseas Contact Details / Auth rep
+		ap.OverseasProducerName as 'OverseasProducerName',
+		pc.Title as 'OverseasContactTitle',
+		pc.Forename as 'OverseasContactForename',
+		pc.Surname as 'OverseasContactSurname',
+		pc.Telephone as 'OverseasContactTelephone',
+		pc.Mobile as 'OverseasContactMobile',
+		pc.Fax as 'OverseasContactFax',
+		pc.Email as 'OverseasContactEmail',
+		pa.PrimaryName as 'OverseasContactPrimaryName',
+		pa.SecondaryName as 'OverseasContactSecondaryName',
+		pa.Street as 'OverseasContactStreet',
+		pa.Town as 'OverseasContactTown',
+		pa.Locality as 'OverseasContactLocality',
+		pa.AdministrativeArea as 'OverseasContactAdministrativeArea',
+		pa.PostCode as 'OverseasContactPostcode',
+		ac.Name as 'OverseasContactCountry',
 
-        -- Removal Status
-        CASE RP.Removed
-            WHEN 1 THEN 'Yes'
-            WHEN 0 THEN 'No'
-        END AS 'RemovedFromScheme',
+		-- Removal Status
+		CASE RP.Removed
+			WHEN 1 THEN 'Yes'
+			WHEN 0 THEN 'No'
+		END AS 'RemovedFromScheme',
 
-        -- Brand Names (if requested)
-        CASE @IncludeBrandNames
-            WHEN 1 THEN
-                ISNULL(NULLIF(
-                    (SELECT STUFF((SELECT '; ' + BN.Name
-                    FROM
-                    [Producer].[DirectRegistrant] drb
-                    INNER JOIN [Producer].[BrandName] bn ON bn.Id = drb.BrandNameId
-                    WHERE drb.Id = dr.Id
-                    FOR XML PATH(''), TYPE)
-                    .value('.', 'NVARCHAR(MAX)')
-                    , 1, 2, '')), ''), '')
-            WHEN 0 THEN ''
-        END AS 'BrandNames',
+		-- Brand Names (if requested)
+		CASE @IncludeBrandNames
+			WHEN 1 THEN
+				ISNULL(NULLIF(
+					(SELECT STUFF((SELECT '; ' + BN.Name
+					FROM
+					[Producer].[DirectRegistrant] drb
+					INNER JOIN [Producer].[BrandName] bn ON bn.Id = drb.BrandNameId
+					WHERE drb.Id = dr.Id
+					FOR XML PATH(''), TYPE)
+					.value('.', 'NVARCHAR(MAX)')
+					, 1, 2, '')), ''), '')
+			WHEN 0 THEN ''
+		END AS 'BrandNames',
 		1 AS IsDirectProducer
 
 	FROM
-        [Producer].[DirectProducerSubmission] dps
-        INNER JOIN [Producer].[DirectRegistrant] dr ON dr.Id = dps.DirectRegistrantId
-        INNER JOIN [Organisation].[Organisation] o ON o.Id = dr.OrganisationId
-        INNER JOIN [Organisation].[Address] oa ON oa.Id = o.BusinessAddressId
-        INNER JOIN [Organisation].[Address] ad ON ad.Id = dr.AddressId
-        INNER JOIN [Organisation].[Contact] oc ON oc.Id = dr.ContactId
-        INNER JOIN [Lookup].[Country] loc ON loc.Id = oa.CountryId
-        INNER JOIN [Producer].[RegisteredProducer] rp ON dps.RegisteredProducerId = rp.Id AND dps.ComplianceYear = @ComplianceYear
-        INNER JOIN (
+		[Producer].[DirectProducerSubmission] dps
+		INNER JOIN [Producer].[DirectRegistrant] dr ON dr.Id = dps.DirectRegistrantId
+		INNER JOIN [Organisation].[Organisation] o ON o.Id = dr.OrganisationId
+		INNER JOIN [Organisation].[Address] oa ON oa.Id = o.BusinessAddressId
+		INNER JOIN [Organisation].[Address] ad ON ad.Id = dr.AddressId
+		INNER JOIN [Organisation].[Contact] oc ON oc.Id = dr.ContactId
+		INNER JOIN [Lookup].[Country] loc ON loc.Id = oa.CountryId
+		INNER JOIN [Producer].[RegisteredProducer] rp ON dps.RegisteredProducerId = rp.Id AND dps.ComplianceYear = @ComplianceYear
+		INNER JOIN (
                     SELECT
                         dpsh.Id,
                         dpsh.DirectProducerSubmissionId,
