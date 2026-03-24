@@ -132,7 +132,7 @@
             }
 
             // Apply additional fee for Online Marketplace
-            ApplyOnlineMarketplaceFee(producer, producerCountry, charge);
+            await ApplyOnlineMarketplaceFee(producer, producerCountry, charge, asOfUtc);
 
             return charge;
         }
@@ -140,7 +140,7 @@
         /// <summary>
         /// Applies additional Online Marketplace fee if applicable
         /// </summary>
-        private void ApplyOnlineMarketplaceFee(producerType producer, countryType producerCountry, ProducerCharge charge)
+        private async Task ApplyOnlineMarketplaceFee(producerType producer, countryType producerCountry, ProducerCharge charge, DateTime asOfUtc)
         {
             bool isOnlineMarketplace = producer.sellingTechnique == sellingTechniqueType.OnlineMarketplace;
             bool isEngland = producerCountry == countryType.UKENGLAND;
@@ -148,8 +148,12 @@
 
             if (isOnlineMarketplace && (isEngland || isNonUK))
             {
-                decimal ompEARegistrationCharge = Convert.ToDecimal(ConfigurationManager.AppSettings["Weee.EAOMPRegistrationCharge"]);
-                charge.Amount += ompEARegistrationCharge;
+                var competentAuthority = ConvertToCompetentAuthorityType(producerCountry);
+                var ompCharge = await fetchProducerCharge.GetOnlineMarketplaceChargeAsync(competentAuthority, asOfUtc);
+                if (ompCharge.HasValue)
+                {
+                    charge.Amount += ompCharge.Value;
+                }
             }
         }
 

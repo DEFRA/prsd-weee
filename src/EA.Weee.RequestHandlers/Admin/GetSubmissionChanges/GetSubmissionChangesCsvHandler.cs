@@ -48,7 +48,7 @@
             csvWriter.DefineColumn("Compliance year", i => i.ComplianceYear);
             csvWriter.DefineColumn("Date / Time (GMT) of submission", i => i.SubmittedDate);
             csvWriter.DefineColumn("Changed type", i => i.ChangeType);
-            csvWriter.DefineColumn("Producer type", i => string.IsNullOrEmpty(i.CompanyName) ? "Partnership" : "Registered company");
+            csvWriter.DefineColumn("Producer type", i => i.ProducerType);
             csvWriter.DefineColumn(@"Company registration number", i => i.CompanyNumber);
             csvWriter.DefineColumn(@"Partnership names", i => i.Partners);
             csvWriter.DefineColumn(@"Trading name", i => i.TradingName);

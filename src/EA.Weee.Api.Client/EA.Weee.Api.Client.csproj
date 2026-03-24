@@ -136,6 +136,7 @@
     <Compile Include="Entities\ErrorData.cs" />
     <Compile Include="Entities\ExternalUserCreationData.cs" />
     <Compile Include="Entities\InternalUserCreationData.cs" />
+    <Compile Include="Entities\MessageBannerDataResult.cs" />
     <Compile Include="Entities\PagedErrorDataList.cs" />
     <Compile Include="Entities\PasswordResetData.cs" />
     <Compile Include="Entities\PasswordResetRequest.cs" />

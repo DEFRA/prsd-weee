@@ -109,5 +109,13 @@
 
             return await response.CreateResponseAsync<bool>();
         }
+
+        public async Task<MessageBannerDataResult> GetMessageBannerAsync(string accessToken)
+        {
+            httpClient.SetBearerToken(accessToken);
+            var response = await httpClient.PostAsJsonAsync(Controller + "GetMessageBannerData", accessToken);
+
+            return await response.CreateResponseAsync<MessageBannerDataResult>();
+        }
     }
 }

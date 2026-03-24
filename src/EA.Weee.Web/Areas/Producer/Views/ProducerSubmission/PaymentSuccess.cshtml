@@ -29,6 +29,20 @@
                 </tr>
             </thead>
             <tbody class="govuk-table__body">
+                @if (!string.IsNullOrEmpty(Model.ProducerRegistrationNumber))
+                {
+                    <tr class="govuk-table__row task-list-row govuk-table__cell--thick prsd-table-small-collapse">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Producer registration number (PRN)</th>
+                        <td class="govuk-table__cell">@Model.ProducerRegistrationNumber</td>
+                    </tr>
+                }
+                @if (!string.IsNullOrEmpty(Model.ProducerName))
+                {
+                    <tr class="govuk-table__row task-list-row govuk-table__cell--thick prsd-table-small-collapse">
+                        <th class="govuk-table__header" style="width: 30%;" scope="row">Producer name</th>
+                        <td class="govuk-table__cell">@Model.ProducerName</td>
+                    </tr>
+                }
                 <tr class="govuk-table__row task-list-row govuk-table__cell--thick prsd-table-small-collapse">
                     <th class="govuk-table__header" style="width: 30%;" scope="row">Total amount</th>
                     <td class="govuk-table__cell">£@Model.TotalAmount.ToString("0.00")</td>

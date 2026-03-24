@@ -4,7 +4,7 @@ Hello,
 
 Your user account has been created on the Waste electrical and electronic equipment (WEEE) service.
 
-To use this service you need to click activate your account: @Model.ActivationUrl 
+To use this service you need to click activate your account: @Model.ActivationUrl  This link expires after 3 hours.
 
 If you didn’t create a user account you don’t need to take any action.
 

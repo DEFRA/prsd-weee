@@ -446,7 +446,9 @@
                 PaymentReference = reference,
                 OrganisationId = SmallProducerSubmissionData.OrganisationData.Id,
                 ComplianceYear = SmallProducerSubmissionData.CurrentSubmission.ComplianceYear,
-                TotalAmount = SmallProducerSubmissionData.DirectRegistrantChargeAmount
+                TotalAmount = SmallProducerSubmissionData.DirectRegistrantChargeAmount,
+                ProducerRegistrationNumber = SmallProducerSubmissionData.ProducerRegistrationNumber,
+                ProducerName = SmallProducerSubmissionData.OrganisationData.OrganisationName
             };
 
             await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);

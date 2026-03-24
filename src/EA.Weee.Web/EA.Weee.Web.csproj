@@ -567,6 +567,7 @@
     <Compile Include="Areas\Producer\Filters\SmallProducerStartSubmissionContextAttribute.cs" />
     <Compile Include="Areas\Test\Controllers\ApiIntegrationController.cs" />
     <Compile Include="Areas\Test\ViewModels\ApiIntegration\ApiModel.cs" />
+    <Compile Include="Controllers\BannerController.cs" />
     <Compile Include="Services\SubmissionsService\ISubmissionService.cs" />
     <Compile Include="Areas\Admin\Controllers\ProducerSubmissionController.cs" />
     <Compile Include="Services\SubmissionsService\SubmissionService.cs" />
@@ -1115,6 +1116,7 @@
     <Content Include="Scripts\lookup\contact-details-address-lookup.js" />
     <Content Include="Scripts\lookup\lookup-search.js" />
     <Content Include="Scripts\lookup\org-details-company-lookup.js" />
+    <Content Include="Scripts\message-banner.js" />
     <Content Include="Scripts\weee-session-timeout.js" />
     <Content Include="Views\Shared\EditorTemplates\RecipientFiltersViewModel.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\ObligationTypeFiltersViewModel.cshtml" />
@@ -2015,6 +2017,7 @@
     <Content Include="Views\Shared\_OrganisationAddressCountryPartial.cshtml" />
     <Content Include="Views\Shared\_RepresentingCompanyPartial.cshtml" />
     <Content Include="Views\Shared\_SessionTimeout.cshtml" />
+    <Content Include="Views\Shared\_MessageBanner.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

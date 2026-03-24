@@ -113,7 +113,20 @@
         {
             SetBreadcrumb(facilityType, null);
 
-            return View(nameof(ManageAatfs), new ManageAatfsViewModel { FacilityType = facilityType, AatfDataList = await GetAatfs(facilityType), CanAddAatf = IsUserInternalAdmin(), Filter = new FilteringViewModel { FacilityType = facilityType, CompetentAuthorityOptions = await GetCompetentAuthoritiesList() } });
+            var complianceYears = await GetComplianceYearsForAatfs();
+
+            return View(nameof(ManageAatfs), new ManageAatfsViewModel 
+            {
+                FacilityType = facilityType,
+                AatfDataList = await GetAatfs(facilityType),
+                CanAddAatf = IsUserInternalAdmin(),
+                Filter = new FilteringViewModel
+                {
+                    FacilityType = facilityType,
+                    CompetentAuthorityOptions = await GetCompetentAuthoritiesList(),
+                    ComplianceYearList = complianceYears
+                }
+            });
         }
 
         [HttpPost]
@@ -154,6 +167,10 @@
         public async Task<ActionResult> ApplyFilter(FilteringViewModel filter)
         {
             SetBreadcrumb(filter.FacilityType, null);
+
+            var complianceYears = await GetComplianceYearsForAatfs();
+            filter.ComplianceYearList = complianceYears;
+
             return View(nameof(ManageAatfs), new ManageAatfsViewModel { AatfDataList = await GetAatfs(filter.FacilityType, filter), CanAddAatf = IsUserInternalAdmin(), Filter = filter, FacilityType = filter.FacilityType });
         }
 
@@ -520,6 +537,15 @@
         private bool IsValidRecordToEdit(DateTime currentDate, int complianceYear)
         {
             return currentDate.Year > 1 && ComplianceYearHelper.FetchCurrentComplianceYears(currentDate, true).Any(x => x.Equals(complianceYear)) ? true : false;
+        }
+
+        private async Task<List<int>> GetComplianceYearsForAatfs()
+        {
+            using (var client = apiClient())
+            {
+                var aatfs = await client.SendAsync(User.GetAccessToken(), new GetAatfs(FacilityType.Aatf, null));
+                return aatfs.Select(a => (int)a.ComplianceYear).Distinct().OrderByDescending(y => y).ToList();
+            }
         }
     }
 }

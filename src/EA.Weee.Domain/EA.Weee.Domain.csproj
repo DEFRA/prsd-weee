@@ -82,6 +82,7 @@
     <Compile Include="AatfReturn\WeeeSentOnAmount.cs" />
     <Compile Include="Admin\AatfReports\AatfSubmissionHistory.cs" />
     <Compile Include="Admin\CompetentAuthorityUser.cs" />
+    <Compile Include="Lookup\AnnualChargeByYear.cs" />
     <Compile Include="Error\ObligationUploadErrorType.cs" />
     <Compile Include="Events\AatfContactDetailsUpdateEvent.cs" />
     <Compile Include="Evidence\NoteFilter.cs" />
@@ -99,6 +100,8 @@
     <Compile Include="Lookup\DirectRegistrantCharge.cs" />
     <Compile Include="Lookup\EEEPlacedOnMarketBand.cs" />
     <Compile Include="Lookup\LocalArea.cs" />
+    <Compile Include="Lookup\MessageBanner.cs" />
+    <Compile Include="Lookup\OnlineMarketplaceCharge.cs" />
     <Compile Include="Lookup\PanArea.cs" />
     <Compile Include="Charges\InvoiceRun.cs" />
     <Compile Include="Charges\IbisFileData.cs" />

@@ -9,10 +9,12 @@
 
 namespace EA.Weee.Tests.Core.Model
 {
+    using EA.Weee.Domain.Lookup;
     using System;
     using System.Data.Entity;
     using System.Data.Entity.Infrastructure;
-    
+    using System.Data.Entity.Migrations.Design;
+
     public partial class Entities : DbContext
     {
         public Entities()
@@ -81,5 +83,7 @@ namespace EA.Weee.Tests.Core.Model
         public virtual DbSet<Return> Returns { get; set; }
         public virtual DbSet<ReturnReportOn> ReturnReportOns { get; set; }
         public virtual DbSet<ReturnScheme> ReturnSchemes { get; set; }
+
+        public virtual DbSet<MessageBanner> MessageBanners { get; set; }
     }
 }

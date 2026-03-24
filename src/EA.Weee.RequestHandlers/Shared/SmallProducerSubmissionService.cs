@@ -9,6 +9,7 @@
     using EA.Weee.Domain.Organisation;
     using EA.Weee.Domain.Producer;
     using EA.Weee.RequestHandlers.Mappings;
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
@@ -65,23 +66,42 @@
                 submissionData.SubmissionHistory.Add(directProducerSubmission.ComplianceYear, history);
             }
 
-            if (submissionData != null && submissionData.CurrentSubmission != null && submissionData.CurrentSubmission.BusinessAddressData != null)
+            // Determine the charge amount based on the business address
+            // Use submission's business address if available, otherwise fall back to organisation's address
+            // The fee is determined by the organisation's registered office or principal place of business
+            // Default to IsNonUk = true (higher fee) if business address or country is not available
+            var countryName = currentYearSubmission?.CurrentSubmission?.BusinessAddress?.Country?.Name
+                              ?? directRegistrant.Organisation?.BusinessAddress?.Country?.Name;
+            bool isNonUk = !IsScotlandWalesOrNorthernIreland(countryName);
+
+            // Get the charge based on current UTC date to ensure date-based pricing
+            var directRegistrantCharge = await smallProducerDataAccess.GetDirectRegistrantChargeAsync(
+                SystemTime.UtcNow.Year,
+                isNonUk,
+                SystemTime.UtcNow);
+
+            if (directRegistrantCharge != null)
             {
-                if (submissionData.CurrentSubmission.BusinessAddressData.CountryName.Equals("UK - Northern Ireland") ||
-                    submissionData.CurrentSubmission.BusinessAddressData.CountryName.Equals("UK - Scotland") ||
-                    submissionData.CurrentSubmission.BusinessAddressData.CountryName.Equals("UK - Wales"))
-                {
-                    var directRegistrantCharge = await smallProducerDataAccess.GetDirectRegistrantChargeByComplianceYear(SystemTime.UtcNow.Year, false);
-                    submissionData.DirectRegistrantChargeAmount = directRegistrantCharge.ChargeAmount;
-                }
-                else
-                {
-                    var directRegistrantCharge = await smallProducerDataAccess.GetDirectRegistrantChargeByComplianceYear(SystemTime.UtcNow.Year, true);
-                    submissionData.DirectRegistrantChargeAmount = directRegistrantCharge.ChargeAmount;
-                }
+                submissionData.DirectRegistrantChargeAmount = directRegistrantCharge.ChargeAmount;
             }
 
             return submissionData;
+        }
+
+        /// <summary>
+        /// Determines if the country is Scotland, Wales, or Northern Ireland.
+        /// These countries have a different (lower) fee structure.
+        /// </summary>
+        private bool IsScotlandWalesOrNorthernIreland(string countryName)
+        {
+            if (string.IsNullOrWhiteSpace(countryName))
+            {
+                return false;
+            }
+
+            return countryName.Equals("UK - Northern Ireland", StringComparison.OrdinalIgnoreCase) ||
+                   countryName.Equals("UK - Scotland", StringComparison.OrdinalIgnoreCase) ||
+                   countryName.Equals("UK - Wales", StringComparison.OrdinalIgnoreCase);
         }
     }
 }

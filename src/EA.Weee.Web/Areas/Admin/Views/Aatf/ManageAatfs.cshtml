@@ -86,8 +86,7 @@
                                                         <input class="govuk-checkboxes__input" id="@id" name="@name" type="checkbox" value="true" @isChecked>
 
                                                         <label class="govuk-label govuk-checkboxes__label" for="@id">
-                                                            @Model.Filter.CompetentAuthorityOptions[i].Abbreviation
-                                                            &nbsp;
+                                                            @Model.Filter.CompetentAuthorityOptions[i].Abbreviation                                                           
                                                         </label>
                                                         <input name="@name" type="hidden" value="false">
                                                     </div>
@@ -156,6 +155,13 @@
                         </table>
                     </td>
                 </tr>
+
+                <tr class="govuk-table__row">
+                    <td>
+                        @Html.Gds().LabelFor(m => m.Filter.SelectedComplianceYear, false)
+                        @Html.Gds().DropDownListFor(m => m.Filter.SelectedComplianceYear, new SelectList(Model.Filter.ComplianceYearList), "All years", new { autocomplete = "false", @class = "govuk-!-width-three-quarters" }, false, false)
+                    </td>
+                </tr>
             </tbody>
         </table>
 
@@ -186,6 +192,7 @@
     @Html.HiddenFor(m => m.Filter.SelectApproved)
     @Html.HiddenFor(m => m.Filter.SelectCancelled)
     @Html.HiddenFor(m => m.Filter.SelectSuspended)
+    @Html.HiddenFor(m => m.Filter.SelectedComplianceYear)
     @Html.HiddenFor(m => m.FacilityType)
 
     for (int i = 0; i < Model.Filter.CompetentAuthorityOptions.Count; i++)
