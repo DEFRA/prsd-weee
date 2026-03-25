@@ -486,6 +486,7 @@
     <Content Include="scripts\Update\Release 8\Sprint6\20260220-1600-alter-PCS-spgSubmissionChangesCsvData.sql" />
     <Content Include="scripts\Update\Release 8\Sprint6\20260220-1600-alter-Producer-spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority.sql" />
     <Content Include="scripts\Update\Release 8\Sprint6\20260220-1600-alter-Producer-spgProducerAmendmentsCSVDataByPRN.sql" />
+    <Content Include="scripts\Update\Release 8\Sprint6\20260309-1600-create-AnnualChargeByYear.sql" />
     <Content Include="scripts\Update\Release 8\Sprint6\20260304-1600-alter-Producer-spgCSVDataBySchemeComplianceYearAndAuthorisedAuthority.sql" />
     <Content Include="scripts\Update\Release 8\Sprint6\20260318-1400-Update-ChargeBandAmount2026.sql" />
     <Content Include="scripts\Update\Release 8\Sprint6\20260318-1400-Update-OnlineMarketPlaceCharge.sql" />

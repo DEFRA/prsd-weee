@@ -98,8 +98,8 @@
 
         [Theory]
         [InlineData(2026, 13438.00)]
-        [InlineData(2027, 13438.00)]
-        [InlineData(2028, 13438.00)]
+        [InlineData(2027, 13948.13)]
+        [InlineData(2028, 13948.13)]
         public void TotalCalculatedCharges_EAScheme_2026AndLater_AppliesUpliftedAnnualCharge(int complianceYear, decimal expectedAnnualCharge)
         {
             // Arrange
@@ -110,7 +110,7 @@
                 "EA",
                 A.Fake<Country>(),
                 "test@ea.gov.uk",
-                13438.00m);
+                expectedAnnualCharge);
 
             var scheme = A.Fake<Scheme>();
             A.CallTo(() => scheme.CompetentAuthority).Returns(competentAuthority);
