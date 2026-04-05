@@ -93,27 +93,3 @@ END
 
 COMMIT TRANSACTION;
 GO
-
--- Verification query
-PRINT N'';
-PRINT N'=== Verification: All Direct Registrant charges for 2026 ===';
-GO
-
-SELECT 
-    [Id],
-    [ComplianceYear],
-    CONVERT(VARCHAR(10), [EffectiveFrom], 120) AS [EffectiveFrom],
-    [ChargeAmount],
-    CASE [IsNonUk]
-        WHEN 0 THEN 'Scotland/Wales/Northern Ireland'
-        WHEN 1 THEN 'England + Non-UK'
-        ELSE 'Unknown'
-    END AS [AppliesTo],
-    [IsNonUk]
-FROM [Lookup].[DirectRegistrantCharge]
-WHERE [ComplianceYear] = 2026
-ORDER BY [EffectiveFrom] ASC, [IsNonUk] ASC;
-GO
-
-PRINT N'=== April 2026 Direct Registrant fee records added successfully ===';
-GO
