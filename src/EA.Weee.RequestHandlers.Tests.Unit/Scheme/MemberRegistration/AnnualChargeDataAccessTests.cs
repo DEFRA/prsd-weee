@@ -44,13 +44,15 @@
         }
 
         [Fact]
-        public async Task GetAnnualChargeForComplianceYear_ReturnsCorrectCharge_For2026()
+        public async Task GetAnnualChargeForComplianceYear_ReturnsUpliftedCharge_For2026_AfterApril2026()
         {
-            // Arrange
+            // Arrange - After 1st April 2026, the uplifted row (£13,948.13) should be returned
+            // because it has the latest EffectiveFrom that is <= now
             var competentAuthorityId = Guid.NewGuid();
             var annualCharges = new List<AnnualChargeByYear>
             {
-                new AnnualChargeByYear(competentAuthorityId, 2026, 13438.00m, new DateTime(2026, 1, 1))
+                new AnnualChargeByYear(competentAuthorityId, 2026, 13438.00m, new DateTime(2026, 1, 1)),
+                new AnnualChargeByYear(competentAuthorityId, 2026, 13948.13m, new DateTime(2026, 4, 1))
             };
 
             var dbSet = helper.GetAsyncEnabledDbSet(annualCharges);
@@ -59,8 +61,8 @@
             // Act
             var result = await dataAccess.GetAnnualChargeForComplianceYear(competentAuthorityId, 2026);
 
-            // Assert
-            Assert.Equal(13438.00m, result);
+            // Assert - Should return the uplifted fee since today is after 1st April 2026
+            Assert.Equal(13948.13m, result);
         }
 
         [Fact]
@@ -91,7 +93,7 @@
             var annualCharges = new List<AnnualChargeByYear>
             {
                 new AnnualChargeByYear(competentAuthorityId, 2026, 13438.00m, new DateTime(2026, 1, 1)),
-                new AnnualChargeByYear(competentAuthorityId, 2026, 14000.00m, new DateTime(2026, 6, 1)) // Mid-year adjustment
+                new AnnualChargeByYear(competentAuthorityId, 2026, 13948.13m, new DateTime(2026, 4, 1))
             };
 
             var dbSet = helper.GetAsyncEnabledDbSet(annualCharges);
@@ -101,7 +103,27 @@
             var result = await dataAccess.GetAnnualChargeForComplianceYear(competentAuthorityId, 2026);
 
             // Assert
-            Assert.Equal(14000.00m, result); // Should return the latest one
+            Assert.Equal(13948.13m, result); // Should return the latest effective one
+        }
+
+        [Fact]
+        public async Task GetAnnualChargeForComplianceYear_FutureEffectiveFrom_IsExcluded()
+        {
+            // Arrange - A record with a future EffectiveFrom should not be returned
+            var competentAuthorityId = Guid.NewGuid();
+            var annualCharges = new List<AnnualChargeByYear>
+            {
+                new AnnualChargeByYear(competentAuthorityId, 2028, 15000.00m, DateTime.UtcNow.AddYears(1))
+            };
+
+            var dbSet = helper.GetAsyncEnabledDbSet(annualCharges);
+            A.CallTo(() => context.AnnualChargesByYear).Returns(dbSet);
+
+            // Act
+            var result = await dataAccess.GetAnnualChargeForComplianceYear(competentAuthorityId, 2028);
+
+            // Assert
+            Assert.Null(result);
         }
 
         [Fact]
@@ -201,6 +223,7 @@
                 new AnnualChargeByYear(competentAuthorityId, 2024, 12500.00m, new DateTime(2024, 1, 1)),
                 new AnnualChargeByYear(competentAuthorityId, 2025, 12500.00m, new DateTime(2025, 1, 1)),
                 new AnnualChargeByYear(competentAuthorityId, 2026, 13438.00m, new DateTime(2026, 1, 1)),
+                new AnnualChargeByYear(competentAuthorityId, 2026, 13948.13m, new DateTime(2026, 4, 1)),
                 new AnnualChargeByYear(competentAuthorityId, 2027, 13948.13m, new DateTime(2026, 4, 1))
             };
 
@@ -214,8 +237,9 @@
                 Assert.Equal(12500.00m, result);
             }
 
+            // 2026 should return the uplifted fee since today (April 2026) is past the effective date
             var result2026 = await dataAccess.GetAnnualChargeForComplianceYear(competentAuthorityId, 2026);
-            Assert.Equal(13438.00m, result2026);
+            Assert.Equal(13948.13m, result2026);
 
             var result2027 = await dataAccess.GetAnnualChargeForComplianceYear(competentAuthorityId, 2027);
             Assert.Equal(13948.13m, result2027);
