@@ -64,6 +64,26 @@
         }
 
         [Fact]
+        public async Task GetAnnualChargeForComplianceYear_ReturnsUpliftedCharge_For2027()
+        {
+            // Arrange - 3.8% inflation uplift from £13,438 to £13,948.13 effective from 1st April 2026
+            var competentAuthorityId = Guid.NewGuid();
+            var annualCharges = new List<AnnualChargeByYear>
+            {
+                new AnnualChargeByYear(competentAuthorityId, 2027, 13948.13m, new DateTime(2026, 4, 1))
+            };
+
+            var dbSet = helper.GetAsyncEnabledDbSet(annualCharges);
+            A.CallTo(() => context.AnnualChargesByYear).Returns(dbSet);
+
+            // Act
+            var result = await dataAccess.GetAnnualChargeForComplianceYear(competentAuthorityId, 2027);
+
+            // Assert
+            Assert.Equal(13948.13m, result);
+        }
+
+        [Fact]
         public async Task GetAnnualChargeForComplianceYear_MultipleRecords_ReturnsLatestEffectiveFrom()
         {
             // Arrange
@@ -180,7 +200,8 @@
                 new AnnualChargeByYear(competentAuthorityId, 2023, 12500.00m, new DateTime(2023, 1, 1)),
                 new AnnualChargeByYear(competentAuthorityId, 2024, 12500.00m, new DateTime(2024, 1, 1)),
                 new AnnualChargeByYear(competentAuthorityId, 2025, 12500.00m, new DateTime(2025, 1, 1)),
-                new AnnualChargeByYear(competentAuthorityId, 2026, 13438.00m, new DateTime(2026, 1, 1))
+                new AnnualChargeByYear(competentAuthorityId, 2026, 13438.00m, new DateTime(2026, 1, 1)),
+                new AnnualChargeByYear(competentAuthorityId, 2027, 13948.13m, new DateTime(2026, 4, 1))
             };
 
             var dbSet = helper.GetAsyncEnabledDbSet(annualCharges);
@@ -195,6 +216,9 @@
 
             var result2026 = await dataAccess.GetAnnualChargeForComplianceYear(competentAuthorityId, 2026);
             Assert.Equal(13438.00m, result2026);
+
+            var result2027 = await dataAccess.GetAnnualChargeForComplianceYear(competentAuthorityId, 2027);
+            Assert.Equal(13948.13m, result2027);
         }
     }
 }
