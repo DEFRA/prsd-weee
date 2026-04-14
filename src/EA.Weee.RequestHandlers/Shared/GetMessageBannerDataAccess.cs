@@ -18,7 +18,7 @@
 
         public async Task<MessageBanner> GetMessageBannerData()
         {
-            var currentDate = DateTime.UtcNow;
+            var currentDate = DateTime.Now;
 
             return await context.MessageBanners
                                 .Where(x => x.StartTime <= currentDate && x.EndTime >= currentDate)
