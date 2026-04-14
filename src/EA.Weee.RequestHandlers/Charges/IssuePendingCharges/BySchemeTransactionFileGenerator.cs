@@ -3,6 +3,7 @@
     using Domain.Charges;
     using EA.Weee.Domain.Scheme;
     using EA.Weee.Ibis;
+    using EA.Weee.RequestHandlers.Scheme.MemberRegistration;
     using Errors;
     using System;
     using System.Collections.Generic;
@@ -17,11 +18,15 @@
     public class BySchemeTransactionFileGenerator : IIbisTransactionFileGenerator
     {
         private readonly ITransactionReferenceGenerator transactionReferenceGenerator;
+        private readonly IAnnualChargeDataAccess annualChargeDataAccess;
         private const string CommonMessageString = "Charge for producer registration submission made on {0:dd MMM yyyy}";
 
-        public BySchemeTransactionFileGenerator(ITransactionReferenceGenerator transactionReferenceGenerator)
+        public BySchemeTransactionFileGenerator(
+            ITransactionReferenceGenerator transactionReferenceGenerator,
+            IAnnualChargeDataAccess annualChargeDataAccess)
         {
             this.transactionReferenceGenerator = transactionReferenceGenerator;
+            this.annualChargeDataAccess = annualChargeDataAccess;
         }
 
         public async Task<IbisFileGeneratorResult<TransactionFile>> CreateAsync(ulong fileID, InvoiceRun invoiceRun)
@@ -39,13 +44,19 @@
                 foreach (MemberUpload memberUpload in group)
                 {
                     var submittedDate = memberUpload.SubmittedDate.Value;
-                    var competantAuthorityAnnualChargeAmount = memberUpload.Scheme.CompetentAuthority.AnnualChargeAmount;
 
                     var description = string.Format("{0}.", CommonMessage(submittedDate));
 
-                    if (memberUpload.HasAnnualCharge && competantAuthorityAnnualChargeAmount > 0)
+                    if (memberUpload.HasAnnualCharge)
                     {
-                        description = string.Format("{0} and the {1} annual charge.", CommonMessage(submittedDate), competantAuthorityAnnualChargeAmount.Value.ToString("#,##0.00"));
+                        var annualChargeAmount = await annualChargeDataAccess.GetAnnualChargeForComplianceYear(
+                            memberUpload.Scheme.CompetentAuthority.Id,
+                            memberUpload.ComplianceYear.Value);
+
+                        if (annualChargeAmount.HasValue && annualChargeAmount.Value > 0)
+                        {
+                            description = string.Format("{0} and the {1} annual charge.", CommonMessage(submittedDate), annualChargeAmount.Value.ToString("#,##0.00"));
+                        }
                     }
 
                     try
