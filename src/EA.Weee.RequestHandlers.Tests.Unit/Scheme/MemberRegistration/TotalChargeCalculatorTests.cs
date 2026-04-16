@@ -98,8 +98,8 @@
 
         [Theory]
         [InlineData(2026, 13438.00)]
-        [InlineData(2027, 13438.00)]
-        [InlineData(2028, 13438.00)]
+        [InlineData(2027, 13948.13)]
+        [InlineData(2028, 13948.13)]
         public void TotalCalculatedCharges_EAScheme_2026AndLater_AppliesUpliftedAnnualCharge(int complianceYear, decimal expectedAnnualCharge)
         {
             // Arrange
@@ -110,7 +110,7 @@
                 "EA",
                 A.Fake<Country>(),
                 "test@ea.gov.uk",
-                13438.00m);
+                expectedAnnualCharge);
 
             var scheme = A.Fake<Scheme>();
             A.CallTo(() => scheme.CompetentAuthority).Returns(competentAuthority);
@@ -135,6 +135,9 @@
         [InlineData("SEPA", 2026)]
         [InlineData("NRW", 2026)]
         [InlineData("NIEA", 2026)]
+        [InlineData("SEPA", 2027)]
+        [InlineData("NRW", 2027)]
+        [InlineData("NIEA", 2027)]
         public void TotalCalculatedCharges_NonEAScheme_DoesNotApplyAnnualCharge(string abbreviation, int complianceYear)
         {
             // Arrange
@@ -249,6 +252,39 @@
 
             // Assert
             Assert.Equal(300, totalCharge); // Only producer charges, annual charge was null
+        }
+
+        [Fact]
+        public void TotalCalculatedCharges_EAScheme_2027_AppliesUpliftedAnnualCharge_13948_13()
+        {
+            // Arrange - Specific test for the 3.8% inflation uplift from April 2026
+            var competentAuthorityId = Guid.NewGuid();
+            var competentAuthority = new UKCompetentAuthority(
+                competentAuthorityId,
+                "Environment Agency",
+                "EA",
+                A.Fake<Country>(),
+                "test@ea.gov.uk",
+                13948.13m);
+
+            var scheme = A.Fake<Scheme>();
+            A.CallTo(() => scheme.CompetentAuthority).Returns(competentAuthority);
+
+            var producerCharges = ProducerCharges();
+            A.CallTo(() => xmlChargeBandCalculator.Calculate(file)).Returns(producerCharges);
+            A.CallTo(() => annualChargeDataAccess.GetAnnualChargeForComplianceYear(competentAuthorityId, 2027))
+                .Returns(13948.13m);
+
+            totalCharge = 0;
+
+            // Act
+            totalChargeCalculator.TotalCalculatedCharges(file, scheme, 2027, true, ref totalCharge);
+
+            // Assert
+            Assert.Equal(300 + 13948.13m, totalCharge);
+            Assert.Equal(14248.13m, totalCharge);
+            A.CallTo(() => annualChargeDataAccess.GetAnnualChargeForComplianceYear(competentAuthorityId, 2027))
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]

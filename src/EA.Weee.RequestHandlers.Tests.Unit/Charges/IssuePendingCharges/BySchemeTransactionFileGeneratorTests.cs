@@ -9,6 +9,7 @@
     using Ibis;
     using Prsd.Core;
     using RequestHandlers.Charges.IssuePendingCharges;
+    using RequestHandlers.Scheme.MemberRegistration;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
@@ -18,13 +19,15 @@
     public class BySchemeTransactionFileGeneratorTests
     {
         private readonly ITransactionReferenceGenerator transactionReferenceGenerator;
+        private readonly IAnnualChargeDataAccess annualChargeDataAccess;
         private readonly BySchemeTransactionFileGenerator generator;
 
         public BySchemeTransactionFileGeneratorTests()
         {
             transactionReferenceGenerator = A.Fake<ITransactionReferenceGenerator>();
+            annualChargeDataAccess = A.Fake<IAnnualChargeDataAccess>();
 
-            generator = new BySchemeTransactionFileGenerator(transactionReferenceGenerator);
+            generator = new BySchemeTransactionFileGenerator(transactionReferenceGenerator, annualChargeDataAccess);
         }
 
         /// <summary>
@@ -385,15 +388,24 @@
         public async Task CreateTransactionFile_GivenMemberUploadContainsAnnualChargeAndSchemeHasAnnualChargeAmount_DescriptionShouldContainAnnualCharge()
         {
             var organisation = A.Fake<Organisation>();
-            var authority = A.Fake<UKCompetentAuthority>();
             var scheme = A.Fake<Scheme>();
+            var competentAuthorityId = Guid.NewGuid();
+            var complianceYear = 2026;
+
+            var authority = new UKCompetentAuthority(
+                competentAuthorityId,
+                "Environment Agency",
+                "EA",
+                A.Dummy<Country>(),
+                "ea@b.c",
+                12500m);
 
             var memberUpload = new MemberUpload(
                 A.Dummy<Guid>(),
                 A.Dummy<string>(),
                 A.Dummy<List<MemberUploadError>>(),
                 123.45m,
-                A.Dummy<int>(),
+                complianceYear,
                 scheme,
                 A.Dummy<string>(),
                 A.Dummy<string>(),
@@ -403,11 +415,12 @@
             memberUpload.Submit(A.Dummy<User>());
             SystemTime.Unfreeze();
 
-            A.CallTo(() => authority.AnnualChargeAmount).Returns(12500);
             A.CallTo(() => scheme.IbisCustomerReference).Returns("WEE00000002");
             A.CallTo(() => scheme.Organisation).Returns(organisation);
             A.CallTo(() => scheme.CompetentAuthority).Returns(authority);
             A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns("WEE800001H");
+            A.CallTo(() => annualChargeDataAccess.GetAnnualChargeForComplianceYear(competentAuthorityId, complianceYear))
+                .Returns(13948.13m);
 
             var memberUploads = new List<MemberUpload>() { memberUpload };
 
@@ -415,22 +428,31 @@
 
             var result = await generator.CreateAsync(0, invoiceRun);
 
-            Assert.Equal("Charge for producer registration submission made on 01 Jan 2019 and the 12,500.00 annual charge.", result.IbisFile.Invoices[0].LineItems[0].Description);
+            Assert.Equal("Charge for producer registration submission made on 01 Jan 2019 and the 13,948.13 annual charge.", result.IbisFile.Invoices[0].LineItems[0].Description);
         }
 
         [Fact]
         public async Task CreateTransactionFile_GivenMemberUploadSchemeHasZeroAnnualChargeAmount_DescriptionShouldNotContainAnnualCharge()
         {
             var organisation = A.Fake<Organisation>();
-            var authority = A.Fake<UKCompetentAuthority>();
             var scheme = A.Fake<Scheme>();
+            var competentAuthorityId = Guid.NewGuid();
+            var complianceYear = 2026;
+
+            var authority = new UKCompetentAuthority(
+                competentAuthorityId,
+                "Environment Agency",
+                "EA",
+                A.Dummy<Country>(),
+                "ea@b.c",
+                0m);
 
             var memberUpload = new MemberUpload(
                 A.Dummy<Guid>(),
                 A.Dummy<string>(),
                 A.Dummy<List<MemberUploadError>>(),
                 123.45m,
-                A.Dummy<int>(),
+                complianceYear,
                 scheme,
                 A.Dummy<string>(),
                 A.Dummy<string>(),
@@ -440,11 +462,12 @@
             memberUpload.Submit(A.Dummy<User>());
             SystemTime.Unfreeze();
 
-            A.CallTo(() => authority.AnnualChargeAmount).Returns(0);
             A.CallTo(() => scheme.IbisCustomerReference).Returns("WEE00000002");
             A.CallTo(() => scheme.Organisation).Returns(organisation);
             A.CallTo(() => scheme.CompetentAuthority).Returns(authority);
             A.CallTo(() => transactionReferenceGenerator.GetNextTransactionReferenceAsync()).Returns("WEE800001H");
+            A.CallTo(() => annualChargeDataAccess.GetAnnualChargeForComplianceYear(competentAuthorityId, complianceYear))
+                .Returns(0m);
 
             var memberUploads = new List<MemberUpload>() { memberUpload };
 
@@ -477,7 +500,6 @@
             memberUpload.Submit(A.Dummy<User>());
             SystemTime.Unfreeze();
 
-            A.CallTo(() => authority.AnnualChargeAmount).Returns(0);
             A.CallTo(() => scheme.IbisCustomerReference).Returns("WEE00000002");
             A.CallTo(() => scheme.Organisation).Returns(organisation);
             A.CallTo(() => scheme.CompetentAuthority).Returns(authority);
