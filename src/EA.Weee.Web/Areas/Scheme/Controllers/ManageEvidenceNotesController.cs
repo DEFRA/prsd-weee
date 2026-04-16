@@ -97,64 +97,39 @@
 
         private static RouteValueDictionary BuildFilterRouteValues(Guid pcsId, string tab, ManageEvidenceNoteViewModel model, int page)
         {
-            var routeValues = new RouteValueDictionary
-             {
-                 { "pcsId", pcsId },
-                 { "tab", tab },
-                 { "page", page }
-             };
+            var builder = new Core.Helpers.RouteValueBuilder()
+                                .Add("pcsId", pcsId)
+                                .Add("tab", tab)
+                                .Add("page", page);
 
             if (model == null)
             {
-                return routeValues;
+                return builder.Build();
             }
 
-            if (model.SelectedComplianceYear > 0)
-            {
-                routeValues["selectedComplianceYear"] = model.SelectedComplianceYear;
-            }
+            builder
+                .AddIf(model.SelectedComplianceYear > 0,
+                    "selectedComplianceYear", model.SelectedComplianceYear)
 
-            if (!string.IsNullOrWhiteSpace(model.FilterViewModel?.SearchRef))
-            {
-                routeValues["searchRef"] = model.FilterViewModel.SearchRef;
-            }
+                .AddIfNotEmpty(model.FilterViewModel?.SearchRef,
+                    "searchRef")
 
-            if (model.SubmittedDatesFilterViewModel?.StartDate.HasValue == true)
-            {
-                routeValues["startDate"] = model.SubmittedDatesFilterViewModel.StartDate.Value.ToString("dd/MM/yyyy");
-            }
+                .AddIfHasValue(model.SubmittedDatesFilterViewModel?.StartDate,
+                    "startDate", d => d.ToString("dd/MM/yyyy"))
 
-            if (model.SubmittedDatesFilterViewModel?.EndDate.HasValue == true)
-            {
-                routeValues["endDate"] = model.SubmittedDatesFilterViewModel.EndDate.Value.ToString("dd/MM/yyyy");
-            }
+                .AddIfHasValue(model.SubmittedDatesFilterViewModel?.EndDate,
+                    "endDate", d => d.ToString("dd/MM/yyyy"));
 
-            if (model.RecipientWasteStatusFilterViewModel?.ReceivedId.HasValue == true)
-            {
-                routeValues["receivedId"] = model.RecipientWasteStatusFilterViewModel.ReceivedId.Value;
-            }
+            var waste = model.RecipientWasteStatusFilterViewModel;
 
-            if (model.RecipientWasteStatusFilterViewModel?.WasteTypeValue.HasValue == true)
-            {
-                routeValues["wasteTypeValue"] = (int)model.RecipientWasteStatusFilterViewModel.WasteTypeValue.Value;
-            }
+            builder
+                .AddIfHasValue(waste?.ReceivedId, "receivedId")
+                .AddIfHasValue(waste?.WasteTypeValue, "wasteTypeValue", wasteType => (int)wasteType)
+                .AddIfHasValue(waste?.EvidenceNoteTypeValue, "evidenceNoteTypeValue", evidenceNoteType => (int)evidenceNoteType)
+                .AddIfHasValue(waste?.NoteStatusValue, "noteStatusValue", noteStatus => (int)noteStatus)
+                .AddIfHasValue(waste?.SubmittedBy, "submittedBy");
 
-            if (model.RecipientWasteStatusFilterViewModel?.EvidenceNoteTypeValue.HasValue == true)
-            {
-                routeValues["evidenceNoteTypeValue"] = (int)model.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue.Value;
-            }
-
-            if (model.RecipientWasteStatusFilterViewModel?.NoteStatusValue.HasValue == true)
-            {
-                routeValues["noteStatusValue"] = (int)model.RecipientWasteStatusFilterViewModel.NoteStatusValue.Value;
-            }
-
-            if (model.RecipientWasteStatusFilterViewModel?.SubmittedBy.HasValue == true)
-            {
-                routeValues["submittedBy"] = model.RecipientWasteStatusFilterViewModel.SubmittedBy.Value;
-            }
-
-            return routeValues;
+            return builder.Build();
         }
 
         private async Task<ActionResult> ProcessManageEvidenceNotes(Guid pcsId, string tab, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, int page)

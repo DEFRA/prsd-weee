@@ -604,7 +604,7 @@
             A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
 
             //act
-            await ManageEvidenceController.Index(RecipientId, "review-submitted-evidence", model, pageNumber);
+            ManageEvidenceController.Index(RecipientId, "review-submitted-evidence", model, pageNumber);
 
             //assert
             A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
