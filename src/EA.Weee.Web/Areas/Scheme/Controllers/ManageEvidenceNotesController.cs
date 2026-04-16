@@ -27,6 +27,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using System.Web.Routing;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.Shared;
@@ -89,9 +90,46 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Index(Guid pcsId, string tab = null, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null, int page = 1)
+        public ActionResult Index(Guid pcsId, string tab = null, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null, int page = 1)
         {
-            return await ProcessManageEvidenceNotes(pcsId, tab, manageEvidenceNoteViewModel, page);
+            return RedirectToAction("Index", BuildFilterRouteValues(pcsId, tab, manageEvidenceNoteViewModel, page));
+        }
+
+        private static RouteValueDictionary BuildFilterRouteValues(Guid pcsId, string tab, ManageEvidenceNoteViewModel model, int page)
+        {
+            var builder = new Core.Helpers.RouteValueBuilder()
+                                .Add("pcsId", pcsId)
+                                .Add("tab", tab)
+                                .Add("page", page);
+
+            if (model == null)
+            {
+                return builder.Build();
+            }
+
+            builder
+                .AddIf(model.SelectedComplianceYear > 0,
+                    "selectedComplianceYear", model.SelectedComplianceYear)
+
+                .AddIfNotEmpty(model.FilterViewModel?.SearchRef,
+                    "searchRef")
+
+                .AddIfHasValue(model.SubmittedDatesFilterViewModel?.StartDate,
+                    "startDate", d => d.ToString("dd/MM/yyyy"))
+
+                .AddIfHasValue(model.SubmittedDatesFilterViewModel?.EndDate,
+                    "endDate", d => d.ToString("dd/MM/yyyy"));
+
+            var waste = model.RecipientWasteStatusFilterViewModel;
+
+            builder
+                .AddIfHasValue(waste?.ReceivedId, "receivedId")
+                .AddIfHasValue(waste?.WasteTypeValue, "wasteTypeValue", wasteType => (int)wasteType)
+                .AddIfHasValue(waste?.EvidenceNoteTypeValue, "evidenceNoteTypeValue", evidenceNoteType => (int)evidenceNoteType)
+                .AddIfHasValue(waste?.NoteStatusValue, "noteStatusValue", noteStatus => (int)noteStatus)
+                .AddIfHasValue(waste?.SubmittedBy, "submittedBy");
+
+            return builder.Build();
         }
 
         private async Task<ActionResult> ProcessManageEvidenceNotes(Guid pcsId, string tab, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, int page)
