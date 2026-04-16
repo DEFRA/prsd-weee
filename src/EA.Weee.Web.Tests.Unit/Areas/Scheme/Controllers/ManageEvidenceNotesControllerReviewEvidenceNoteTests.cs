@@ -589,32 +589,21 @@
         }
 
         [Fact]
-        public async Task ReviewEvidenceNoteGet_ViewAndTransferEvidenceTab_MapperShouldCorrectlySetPageNumber()
+        public void IndexPost_GivenReviewSubmittedEvidenceTab_ShouldRedirectWithCorrectRouteValues()
         {
             // Arrange
-            var scheme = testFixture.Create<SchemePublicInfo>();
-            var noteData = testFixture.Build<EvidenceNoteSearchDataResult>().Create();
-            var currentDate = testFixture.Create<DateTime>();
             var model = testFixture.Create<ManageEvidenceNoteViewModel>();
             var pageNumber = 3;
 
-            A.CallTo(() => configurationService.CurrentConfiguration.DefaultExternalPagingPageSize).Returns(10);
-            A.CallTo(() => Cache.FetchSchemePublicInfo(A<Guid>._)).Returns(scheme);
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetEvidenceNotesByOrganisationRequest>._)).Returns(noteData);
-            A.CallTo(() => WeeeClient.SendAsync(A<string>._, A<GetApiUtcDate>._)).Returns(currentDate);
+            // Act
+            var result = ManageEvidenceController.Index(RecipientId, "review-submitted-evidence", model, pageNumber) as RedirectToRouteResult;
 
-            //act
-            ManageEvidenceController.Index(RecipientId, "review-submitted-evidence", model, pageNumber);
-
-            //assert
-            A.CallTo(() => Mapper.Map<ReviewSubmittedManageEvidenceNotesSchemeViewModel>(
-                A<SchemeTabViewModelMapTransfer>.That.Matches(
-                    a => a.OrganisationId.Equals(RecipientId) &&
-                         a.NoteData == noteData &&
-                         a.Scheme.Equals(scheme) &&
-                         a.CurrentDate.Equals(currentDate) &&
-                         a.PageNumber == pageNumber &&
-                         a.PageSize == 10))).MustHaveHappenedOnceExactly();
+            // Assert
+            result.Should().NotBeNull();
+            result.RouteValues["action"].Should().Be("Index");
+            result.RouteValues["pcsId"].Should().Be(RecipientId);
+            result.RouteValues["tab"].Should().Be("review-submitted-evidence");
+            result.RouteValues["page"].Should().Be(pageNumber);
         }
 
         [Fact]
