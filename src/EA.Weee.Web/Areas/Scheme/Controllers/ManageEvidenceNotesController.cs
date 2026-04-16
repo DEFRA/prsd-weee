@@ -27,6 +27,7 @@
     using System.Text;
     using System.Threading.Tasks;
     using System.Web.Mvc;
+    using System.Web.Routing;
     using Web.ViewModels.Shared;
     using Web.ViewModels.Shared.Mapping;
     using Weee.Requests.Shared;
@@ -89,9 +90,71 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Index(Guid pcsId, string tab = null, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null, int page = 1)
+        public ActionResult Index(Guid pcsId, string tab = null, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel = null, int page = 1)
         {
-            return await ProcessManageEvidenceNotes(pcsId, tab, manageEvidenceNoteViewModel, page);
+            return RedirectToAction("Index", BuildFilterRouteValues(pcsId, tab, manageEvidenceNoteViewModel, page));
+        }
+
+        private static RouteValueDictionary BuildFilterRouteValues(Guid pcsId, string tab, ManageEvidenceNoteViewModel model, int page)
+        {
+            var routeValues = new RouteValueDictionary
+             {
+                 { "pcsId", pcsId },
+                 { "tab", tab },
+                 { "page", page }
+             };
+
+            if (model == null)
+            {
+                return routeValues;
+            }
+
+            if (model.SelectedComplianceYear > 0)
+            {
+                routeValues["selectedComplianceYear"] = model.SelectedComplianceYear;
+            }
+
+            if (!string.IsNullOrWhiteSpace(model.FilterViewModel?.SearchRef))
+            {
+                routeValues["searchRef"] = model.FilterViewModel.SearchRef;
+            }
+
+            if (model.SubmittedDatesFilterViewModel?.StartDate.HasValue == true)
+            {
+                routeValues["startDate"] = model.SubmittedDatesFilterViewModel.StartDate.Value.ToString("dd/MM/yyyy");
+            }
+
+            if (model.SubmittedDatesFilterViewModel?.EndDate.HasValue == true)
+            {
+                routeValues["endDate"] = model.SubmittedDatesFilterViewModel.EndDate.Value.ToString("dd/MM/yyyy");
+            }
+
+            if (model.RecipientWasteStatusFilterViewModel?.ReceivedId.HasValue == true)
+            {
+                routeValues["receivedId"] = model.RecipientWasteStatusFilterViewModel.ReceivedId.Value;
+            }
+
+            if (model.RecipientWasteStatusFilterViewModel?.WasteTypeValue.HasValue == true)
+            {
+                routeValues["wasteTypeValue"] = (int)model.RecipientWasteStatusFilterViewModel.WasteTypeValue.Value;
+            }
+
+            if (model.RecipientWasteStatusFilterViewModel?.EvidenceNoteTypeValue.HasValue == true)
+            {
+                routeValues["evidenceNoteTypeValue"] = (int)model.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue.Value;
+            }
+
+            if (model.RecipientWasteStatusFilterViewModel?.NoteStatusValue.HasValue == true)
+            {
+                routeValues["noteStatusValue"] = (int)model.RecipientWasteStatusFilterViewModel.NoteStatusValue.Value;
+            }
+
+            if (model.RecipientWasteStatusFilterViewModel?.SubmittedBy.HasValue == true)
+            {
+                routeValues["submittedBy"] = model.RecipientWasteStatusFilterViewModel.SubmittedBy.Value;
+            }
+
+            return routeValues;
         }
 
         private async Task<ActionResult> ProcessManageEvidenceNotes(Guid pcsId, string tab, ManageEvidenceNoteViewModel manageEvidenceNoteViewModel, int page)
