@@ -60,7 +60,7 @@
 
         [HttpGet]
         [NoCacheFilter]
-        public async Task<ActionResult> Index(Guid pcsId, string tab = null, int? selectedComplianceYear = null, int? page = 1, DateTime? startDate = null, DateTime? endDate = null, Guid? receivedId = null,
+        public async Task<ActionResult> Index(Guid pcsId, string tab = null, int? selectedComplianceYear = null, int? page = 1, string startDate = null, string endDate = null, Guid? receivedId = null,
                                               int? wasteTypeValue = null, int? evidenceNoteTypeValue = null, string searchRef = null, int? noteStatusValue = null, Guid? submittedBy = null)
         {
             var manageEvidenceNoteViewModel = new ManageEvidenceNoteViewModel()
@@ -80,12 +80,29 @@
                 },
                 SubmittedDatesFilterViewModel = new SubmittedDatesFilterViewModel()
                 {
-                    StartDate = startDate,
-                    EndDate = endDate
+                    StartDate = ParseDate(startDate),
+                    EndDate = ParseDate(endDate)
                 }
             };
             page = page ?? 1;
             return await ProcessManageEvidenceNotes(pcsId, tab, manageEvidenceNoteViewModel, page.Value);
+        }
+
+        private static DateTime? ParseDate(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return null;
+            }
+
+            if (DateTime.TryParseExact(value, new[] { "dd-MM-yyyy", "dd/MM/yyyy" },
+                System.Globalization.CultureInfo.InvariantCulture,
+                System.Globalization.DateTimeStyles.None, out var result))
+            {
+                return result;
+            }
+
+            return null;
         }
 
         [HttpPost]
@@ -115,10 +132,10 @@
                     "searchRef")
 
                 .AddIfHasValue(model.SubmittedDatesFilterViewModel?.StartDate,
-                    "startDate", d => d.ToString("dd/MM/yyyy"))
+                    "startDate", d => d.ToString("dd-MM-yyyy"))
 
                 .AddIfHasValue(model.SubmittedDatesFilterViewModel?.EndDate,
-                    "endDate", d => d.ToString("dd/MM/yyyy"));
+                    "endDate", d => d.ToString("dd-MM-yyyy"));
 
             var waste = model.RecipientWasteStatusFilterViewModel;
 
@@ -258,8 +275,8 @@
 
                 var submittedDatesFilterViewModel = mapper.Map<SubmittedDatesFilterViewModel>(new SubmittedDateFilterBase(noteViewModel?.SubmittedDatesFilterViewModel.StartDate, noteViewModel?.SubmittedDatesFilterViewModel.EndDate));
                 var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(new RecipientWasteStatusFilterBase(null, null, noteViewModel?.RecipientWasteStatusFilterViewModel.WasteTypeValue,
-                                                                                                                                       noteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue, noteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy,
-                                                                                                                                       submittedByFilterList, noteViewModel?.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue, true, true, defaultNoteStatusList));
+                                                                                                                                        noteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue, noteViewModel?.RecipientWasteStatusFilterViewModel.SubmittedBy,
+                                                                                                                                        submittedByFilterList, noteViewModel?.RecipientWasteStatusFilterViewModel.EvidenceNoteTypeValue, true, true, defaultNoteStatusList));
 
                 var model = mapper.Map<SchemeViewAndTransferManageEvidenceSchemeViewModel>(new SchemeTabViewModelMapTransfer(organisationId, result, scheme, currentDate, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
 
@@ -458,7 +475,7 @@
                 }
 
                 var recipientWasteStatusViewModel = mapper.Map<RecipientWasteStatusFilterViewModel>(new RecipientWasteStatusFilterBase(recipientData, noteViewModel?.RecipientWasteStatusFilterViewModel.ReceivedId, null,
-                                                                                                                                       noteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue, null, null, null, false, false, defaultStatusList));
+                                                                                                                                        noteViewModel?.RecipientWasteStatusFilterViewModel.NoteStatusValue, null, null, null, false, false, defaultStatusList));
                 var model = mapper.Map<TransferredOutEvidenceNotesSchemeViewModel>(new SchemeTabViewModelMapTransfer(organisationId, result, scheme, currentDate, selectedComplianceYear, pageNumber, configurationService.CurrentConfiguration.DefaultExternalPagingPageSize));
                 model.ManageEvidenceNoteViewModel = mapper.Map<ManageEvidenceNoteViewModel>(new ManageEvidenceNoteTransfer(organisationId, noteViewModel?.FilterViewModel, recipientWasteStatusViewModel, submittedDatesFilterViewModel, selectedComplianceYear, currentDate));
 
@@ -469,13 +486,25 @@
         [HttpGet]
         [CheckCanApproveNote]
         [NoCacheFilter]
-        public async Task<ActionResult> ReviewEvidenceNote(Guid pcsId, Guid evidenceNoteId, string queryString = null)
-        {
+        public async Task<ActionResult> ReviewEvidenceNote(Guid pcsId, Guid evidenceNoteId, string queryString = null,
+            string return_tab = null, int? return_page = null, int? return_selectedComplianceYear = null,
+            string return_startDate = null, string return_endDate = null, string return_searchRef = null,
+            Guid? return_receivedId = null, int? return_wasteTypeValue = null, int? return_evidenceNoteTypeValue = null,
+            int? return_noteStatusValue = null, Guid? return_submittedBy = null)
+        {   
             using (var client = this.apiClient())
             {
                 await SetBreadcrumb(pcsId);
 
-                ReviewEvidenceNoteViewModel model = await GetNote(pcsId, evidenceNoteId, queryString, client);
+                var returnQueryString = BuildReturnQueryString(
+                    return_tab, return_page, return_selectedComplianceYear,
+                    return_startDate, return_endDate, return_searchRef,
+                    return_receivedId, return_wasteTypeValue, return_evidenceNoteTypeValue,
+                    return_noteStatusValue, return_submittedBy);
+
+                var effectiveQueryString = !string.IsNullOrEmpty(returnQueryString) ? returnQueryString : queryString;
+
+                ReviewEvidenceNoteViewModel model = await GetNote(pcsId, evidenceNoteId, effectiveQueryString, client);
 
                 if (model.ViewEvidenceNoteViewModel.Status != NoteStatus.Submitted)
                 {
@@ -484,6 +513,72 @@
 
                 return View("ReviewEvidenceNote", model);
             }
+        }
+
+        internal static string BuildReturnQueryString(
+            string tab, int? page, int? selectedComplianceYear,
+            string startDate, string endDate, string searchRef,
+            Guid? receivedId, int? wasteTypeValue, int? evidenceNoteTypeValue,
+            int? noteStatusValue, Guid? submittedBy)
+        {
+            var parts = new List<string>();
+
+            if (!string.IsNullOrEmpty(tab))
+            {
+                parts.Add($"tab={Uri.EscapeDataString(tab)}");
+            }
+
+            if (page.HasValue)
+            {
+                parts.Add($"page={page.Value}");
+            }
+
+            if (selectedComplianceYear.HasValue)
+            {
+                parts.Add($"selectedComplianceYear={selectedComplianceYear.Value}");
+            }
+
+            if (!string.IsNullOrEmpty(startDate))
+            {
+                parts.Add($"startDate={Uri.EscapeDataString(startDate)}");
+            }
+
+            if (!string.IsNullOrEmpty(endDate))
+            {
+                parts.Add($"endDate={Uri.EscapeDataString(endDate)}");
+            }
+
+            if (!string.IsNullOrEmpty(searchRef))
+            {
+                parts.Add($"searchRef={Uri.EscapeDataString(searchRef)}");
+            }
+
+            if (receivedId.HasValue)
+            {
+                parts.Add($"receivedId={receivedId.Value}");
+            }
+
+            if (wasteTypeValue.HasValue)
+            {
+                parts.Add($"wasteTypeValue={wasteTypeValue.Value}");
+            }
+
+            if (evidenceNoteTypeValue.HasValue)
+            {
+                parts.Add($"evidenceNoteTypeValue={evidenceNoteTypeValue.Value}");
+            }
+
+            if (noteStatusValue.HasValue)
+            {
+                parts.Add($"noteStatusValue={noteStatusValue.Value}");
+            }
+
+            if (submittedBy.HasValue)
+            {
+                parts.Add($"submittedBy={submittedBy.Value}");
+            }
+
+            return parts.Count > 0 ? string.Join("&", parts) : null;
         }
 
         [HttpPost]
@@ -520,7 +615,11 @@
             string redirectTab = null,
             int page = 1,
             bool openedInNewTab = false,
-            string queryString = null)
+            string queryString = null,
+            string return_tab = null, int? return_page = null, int? return_selectedComplianceYear = null,
+            string return_startDate = null, string return_endDate = null, string return_searchRef = null,
+            Guid? return_receivedId = null, int? return_wasteTypeValue = null, int? return_evidenceNoteTypeValue = null,
+            int? return_noteStatusValue = null, Guid? return_submittedBy = null)
         {
             using (var client = this.apiClient())
             {
@@ -530,12 +629,20 @@
 
                 var result = await client.SendAsync(User.GetAccessToken(), request);
 
+                var returnQueryString = BuildReturnQueryString(
+                    return_tab, return_page, return_selectedComplianceYear,
+                    return_startDate, return_endDate, return_searchRef,
+                    return_receivedId, return_wasteTypeValue, return_evidenceNoteTypeValue,
+                    return_noteStatusValue, return_submittedBy);
+
+                var effectiveQueryString = !string.IsNullOrEmpty(returnQueryString) ? returnQueryString : queryString;
+
                 var model = mapper.Map<ViewEvidenceNoteViewModel>(new ViewEvidenceNoteMapTransfer(result, TempData[ViewDataConstant.EvidenceNoteStatus], false)
                 {
                     SchemeId = pcsId,
                     RedirectTab = redirectTab,
                     OpenedInNewTab = openedInNewTab,
-                    QueryString = queryString
+                    QueryString = effectiveQueryString
                 });
 
                 ViewBag.Page = page;
@@ -553,7 +660,6 @@
                 GetObligationSummaryRequest request = null;
                 if (scheme.IsBalancingScheme)
                 {
-                    // PBS do not have a scheme id - we send a null to the Stored Proc which will use organisation id instead
                     request = new GetObligationSummaryRequest(null, pcsId, selectedComplianceYear);
 
                     var evidenceSummaryData = await client.SendAsync(User.GetAccessToken(), request);
@@ -566,7 +672,6 @@
                     return View("SummaryEvidencePBS", pbsSummaryModel);
                 }
 
-                // used by Scheme users
                 request = new GetObligationSummaryRequest(scheme.SchemeId, pcsId, selectedComplianceYear);
 
                 var obligationEvidenceSummaryData = await client.SendAsync(User.GetAccessToken(), request);

@@ -258,7 +258,11 @@
         [HttpGet]
         [NoCacheFilter]
         public async Task<ActionResult> TransferredEvidence(Guid pcsId, Guid evidenceNoteId, string redirectTab, string linkType = "", int page = 1,
-            bool openedInNewTab = false, string queryString = null)
+            bool openedInNewTab = false, string queryString = null,
+            string return_tab = null, int? return_page = null, int? return_selectedComplianceYear = null,
+            string return_startDate = null, string return_endDate = null, string return_searchRef = null,
+            Guid? return_receivedId = null, int? return_wasteTypeValue = null, int? return_evidenceNoteTypeValue = null,
+            int? return_noteStatusValue = null, Guid? return_submittedBy = null)
         {
             await SetBreadcrumb(pcsId);
 
@@ -269,6 +273,14 @@
 
                 var currentDateTime = await client.SendAsync(User.GetAccessToken(), new GetApiUtcDate());
 
+                var returnQueryString = ManageEvidenceNotesController.BuildReturnQueryString(
+                    return_tab, return_page, return_selectedComplianceYear,
+                    return_startDate, return_endDate, return_searchRef,
+                    return_receivedId, return_wasteTypeValue, return_evidenceNoteTypeValue,
+                    return_noteStatusValue, return_submittedBy);
+
+                var effectiveQueryString = !string.IsNullOrEmpty(returnQueryString) ? returnQueryString : queryString;
+
                 var model = mapper.Map<ViewTransferNoteViewModel>(new ViewTransferNoteViewModelMapTransfer(pcsId,
                     noteData, TempData[ViewDataConstant.TransferEvidenceNoteDisplayNotification])
                 {
@@ -276,7 +288,7 @@
                     SystemDateTime = currentDateTime,
                     Page = page,
                     OpenedInNewTab = openedInNewTab,
-                    QueryString = queryString
+                    QueryString = effectiveQueryString
                 });
 
                 if (!string.IsNullOrEmpty(linkType) && linkType == "View")
