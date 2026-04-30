@@ -56,7 +56,7 @@
                 editContactDetailsRequestCreator,
             IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest> serviceOfNoticeRequestCreator,
             IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator,
-            IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryAndCompleteRequest> addSignatoryRequestCreator, 
+            IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryAndCompleteRequest> addSignatoryRequestCreator,
             IPaymentService paymentService,
             ConfigurationService configuration)
         {
@@ -119,7 +119,7 @@
                     await client.SendAsync(User.GetAccessToken(), request);
                 }
 
-                return RedirectToAction(model.RedirectToCheckAnswers == true ? nameof(ProducerController.CheckAnswers) : 
+                return RedirectToAction(model.RedirectToCheckAnswers == true ? nameof(ProducerController.CheckAnswers) :
                     nameof(ProducerController.TaskList), typeof(ProducerController).GetControllerName());
             }
 
@@ -394,6 +394,8 @@
             {
                 OrganisationId = SmallProducerSubmissionData.OrganisationData.Id,
                 ComplianceYear = SmallProducerSubmissionData.CurrentSubmission.ComplianceYear,
+                HasPaid = SmallProducerSubmissionData.SubmissionHistory[0].HasPaid,
+                Status = SmallProducerSubmissionData.SubmissionHistory[0].Status
             };
 
             await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);

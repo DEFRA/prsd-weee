@@ -2,6 +2,7 @@
 @using EA.Weee.Web.Controllers
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
+@using EA.Weee.Core.DirectRegistrant
 @model EA.Weee.Web.Areas.Producer.ViewModels.RegisteredResultModel
 @{
     var title = "You have successfully submitted your producer registration";
@@ -12,11 +13,26 @@
     <div class="govuk-!-padding-bottom-5"></div>
     <div class="govuk-panel govuk-panel--confirmation govuk-!-width-two-thirds">
         <h1 class="govuk-panel__title">
-            You are now registered as a small producer for @Model.ComplianceYear
+            @if (Model.HasPaid == true && Model.Status == SubmissionStatus.Returned)
+            {
+                <label> You are registered as a small producer for @Model.ComplianceYear</label>
+            }
+            else
+            {
+                <label> You are now registered as a small producer for @Model.ComplianceYear</label>
+            }
         </h1>
     </div>
     <div class="govuk-!-width-two-thirds">
-        <p class="govuk-body">Your registration has been resubmitted and you are now registered as a small producer.</p>
+        @if (Model.HasPaid == true && Model.Status == SubmissionStatus.Returned)
+        {
+            <p class="govuk-body">Your registration has been resubmitted and you are registered as a small producer.</p>
+        }
+        else
+        {
+            <p class="govuk-body">Your registration has been resubmitted and you are now registered as a small producer.</p>
+        }
+
         @Html.Partial("_ContactPartial")
     </div>
 

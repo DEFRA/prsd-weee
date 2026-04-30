@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Producer.ViewModels
 {
+    using EA.Weee.Core.DirectRegistrant;
     using System;
 
     public class RegisteredResultModel
@@ -15,5 +16,9 @@
         public string ProducerRegistrationNumber { get; set; }
 
         public string ProducerName { get; set; }
+
+        public bool HasPaid { get; set; }
+
+        public SubmissionStatus Status { get; set; }
     }
 }
