@@ -395,7 +395,7 @@
             {
                 OrganisationId = SmallProducerSubmissionData.OrganisationData.Id,
                 ComplianceYear = SmallProducerSubmissionData.CurrentSubmission.ComplianceYear,
-                HasPaid = SmallProducerSubmissionData.SubmissionHistory.FirstOrDefault().Value.HasPaid
+                HasPaid = (SmallProducerSubmissionData.SubmissionHistory == null ? false : SmallProducerSubmissionData.SubmissionHistory.FirstOrDefault().Value.HasPaid)
             };
 
             await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);

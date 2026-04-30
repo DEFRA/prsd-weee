@@ -15,8 +15,8 @@
                 OrganisationId = source.OrganisationData.Id,
                 HasAuthorisedRepresentitive = source.HasAuthorisedRepresentitive,
                 DirectRegistrantChargeAmount = source.DirectRegistrantChargeAmount,
-                HasPaid = source.SubmissionHistory.FirstOrDefault().Value.HasPaid,
-                Status = source.SubmissionHistory.FirstOrDefault().Value.Status
+                HasPaid = (source.SubmissionHistory == null ? false : source.SubmissionHistory.FirstOrDefault().Value.HasPaid),
+                Status = (source.SubmissionHistory == null ? SubmissionStatus.InComplete : source.SubmissionHistory.FirstOrDefault().Value.Status)
             };
 
             return viewModel;
