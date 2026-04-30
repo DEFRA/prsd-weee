@@ -21,6 +21,7 @@
     using EA.Weee.Web.Services.Caching;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
@@ -394,8 +395,7 @@
             {
                 OrganisationId = SmallProducerSubmissionData.OrganisationData.Id,
                 ComplianceYear = SmallProducerSubmissionData.CurrentSubmission.ComplianceYear,
-                HasPaid = SmallProducerSubmissionData.SubmissionHistory[0].HasPaid,
-                Status = SmallProducerSubmissionData.SubmissionHistory[0].Status
+                HasPaid = SmallProducerSubmissionData.SubmissionHistory.FirstOrDefault().Value.HasPaid
             };
 
             await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);

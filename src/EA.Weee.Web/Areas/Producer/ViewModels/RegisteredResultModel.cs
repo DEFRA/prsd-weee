@@ -18,7 +18,5 @@
         public string ProducerName { get; set; }
 
         public bool HasPaid { get; set; }
-
-        public SubmissionStatus Status { get; set; }
     }
 }

@@ -570,6 +570,11 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>AppropriateSignatory.resx</DependentUpon>
     </Compile>
+    <Compile Include="Areas\Producer\Views\ProducerSubmission\Registered.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Registered.resx</DependentUpon>
+    </Compile>
     <Compile Include="Areas\Test\Controllers\ApiIntegrationController.cs" />
     <Compile Include="Areas\Test\ViewModels\ApiIntegration\ApiModel.cs" />
     <Compile Include="Controllers\BannerController.cs" />
@@ -2268,6 +2273,11 @@
       <LastGenOutput>ProducerSubmission.Designer.cs</LastGenOutput>
       <CustomToolNamespace>Resources.ProducerSubmission</CustomToolNamespace>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Areas\Producer\Views\ProducerSubmission\Registered.resx">
+      <Generator>PublicResXFileCodeGenerator</Generator>
+      <LastGenOutput>Registered.Designer.cs</LastGenOutput>
+      <CustomToolNamespace>ProducerSubmission.Registered</CustomToolNamespace>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>

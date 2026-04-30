@@ -2,10 +2,10 @@
 @using EA.Weee.Web.Controllers
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
-@using EA.Weee.Core.DirectRegistrant
+@using ProducerSubmission.Registered
 @model EA.Weee.Web.Areas.Producer.ViewModels.RegisteredResultModel
 @{
-    var title = "You have successfully submitted your producer registration";
+    var title = Registered.Title;
     ViewBag.Title = @title + " - GOV.UK";
 }
 
@@ -13,24 +13,28 @@
     <div class="govuk-!-padding-bottom-5"></div>
     <div class="govuk-panel govuk-panel--confirmation govuk-!-width-two-thirds">
         <h1 class="govuk-panel__title">
-            @if (Model.HasPaid == true && Model.Status == SubmissionStatus.Returned)
+            @if (Model.HasPaid == true)
             {
-                <label> You are registered as a small producer for @Model.ComplianceYear</label>
+                @Html.Raw(string.Format(Registered.HasPaidTitle, @Model.ComplianceYear))
             }
             else
             {
-                <label> You are now registered as a small producer for @Model.ComplianceYear</label>
+                @Html.Raw(string.Format(Registered.RegisteredTitle, @Model.ComplianceYear))
             }
         </h1>
     </div>
     <div class="govuk-!-width-two-thirds">
-        @if (Model.HasPaid == true && Model.Status == SubmissionStatus.Returned)
+        @if (Model.HasPaid == true)
         {
-            <p class="govuk-body">Your registration has been resubmitted and you are registered as a small producer.</p>
+            <p class="govuk-body">
+                @Registered.HasPaidDesc
+            </p>
         }
         else
         {
-            <p class="govuk-body">Your registration has been resubmitted and you are now registered as a small producer.</p>
+            <p class="govuk-body">
+                @Registered.RegisteredDesc
+            </p>
         }
 
         @Html.Partial("_ContactPartial")
