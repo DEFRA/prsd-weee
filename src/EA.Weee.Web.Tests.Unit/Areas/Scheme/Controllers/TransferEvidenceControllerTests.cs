@@ -80,7 +80,7 @@
         [Fact]
         public void TransferEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(string), typeof(int), typeof(bool), typeof(string), typeof(string), typeof(int), typeof(int), typeof(string), typeof(string), typeof(string), typeof(Guid), typeof(int), typeof(int), typeof(int), typeof(Guid) }).Should().BeDecoratedWith<HttpGetAttribute>();
+            typeof(TransferEvidenceController).GetMethod("TransferEvidenceNote", new[] { typeof(Guid), typeof(int) }).Should().BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
@@ -98,13 +98,17 @@
         [Fact]
         public void TransferEvidenceNoteGet_ShouldHaveNoCacheFilterAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(string), typeof(int), typeof(bool), typeof(string), typeof(string), typeof(int), typeof(int), typeof(string), typeof(string), typeof(string), typeof(Guid), typeof(int), typeof(int), typeof(int), typeof(Guid) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
+            typeof(TransferEvidenceController).GetMethod("TransferEvidenceNote", new[] { typeof(Guid), typeof(int) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
         public void TransferEvidenceNoteGet_ShouldHaveCheckCanCreateTransferNoteAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(string), typeof(int), typeof(bool), typeof(string), typeof(string), typeof(int), typeof(int), typeof(string), typeof(string), typeof(string), typeof(Guid), typeof(int), typeof(int), typeof(int), typeof(Guid) }).Should().BeDecoratedWith<CheckCanCreateTransferNoteAttribute>();
+            typeof(TransferEvidenceController).GetMethod("TransferEvidenceNote", new[]
+                {
+                    typeof(Guid),
+                    typeof(int)
+                }).Should().BeDecoratedWith<CheckCanCreateTransferNoteAttribute>();
         }
 
         [Fact]

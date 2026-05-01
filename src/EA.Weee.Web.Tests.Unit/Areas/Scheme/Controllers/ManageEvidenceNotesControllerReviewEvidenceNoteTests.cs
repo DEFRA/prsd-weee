@@ -134,7 +134,6 @@
                     typeof(Guid),
                     typeof(int),
                     typeof(int),
-                    typeof(string),
                     typeof(int),
                     typeof(Guid)
                 }).Should().BeDecoratedWith<HttpGetAttribute>();
@@ -160,7 +159,6 @@
                     typeof(Guid),
                     typeof(int),
                     typeof(int),
-                    typeof(string),
                     typeof(int),
                     typeof(Guid)
                 }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
