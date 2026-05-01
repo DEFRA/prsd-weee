@@ -70,11 +70,9 @@
 
             transferEvidenceController = new TransferEvidenceController(() => weeeClient, breadcrumb, mapper, transferNoteRequestCreator, cache, sessionService, configurationService, pdfDocumentProvider, templateExecutor);
 
-            A.CallTo(() => configurationService.CurrentConfiguration.DefaultExternalPagingPageSize)
-                .Returns(DefaultPageSize);
+            A.CallTo(() => configurationService.CurrentConfiguration.DefaultExternalPagingPageSize).Returns(DefaultPageSize);
 
-            A.CallTo(() =>
-                sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(SessionKeyConstant.TransferNoteKey)).Returns(GetRequest());
+            A.CallTo(() => sessionService.GetTransferSessionObject<TransferEvidenceNoteRequest>(SessionKeyConstant.TransferNoteKey)).Returns(GetRequest());
 
             TestFixture.Customizations.Add(new TypeRelay(typeof(ISessionService), typeof(SessionService)));
         }
@@ -82,41 +80,37 @@
         [Fact]
         public void TransferEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferEvidenceNote", new[] { typeof(Guid), typeof(int) }).Should()
-             .BeDecoratedWith<HttpGetAttribute>();
+            typeof(TransferEvidenceController).GetMethod("TransferEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(string), typeof(int), typeof(bool), typeof(string), typeof(string), typeof(int), typeof(int), typeof(string), typeof(string), typeof(string), typeof(Guid), typeof(int), typeof(int), typeof(int), typeof(Guid) }).Should().BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void TransferredEvidenceGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferredEvidence", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(string), typeof(int), typeof(bool), typeof(string) }).Should().BeDecoratedWith<HttpGetAttribute>();
+            typeof(TransferEvidenceController).GetMethod("TransferredEvidence", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(string), typeof(int), typeof(bool), typeof(string), typeof(string), typeof(int), typeof(int), typeof(string), typeof(string), typeof(string), typeof(Guid), typeof(int), typeof(int), typeof(int), typeof(Guid) }).Should().BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Fact]
         public void TransferredEvidenceGet_ShouldHaveNoCacheFilterAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferredEvidence", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(string), typeof(int), typeof(bool), typeof(string) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
+            typeof(TransferEvidenceController).GetMethod("TransferredEvidence", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(string), typeof(int), typeof(bool), typeof(string), typeof(string), typeof(int), typeof(int), typeof(string), typeof(string), typeof(string), typeof(Guid), typeof(int), typeof(int), typeof(int), typeof(Guid) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
         public void TransferEvidenceNoteGet_ShouldHaveNoCacheFilterAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferEvidenceNote", new[] { typeof(Guid), typeof(int) }).Should()
-                .BeDecoratedWith<NoCacheFilterAttribute>();
+            typeof(TransferEvidenceController).GetMethod("TransferEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(string), typeof(int), typeof(bool), typeof(string), typeof(string), typeof(int), typeof(int), typeof(string), typeof(string), typeof(string), typeof(Guid), typeof(int), typeof(int), typeof(int), typeof(Guid) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
         public void TransferEvidenceNoteGet_ShouldHaveCheckCanCreateTransferNoteAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferEvidenceNote", new[] { typeof(Guid), typeof(int) }).Should()
-                .BeDecoratedWith<CheckCanCreateTransferNoteAttribute>();
+            typeof(TransferEvidenceController).GetMethod("TransferEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(string), typeof(int), typeof(bool), typeof(string), typeof(string), typeof(int), typeof(int), typeof(string), typeof(string), typeof(string), typeof(Guid), typeof(int), typeof(int), typeof(int), typeof(Guid) }).Should().BeDecoratedWith<CheckCanCreateTransferNoteAttribute>();
         }
 
         [Fact]
         public void TransferTonnageGet_ShouldHaveNoCacheFilterAttribute()
         {
-            typeof(TransferEvidenceController).GetMethod("TransferTonnage", new[] { typeof(Guid), typeof(int), typeof(bool) }).Should()
-                .BeDecoratedWith<NoCacheFilterAttribute>();
+            typeof(TransferEvidenceController).GetMethod("TransferTonnage", new[] { typeof(Guid), typeof(int), typeof(bool) }).Should().BeDecoratedWith<NoCacheFilterAttribute>();
         }
 
         [Fact]
