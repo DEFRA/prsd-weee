@@ -1089,7 +1089,7 @@
             var submissionData = TestFixture.Create<SmallProducerSubmissionData>();
             submissionData.CurrentSubmission.HasPaid = false;
             controller.SmallProducerSubmissionData = submissionData;
-           
+
             var model = TestFixture.Create<AppropriateSignatoryViewModel>();
             var request = TestFixture.Create<AddSignatoryAndCompleteRequest>();
             request.DirectRegistrantId = model.DirectRegistrantId = submissionData.DirectRegistrantId;
@@ -1540,7 +1540,7 @@
             controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
             {
                 OrganisationData = new OrganisationData { Id = Guid.NewGuid() },
-                CurrentSubmission = new SmallProducerSubmissionHistoryData { ComplianceYear = SystemTime.UtcNow.Year }
+                CurrentSubmission = new SmallProducerSubmissionHistoryData { ComplianceYear = SystemTime.UtcNow.Year, HasPaid = false, Status = SubmissionStatus.InComplete }
             };
 
             // Act
@@ -1563,7 +1563,7 @@
             controller.SmallProducerSubmissionData = new SmallProducerSubmissionData
             {
                 OrganisationData = new OrganisationData { Id = organisationId },
-                CurrentSubmission = new SmallProducerSubmissionHistoryData()
+                CurrentSubmission = new SmallProducerSubmissionHistoryData() { HasPaid = false, Status = SubmissionStatus.InComplete }
             };
 
             A.CallTo(() => weeeCache.FetchOrganisationName(organisationId)).Returns(organisationName);
@@ -1574,8 +1574,7 @@
             // Assert
             breadcrumbService.OrganisationId.Should().Be(organisationId);
             breadcrumbService.ExternalOrganisation.Should().Be(organisationName);
-            breadcrumbService.ExternalActivity.Should()
-                .Be(ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
+            breadcrumbService.ExternalActivity.Should().Be(ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);
         }
 
         [Fact]

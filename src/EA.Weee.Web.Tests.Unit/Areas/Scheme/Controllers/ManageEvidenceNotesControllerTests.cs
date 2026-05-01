@@ -64,8 +64,8 @@
                     typeof(string),
                     typeof(int?),
                     typeof(int?),
-                    typeof(DateTime?),
-                    typeof(DateTime?),
+                    typeof(string),
+                    typeof(string),
                     typeof(Guid?),
                     typeof(int?),
                     typeof(int?),
@@ -85,8 +85,8 @@
                     typeof(string),
                     typeof(int?),
                     typeof(int?),
-                    typeof(DateTime?),
-                    typeof(DateTime?),
+                    typeof(string),
+                    typeof(string),
                     typeof(Guid?),
                     typeof(int?),
                     typeof(int?),
@@ -140,7 +140,26 @@
         [Fact]
         public void ViewEvidenceNoteGet_ShouldHaveHttpGetAttribute()
         {
-            typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[] { typeof(Guid), typeof(Guid), typeof(string), typeof(int), typeof(bool), typeof(string) }).Should().BeDecoratedWith<HttpGetAttribute>();
+            typeof(ManageEvidenceNotesController).GetMethod("ViewEvidenceNote", new[]
+                {
+                    typeof(Guid),
+                    typeof(Guid),
+                    typeof(string),
+                    typeof(int),
+                    typeof(bool),
+                    typeof(string),
+                    typeof(string),
+                    typeof(int),
+                    typeof(int),
+                    typeof(string),
+                    typeof(string),
+                    typeof(string),
+                    typeof(Guid),
+                    typeof(int),
+                    typeof(int),
+                    typeof(int),
+                    typeof(Guid)
+                }).Should().BeDecoratedWith<HttpGetAttribute>();
         }
 
         [Theory]
