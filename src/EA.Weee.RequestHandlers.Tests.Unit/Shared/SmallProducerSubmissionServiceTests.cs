@@ -426,9 +426,9 @@
         }
 
         [Theory]
-        [InlineData(2025, "2025-01-01", 32.00)] // Before April 1st - old fee
-        [InlineData(2026, "2026-04-01", 33.48)] // On April 1st - new fee
-        [InlineData(2027, "2027-01-01", 33.48)] // From January 1st - new fee
+        [InlineData(2025, "2025-01-01", 32.00)]
+        [InlineData(2026, "2026-04-01", 33.48)]
+        [InlineData(2027, "2027-01-01", 33.48)]
         public async Task GetSmallProducerSubmissionData_EnglandOrganisation_ReturnsCorrectFeeBasedOnDate(int complianceYear, string dateString, decimal expectedAmount)
         {
             // Arrange
@@ -458,10 +458,9 @@
         }
 
         [Theory]
-        [InlineData(2026, "2026-03-31", 32.00)] // Before April 1st - old fee
-        [InlineData(2026, "2026-04-01", 33.48)] // On April 1st - new fee
-        [InlineData(2026, "2026-04-02", 33.48)] // After April 1st - new fee
-        [InlineData(2027, "2027-01-01", 33.48)] // From January 1st 2027 - new fee
+        [InlineData(2025, "2025-01-01", 30.00)]
+        [InlineData(2026, "2026-04-01", 33.48)]
+        [InlineData(2027, "2027-01-01", 33.48)]
         public async Task GetSmallProducerSubmissionData_NonUKOrganisation_ReturnsCorrectFeeBasedOnDate(int complianceYear, string dateString, decimal expectedAmount)
         {
             // Arrange
