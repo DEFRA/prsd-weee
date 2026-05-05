@@ -262,24 +262,46 @@
             result.CompetentAuthority.Should().Be(CompetentAuthorityType.England);
         }
 
-        [Fact]
-        public async Task GetChargeAmountAsync_GivenNonUKCompetentAuthority_ShouldReturnNonUKCharge()
+        [Theory]
+        [InlineData("2025-01-01", 13631.00)]
+        [InlineData("2026-04-01", 14148.98)]
+        [InlineData("2027-01-01", 14148.98)]
+        public async Task GetChargeAmountAsync_GivenNonUKCompetentAuthority_ShouldReturnNonUKCharge(DateTime effectiveFrom, decimal expectedAmount)
         {
             // Arrange
             var competentAuthority = CompetentAuthorityType.NonUK;
-            var asOfUtc = new DateTime(2025, 6, 15);
-            var charge = CreateOnlineMarketplaceCharge(competentAuthority, 13631.00m, new DateTime(2025, 1, 1));
+            var charge = CreateOnlineMarketplaceCharge(competentAuthority, expectedAmount, effectiveFrom);
 
-            A.CallTo(() => context.OnlineMarketplaceCharges)
-                .Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<OnlineMarketplaceCharge> { charge }));
+            A.CallTo(() => context.OnlineMarketplaceCharges).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<OnlineMarketplaceCharge> { charge }));
 
             // Act
-            var result = await dataAccess.GetChargeAmountAsync(competentAuthority, asOfUtc);
+            var result = await dataAccess.GetChargeAmountAsync(competentAuthority, effectiveFrom);
 
             // Assert
             result.Should().NotBeNull();
-            result.Amount.Should().Be(13631.00m);
+            result.Amount.Should().Be(expectedAmount);
             result.CompetentAuthority.Should().Be(CompetentAuthorityType.NonUK);
+        }
+
+        [Theory]
+        [InlineData("2025-01-01", 13631.00)]
+        [InlineData("2026-04-01", 14148.98)]
+        [InlineData("2027-01-01", 14148.98)]
+        public async Task GetChargeAmountAsync_GivenNonUKCompetentAuthority_ShouldReturnEnglandCharge(DateTime effectiveFrom, decimal expectedAmount)
+        {
+            // Arrange
+            var competentAuthority = CompetentAuthorityType.England;
+            var charge = CreateOnlineMarketplaceCharge(competentAuthority, expectedAmount, effectiveFrom);
+
+            A.CallTo(() => context.OnlineMarketplaceCharges).Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<OnlineMarketplaceCharge> { charge }));
+
+            // Act
+            var result = await dataAccess.GetChargeAmountAsync(competentAuthority, effectiveFrom);
+
+            // Assert
+            result.Should().NotBeNull();
+            result.Amount.Should().Be(expectedAmount);
+            result.CompetentAuthority.Should().Be(CompetentAuthorityType.England);
         }
 
         [Theory]
@@ -289,15 +311,15 @@
         public async Task GetChargeAmountAsync_GivenNonApplicableCompetentAuthority_ShouldReturnNull(CompetentAuthorityType competentAuthority)
         {
             // Arrange - Only England and NonUK have OMP charges
-            var asOfUtc = new DateTime(2025, 6, 15);
-            var englandCharge = CreateOnlineMarketplaceCharge(CompetentAuthorityType.England, 13631.00m, new DateTime(2025, 1, 1));
-            var nonUkCharge = CreateOnlineMarketplaceCharge(CompetentAuthorityType.NonUK, 13631.00m, new DateTime(2025, 1, 1));
+            var effectiveFrom = DateTime.UtcNow;
+            var englandCharge = CreateOnlineMarketplaceCharge(CompetentAuthorityType.England, 13631.00m, effectiveFrom);
+            var nonUkCharge = CreateOnlineMarketplaceCharge(CompetentAuthorityType.NonUK, 13631.00m, effectiveFrom);
 
             A.CallTo(() => context.OnlineMarketplaceCharges)
                 .Returns(dbContextHelper.GetAsyncEnabledDbSet(new List<OnlineMarketplaceCharge> { englandCharge, nonUkCharge }));
 
             // Act
-            var result = await dataAccess.GetChargeAmountAsync(competentAuthority, asOfUtc);
+            var result = await dataAccess.GetChargeAmountAsync(competentAuthority, effectiveFrom);
 
             // Assert
             result.Should().BeNull();
