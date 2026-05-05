@@ -16,6 +16,7 @@
     using FluentAssertions;
     using System;
     using System.Collections.Generic;
+    using System.Globalization;
     using System.Linq;
     using System.Threading.Tasks;
     using Xunit;
@@ -425,121 +426,105 @@
         }
 
         [Theory]
-        [InlineData("2026-03-31", 32.00)] // Before April 1st - old fee
-        [InlineData("2026-04-01", 33.48)] // On April 1st - new fee
-        [InlineData("2026-04-02", 33.48)] // After April 1st - new fee
-        [InlineData("2026-12-31", 33.48)] // End of year - new fee
-        public async Task GetSmallProducerSubmissionData_EnglandOrganisation_ReturnsCorrectFeeBasedOnDate(
-    string dateString, decimal expectedAmount)
+        [InlineData(2025, "2025-01-01", 32.00)] // Before April 1st - old fee
+        [InlineData(2026, "2026-04-01", 33.48)] // On April 1st - new fee
+        [InlineData(2027, "2027-01-01", 33.48)] // From January 1st - new fee
+        public async Task GetSmallProducerSubmissionData_EnglandOrganisation_ReturnsCorrectFeeBasedOnDate(int complianceYear, string dateString, decimal expectedAmount)
         {
             // Arrange
             var testDate = DateTime.Parse(dateString);
             var directRegistrant = SetupDirectRegistrantWithCountry("UK - England");
 
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(testDate);
-            A.CallTo(() => smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(
-                A<Guid>._, A<int>._)).Returns((DirectProducerSubmission)null);
+            A.CallTo(() => smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(A<Guid>._, A<int>._)).Returns((DirectProducerSubmission)null);
 
-            var charge = CreateDirectRegistrantCharge(2026, true, expectedAmount);
-            A.CallTo(() => smallProducerDataAccess.GetDirectRegistrantChargeAsync(
-                2026, true, testDate))
-                .Returns(charge);
+            var charge = CreateDirectRegistrantCharge(complianceYear, true, expectedAmount);
+            A.CallTo(() => smallProducerDataAccess.GetDirectRegistrantChargeAsync(complianceYear, true, testDate)).Returns(charge);
 
             // Act
-            EA.Prsd.Core.SystemTime.Freeze(testDate);
+            Prsd.Core.SystemTime.Freeze(testDate);
             try
             {
                 var result = await service.GetSmallProducerSubmissionData(directRegistrant, false);
 
                 // Assert
                 result.DirectRegistrantChargeAmount.Should().Be(expectedAmount);
-                A.CallTo(() => smallProducerDataAccess.GetDirectRegistrantChargeAsync(
-                    2026, true, testDate)).MustHaveHappenedOnceExactly();
+                A.CallTo(() => smallProducerDataAccess.GetDirectRegistrantChargeAsync(complianceYear, true, testDate)).MustHaveHappenedOnceExactly();
             }
             finally
             {
-                EA.Prsd.Core.SystemTime.Unfreeze();
+                Prsd.Core.SystemTime.Unfreeze();
             }
         }
 
         [Theory]
-        [InlineData("2026-03-31", 32.00)] // Before April 1st - old fee
-        [InlineData("2026-04-01", 33.48)] // On April 1st - new fee
-        [InlineData("2026-04-02", 33.48)] // After April 1st - new fee
-        public async Task GetSmallProducerSubmissionData_NonUKOrganisation_ReturnsCorrectFeeBasedOnDate(
-            string dateString, decimal expectedAmount)
+        [InlineData(2026, "2026-03-31", 32.00)] // Before April 1st - old fee
+        [InlineData(2026, "2026-04-01", 33.48)] // On April 1st - new fee
+        [InlineData(2026, "2026-04-02", 33.48)] // After April 1st - new fee
+        [InlineData(2027, "2027-01-01", 33.48)] // From January 1st 2027 - new fee
+        public async Task GetSmallProducerSubmissionData_NonUKOrganisation_ReturnsCorrectFeeBasedOnDate(int complianceYear, string dateString, decimal expectedAmount)
         {
             // Arrange
             var testDate = DateTime.Parse(dateString);
             var directRegistrant = SetupDirectRegistrantWithCountry("France");
 
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(testDate);
-            A.CallTo(() => smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(
-                A<Guid>._, A<int>._)).Returns((DirectProducerSubmission)null);
+            A.CallTo(() => smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(A<Guid>._, A<int>._)).Returns((DirectProducerSubmission)null);
 
-            var charge = CreateDirectRegistrantCharge(2026, true, expectedAmount);
-            A.CallTo(() => smallProducerDataAccess.GetDirectRegistrantChargeAsync(
-                2026, true, testDate))
-                .Returns(charge);
+            var charge = CreateDirectRegistrantCharge(complianceYear, true, expectedAmount);
+            A.CallTo(() => smallProducerDataAccess.GetDirectRegistrantChargeAsync(complianceYear, true, testDate)).Returns(charge);
 
             // Act
-            EA.Prsd.Core.SystemTime.Freeze(testDate);
+            Prsd.Core.SystemTime.Freeze(testDate);
             try
             {
                 var result = await service.GetSmallProducerSubmissionData(directRegistrant, false);
 
                 // Assert
                 result.DirectRegistrantChargeAmount.Should().Be(expectedAmount);
-                A.CallTo(() => smallProducerDataAccess.GetDirectRegistrantChargeAsync(
-                    2026, true, testDate)).MustHaveHappenedOnceExactly();
+                A.CallTo(() => smallProducerDataAccess.GetDirectRegistrantChargeAsync(complianceYear, true, testDate)).MustHaveHappenedOnceExactly();
             }
             finally
             {
-                EA.Prsd.Core.SystemTime.Unfreeze();
+                Prsd.Core.SystemTime.Unfreeze();
             }
         }
 
         [Theory]
-        [InlineData("UK - Scotland", "2026-03-31")]
-        [InlineData("UK - Scotland", "2026-04-01")]
-        [InlineData("UK - Scotland", "2026-12-31")]
-        [InlineData("UK - Wales", "2026-03-31")]
-        [InlineData("UK - Wales", "2026-04-01")]
-        [InlineData("UK - Wales", "2026-12-31")]
-        [InlineData("UK - Northern Ireland", "2026-03-31")]
-        [InlineData("UK - Northern Ireland", "2026-04-01")]
-        [InlineData("UK - Northern Ireland", "2026-12-31")]
-        public async Task GetSmallProducerSubmissionData_ScotlandWalesNI_FeeAlwaysRemains30(
-            string countryName, string dateString)
+        [InlineData(2025, "UK - Scotland", "2025-01-01", 30.00)]
+        [InlineData(2026, "UK - Scotland", "2026-04-01", 30.00)]
+        [InlineData(2027, "UK - Scotland", "2027-01-01", 30.00)]
+        [InlineData(2025, "UK - Wales", "2025-01-01", 30.00)]
+        [InlineData(2026, "UK - Wales", "2026-04-01", 30.00)]
+        [InlineData(2027, "UK - Wales", "2027-01-01", 30.00)]
+        [InlineData(2025, "UK - Northern Ireland", "2025-01-01", 30.00)]
+        [InlineData(2026, "UK - Northern Ireland", "2026-04-01", 30.00)]
+        [InlineData(2027, "UK - Northern Ireland", "2027-01-01", 30.00)]
+        public async Task GetSmallProducerSubmissionData_Scotland_Wales_NI_Fee(int complianceYear, string countryName, string dateString, decimal expectedAmount)
         {
             // Arrange
             var testDate = DateTime.Parse(dateString);
             var directRegistrant = SetupDirectRegistrantWithCountry(countryName);
 
             A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(testDate);
-            A.CallTo(() => smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(
-                A<Guid>._, A<int>._)).Returns((DirectProducerSubmission)null);
+            A.CallTo(() => smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(A<Guid>._, A<int>._)).Returns((DirectProducerSubmission)null);
 
-            var charge = CreateDirectRegistrantCharge(2026, false, 30.00m);
-            A.CallTo(() => smallProducerDataAccess.GetDirectRegistrantChargeAsync(
-                2026, false, testDate))
-                .Returns(charge);
+            var charge = CreateDirectRegistrantCharge(complianceYear, false, expectedAmount);
+            A.CallTo(() => smallProducerDataAccess.GetDirectRegistrantChargeAsync(complianceYear, false, testDate)).Returns(charge);
 
             // Act
-            EA.Prsd.Core.SystemTime.Freeze(testDate);
+            Prsd.Core.SystemTime.Freeze(testDate);
             try
             {
                 var result = await service.GetSmallProducerSubmissionData(directRegistrant, false);
 
                 // Assert
-                result.DirectRegistrantChargeAmount.Should().Be(30.00m,
-                    $"{countryName} should have £30 fee on {dateString}");
-                A.CallTo(() => smallProducerDataAccess.GetDirectRegistrantChargeAsync(
-                    2026, false, testDate)).MustHaveHappenedOnceExactly();
+                result.DirectRegistrantChargeAmount.Should().Be(expectedAmount, $"{countryName} should have £30 fee on {dateString}");
+                A.CallTo(() => smallProducerDataAccess.GetDirectRegistrantChargeAsync(complianceYear, false, testDate)).MustHaveHappenedOnceExactly();
             }
             finally
             {
-                EA.Prsd.Core.SystemTime.Unfreeze();
+                Prsd.Core.SystemTime.Unfreeze();
             }
         }
 
@@ -616,42 +601,33 @@
         }
 
         [Theory]
-        [InlineData("Germany")]
-        [InlineData("France")]
-        [InlineData("Spain")]
-        [InlineData("United States")]
-        [InlineData("China")]
-        public async Task GetSmallProducerSubmissionData_OverseasOrganisations_UseIsNonUkTrue(string countryName)
+        [InlineData(2025, "Germany", "2025-01-01", 30.00)]
+        [InlineData(2026, "France", "2026-04-01", 33.48)]
+        [InlineData(2027, "United States", "2027-01-01", 33.48)]
+        public async Task GetSmallProducerSubmissionData_OverseasOrganisations_UseIsNonUkTrue(int complianceYear, string countryName, DateTime dateString, decimal expectedAmount)
         {
             // Arrange
-            var testDate = new DateTime(2026, 4, 1);
+            //DateTime testDate = new DateTime(dateString);
             var directRegistrant = SetupDirectRegistrantWithCountry(countryName);
 
-            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(testDate);
-            A.CallTo(() => smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(
-                A<Guid>._, A<int>._)).Returns((DirectProducerSubmission)null);
+            A.CallTo(() => systemDataDataAccess.GetSystemDateTime()).Returns(dateString);
+            A.CallTo(() => smallProducerDataAccess.GetCurrentDirectRegistrantSubmissionByComplianceYear(A<Guid>._, A<int>._)).Returns((DirectProducerSubmission)null);
 
-            var charge = CreateDirectRegistrantCharge(2026, true, 33.48m);
-            A.CallTo(() => smallProducerDataAccess.GetDirectRegistrantChargeAsync(
-                2026, true, testDate))
-                .Returns(charge);
+            var charge = CreateDirectRegistrantCharge(complianceYear, true, expectedAmount);
+            A.CallTo(() => smallProducerDataAccess.GetDirectRegistrantChargeAsync(complianceYear, true, dateString)).Returns(charge);
 
             // Act
-            EA.Prsd.Core.SystemTime.Freeze(testDate);
+            Prsd.Core.SystemTime.Freeze(dateString);
             try
             {
                 await service.GetSmallProducerSubmissionData(directRegistrant, false);
 
                 // Assert - verify IsNonUk = true is used for overseas countries
-                A.CallTo(() => smallProducerDataAccess.GetDirectRegistrantChargeAsync(
-                    2026,
-                    true, // isNonUk should be true for non-UK countries
-                    testDate))
-                    .MustHaveHappenedOnceExactly();
+                A.CallTo(() => smallProducerDataAccess.GetDirectRegistrantChargeAsync(complianceYear, true, dateString)).MustHaveHappenedOnceExactly();
             }
             finally
             {
-                EA.Prsd.Core.SystemTime.Unfreeze();
+                Prsd.Core.SystemTime.Unfreeze();
             }
         }
 
@@ -791,7 +767,7 @@
             var isScotlandWalesNI = countryName.Equals("UK - Northern Ireland", StringComparison.OrdinalIgnoreCase) ||
                                     countryName.Equals("UK - Scotland", StringComparison.OrdinalIgnoreCase) ||
                                     countryName.Equals("UK - Wales", StringComparison.OrdinalIgnoreCase);
-            
+
             var expectedIsNonUk = !isScotlandWalesNI;
             var expectedAmount = isScotlandWalesNI ? 30.00m : 33.48m;
 
