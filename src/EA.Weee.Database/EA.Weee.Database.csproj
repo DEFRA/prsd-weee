@@ -494,6 +494,7 @@
     <Content Include="scripts\Update\Release 8\Sprint6\20260410-0900-Insert-AnnualCharge2027.sql" />
     <Content Include="scripts\Update\Release 8\Sprint6\20260420-1653-Alter-spgProducerPublicRegisterCSVDataByComplianceYear.sql" />
     <Content Include="scripts\Update\Release 8\Sprint7\20260505-1016-DirectRegistrantChargeIncreaseFees_2027.sql" />
+    <Content Include="scripts\Update\Release 8\Sprint7\20260505-1215-OnlineMarketPlaceCharge-For-2027.sql" />
     <None Include="rebuild-development.bat" />
     <Content Include="scripts\Update\Release 4\20220311-1315-sent-on-for-treatment-report.sql" />
     <Content Include="scripts\Update\Release 4\20220923-1751-remove-weeesenton-table-relation.sql" />
