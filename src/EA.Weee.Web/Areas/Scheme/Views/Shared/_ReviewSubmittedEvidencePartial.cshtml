@@ -94,6 +94,7 @@
         <tbody class="govuk-table__body">
             @if (Model.EvidenceNotesDataList.Any())
             {
+                var returnRouteValues = ReturnUrlHelper.BuildReturnRouteValues(Context.Request.QueryString);
                 foreach (var note in Model.EvidenceNotesDataList)
                 {
                     <tr class="govuk-table__row">
@@ -115,76 +116,23 @@
                                 {
                                     if (Model.SchemeInfo != null)
                                     {
-                                        @Html.NavigationRouteLink("Review evidence",
-                                                                  "Review evidence note with reference ID " + note.ReferenceDisplay,
-                                                                  "Scheme_evidence_default",
-                                                                  new
-                                                                  {
-                                                                      action = "ReviewEvidenceNote",
-                                                                      controller = "ManageEvidenceNotes",
-                                                                      pcsId = Model.OrganisationId,
-                                                                      evidenceNoteId = note.Id,
-                                                                      selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
-                                                                      queryString = ReturnUrlHelper.TidyQueryString(Context.Request.QueryString)
-                                                                  },
-                                                                  null
-                                                                )
+                                        @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference ID " + @note.ReferenceDisplay, "Scheme_evidence_default", ReturnUrlHelper.MergeRouteValues(new { action = "ReviewEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, returnRouteValues), null)
                                     }
                                 }
                                 else
                                 {
-                                    @Html.NavigationRouteLink("View",
-                                                              "View evidence note with reference ID " + note.ReferenceDisplay,
-                                                              "Scheme_evidence_default",
-                                                              new
-                                                              {
-                                                                  action = "ViewEvidenceNote",
-                                                                  controller = "ManageEvidenceNotes",
-                                                                  pcsId = Model.OrganisationId,
-                                                                  evidenceNoteId = note.Id,
-                                                                  selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
-                                                                  redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence),
-                                                                  queryString = ReturnUrlHelper.TidyQueryString(Context.Request.QueryString)
-                                                              },
-                                                              null
-                                                            )
+                                    @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, "Scheme_evidence_default", ReturnUrlHelper.MergeRouteValues(new { action = "ViewEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence) }, returnRouteValues), null)
                                 }
                             }
                             else
                             {
                                 if (Model.CanSchemeManageEvidence)
                                 {
-                                    @Html.NavigationRouteLink("Review evidence",
-                                                              "Review evidence note with reference ID " + note.ReferenceDisplay,
-                                                              SchemeTransferEvidenceRedirect.ReviewSubmittedTransferEvidenceRouteName,
-                                                              new
-                                                              {
-                                                                  pcsId = Model.OrganisationId,
-                                                                  evidenceNoteId = note.Id,
-                                                                  selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
-                                                                  area = "Scheme",
-                                                                  returnToView = false,
-                                                                  redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence),
-                                                                  queryString = ReturnUrlHelper.TidyQueryString(Context.Request.QueryString)
-                                                              },
-                                                              null
-                                                            )
+                                    @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference ID " + @note.ReferenceDisplay, SchemeTransferEvidenceRedirect.ReviewSubmittedTransferEvidenceRouteName, ReturnUrlHelper.MergeRouteValues(new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, area = "Scheme", returnToView = false, redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence) }, returnRouteValues), null)
                                 }
                                 else
                                 {
-                                    @Html.NavigationRouteLink("View",
-                                                              "View transfer note with reference ID " + note.ReferenceDisplay,
-                                                              note.SchemeViewRouteName,
-                                                              new
-                                                              {
-                                                                  pcsId = Model.OrganisationId,
-                                                                  evidenceNoteId = note.Id,
-                                                                  selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear,
-                                                                  redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence),
-                                                                  queryString = ReturnUrlHelper.TidyQueryString(Context.Request.QueryString)
-                                                              },
-                                                              null
-                                                            )
+                                    @Html.NavigationRouteLink("View", "View transfer note with reference ID " + @note.ReferenceDisplay, note.SchemeViewRouteName, ReturnUrlHelper.MergeRouteValues(new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = Extensions.ToDisplayString(ManageEvidenceNotesDisplayOptions.ReviewSubmittedEvidence) }, returnRouteValues), null)
                                 }
                             }
                         </td>
