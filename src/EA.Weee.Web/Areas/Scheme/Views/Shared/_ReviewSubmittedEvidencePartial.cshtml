@@ -116,7 +116,7 @@
                                 {
                                     if (Model.SchemeInfo != null)
                                     {
-                                        @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference ID " + @note.ReferenceDisplay, "Scheme_evidence_default", ReturnUrlHelper.MergeRouteValues(new { action = "ReviewEvidenceNote", controller = "ManageEvidenceNotes", pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, returnRouteValues), null)
+                                        @Html.NavigationRouteLink("Review evidence", "Review evidence note with reference ID " + @note.ReferenceDisplay, SchemeTransferEvidenceRedirect.ReviewSubmittedEvidenceNoteRouteName, ReturnUrlHelper.MergeRouteValues(new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, returnRouteValues), null)
                                     }
                                 }
                                 else

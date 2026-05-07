@@ -125,6 +125,12 @@
                 namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
 
             context.MapLowercaseDashedRoute(
+                name: SchemeTransferEvidenceRedirect.ReviewSubmittedEvidenceNoteRouteName,
+                url: "Scheme/{pcsId}/manage-evidence-notes/review-submitted-evidence-note/{evidenceNoteId}",
+                defaults: new { action = "ReviewEvidenceNote", controller = "ManageEvidenceNotes", area = "Scheme" },
+                namespaces: new[] { typeof(ManageEvidenceNotesController).Namespace });
+
+            context.MapLowercaseDashedRoute(
                 name: "Scheme_evidence_default",
                 url: "Scheme/{pcsId}/{controller}/{action}/{evidenceNoteId}",
                 defaults: new { action = "Index", controller = "Home", area = "Scheme" },
