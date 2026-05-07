@@ -106,7 +106,9 @@
                         Complete = submission.ServiceOfNoticeComplete,
                         Action = nameof(ProducerSubmissionController.ServiceOfNotice)
                     },
-                }
+                },
+                HasPaid = submission.HasPaid,
+                Status = submission.Status
             };
 
             if (SmallProducerSubmissionData.HasAuthorisedRepresentitive)
