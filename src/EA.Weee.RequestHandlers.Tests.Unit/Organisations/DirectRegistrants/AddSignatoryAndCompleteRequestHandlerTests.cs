@@ -151,41 +151,6 @@
         }
 
         [Fact]
-        public async Task HandleAsync_UpdatesBrandName_WhenBrandNameExists()
-        {
-            // Arrange
-            var request = CreateValidRequest();
-            var directRegistrant = SetupValidDirectRegistrant(true, true);
-            var name = TestFixture.Create<string>();
-            directProducerSubmissionCurrentYear.CurrentSubmission.AddOrUpdateBrandName(new BrandName(name));
-
-            // Act
-            await handler.HandleAsync(request);
-
-            // Assert
-            directRegistrant.BrandName.Name.Should().Be(name);
-        }
-
-        [Fact]
-        public async Task HandleAsync_UpdatesAuthorisedRepresentative_WhenExists()
-        {
-            // Arrange
-            var request = CreateValidRequest();
-            var directRegistrant = SetupValidDirectRegistrant(true, true);
-
-            var name = TestFixture.Create<string>();
-            var tradingName = TestFixture.Create<string>();
-            directProducerSubmissionCurrentYear.CurrentSubmission.AuthorisedRepresentative =
-                new AuthorisedRepresentative(name, tradingName, A.Fake<ProducerContact>());
-
-            // Act
-            await handler.HandleAsync(request);
-
-            // Assert
-            directRegistrant.AuthorisedRepresentative.OverseasProducerTradingName.Should().Be(tradingName);
-        }
-
-        [Fact]
         public async Task HandleAsync_SetsSubmissionDateAndStatus()
         {
             // Arrange
@@ -208,68 +173,105 @@
         }
 
         [Fact]
-        public async Task HandleAsync_UpdatesOrganisationDetails()
+        public async Task HandleAsync_DoesNotOverwriteRootBrandName_WhenSubmissionHasBrandName()
         {
-            // Arrange
+            // Arrange — root DirectRegistrant has its own brand name;
+            //           submission history has a separate brand name instance (set up independently in SetupValidDirectRegistrant)
             var request = CreateValidRequest();
-            var directRegistrant = SetupValidDirectRegistrant(true, true);
+            var directRegistrant = SetupValidDirectRegistrant(existingBrandName: true, existingAddress: true);
+            var originalRootBrandName = directRegistrant.BrandName?.Name;
+
+            // Act
+            await handler.HandleAsync(request);
+
+            // Assert — root BrandName must remain unchanged; per-year data stays in submission history only
+            directRegistrant.BrandName?.Name.Should().Be(originalRootBrandName,
+                "completing a submission must not sync the submission history BrandName back to the root DirectRegistrant");
+        }
+
+        [Fact]
+        public async Task HandleAsync_DoesNotOverwriteRootAuthorisedRepresentative_WhenSubmissionHasAuthRep()
+        {
+            // Arrange — root DirectRegistrant has "oldTradingName", submission history has a different auth rep
+            var request = CreateValidRequest();
+            var directRegistrant = SetupValidDirectRegistrant(existingBrandName: true, existingAddress: true, useAuthRep: true);
+            var originalTradingName = directRegistrant.AuthorisedRepresentative?.OverseasProducerTradingName;
+            directProducerSubmissionCurrentYear.CurrentSubmission.AuthorisedRepresentative =
+                new AuthorisedRepresentative(TestFixture.Create<string>(), TestFixture.Create<string>(), A.Fake<ProducerContact>());
+
+            // Act
+            await handler.HandleAsync(request);
+
+            // Assert — root AuthorisedRepresentative must remain unchanged
+            directRegistrant.AuthorisedRepresentative?.OverseasProducerTradingName.Should().Be(originalTradingName,
+                "completing a submission must not sync the submission history AuthorisedRepresentative back to the root DirectRegistrant");
+        }
+
+        [Fact]
+        public async Task HandleAsync_DoesNotOverwriteRootOrganisationDetails_WhenSubmissionHasCompanyDetails()
+        {
+            // Arrange — root Organisation has "companyName"/"tradingName", submission history has different values
+            var request = CreateValidRequest();
+            var directRegistrant = SetupValidDirectRegistrant(existingBrandName: true, existingAddress: true);
+            var originalName = directRegistrant.Organisation.Name;
+            var originalTradingName = directRegistrant.Organisation.TradingName;
             directProducerSubmissionCurrentYear.CurrentSubmission.CompanyName = TestFixture.Create<string>();
             directProducerSubmissionCurrentYear.CurrentSubmission.TradingName = TestFixture.Create<string>();
 
             // Act
             await handler.HandleAsync(request);
 
-            // Assert
-            directRegistrant.Organisation.Name.Should().Be(directProducerSubmissionCurrentYear.CurrentSubmission.CompanyName);
-            directRegistrant.Organisation.TradingName.Should().Be(directProducerSubmissionCurrentYear.CurrentSubmission.TradingName);
+            // Assert — root Organisation.Name and TradingName must not be overwritten from submission history
+            directRegistrant.Organisation.Name.Should().Be(originalName,
+                "completing a submission must not sync the submission history CompanyName back to the root Organisation");
+            directRegistrant.Organisation.TradingName.Should().Be(originalTradingName,
+                "completing a submission must not sync the submission history TradingName back to the root Organisation");
         }
 
         [Fact]
-        public async Task HandleAsync_UpdatesAddress_WhenExists()
+        public async Task HandleAsync_DoesNotOverwriteRootOrganisationBusinessAddress_WhenSubmissionHasAddress()
         {
-            // Arrange
+            // Arrange — root Organisation has its own business address
             var request = CreateValidRequest();
-            var directRegistrant = SetupValidDirectRegistrant(true, true);
+            var directRegistrant = SetupValidDirectRegistrant(existingBrandName: true, existingAddress: true);
+            var originalAddress = directRegistrant.Organisation.BusinessAddress;
 
             // Act
             await handler.HandleAsync(request);
 
-            // Assert
-            directRegistrant.Organisation.BusinessAddress.Should().BeEquivalentTo(directProducerSubmissionCurrentYear.CurrentSubmission.BusinessAddress);
+            // Assert — root Organisation.BusinessAddress must not be replaced with submission history address
+            directRegistrant.Organisation.BusinessAddress.Should().BeSameAs(originalAddress,
+                "completing a submission must not sync the submission history BusinessAddress back to the root Organisation");
         }
 
         [Fact]
-        public async Task HandleAsync_UpdatesContact_WhenExists()
+        public async Task HandleAsync_DoesNotOverwriteRootContact_WhenSubmissionHasContact()
         {
-            // Arrange
+            // Arrange — root DirectRegistrant has its own contact
             var request = CreateValidRequest();
-            var directRegistrant = SetupValidDirectRegistrant(true, true);
+            var directRegistrant = SetupValidDirectRegistrant(existingBrandName: true, existingAddress: true);
+            var originalContact = directRegistrant.Contact;
 
             // Act
             await handler.HandleAsync(request);
 
-            // Assert
-            directRegistrant.Contact.Should()
-                .BeEquivalentTo(directProducerSubmissionCurrentYear.CurrentSubmission.Contact);
+            // Assert — root DirectRegistrant.Contact must not be replaced with submission history contact
+            directRegistrant.Contact.Should().BeSameAs(originalContact,
+                "completing a submission must not sync the submission history Contact back to the root DirectRegistrant");
         }
 
         [Fact]
-        public async Task HandleAsync_NoBrandNameOrAuthorisedRepresentative()
+        public async Task HandleAsync_NoBrandNameOrAuthorisedRepresentative_CompletesSuccessfully()
         {
-            // Arrange
             var request = CreateValidRequest();
-            var directRegistrant = SetupValidDirectRegistrant(false, true, useAuthRep: false); // No brand name or authorised representative
-            
+            var directRegistrant = SetupValidDirectRegistrant(existingBrandName: false, existingAddress: true, useAuthRep: false);
+
             directProducerSubmissionCurrentYear.CurrentSubmission.AuthorisedRepresentative = null;
             directProducerSubmissionCurrentYear.CurrentSubmission.BrandName = null;
 
-            // Act
             var result = await handler.HandleAsync(request);
 
-            // Assert
             result.Should().BeTrue();
-            directRegistrant.BrandName.Should().BeNull();
-            directRegistrant.AuthorisedRepresentative.Should().BeNull();
             A.CallTo(() => weeeContext.SaveChangesAsync()).MustHaveHappenedOnceExactly();
         }
 
@@ -280,16 +282,25 @@
                 .With(a => a.LastName, contact.LastName)
                 .With(a => a.Position, contact.Position)
                 .Create();
-            
-            return new AddSignatoryAndCompleteRequest(directRegistrantId,  contactData);
+
+            return new AddSignatoryAndCompleteRequest(directRegistrantId, contactData);
         }
 
         private DirectRegistrant SetupValidDirectRegistrant(bool existingBrandName = false, bool existingAddress = false, bool useAuthRep = true)
         {
-            BrandName brandName = null;
+            // Root DirectRegistrant brand name — independent instance
+            BrandName rootBrandName = null;
             if (existingBrandName)
             {
-                brandName = new BrandName(TestFixture.Create<string>());
+                rootBrandName = new BrandName(TestFixture.Create<string>());
+            }
+
+            // Submission history brand name — separate instance with a different name
+            // to prevent shared-entity mutation via OverwriteWhereNull corrupting the test
+            BrandName historyBrandName = null;
+            if (existingBrandName)
+            {
+                historyBrandName = new BrandName(TestFixture.Create<string>());
             }
 
             Address businessAddress = null;
@@ -308,8 +319,11 @@
             var directRegistrantAddress = new Address("address1", "address2", "town", "county", "gu21",
                 new Country(Guid.NewGuid(), "country"), "1245", "email@email.com", "http://", "456789");
 
-            var directRegistrant = new DirectRegistrant(Organisation.CreateDirectRegistrantCompany(Domain.Organisation.OrganisationType.Partnership, "companyName", "tradingName", "1231234"),
-                brandName, new Contact("First", "Last", "Position"), directRegistrantAddress,
+            var directRegistrant = new DirectRegistrant(
+                Organisation.CreateDirectRegistrantCompany(Domain.Organisation.OrganisationType.Partnership, "companyName", "tradingName", "1231234"),
+                rootBrandName,
+                new Contact("First", "Last", "Position"),
+                directRegistrantAddress,
                 authorisedRepresentative,
                 A.CollectionOfFake<AdditionalCompanyDetails>(2).ToList());
 
@@ -318,11 +332,14 @@
             var directProducerSubmissionNotCurrentYear = new DirectProducerSubmission(directRegistrant,
                 A.Fake<RegisteredProducer>(), SystemTime.UtcNow.Year + 1);
 
+            // Use historyBrandName (separate instance) so that root and history never share the same entity.
+            // Sharing the same instance would allow OverwriteWhereNull calls on the history to silently
+            // mutate directRegistrant.BrandName, making root-overwrite tests unreliable.
             directProducerSubmissionCurrentYear.CurrentSubmission =
-                new DirectProducerSubmissionHistory(directProducerSubmissionCurrentYear, brandName, businessAddress)
-                    {
-                        CompanyName = TestFixture.Create<string>()
-                    };
+                new DirectProducerSubmissionHistory(directProducerSubmissionCurrentYear, historyBrandName, businessAddress)
+                {
+                    CompanyName = TestFixture.Create<string>()
+                };
 
             directProducerSubmissionCurrentYear.CurrentSubmission.AddOrUpdateContact(contact);
 
@@ -333,7 +350,7 @@
 
             directRegistrant.DirectProducerSubmissions.Add(directProducerSubmissionCurrentYear);
             directRegistrant.DirectProducerSubmissions.Add(directProducerSubmissionNotCurrentYear);
-            
+
             A.CallTo(() => genericDataAccess.GetById<DirectRegistrant>(directRegistrantId))
                 .Returns(Task.FromResult(directRegistrant));
 
