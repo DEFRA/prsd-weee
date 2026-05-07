@@ -1,4 +1,4 @@
-GO
+﻿GO
 /****** Object:  StoredProcedure [Producer].[spgProducerPublicRegisterCSVDataByComplianceYear]    Script Date: 07/05/2026 ******/
 SET ANSI_NULLS ON
 GO
