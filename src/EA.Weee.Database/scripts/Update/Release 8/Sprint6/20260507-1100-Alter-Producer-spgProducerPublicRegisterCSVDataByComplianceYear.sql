@@ -40,7 +40,7 @@ SELECT
     -- Registered Office Contact Details
     CASE
 		WHEN ORG.OrganisationType = 1 THEN ROC.Telephone
-		ELSE NULL
+		ELSE NULL 
 	END AS 'ROATelephone',
 	CASE
 		WHEN ORG.OrganisationType = 1 THEN ROC.Email
