@@ -100,7 +100,7 @@ BEGIN
         INNER JOIN [Producer].[RegisteredProducer] RP ON RP.Id = DPS.RegisteredProducerId
 
         -- Latest submitted history row for this compliance-year submission.
-        -- FIX: Added CompanyName and AuthorisedRepresentativeId so we read per-year values
+        -- FIX: Added CompanyName, AuthorisedRepresentativeId and BusinessAddressId so we read per-year values
         --      instead of root entity values.
         INNER JOIN (
             SELECT
@@ -109,6 +109,7 @@ BEGIN
                 Id,
                 CompanyName,
                 AuthorisedRepresentativeId,
+                BusinessAddressId,
                 ROW_NUMBER() OVER (
                     PARTITION BY DirectProducerSubmissionId
                     ORDER BY SubmittedDate DESC
