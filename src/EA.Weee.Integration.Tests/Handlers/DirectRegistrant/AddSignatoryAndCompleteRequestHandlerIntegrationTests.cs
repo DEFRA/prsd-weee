@@ -33,25 +33,61 @@
                 result = AsyncHelper.RunSync(() => handler.HandleAsync(request));
             };
 
-            private readonly It shouldUpdateTheData = () =>
+            private readonly It shouldSetSubmissionStatusAndDate = () =>
+            {
+                var submission = Query.GetDirectProducerSubmissionById(directProducerSubmission.Id);
+
+                submission.CurrentSubmission.SubmittedDate.Should().NotBeNull();
+                submission.DirectProducerSubmissionStatus.Should().Be(DirectProducerSubmissionStatus.Complete);
+            };
+
+            private readonly It shouldSetAppropriateSignatoryFromRequest = () =>
             {
                 var submission = Query.GetDirectProducerSubmissionById(directProducerSubmission.Id);
 
                 submission.CurrentSubmission.Contact.FirstName.Should().Be(request.ContactData.FirstName);
                 submission.CurrentSubmission.Contact.LastName.Should().Be(request.ContactData.LastName);
                 submission.CurrentSubmission.Contact.Position.Should().Be(request.ContactData.Position);
+            };
 
-                submission.DirectRegistrant.Organisation.BusinessAddress.Should().Be(submission.CurrentSubmission.BusinessAddress);
-                submission.DirectRegistrant.Organisation.Name.Should().Be(submission.CurrentSubmission.CompanyName);
-                submission.DirectRegistrant.Organisation.TradingName.Should().Be(submission.CurrentSubmission.TradingName);
+            private readonly It shouldNotOverwriteRootOrganisationDetailsFromSubmissionHistory = () =>
+            {
+                var submission = Query.GetDirectProducerSubmissionById(directProducerSubmission.Id);
 
-                submission.DirectRegistrant.Contact.Should().Be(submission.CurrentSubmission.Contact);
-                submission.DirectRegistrant.Address.Should().Be(submission.CurrentSubmission.ContactAddress);
-                submission.DirectRegistrant.BrandName.Should().Be(submission.CurrentSubmission.BrandName);
-                submission.DirectRegistrant.AuthorisedRepresentative.Should().Be(submission.CurrentSubmission.AuthorisedRepresentative);
+                // Root organisation must remain unchanged — not synced from current year submission
+                submission.DirectRegistrant.Organisation.Name.Should()
+                    .NotBe(submission.CurrentSubmission.CompanyName,
+                        "root Organisation.Name must not be overwritten with per-year submission data");
+                submission.DirectRegistrant.Organisation.TradingName.Should()
+                    .NotBe(submission.CurrentSubmission.TradingName,
+                        "root Organisation.TradingName must not be overwritten with per-year submission data");
+            };
 
-                submission.CurrentSubmission.SubmittedDate.Should().NotBeNull();
-                submission.DirectProducerSubmissionStatus.Should().Be(DirectProducerSubmissionStatus.Complete);
+            private readonly It shouldNotOverwriteRootBrandNameFromSubmissionHistory = () =>
+            {
+                var submission = Query.GetDirectProducerSubmissionById(directProducerSubmission.Id);
+
+                // Root BrandName entity must NOT be the same DB row as history BrandName.
+                // If they shared the same entity, Year 2 completion would corrupt Year 1's BrandName via OverwriteWhereNull.
+                if (submission.DirectRegistrant.BrandNameId.HasValue && submission.CurrentSubmission.BrandNameId.HasValue)
+                {
+                    submission.DirectRegistrant.BrandNameId.Value.Should()
+                        .NotBe(submission.CurrentSubmission.BrandNameId.Value,
+                            "root DirectRegistrant.BrandName must not share the same entity as submission history BrandName");
+                }
+            };
+
+            private readonly It shouldNotOverwriteRootContactFromSubmissionHistory = () =>
+            {
+                var submission = Query.GetDirectProducerSubmissionById(directProducerSubmission.Id);
+
+                // Root contact entity must remain the original registration contact, not replaced by submission history.
+                submission.DirectRegistrant.ContactId.Should().HaveValue();
+                submission.CurrentSubmission.ContactId.Should().HaveValue();
+
+                submission.DirectRegistrant.ContactId.Value.Should()
+                    .NotBe(submission.CurrentSubmission.ContactId.Value,
+                        "root DirectRegistrant.Contact must not be overwritten with per-year submission contact");
             };
         }
 

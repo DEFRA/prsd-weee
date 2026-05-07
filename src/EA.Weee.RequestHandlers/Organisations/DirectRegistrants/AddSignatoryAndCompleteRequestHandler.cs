@@ -31,24 +31,6 @@
             var contact = ValueObjectInitializer.CreateContact(request.ContactData);
             currentYearSubmission.CurrentSubmission.AddOrUpdateAppropriateSignatory(contact);
 
-            currentYearSubmission.DirectRegistrant.Organisation.AddOrUpdateAddress(AddressType.RegisteredOrPPBAddress, currentYearSubmission.CurrentSubmission.BusinessAddress);
-
-            currentYearSubmission.DirectRegistrant.Organisation.UpdateDirectRegistrantDetails(currentYearSubmission.CurrentSubmission.CompanyName,
-                currentYearSubmission.CurrentSubmission.TradingName, currentYearSubmission.DirectRegistrant.Organisation.CompanyRegistrationNumber);
-
-            currentYearSubmission.DirectRegistrant.AddOrUpdateMainContactPerson(currentYearSubmission.CurrentSubmission.Contact);
-            currentYearSubmission.DirectRegistrant.AddOrUpdateAddress(currentYearSubmission.CurrentSubmission.ContactAddress);
-
-            if (currentYearSubmission.CurrentSubmission.BrandName != null)
-            {
-                currentYearSubmission.DirectRegistrant.AddOrUpdateBrandName(currentYearSubmission.CurrentSubmission.BrandName);
-            }
-
-            if (currentYearSubmission.CurrentSubmission.AuthorisedRepresentative != null)
-            {
-                currentYearSubmission.DirectRegistrant.AddOrUpdateAuthorisedRepresentitive(currentYearSubmission.CurrentSubmission.AuthorisedRepresentative);
-            }
-
             var systemDateTime = await systemDataAccess.GetSystemDateTime();
 
             var currentDateTime = SystemTime.UtcNow;
