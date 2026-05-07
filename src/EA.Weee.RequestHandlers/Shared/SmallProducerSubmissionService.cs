@@ -35,29 +35,45 @@
 
             var submissionHistory = directRegistrant.DirectProducerSubmissions;
 
+            // Prefer current year's submission history data over root entity data so that
+            // each compliance year's details are self-contained and do not overwrite one another.
+            var currentHistory = currentYearSubmission?.CurrentSubmission;
+
             var submissionData = new SmallProducerSubmissionData
             {
                 DirectRegistrantId = directRegistrant.Id,
 
                 OrganisationData = organisation,
-                ContactData = directRegistrant.Contact != null
-                    ? mapper.Map<Contact, ContactData>(directRegistrant.Contact)
-                    : null,
-                ContactAddressData = directRegistrant.Address != null
-                    ? mapper.Map<Address, AddressData>(directRegistrant.Address)
-                    : null,
-                HasAuthorisedRepresentitive = directRegistrant.AuthorisedRepresentativeId.HasValue,
-                AuthorisedRepresentitiveData = directRegistrant.AuthorisedRepresentativeId.HasValue
-                    ? mapper.Map<AuthorisedRepresentative, AuthorisedRepresentitiveData>(directRegistrant.AuthorisedRepresentative)
-                    : null,
+                ContactData = currentHistory?.ContactId.HasValue == true
+                    ? mapper.Map<Contact, ContactData>(currentHistory.Contact)
+                    : (directRegistrant.Contact != null
+                        ? mapper.Map<Contact, ContactData>(directRegistrant.Contact)
+                        : null),
+                // Use ContactId (not ContactAddressId) as the gate — consistent with SmallProducerSubmissionHistoryDataMap
+                // which gates contact address on ContactId.HasValue since both are always written together.
+                ContactAddressData = currentHistory?.ContactId.HasValue == true
+                    ? mapper.Map<Address, AddressData>(currentHistory.ContactAddress)
+                    : (directRegistrant.Address != null
+                        ? mapper.Map<Address, AddressData>(directRegistrant.Address)
+                        : null),
+                HasAuthorisedRepresentitive = currentHistory?.AuthorisedRepresentativeId.HasValue == true
+                    ? true
+                    : directRegistrant.AuthorisedRepresentativeId.HasValue,
+                AuthorisedRepresentitiveData = currentHistory?.AuthorisedRepresentativeId.HasValue == true
+                    ? mapper.Map<AuthorisedRepresentative, AuthorisedRepresentitiveData>(currentHistory.AuthorisedRepresentative)
+                    : (directRegistrant.AuthorisedRepresentativeId.HasValue
+                        ? mapper.Map<AuthorisedRepresentative, AuthorisedRepresentitiveData>(directRegistrant.AuthorisedRepresentative)
+                        : null),
                 CurrentSubmission = currentYearSubmission != null
                     ? mapper.Map<SmallProducerSubmissionHistoryData>(
                         new DirectProducerSubmissionSource(directRegistrant, currentYearSubmission))
                     : null,
-                SubmissionHistory = new Dictionary<int, SmallProducerSubmissionHistoryData>(),
+                SubmissionHistory = new System.Collections.Generic.Dictionary<int, SmallProducerSubmissionHistoryData>(),
                 ProducerRegistrationNumber = submissionHistory.Any() ? submissionHistory.First().RegisteredProducer.ProducerRegistrationNumber : string.Empty,
                 CurrentSystemYear = systemTime.Year,
-                EeeBrandNames = directRegistrant.BrandNameId.HasValue ? directRegistrant.BrandName.Name : string.Empty
+                EeeBrandNames = currentHistory?.BrandNameId.HasValue == true
+                    ? currentHistory.BrandName.Name
+                    : (directRegistrant.BrandNameId.HasValue ? directRegistrant.BrandName.Name : string.Empty)
             };
 
             foreach (var directProducerSubmission in submissionHistory)
