@@ -3,10 +3,21 @@
 @using EA.Weee.Web.Areas.Producer.Controllers
 @using MvcNavigationHelpers
 @using EA.Weee.Web.RazorHelpers
+@using EA.Weee.Core.DirectRegistrant
+@using Resources = Resources.AppropriateSignatory.AppropriateSignatory
 @model EA.Weee.Web.Areas.Producer.ViewModels.AppropriateSignatoryViewModel
 
 @{
-    const string title = "Submit application to register";
+    string title = string.Empty;
+    if (Model.HasPaid == true && Model.Status == SubmissionStatus.Returned)
+    {
+        title = Resources.ReturnedRegisterTitle;
+    }
+    else
+    {
+        title = Resources.RegisterTitle;
+    }
+
     ViewBag.Title = title + " - GOV.UK";
 }
 @section full_main_content
@@ -19,9 +30,18 @@
         @Html.Gds().ValidationSummary()
         @Html.HiddenFor(m => m.OrganisationId)
         @Html.HiddenFor(m => m.DirectRegistrantId)
-        <header class="hgroup">
-            <h1 class="govuk-heading-l">@title</h1>
-        </header>
+        if (Model.HasPaid == true && Model.Status == SubmissionStatus.Returned)
+        {
+            <header class="hgroup">
+                <h1 class="govuk-heading-l">@Resources.ReturnedRegisterTitle</h1>
+            </header>
+        }
+        else
+        {
+            <header class="hgroup">
+                <h1 class="govuk-heading-l">@Resources.RegisterTitle</h1>
+            </header>
+        }
 
         <h2 class="govuk-heading-m">Appropriate signatory</h2>
 
@@ -52,7 +72,10 @@
         <h2 class="govuk-heading-m">Now submit your application</h2>
 
         <p class="govuk-body">By submitting this application you are confirming that, to the best of your knowledge, the details you are providing are correct.</p>
-        <p class="govuk-body">Pressing submit will take you to our online payments page. The charge for registering is £@Model.DirectRegistrantChargeAmount.</p>
+        if (Model.HasPaid == false && Model.Status != SubmissionStatus.Returned)
+        {
+            <p class="govuk-body">Pressing submit will take you to our online payments page. The charge for registering is £@Model.DirectRegistrantChargeAmount.</p>
+        }
 
         <div class="govuk-button-group govuk-!-padding-top-3">
             @this.WeeeGds().Button("Submit your application")

@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Web.Areas.Producer.ViewModels
 {
+    using EA.Weee.Core.DirectRegistrant;
     using System;
     using System.Collections.Generic;
 
@@ -18,5 +19,9 @@
         }
 
         public decimal DirectRegistrantChargeAmount { get; set; }
+
+        public bool HasPaid { get; set; }
+
+        public SubmissionStatus Status { get; set; }
     }
 }
