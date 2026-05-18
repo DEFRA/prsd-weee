@@ -88,6 +88,7 @@
             if (paid)
             {
                 submission.PaymentFinished = true;
+                submission.ManualPaymentReceivedDate = SystemTime.UtcNow;
             }
 
             await wrapper.WeeeContext.SaveChangesAsync();
