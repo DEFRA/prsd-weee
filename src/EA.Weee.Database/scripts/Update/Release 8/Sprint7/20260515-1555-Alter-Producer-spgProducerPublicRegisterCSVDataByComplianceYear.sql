@@ -273,8 +273,7 @@ WHERE
 	(
 		DPS.FinalPaymentSessionId IS NOT NULL OR
 		DPS.ManualPaymentReceivedDate IS NOT NULL
-	) AND
-	O.OrganisationType = 1 -- Registered company
+	)
 
 ORDER BY
 	IsDirectProducer,
