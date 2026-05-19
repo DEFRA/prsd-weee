@@ -3,7 +3,7 @@
    =========================== */
 
 SET NOCOUNT ON;
-DECLARE @EffectiveFrom NVARCHAR(10) = '2027-01-01';
+DECLARE @EffectiveFrom NVARCHAR(10) = '2026-09-01';
 DECLARE @ComplianceYear INT = 2027;
 
 INSERT INTO [Lookup].[ChargeBandAmount] (
