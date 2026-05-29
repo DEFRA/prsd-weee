@@ -43,7 +43,9 @@
                          Name = caUser.Role.Name,
                          Description = caUser.Role.Description,
                      },
-                     IsCompetentAuthorityUser = true
+                     IsCompetentAuthorityUser = true,
+                     LastLoginDate = u.LastLoginDate,
+                     UserCreated = u.UserCreated
                  }).SingleOrDefaultAsync();
 
             return competentAuthorityUser;
@@ -67,7 +69,9 @@
                      OrganisationName = org.Name ?? org.TradingName,
                      UserStatus = (UserStatus)orgUser.UserStatus.Value,
                      OrganisationId = orgUser.OrganisationId,
-                     IsCompetentAuthorityUser = false
+                     IsCompetentAuthorityUser = false,
+                     LastLoginDate = u.LastLoginDate,
+                     UserCreated = u.UserCreated
                  }).SingleOrDefaultAsync();
 
             return organisationsUser;

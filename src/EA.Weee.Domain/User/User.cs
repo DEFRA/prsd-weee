@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.Domain.User
 {
+    using System;
     using Prsd.Core;
 
     public class User
@@ -42,5 +43,9 @@
             FirstName = firstName;
             Surname = lastName;
         }
+
+        public DateTime? LastLoginDate { get; private set; }
+
+        public DateTime? UserCreated { get; private set; }
     }
 }
