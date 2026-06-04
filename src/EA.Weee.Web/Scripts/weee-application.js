@@ -38,6 +38,47 @@
         return disableButtonFor1Second($(this));
     });
 
+    // Prevent multiple submissions of the same form. The per-button debounce
+    // above only protects against repeated mouse clicks on the same button;
+    // this handler additionally covers:
+    //   - Enter-key submissions from inside an input (no button click fires)
+    //   - Programmatic submits via $form.submit()
+    //   - Any subsequent submit attempt of the same form instance
+    //
+    // The first submit is allowed through and the submit buttons inside the
+    // form are disabled (with aria-disabled for assistive tech) so the user
+    // gets immediate visual feedback. Because a disabled control's value is
+    // not posted, a hidden input mirroring each submit button's name/value
+    // is appended before disabling so any server-side code that branches on
+    // the button name continues to receive it.
+    $(document).on('submit', 'form', function () {
+        var $form = $(this);
+
+        if ($form.data('weeeSubmitted')) {
+            return false;
+        }
+        $form.data('weeeSubmitted', true);
+
+        $form.find('button[type=submit], input[type=submit]').each(function () {
+            var $btn = $(this);
+
+            if ($btn.is(':disabled')) {
+                return;
+            }
+
+            var name = $btn.attr('name');
+            if (name) {
+                $('<input>', {
+                    type: 'hidden',
+                    name: name,
+                    value: $btn.val()
+                }).appendTo($form);
+            }
+
+            $btn.prop('disabled', true).attr('aria-disabled', 'true');
+        });
+    });
+
     // There is a bug with jQuery UI autocomplete whereby the content
     // of the drop-down list has the incorrect width. a fix for this
     // is to override the implementation of "_resizeMenu" to correctly
