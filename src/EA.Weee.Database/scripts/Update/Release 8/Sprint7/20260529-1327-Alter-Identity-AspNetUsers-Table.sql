@@ -23,6 +23,6 @@ END
 
 IF COL_LENGTH('Identity.AspNetUsers','LastLoginDate') IS NULL
 BEGIN
-	ALTER TABLE [Identity].[LastLoginDate] ADD LastLoginDate DATETIME2(7) NULL
+	ALTER TABLE [Identity].[AspNetUsers] ADD LastLoginDate DATETIME2(7) NULL
     PRINT N'Added LastLoginDate column';
 END
