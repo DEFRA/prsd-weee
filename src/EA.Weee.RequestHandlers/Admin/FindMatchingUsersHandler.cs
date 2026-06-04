@@ -92,6 +92,20 @@
                         .ThenBy(u => u.Id);
                     break;
 
+                case FindMatchingUsers.OrderBy.LastLoginDateAscending:
+                    orderedResults = results
+                        .OrderBy(u => u.LastLoginDate)
+                        .ThenBy(u => u.FullName)
+                        .ThenBy(u => u.Id);
+                    break;
+
+                case FindMatchingUsers.OrderBy.LastLoginDateDescending:
+                    orderedResults = results
+                        .OrderByDescending(u => u.LastLoginDate)
+                        .ThenBy(u => u.FullName)
+                        .ThenBy(u => u.Id);
+                    break;
+
                 default:
                     throw new NotSupportedException();
             }

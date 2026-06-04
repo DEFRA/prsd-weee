@@ -13,7 +13,8 @@
                 Id = source.Id,
                 Email = source.Email,
                 FirstName = source.FirstName,
-                Surname = source.Surname
+                Surname = source.Surname,
+                LastLoginDate = source.LastLoginDate
             };
         }
     }

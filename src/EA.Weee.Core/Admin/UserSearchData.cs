@@ -34,5 +34,8 @@
         {
             get { return string.Format("{0} {1}", FirstName, LastName); }
         }
+        public DateTime? LastLoginDate { get; set; }
+
+        public DateTime? UserCreated { get; set; }
     }
 }

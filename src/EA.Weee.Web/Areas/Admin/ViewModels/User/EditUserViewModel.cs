@@ -71,6 +71,12 @@
             CanManageStatus = manageUser.CanManageRoleAndStatus;
             Role = manageUser.Role;
             CanEditUser = manageUser.CanEditUser;
+            LastLoginDate = manageUser.LastLoginDate;
+            UserCreated = manageUser.UserCreated;
         }
+
+        public DateTime? LastLoginDate { get; set; }
+
+        public DateTime? UserCreated { get; set; }
     }
 }
