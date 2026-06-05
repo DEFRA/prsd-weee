@@ -1,8 +1,10 @@
 ﻿namespace EA.Weee.Web.Areas.Producer.Controllers
 {
+    using EA.Prsd.Core.Helpers;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Core;
+    using EA.Weee.Core.DataReturns;
     using EA.Weee.Core.DirectRegistrant;
     using EA.Weee.Core.Helpers;
     using EA.Weee.Core.Organisations;
@@ -154,6 +156,16 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> EditEeeeData(EditEeeDataViewModel model)
         {
+            if (model.CategoryValues[(int)WeeeCategory.PhotovoltaicPanels - 1].NonHouseHold != null
+                || model.CategoryValues[(int)WeeeCategory.VapesAndElectronicCigarettes - 1].NonHouseHold != null)
+            {
+                model.CategoryValues[(int)WeeeCategory.PhotovoltaicPanels - 1].NonHouseHold = null;
+                model.CategoryValues[(int)WeeeCategory.VapesAndElectronicCigarettes - 1].NonHouseHold = null;
+                ModelState.Remove("CategoryValues[" + ((int)WeeeCategory.PhotovoltaicPanels - 1) + "].NonHouseHold");
+                ModelState.Remove("CategoryValues[" + ((int)WeeeCategory.VapesAndElectronicCigarettes - 1) + "].NonHouseHold");
+                ModelState.AddModelError("CategoryValues", "Non-Household (B2B) tonnage is not allowed for " + WeeeCategory.PhotovoltaicPanels.GetDisplayName() + " and " + WeeeCategory.VapesAndElectronicCigarettes.GetDisplayName() + " and has been removed. Please re-save.");
+            }
+
             if (ModelState.IsValid)
             {
                 var request = editEeeDataRequestCreator.ViewModelToRequest(model);
@@ -166,8 +178,9 @@
                 if (model.RedirectToCheckAnswers == true)
                 {
                     return RedirectToAction(nameof(ProducerController.CheckAnswers),
-                    typeof(ProducerController).GetControllerName());
+                        typeof(ProducerController).GetControllerName());
                 }
+                
                 return RedirectToAction(nameof(ProducerController.TaskList),
                     typeof(ProducerController).GetControllerName());
             }
