@@ -38,6 +38,73 @@
         return disableButtonFor1Second($(this));
     });
 
+    // Track which submit control the user actually activated so that when we
+    // disable the buttons after the first submit (below) we only re-post the
+    // name/value of the button the user clicked - matching native browser
+    // behaviour on multi-submit forms.
+    var lastClickedSubmit = null;
+
+    $(document).on('click', 'button[type=submit], input[type=submit]', function () {
+        lastClickedSubmit = this;
+    });
+
+    // Prevent multiple submissions of the same form. The per-button debounce
+    // above only protects against repeated mouse clicks on the same button;
+    // this handler additionally covers:
+    //   - Enter-key submissions from inside an input (no button click fires)
+    //   - Programmatic submits via $form.submit()
+    //   - Any subsequent submit attempt of the same form instance
+    //
+    // The first submit is allowed through and the submit buttons inside the
+    // form are disabled (with aria-disabled for assistive tech) so the user
+    // gets immediate visual feedback. Because a disabled control's value is
+    // not posted, a hidden input mirroring the clicked submit button's
+    // name/value is appended before disabling so server-side code that
+    // branches on the button name continues to receive it.
+    $(document).on('submit', 'form', function () {
+        var $form = $(this);
+
+        if ($form.data('weeeSubmitted')) {
+            return false;
+        }
+        $form.data('weeeSubmitted', true);
+
+        // Resolve the submitter: the button the user clicked, or - for
+        // Enter-key / programmatic submits - the first enabled submit button
+        // in this form, which is what the browser would have used implicitly.
+        var submitter = null;
+
+        if (lastClickedSubmit && $.contains(this, lastClickedSubmit)) {
+            submitter = lastClickedSubmit;
+        } else {
+            submitter = $form.find('button[type=submit], input[type=submit]')
+                             .filter(':not(:disabled)')
+                             .get(0) || null;
+        }
+
+        if (submitter && submitter.name) {
+            $('<input>', {
+                type: 'hidden',
+                name: submitter.name,
+                value: $(submitter).val()
+            }).appendTo($form);
+        }
+
+        $form.find('button[type=submit], input[type=submit]').each(function () {
+            var $btn = $(this);
+
+            if ($btn.is(':disabled')) {
+                return;
+            }
+
+            $btn.prop('disabled', true).attr('aria-disabled', 'true');
+        });
+
+        // Clear the tracked submitter so a later form submission on the same
+        // page cannot inherit it.
+        lastClickedSubmit = null;
+    });
+
     // There is a bug with jQuery UI autocomplete whereby the content
     // of the drop-down list has the incorrect width. a fix for this
     // is to override the implementation of "_resizeMenu" to correctly

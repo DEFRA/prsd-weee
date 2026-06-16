@@ -7,6 +7,7 @@
     using EA.Weee.Requests.AatfReturn;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
 
     public class AddReturnSchemeHandler : IRequestHandler<AddReturnScheme, List<Guid>>
@@ -29,11 +30,28 @@
             authorization.EnsureCanAccessExternalArea();
 
             var @return = await returnDataAccess.GetById(message.ReturnId);
+
+            // Make the handler idempotent: duplicate or concurrent submissions
+            // (double-click, browser retry, second tab) must not create
+            // duplicate ReturnScheme rows for the same (ReturnId, SchemeId).
+            var existingSchemes = await returnSchemeDataAccess.GetSelectedSchemesByReturnId(message.ReturnId);
+            var existingSchemeIds = new HashSet<Guid>(existingSchemes.Select(rs => rs.SchemeId));
+
             var returnSchemes = new List<ReturnScheme>();
-            foreach (var schemeId in message.SchemeIds)
+            foreach (var schemeId in message.SchemeIds.Distinct())
             {
+                if (existingSchemeIds.Contains(schemeId))
+                {
+                    continue;
+                }
+
                 var scheme = await schemeDataAccess.GetSchemeOrDefault(schemeId);
                 returnSchemes.Add(new ReturnScheme(scheme, @return));
+            }
+
+            if (returnSchemes.Count == 0)
+            {
+                return new List<Guid>();
             }
 
             return await returnSchemeDataAccess.Submit(returnSchemes);
