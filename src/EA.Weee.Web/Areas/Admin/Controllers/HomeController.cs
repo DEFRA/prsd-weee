@@ -129,6 +129,11 @@
                         }
                     }
 
+                case InternalUserActivity.ArchiveData:
+                    {
+                        return RedirectToAction("ChooseArchiveType", "ArchiveData");
+                    }
+
                 default:
                     throw new NotSupportedException();
             }
@@ -138,14 +143,23 @@
         {
             var isAdmin = new ClaimsPrincipal(User).HasClaim(p => p.Value == Claims.InternalAdmin);
 
-            viewModel.PossibleValues = new List<string>();
+            //viewModel.PossibleValues = new List<string>();
 
-            viewModel.PossibleValues.Add(InternalUserActivity.ManageScheme);
-            viewModel.PossibleValues.Add(InternalUserActivity.SubmissionsHistory);
-            viewModel.PossibleValues.Add(InternalUserActivity.ProducerDetails);
-            viewModel.PossibleValues.Add(InternalUserActivity.DirectRegistrantDetails);
+            //viewModel.PossibleValues.Add(InternalUserActivity.ManageScheme);
+            //viewModel.PossibleValues.Add(InternalUserActivity.SubmissionsHistory);
+            //viewModel.PossibleValues.Add(InternalUserActivity.ProducerDetails);
+            //viewModel.PossibleValues.Add(InternalUserActivity.DirectRegistrantDetails);
+            //viewModel.PossibleValues.Add(InternalUserActivity.ManageEvidenceNotes);
 
-            viewModel.PossibleValues.Add(InternalUserActivity.ManageEvidenceNotes);
+            viewModel.PossibleValues = new List<string>
+            {
+                InternalUserActivity.ManageScheme,
+                InternalUserActivity.SubmissionsHistory,
+                InternalUserActivity.ProducerDetails,
+                InternalUserActivity.DirectRegistrantDetails,
+                InternalUserActivity.ManageEvidenceNotes
+            };
+
             if (configuration.EnablePCSObligations)
             {
                 viewModel.PossibleValues.Add(InternalUserActivity.ViewPCSObligationAndEvidenceSummary);
@@ -154,7 +168,7 @@
             {
                 viewModel.PossibleValues.Add(InternalUserActivity.ManagePcsObligations);
             }
-           
+
             if (configuration.EnableInvoicing)
             {
                 viewModel.PossibleValues.Add(InternalUserActivity.ManagePcsCharges);
@@ -163,6 +177,7 @@
             viewModel.PossibleValues.Add(InternalUserActivity.ManageAes);
             viewModel.PossibleValues.Add(InternalUserActivity.ManageUsers);
             viewModel.PossibleValues.Add(InternalUserActivity.ViewReports);
+            viewModel.PossibleValues.Add(InternalUserActivity.ArchiveData);
         }
     }
 }

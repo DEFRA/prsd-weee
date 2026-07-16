@@ -1,0 +1,32 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.RazorHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.ArchiveData.ChooseArchiveTypeViewModel
+@{
+    var title = "Which archive(s) would you like to view?";
+    ViewBag.Title = title + " - GOV.UK";
+}
+
+@section main_content
+{
+    <header class="hgroup">
+        <h1 class="govuk-heading-l">
+            @title
+        </h1>
+    </header>
+
+    @using (Html.BeginForm(actionName: "ChooseArchiveType", controllerName: "ArchiveData", method: FormMethod.Post))
+    {
+        @Html.AntiForgeryToken()
+        @Html.Gds().ValidationSummary()
+
+        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedValue)" id="ReportOptions">
+            @this.WeeeGds().RadioButtonsFor(m => m.SelectedValue, Model.PossibleValues, "Which archive data would you like to view?", RadioButtonLegend.VisuallyHidden, RadioButtonLayout.Stacked)
+        </div>
+
+        @(this.WeeeGds().Submit("Continue"))
+
+        <p>
+            @Html.ActionLink("Back", "ChooseActivity", "Home")
+        </p>
+    }
+}
