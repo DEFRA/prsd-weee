@@ -1,4 +1,4 @@
-/****** Object:  StoredProcedure [Producer].[spgProducerEeeCsvData]    Script Date: 27/03/2025 10:08:45  ******/
+/****** Object:  StoredProcedure [Producer].[spgProducerEeeCsvData]    Script Date: 27/03/2025 10:08:45 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -74,17 +74,15 @@ BEGIN
         dr.Id AS 'SchemeId',
         '' AS 'ApprovalNumber',
         'Direct registrant' AS SchemeName,
-        -- Use submission history company name if available, otherwise fall back to organisation
+        -- Use submission history company name ONLY for this compliance year (no fallback)
         COALESCE(
             latest_submission.CompanyName,
             DPSH_AR.OverseasProducerName,
-            o.[Name],
             ''
         ) AS 'ProducerName',
-        -- Use submission history business address country if available, otherwise fall back to organisation business address
+        -- Use submission history business address country ONLY for this compliance year (no fallback)
         COALESCE(
             BA_C.Name,
-            OC.Name,
             ''
         ) AS 'ProducerCountry',
         4 AS Quarter,
@@ -94,44 +92,44 @@ BEGIN
     FROM
         [Producer].[DirectProducerSubmission] DPS
 		INNER JOIN [Producer].[DirectRegistrant] DR ON DR.Id = DPS.DirectRegistrantId
-		INNER JOIN [Organisation].[Organisation] O ON O.Id = DR.OrganisationId
-		-- Organisation business address (fallback)
-		LEFT JOIN [Organisation].[Address] OA ON OA.Id = O.BusinessAddressId
-		LEFT JOIN [Lookup].[Country] OC ON OC.Id = OA.CountryId
-		
 		INNER JOIN [Producer].[RegisteredProducer] RP ON DPS.RegisteredProducerId = RP.Id
 		
-		-- Get the latest submitted history for this compliance year to retrieve year-specific data
+		-- Get the latest submitted history for compliance year
 		INNER JOIN (
 			SELECT 
-				DirectProducerSubmissionId,
-				EeeOutputReturnVersionId,
-				Id,
-				CompanyName,
-				BusinessAddressId,
-				AuthorisedRepresentativeId,
-				ROW_NUMBER() OVER (PARTITION BY DirectProducerSubmissionId ORDER BY SubmittedDate DESC) AS RowNum
-			FROM [Producer].[DirectProducerSubmissionHistory]
-			WHERE SubmittedDate IS NOT NULL
+                dpsh_inner.Id,
+				dpsh_inner.DirectProducerSubmissionId,
+				dpsh_inner.EeeOutputReturnVersionId,
+				dpsh_inner.CompanyName,
+				dpsh_inner.BusinessAddressId,
+				dpsh_inner.AuthorisedRepresentativeId,
+				ROW_NUMBER() OVER (PARTITION BY dpsh_inner.DirectProducerSubmissionId ORDER BY dpsh_inner.SubmittedDate DESC) AS RowNum
+			FROM [Producer].[DirectProducerSubmissionHistory] dpsh_inner
+            INNER JOIN [Producer].[DirectProducerSubmission] dps_inner ON dpsh_inner.DirectProducerSubmissionId = dps_inner.Id
+			WHERE dpsh_inner.SubmittedDate IS NOT NULL
+                AND dps_inner.ComplianceYear = (@ComplianceYear + 1)  -- Direct registrants register for next year
 		) DPSH ON DPSH.DirectProducerSubmissionId = DPS.Id AND DPSH.RowNum = 1
 		
-		-- Get the latest submission-specific data for the producer name and business address
+		-- Get the latest submission-specific data for compliance year ONLY
 		OUTER APPLY (
 			SELECT TOP 1
 				ps.CompanyName,
-				ps.BusinessAddressId
+				ps.BusinessAddressId,
+                ps.AuthorisedRepresentativeId
 			FROM [Producer].[DirectProducerSubmissionHistory] ps
+            INNER JOIN [Producer].[DirectProducerSubmission] dps_apply ON ps.DirectProducerSubmissionId = dps_apply.Id
 			WHERE ps.DirectProducerSubmissionId = DPS.Id
 				AND ps.SubmittedDate IS NOT NULL
+                AND dps_apply.ComplianceYear = (@ComplianceYear + 1)  -- Filter by compliance year
 			ORDER BY ps.SubmittedDate DESC
 		) latest_submission
 		
 		-- Year-specific business address from submission history
-		LEFT JOIN [Producer].[Address] BA ON BA.Id = latest_submission.BusinessAddressId
+		LEFT JOIN [Organisation].[Address] BA ON BA.Id = latest_submission.BusinessAddressId
 		LEFT JOIN [Lookup].[Country] BA_C ON BA_C.Id = BA.CountryId
 		
 		-- Year-specific authorised representative from submission history
-		LEFT JOIN [Producer].[AuthorisedRepresentative] DPSH_AR ON DPSH_AR.Id = DPSH.AuthorisedRepresentativeId
+		LEFT JOIN [Producer].[AuthorisedRepresentative] DPSH_AR ON DPSH_AR.Id = latest_submission.AuthorisedRepresentativeId
 		
 		INNER JOIN [PCS].[EeeOutputReturnVersion] EORV ON EORV.Id = DPSH.EeeOutputReturnVersionId
 		INNER JOIN [PCS].[EeeOutputReturnVersionAmount] EORVA ON EORVA.EeeOutputReturnVersionId = EORV.Id
