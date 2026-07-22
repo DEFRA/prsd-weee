@@ -31,16 +31,8 @@
             var contact = ValueObjectInitializer.CreateContact(request.ContactData);
             currentYearSubmission.CurrentSubmission.AddOrUpdateAppropriateSignatory(contact);
 
-            var systemDateTime = await systemDataAccess.GetSystemDateTime();
-
-            var currentDateTime = SystemTime.UtcNow;
-            currentYearSubmission.CurrentSubmission.SubmittedDate =
-                new DateTime(systemDateTime.Year,
-                    currentDateTime.Month,
-                    currentDateTime.Day,
-                    currentDateTime.Hour,
-                    currentDateTime.Minute,
-                    currentDateTime.Second);
+            // Use the actual current date/time for SubmittedDate instead of mixing system year with current time
+            currentYearSubmission.CurrentSubmission.SubmittedDate = SystemTime.UtcNow;
 
             currentYearSubmission.DirectProducerSubmissionStatus = DirectProducerSubmissionStatus.Complete;
 
