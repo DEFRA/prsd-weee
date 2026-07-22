@@ -261,6 +261,33 @@
             SystemTime.Unfreeze();
         }
 
+        [Fact]
+        public async Task HandleAsync_Given2026_MatchingFileContent()
+        {
+            int complianceYear = 2026;
+            ReportFacilityType facilityType = fixture.Create<ReportFacilityType>();
+            Guid authority = fixture.Create<Guid>();
+            Guid area = fixture.Create<Guid>();
+            Guid pat = fixture.Create<Guid>();
+
+            AatfAeDetailsData csvData1 = CreateCsvData();
+
+            AatfAeDetailsData csvData2 = CreateCsvData();
+
+            AatfAeDetailsData csvData3 = CreateCsvData();
+
+            A.CallTo(() => storedProcedures.GetAatfAeDetailsCsvData(complianceYear, (int)facilityType, authority, area, pat))
+            .Returns(new List<AatfAeDetailsData> { csvData1, csvData2, csvData3 });
+
+            GetAatfAeDetailsCsv request = new GetAatfAeDetailsCsv(complianceYear, facilityType, authority, pat, area, false);
+
+            CSVFileData data = await handler.HandleAsync(request);
+
+            string facilityTypeString = facilityType.ToString().ToUpper();
+
+            data.FileContent.Should().Contain($"Compliance year,Appropriate authority,EA Area,\"AATF, AE or PCS?\",Name,Approval number,Status,AATF / AE address1,AATF / AE address2,AATF / AE town or city,AATF / AE county or region,AATF / AE postcode,AATF / AE country,PCS billing reference,PCS obligation type,AATF / AE date of approval,AATF / AE size,Contact first name,Contact last name,Contact position,Contact address1,Contact address2,Contact town or city,Contact county or region,Contact postcode,Contact country,Contact phone number,Contact email,Organisation type,Organisation name,Organisation business trading name,Organisation company registration number,Organisation address1,Organisation address2,Organisation town or city,Organisation county or region,Organisation postcode,Organisation country,Organisation telephone,Organisation email");
+        }
+
         private AatfAeDetailsData CreateCsvData()
         {
             return new AatfAeDetailsData
