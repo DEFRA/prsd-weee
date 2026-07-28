@@ -50,6 +50,20 @@
             int? sellingTechniqueType = null,
             bool paid = false)
         {
+            // Add the organisation first if not already tracked
+            if (wrapper.WeeeContext.Entry(directRegistrant.Organisation).State == System.Data.Entity.EntityState.Detached)
+            {
+                wrapper.WeeeContext.Organisations.Add(directRegistrant.Organisation);
+            }
+            
+            // Add the DirectRegistrant - EF will cascade the AuthorisedRepresentative automatically
+            if (wrapper.WeeeContext.Entry(directRegistrant).State == System.Data.Entity.EntityState.Detached)
+            {
+                wrapper.WeeeContext.DirectRegistrants.Add(directRegistrant);
+            }
+            
+            await wrapper.WeeeContext.SaveChangesAsync();
+
             var submission = new DirectProducerSubmission
             {
                 ComplianceYear = complianceYear,
@@ -58,6 +72,34 @@
             };
 
             var history = new DirectProducerSubmissionHistory(submission);
+            
+            // Populate organisation details in the submission history so the stored procedures can find year-specific data
+            history.CompanyName = directRegistrant.Organisation.Name;
+            history.TradingName = directRegistrant.Organisation.TradingName;
+            
+            // Add business address to the submission history
+            if (directRegistrant.Organisation.BusinessAddress != null)
+            {
+                history.AddOrUpdateBusinessAddress(directRegistrant.Organisation.BusinessAddress);
+            }
+            
+            // Add contact details to submission history
+            if (directRegistrant.Contact != null)
+            {
+                history.Contact = directRegistrant.Contact;
+            }
+            
+            if (directRegistrant.Address != null)
+            {
+                history.ContactAddress = directRegistrant.Address;
+            }
+            
+            // Add the AuthorisedRepresentative to the submission history
+            // The stored procedure joins on dpsh.AuthorisedRepresentativeId, not dr.AuthorisedRepresentativeId
+            if (directRegistrant.AuthorisedRepresentative != null)
+            {
+                history.AuthorisedRepresentative = directRegistrant.AuthorisedRepresentative;
+            }
             
             var returnVersion = new Domain.DataReturns.EeeOutputReturnVersion();
 
@@ -88,6 +130,7 @@
             if (paid)
             {
                 submission.PaymentFinished = true;
+                submission.ManualPaymentReceivedDate = SystemTime.UtcNow;
             }
 
             await wrapper.WeeeContext.SaveChangesAsync();
@@ -164,6 +207,30 @@
             DirectProducerSubmission submission)
         {
             var history = new DirectProducerSubmissionHistory(submission);
+            
+            // Copy organisation details from the submission's direct registrant to the new history
+            // so that stored procedures can retrieve year-specific data
+            var directRegistrant = submission.DirectRegistrant;
+            
+            history.CompanyName = directRegistrant.Organisation.Name;
+            history.TradingName = directRegistrant.Organisation.TradingName;
+            
+            // Copy business address (critical for country lookup in reports)
+            if (directRegistrant.Organisation.BusinessAddress != null)
+            {
+                history.AddOrUpdateBusinessAddress(directRegistrant.Organisation.BusinessAddress);
+            }
+            
+            // Copy contact details
+            if (directRegistrant.Contact != null)
+            {
+                history.Contact = directRegistrant.Contact;
+            }
+            
+            if (directRegistrant.Address != null)
+            {
+                history.ContactAddress = directRegistrant.Address;
+            }
             
             wrapper.WeeeContext.DirectProducerSubmissionHistories.Add(history);
             await wrapper.WeeeContext.SaveChangesAsync();

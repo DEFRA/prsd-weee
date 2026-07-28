@@ -20,6 +20,7 @@
         public static string ViewSubmittedEvidenceNoteRouteName = "Scheme_submitted_evidence_note";
         public static string ViewVoidedEvidenceNoteRouteName = "Scheme_void_evidence_note";
         public static string ViewCancelledEvidenceNoteRouteName = "Scheme_cancelled_evidence_note";
+        public static string ReviewSubmittedEvidenceNoteRouteName = "Scheme_review_submitted_evidence_note";
 
         public static string SchemeViewRouteName(NoteType noteType, NoteStatus noteStatus)
         {

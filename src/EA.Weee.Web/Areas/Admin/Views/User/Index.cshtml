@@ -178,6 +178,29 @@
                             </th>
                             break;
                     }
+                    @switch (@Model.OrderBy)
+                    {
+                        case FindMatchingUsers.OrderBy.LastLoginDateAscending:
+                            <th class="sorted-ascending govuk-table__header">
+                                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.LastLoginDateDescending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Last logged in</a>
+                                <span class="govuk-visually-hidden">Sorted from oldest to newest.</span>
+                            </th>
+                            break;
+
+                        case FindMatchingUsers.OrderBy.LastLoginDateDescending:
+                            <th class="sorted-descending govuk-table__header">
+                                <a href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.LastLoginDateAscending })">Last logged in</a>
+                                <span class="govuk-visually-hidden">Sorted from newest to oldest.</span>
+                            </th>
+                            break;
+
+                        default:
+                            <th class="govuk-table__header">
+                                <a class="govuk-link govuk-link--no-visited-state" href="@Url.Action("Index", new { OrderBy = FindMatchingUsers.OrderBy.LastLoginDateAscending, name = Model.Filter.Name, organisationName = Model.Filter.OrganisationName, status = Model.Filter.Status })">Last logged in</a>
+                                <span class="govuk-visually-hidden">Sortable by Last logged in</span>
+                            </th>
+                            break;
+                    }
                     <th class="govuk-table__header" style="padding-right: 15px">Select</th>
                 </tr>
             </thead>
@@ -192,6 +215,7 @@
                         <td class="govuk-table__cell">@user.OrganisationName</td>
                         <td class="govuk-table__cell">@user.Role</td>
                         <td class="govuk-table__cell">@user.Status</td>
+                        <td class="govuk-table__cell">@user.LastLoginDate</td>
                         <td class="govuk-table__cell">
                             <label class="govuk-visually-hidden" for="@id">Select</label>
                             @Html.RadioButtonFor(m => m.SelectedUserId, @user.OrganisationUserId, new { id = @id })

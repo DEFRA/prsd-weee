@@ -21,6 +21,7 @@
     using EA.Weee.Web.Services.Caching;
     using System;
     using System.Collections.Generic;
+    using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
@@ -56,7 +57,7 @@
                 editContactDetailsRequestCreator,
             IRequestCreator<ServiceOfNoticeViewModel, ServiceOfNoticeRequest> serviceOfNoticeRequestCreator,
             IRequestCreator<EditEeeDataViewModel, EditEeeDataRequest> editEeeDataRequestCreator,
-            IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryAndCompleteRequest> addSignatoryRequestCreator, 
+            IRequestCreator<AppropriateSignatoryViewModel, AddSignatoryAndCompleteRequest> addSignatoryRequestCreator,
             IPaymentService paymentService,
             ConfigurationService configuration)
         {
@@ -119,7 +120,7 @@
                     await client.SendAsync(User.GetAccessToken(), request);
                 }
 
-                return RedirectToAction(model.RedirectToCheckAnswers == true ? nameof(ProducerController.CheckAnswers) : 
+                return RedirectToAction(model.RedirectToCheckAnswers == true ? nameof(ProducerController.CheckAnswers) :
                     nameof(ProducerController.TaskList), typeof(ProducerController).GetControllerName());
             }
 
@@ -394,6 +395,7 @@
             {
                 OrganisationId = SmallProducerSubmissionData.OrganisationData.Id,
                 ComplianceYear = SmallProducerSubmissionData.CurrentSubmission.ComplianceYear,
+                HasPaid = (SmallProducerSubmissionData.SubmissionHistory == null ? false : SmallProducerSubmissionData.SubmissionHistory.FirstOrDefault().Value.HasPaid)
             };
 
             await SetBreadcrumb(SmallProducerSubmissionData.OrganisationData.Id, ProducerSubmissionConstant.NewContinueProducerRegistrationSubmission);

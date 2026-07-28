@@ -34,5 +34,9 @@
         public Role Role { get; set; }
 
         public bool CanEditUser { get; set; }
+
+        public DateTime? LastLoginDate { get; set; }
+
+        public DateTime? UserCreated { get; set; }
     }
 }
