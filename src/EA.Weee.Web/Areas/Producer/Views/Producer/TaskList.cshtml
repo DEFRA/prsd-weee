@@ -2,6 +2,7 @@
 @using EA.Weee.Web.Areas.Producer.Controllers
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
+@using EA.Weee.Core.DirectRegistrant
 @model EA.Weee.Web.Areas.Producer.ViewModels.TaskListViewModel
 
 @{
@@ -22,9 +23,19 @@
     <p class="govuk-body">
         After completing a step, you can click on the <span class="govuk-!-font-weight-bold">Save and return to tasklist</span> button, to return to this page. When you have completed all the steps within the application, select the <span class="govuk-!-font-weight-bold">Check your answers</span> button.
     </p>
-    <p class="govuk-body">
-        Once you have checked and submitted your application, the charge for registering is <span class="govuk-!-font-weight-bold">£@Model.DirectRegistrantChargeAmount</span>.
-    </p>
+
+    @if (Model.HasPaid == true && Model.Status == SubmissionStatus.Returned)
+    {
+        <p class="govuk-body">
+            There is no charge for making an amendment to your registration.
+        </p>
+    }
+    else
+    {
+        <p class="govuk-body">
+            Once you have checked and submitted your application, the charge for registering is <span class="govuk-!-font-weight-bold">£@Model.DirectRegistrantChargeAmount</span>.
+        </p>
+    }
 
     <ul class="govuk-task-list">
         @foreach (var task in Model.ProducerTaskModels)
@@ -73,6 +84,6 @@
                 @(this.WeeeGds().Submit("Check your answers", new { disabled = "disabled"}))
             </div>
         }
-       
+
     }
 }

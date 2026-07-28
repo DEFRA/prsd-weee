@@ -159,7 +159,8 @@
             SubmissionStatus status,
             int currentYear,
             int? year,
-            bool expectedResult)
+            bool expectedResult,
+            bool hasPaid)
         {
             // Arrange
             var model = CreateViewModel();
@@ -168,6 +169,7 @@
             model.Status = status;
             model.CurrentYear = currentYear;
             model.Year = year;
+            model.HasPaid = hasPaid;
 
             // Act & Assert
             model.ShowReturnRegistrationToUser.Should().Be(expectedResult);
@@ -176,22 +178,22 @@
         public static IEnumerable<object[]> ShowReturnRegistrationToUserTestData()
         {
             // Case 1: Internal admin, Submitted status, matching year - should show
-            yield return new object[] { true, true, SubmissionStatus.Submitted, 2024, 2024, true };
+            yield return new object[] { true, true, SubmissionStatus.Submitted, 2024, 2024, true, true };
 
             // Case 2: Internal admin, Submitted status, different year - should NOT show
-            yield return new object[] { true, true, SubmissionStatus.Submitted, 2024, 2023, false };
+            yield return new object[] { true, true, SubmissionStatus.Submitted, 2024, 2023, false, true };
 
             // Case 3: Internal admin, non-Submitted status - should NOT show
-            yield return new object[] { true, true, SubmissionStatus.Returned, 2024, 2024, false };
-            yield return new object[] { true, true, SubmissionStatus.InComplete, 2024, 2024, false };
+            yield return new object[] { true, true, SubmissionStatus.Returned, 2024, 2024, false, true };
+            yield return new object[] { true, true, SubmissionStatus.InComplete, 2024, 2024, false, true };
 
             // Case 4: Not internal admin cases - should never show
-            yield return new object[] { false, true, SubmissionStatus.Submitted, 2024, 2024, false };
-            yield return new object[] { true, false, SubmissionStatus.Submitted, 2024, 2024, false };
-            yield return new object[] { false, false, SubmissionStatus.Submitted, 2024, 2024, false };
+            yield return new object[] { false, true, SubmissionStatus.Submitted, 2024, 2024, false, true };
+            yield return new object[] { true, false, SubmissionStatus.Submitted, 2024, 2024, false, true };
+            yield return new object[] { false, false, SubmissionStatus.Submitted, 2024, 2024, false, true };
 
             // Case 5: Internal admin, Year is null - should not show
-            yield return new object[] { true, true, SubmissionStatus.Submitted, 2024, null, false };
+            yield return new object[] { true, true, SubmissionStatus.Submitted, 2024, null, false, true };
         }
 
         private OrganisationDetailsTabsViewModel CreateViewModel()

@@ -1736,6 +1736,285 @@
             Assert.Equal("text/csv", fileResult.ContentType);
         }
 
+        [Fact]
+        public async Task ManageAatfsGet_ShouldPopulateComplianceYearList()
+        {
+            // Arrange
+            SetUpControllerContext(false);
+            var facilityType = FacilityType.Aatf;
+            var expectedYears = new List<int> { 2024, 2023, 2022 };
+            var aatfList = new List<AatfDataList>
+            {
+                A.Fake<AatfDataList>(x => x.WithArgumentsForConstructor(() =>
+                    new AatfDataList(Guid.NewGuid(), "Test1", A.Dummy<UKCompetentAuthorityData>(), "WEE/AA1111AA",
+                    A.Dummy<AatfStatus>(), A.Dummy<OrganisationData>(), FacilityType.Aatf, (short)2024, Guid.NewGuid(), DateTime.Now))),
+                A.Fake<AatfDataList>(x => x.WithArgumentsForConstructor(() =>
+                    new AatfDataList(Guid.NewGuid(), "Test2", A.Dummy<UKCompetentAuthorityData>(), "WEE/AA2222AA",
+                    A.Dummy<AatfStatus>(), A.Dummy<OrganisationData>(), FacilityType.Aatf, (short)2023, Guid.NewGuid(), DateTime.Now))),
+                A.Fake<AatfDataList>(x => x.WithArgumentsForConstructor(() =>
+                    new AatfDataList(Guid.NewGuid(), "Test3", A.Dummy<UKCompetentAuthorityData>(), "WEE/AA3333AA",
+                    A.Dummy<AatfStatus>(), A.Dummy<OrganisationData>(), FacilityType.Aatf, (short)2022, Guid.NewGuid(), DateTime.Now)))
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfs>._))
+                .Returns(aatfList);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._))
+                .Returns(new List<UKCompetentAuthorityData>());
+
+            // Act
+            var result = await controller.ManageAatfs(facilityType) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var viewModel = result.Model as ManageAatfsViewModel;
+            viewModel.Should().NotBeNull();
+            viewModel.Filter.ComplianceYearList.Should().BeEquivalentTo(expectedYears);
+        }
+
+        [Fact]
+        public async Task ApplyFilterPost_WithComplianceYear_FiltersAatfsByYear()
+        {
+            // Arrange
+            SetUpControllerContext(false);
+            var selectedYear = 2023;
+            var filter = new FilteringViewModel
+            {
+                FacilityType = FacilityType.Aatf,
+                SelectedComplianceYear = selectedYear,
+                ComplianceYearList = new List<int> { 2024, 2023, 2022 }
+            };
+
+            var mappedFilter = new AatfFilter
+            {
+                ComplianceYear = selectedYear
+            };
+
+            var filteredAatfs = new List<AatfDataList>
+            {
+                A.Fake<AatfDataList>(x => x.WithArgumentsForConstructor(() =>
+                    new AatfDataList(Guid.NewGuid(), "Test", A.Dummy<UKCompetentAuthorityData>(), "WEE/AA1111AA",
+                    A.Dummy<AatfStatus>(), A.Dummy<OrganisationData>(), FacilityType.Aatf, (short)selectedYear, Guid.NewGuid(), DateTime.Now)))
+            };
+
+            A.CallTo(() => mapper.Map<AatfFilter>(filter)).Returns(mappedFilter);
+            // Fix: Use a more robust matcher that handles null Filter
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfs>.That.Matches(g => g.Filter != null && g.Filter.ComplianceYear == selectedYear)))
+                .Returns(filteredAatfs);
+
+            // Act
+            var result = await controller.ApplyFilter(filter) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var viewModel = result.Model as ManageAatfsViewModel;
+            viewModel.Should().NotBeNull();
+            viewModel.Filter.SelectedComplianceYear.Should().Be(selectedYear);
+            // Fix: Use the same robust matcher in verification
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfs>.That.Matches(g => g.Filter != null && g.Filter.ComplianceYear == selectedYear)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task ApplyFilterPost_WithNullComplianceYear_ReturnsAllYears()
+        {
+            // Arrange
+            SetUpControllerContext(false);
+            var filter = new FilteringViewModel
+            {
+                FacilityType = FacilityType.Aatf,
+                SelectedComplianceYear = null,
+                ComplianceYearList = new List<int> { 2024, 2023, 2022 }
+            };
+
+            var mappedFilter = new AatfFilter
+            {
+                ComplianceYear = null
+            };
+
+            var allAatfs = new List<AatfDataList>
+            {
+                A.Fake<AatfDataList>(x => x.WithArgumentsForConstructor(() =>
+                    new AatfDataList(Guid.NewGuid(), "Test1", A.Dummy<UKCompetentAuthorityData>(), "WEE/AA1111AA",
+                    A.Dummy<AatfStatus>(), A.Dummy<OrganisationData>(), FacilityType.Aatf, (short)2024, Guid.NewGuid(), DateTime.Now))),
+                A.Fake<AatfDataList>(x => x.WithArgumentsForConstructor(() =>
+                    new AatfDataList(Guid.NewGuid(), "Test2", A.Dummy<UKCompetentAuthorityData>(), "WEE/AA2222AA",
+                    A.Dummy<AatfStatus>(), A.Dummy<OrganisationData>(), FacilityType.Aatf, (short)2023, Guid.NewGuid(), DateTime.Now)))
+            };
+
+            A.CallTo(() => mapper.Map<AatfFilter>(filter)).Returns(mappedFilter);
+            // Fix: Add null check
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfs>.That.Matches(g => g.Filter != null && g.Filter.ComplianceYear == null)))
+                .Returns(allAatfs);
+
+            // Act
+            var result = await controller.ApplyFilter(filter) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var viewModel = result.Model as ManageAatfsViewModel;
+            viewModel.Should().NotBeNull();
+            viewModel.Filter.SelectedComplianceYear.Should().BeNull();
+        }
+
+        [Fact]
+        public async Task ManageAatfsPost_WithComplianceYearFilter_PreservesFilterState()
+        {
+            // Arrange
+            SetUpControllerContext(false);
+            controller.ModelState.AddModelError(string.Empty, "Validation message");
+
+            var selectedYear = 2023;
+            var filter = new FilteringViewModel
+            {
+                FacilityType = FacilityType.Aatf,
+                SelectedComplianceYear = selectedYear,
+                ComplianceYearList = new List<int> { 2024, 2023, 2022 }
+            };
+
+            var viewModel = new ManageAatfsViewModel
+            {
+                Filter = filter,
+                FacilityType = FacilityType.Aatf
+            };
+
+            var mappedFilter = new AatfFilter { ComplianceYear = selectedYear };
+            A.CallTo(() => mapper.Map<AatfFilter>(filter)).Returns(mappedFilter);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfs>._))
+                .Returns(new List<AatfDataList>());
+
+            // Act
+            var result = await controller.ManageAatfs(viewModel) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var resultViewModel = result.Model as ManageAatfsViewModel;
+            resultViewModel.Should().NotBeNull();
+            resultViewModel.Filter.SelectedComplianceYear.Should().Be(selectedYear);
+        }
+
+        [Fact]
+        public async Task ClearFilter_ShouldResetComplianceYear()
+        {
+            // Arrange
+            SetUpControllerContext(false);
+            var facilityType = FacilityType.Aatf;
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfs>._))
+                .Returns(new List<AatfDataList>());
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._))
+                .Returns(new List<UKCompetentAuthorityData>());
+
+            // Act
+            var result = await controller.ClearFilter(facilityType) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var viewModel = result.Model as ManageAatfsViewModel;
+            viewModel.Should().NotBeNull();
+            viewModel.Filter.SelectedComplianceYear.Should().BeNull();
+        }
+
+        [Theory]
+        [InlineData(2019)]
+        [InlineData(2020)]
+        [InlineData(2021)]
+        [InlineData(2024)]
+        [InlineData(2025)]
+        public async Task ApplyFilterPost_WithVariousComplianceYears_FiltersCorrectly(int year)
+        {
+            // Arrange
+            SetUpControllerContext(false);
+            var filter = new FilteringViewModel
+            {
+                FacilityType = FacilityType.Aatf,
+                SelectedComplianceYear = year
+            };
+
+            var mappedFilter = new AatfFilter { ComplianceYear = year };
+            A.CallTo(() => mapper.Map<AatfFilter>(filter)).Returns(mappedFilter);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfs>._))
+                .Returns(new List<AatfDataList>());
+
+            // Act
+            await controller.ApplyFilter(filter);
+
+            // Assert
+            // Fix: Add null check
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfs>.That.Matches(g => g.Filter != null && g.Filter.ComplianceYear == year)))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Fact]
+        public async Task ManageAatfsGet_ForAeType_ShouldPopulateComplianceYearList()
+        {
+            // Arrange
+            SetUpControllerContext(false);
+            var facilityType = FacilityType.Ae;
+            var aelist = new List<AatfDataList>
+            {
+                A.Fake<AatfDataList>(x => x.WithArgumentsForConstructor(() =>
+                    new AatfDataList(Guid.NewGuid(), "Test1", A.Dummy<UKCompetentAuthorityData>(), "WEE/AE1111AA",
+                    A.Dummy<AatfStatus>(), A.Dummy<OrganisationData>(), FacilityType.Ae, (short)2024, Guid.NewGuid(), DateTime.Now))),
+                A.Fake<AatfDataList>(x => x.WithArgumentsForConstructor(() =>
+                    new AatfDataList(Guid.NewGuid(), "Test2", A.Dummy<UKCompetentAuthorityData>(), "WEE/AE2222AA",
+                    A.Dummy<AatfStatus>(), A.Dummy<OrganisationData>(), FacilityType.Ae, (short)2023, Guid.NewGuid(), DateTime.Now)))
+            };
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfs>._))
+                .Returns(aelist);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUKCompetentAuthorities>._))
+                .Returns(new List<UKCompetentAuthorityData>());
+
+            // Act
+            var result = await controller.ManageAatfs(facilityType) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            var viewModel = result.Model as ManageAatfsViewModel;
+            viewModel.Should().NotBeNull();
+            viewModel.Filter.ComplianceYearList.Should().NotBeEmpty();
+        }
+
+        [Fact]
+        public async Task ApplyFilterPost_WithComplianceYearAndOtherFilters_CombinesFiltersCorrectly()
+        {
+            // Arrange
+            SetUpControllerContext(false);
+            var selectedYear = 2023;
+            var filter = new FilteringViewModel
+            {
+                FacilityType = FacilityType.Aatf,
+                SelectedComplianceYear = selectedYear,
+                Name = "Test AATF",
+                ApprovalNumber = "WEE/AA1234AA",
+                SelectApproved = true
+            };
+
+            var mappedFilter = new AatfFilter
+            {
+                ComplianceYear = selectedYear,
+                Name = "Test AATF",
+                ApprovalNumber = "WEE/AA1234AA"
+            };
+
+            A.CallTo(() => mapper.Map<AatfFilter>(filter)).Returns(mappedFilter);
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfs>._))
+                .Returns(new List<AatfDataList>());
+
+            // Act
+            var result = await controller.ApplyFilter(filter) as ViewResult;
+
+            // Assert
+            result.Should().NotBeNull();
+            // Fix: Add null check
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetAatfs>.That.Matches(g =>
+                g.Filter != null &&
+                g.Filter.ComplianceYear == selectedYear &&
+                g.Filter.Name == "Test AATF" &&
+                g.Filter.ApprovalNumber == "WEE/AA1234AA")))
+                .MustHaveHappenedOnceExactly();
+        }
+
         private void ContactDataAccessSetup(bool canEdit)
         {
             var contact = new AatfContactData()

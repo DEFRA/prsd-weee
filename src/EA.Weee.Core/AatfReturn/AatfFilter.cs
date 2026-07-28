@@ -16,5 +16,7 @@
         public List<Guid> SelectedAuthority { get; set; }
 
         public List<int> SelectedStatus { get; set; }
+
+        public int? ComplianceYear { get; set; }
     }
 }

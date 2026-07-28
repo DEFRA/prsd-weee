@@ -39,6 +39,7 @@
                 model.OrganisationType =
                     MapOrganisationType(source.SmallProducerSubmissionData.OrganisationData.OrganisationType);
                 model.EEEBrandNames = sub.EEEBrandNames;
+                model.AppropriateSignatoryData = sub.AppropriateSignatoryData;
             }
             else
             {

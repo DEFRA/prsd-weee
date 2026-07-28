@@ -27,7 +27,8 @@
                     "~/Scripts/auto-complete.min.js",
                     "~/Scripts/weee-application.js",
                     "~/Scripts/weee-session-timeout.js",
-                    "~/Scripts/jquery-ui-date-picker.js"));
+                    "~/Scripts/jquery-ui-date-picker.js",
+                    "~/Scripts/message-banner.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/weee_tonnage_totals").Include(
                 "~/Scripts/weee-tonnage-totals.js"));

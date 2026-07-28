@@ -187,7 +187,10 @@
         {
             if (source.BrandName != null)
             {
-                target.AddOrUpdateBrandName(source.BrandName);
+                // Create a new BrandName entity rather than sharing source.BrandName directly.
+                // Sharing the same entity instance causes OverwriteWhereNull to mutate the original
+                // submission's BrandName when the returned submission is later edited.
+                target.AddOrUpdateBrandName(new BrandName(source.BrandName.Name));
             }
 
             target.CompanyName = source.CompanyName;

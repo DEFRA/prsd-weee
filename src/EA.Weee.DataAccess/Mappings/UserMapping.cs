@@ -12,6 +12,8 @@
                 .HasColumnName("Id");
 
             Ignore(u => u.FullName);
+
+            Property(x => x.LastLoginDate).IsOptional();
         }
     }
 }

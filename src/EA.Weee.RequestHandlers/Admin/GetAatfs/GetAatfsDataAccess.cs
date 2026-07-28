@@ -35,7 +35,8 @@
                 (filter.Name == null || filter.Name.Trim() == string.Empty ||
                     a.Name.ToLower().Contains(filter.Name.ToLower())) &&
                 (filter.ApprovalNumber == null || filter.ApprovalNumber.Trim() == string.Empty ||
-                    a.ApprovalNumber.ToLower().Contains(filter.ApprovalNumber.ToLower())))
+                    a.ApprovalNumber.ToLower().Contains(filter.ApprovalNumber.ToLower())) &&
+                (!filter.ComplianceYear.HasValue || a.ComplianceYear == filter.ComplianceYear.Value))
                 .ToListAsync();
 
             if (filter.SelectedAuthority != null && filter.SelectedAuthority.Count > 0)

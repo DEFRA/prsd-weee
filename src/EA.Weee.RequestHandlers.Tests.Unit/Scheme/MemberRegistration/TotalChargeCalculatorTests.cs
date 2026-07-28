@@ -20,6 +20,7 @@
     {
         private readonly IXMLChargeBandCalculator xmlChargeBandCalculator;
         private readonly TotalChargeCalculator totalChargeCalculator;
+        private readonly IAnnualChargeDataAccess annualChargeDataAccess;
         private readonly IXmlConverter xmlConverter;
 
         private decimal? totalCharge;
@@ -29,11 +30,12 @@
         {
             xmlChargeBandCalculator = A.Fake<IXMLChargeBandCalculator>();
             xmlConverter = A.Fake<IXmlConverter>();
+            annualChargeDataAccess = A.Fake<IAnnualChargeDataAccess>();
 
             totalCharge = 0;
             file = ProcessTestXmlFile();
 
-            totalChargeCalculator = new TotalChargeCalculator(xmlChargeBandCalculator, xmlConverter);
+            totalChargeCalculator = new TotalChargeCalculator(xmlChargeBandCalculator, xmlConverter, annualChargeDataAccess);
         }
 
         [Fact]
@@ -50,24 +52,239 @@
             var scheme = Scheme();
             totalCharge = 0;
 
-            var result = totalChargeCalculator.TotalCalculatedCharges(file, scheme, 2019, A.Dummy<bool>(), ref totalCharge);
+            var result = totalChargeCalculator.TotalCalculatedCharges(file, scheme, 2019, false, ref totalCharge);
 
             Assert.Equal(totalCharge, 0);
         }
 
-        [Fact]
-        public void TotalCalculatedCharges_GivenSchemeDoesNotHaveAnnualChargeForComplianceYear_TotalShouldContainAnnualCharge()
+        [Theory]
+        [InlineData(2019, 12500.00)]
+        [InlineData(2020, 12500.00)]
+        [InlineData(2021, 12500.00)]
+        [InlineData(2022, 12500.00)]
+        [InlineData(2023, 12500.00)]
+        [InlineData(2024, 12500.00)]
+        [InlineData(2025, 12500.00)]
+        public void TotalCalculatedCharges_EAScheme_2019To2025_AppliesCorrectAnnualCharge(int complianceYear, decimal expectedAnnualCharge)
         {
-            var competentAuthority = new UKCompetentAuthority(Guid.NewGuid(), A.Dummy<string>(), "EA", A.Dummy<Country>(), A.Dummy<string>(), 100);
+            // Arrange
+            var competentAuthorityId = Guid.NewGuid();
+            var competentAuthority = new UKCompetentAuthority(
+                competentAuthorityId,
+                "Environment Agency",
+                "EA",
+                A.Fake<Country>(),
+                "test@ea.gov.uk",
+                12500.00m);
 
             var scheme = A.Fake<Scheme>();
             A.CallTo(() => scheme.CompetentAuthority).Returns(competentAuthority);
 
+            var producerCharges = ProducerCharges();
+            A.CallTo(() => xmlChargeBandCalculator.Calculate(file)).Returns(producerCharges);
+            A.CallTo(() => annualChargeDataAccess.GetAnnualChargeForComplianceYear(competentAuthorityId, complianceYear))
+                .Returns(expectedAnnualCharge);
+
             totalCharge = 0;
 
-            var result = totalChargeCalculator.TotalCalculatedCharges(file, scheme, 2019, true, ref totalCharge);
+            // Act
+            totalChargeCalculator.TotalCalculatedCharges(file, scheme, complianceYear, true, ref totalCharge);
 
-            Assert.Equal(totalCharge, 100);
+            // Assert
+            Assert.Equal(300 + expectedAnnualCharge, totalCharge);
+            A.CallTo(() => annualChargeDataAccess.GetAnnualChargeForComplianceYear(competentAuthorityId, complianceYear))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData(2026, 13438.00)]
+        [InlineData(2027, 13948.13)]
+        [InlineData(2028, 13948.13)]
+        public void TotalCalculatedCharges_EAScheme_2026AndLater_AppliesUpliftedAnnualCharge(int complianceYear, decimal expectedAnnualCharge)
+        {
+            // Arrange
+            var competentAuthorityId = Guid.NewGuid();
+            var competentAuthority = new UKCompetentAuthority(
+                competentAuthorityId,
+                "Environment Agency",
+                "EA",
+                A.Fake<Country>(),
+                "test@ea.gov.uk",
+                expectedAnnualCharge);
+
+            var scheme = A.Fake<Scheme>();
+            A.CallTo(() => scheme.CompetentAuthority).Returns(competentAuthority);
+
+            var producerCharges = ProducerCharges();
+            A.CallTo(() => xmlChargeBandCalculator.Calculate(file)).Returns(producerCharges);
+            A.CallTo(() => annualChargeDataAccess.GetAnnualChargeForComplianceYear(competentAuthorityId, complianceYear))
+                .Returns(expectedAnnualCharge);
+
+            totalCharge = 0;
+
+            // Act
+            totalChargeCalculator.TotalCalculatedCharges(file, scheme, complianceYear, true, ref totalCharge);
+
+            // Assert
+            Assert.Equal(300 + expectedAnnualCharge, totalCharge);
+            A.CallTo(() => annualChargeDataAccess.GetAnnualChargeForComplianceYear(competentAuthorityId, complianceYear))
+                .MustHaveHappenedOnceExactly();
+        }
+
+        [Theory]
+        [InlineData("SEPA", 2026)]
+        [InlineData("NRW", 2026)]
+        [InlineData("NIEA", 2026)]
+        [InlineData("SEPA", 2027)]
+        [InlineData("NRW", 2027)]
+        [InlineData("NIEA", 2027)]
+        public void TotalCalculatedCharges_NonEAScheme_DoesNotApplyAnnualCharge(string abbreviation, int complianceYear)
+        {
+            // Arrange
+            var competentAuthority = new UKCompetentAuthority(
+                Guid.NewGuid(),
+                "Test Authority",
+                abbreviation,
+                A.Fake<Country>(),
+                "test@authority.gov.uk",
+                0m);
+
+            var scheme = A.Fake<Scheme>();
+            A.CallTo(() => scheme.CompetentAuthority).Returns(competentAuthority);
+
+            var producerCharges = ProducerCharges();
+            A.CallTo(() => xmlChargeBandCalculator.Calculate(file)).Returns(producerCharges);
+
+            totalCharge = 0;
+
+            // Act
+            totalChargeCalculator.TotalCalculatedCharges(file, scheme, complianceYear, true, ref totalCharge);
+
+            // Assert
+            Assert.Equal(300, totalCharge); // Only producer charges, no annual charge
+            A.CallTo(() => annualChargeDataAccess.GetAnnualChargeForComplianceYear(A<Guid>._, A<int>._))
+                .MustNotHaveHappened();
+        }
+
+        [Fact]
+        public void TotalCalculatedCharges_EAScheme_2018OrEarlier_DoesNotApplyAnnualCharge()
+        {
+            // Arrange
+            var competentAuthority = new UKCompetentAuthority(
+                Guid.NewGuid(),
+                "Environment Agency",
+                "EA",
+                A.Fake<Country>(),
+                "test@ea.gov.uk",
+                12500.00m);
+
+            var scheme = A.Fake<Scheme>();
+            A.CallTo(() => scheme.CompetentAuthority).Returns(competentAuthority);
+
+            var producerCharges = ProducerCharges();
+            A.CallTo(() => xmlChargeBandCalculator.Calculate(file)).Returns(producerCharges);
+
+            totalCharge = 0;
+
+            // Act
+            totalChargeCalculator.TotalCalculatedCharges(file, scheme, 2018, true, ref totalCharge);
+
+            // Assert
+            Assert.Equal(300, totalCharge); // Only producer charges
+            A.CallTo(() => annualChargeDataAccess.GetAnnualChargeForComplianceYear(A<Guid>._, A<int>._))
+                .MustNotHaveHappened();
+        }
+
+        [Fact]
+        public void TotalCalculatedCharges_EAScheme_AnnualChargeNotToBeAdded_DoesNotApplyAnnualCharge()
+        {
+            // Arrange
+            var competentAuthority = new UKCompetentAuthority(
+                Guid.NewGuid(),
+                "Environment Agency",
+                "EA",
+                A.Fake<Country>(),
+                "test@ea.gov.uk",
+                12500.00m);
+
+            var scheme = A.Fake<Scheme>();
+            A.CallTo(() => scheme.CompetentAuthority).Returns(competentAuthority);
+
+            var producerCharges = ProducerCharges();
+            A.CallTo(() => xmlChargeBandCalculator.Calculate(file)).Returns(producerCharges);
+
+            totalCharge = 0;
+
+            // Act
+            totalChargeCalculator.TotalCalculatedCharges(file, scheme, 2026, false, ref totalCharge);
+
+            // Assert
+            Assert.Equal(300, totalCharge); // Only producer charges
+            A.CallTo(() => annualChargeDataAccess.GetAnnualChargeForComplianceYear(A<Guid>._, A<int>._))
+                .MustNotHaveHappened();
+        }
+
+        [Fact]
+        public void TotalCalculatedCharges_EAScheme_AnnualChargeReturnsNull_AppliesOnlyProducerCharges()
+        {
+            // Arrange
+            var competentAuthorityId = Guid.NewGuid();
+            var competentAuthority = new UKCompetentAuthority(
+                competentAuthorityId,
+                "Environment Agency",
+                "EA",
+                A.Fake<Country>(),
+                "test@ea.gov.uk",
+                12500.00m);
+
+            var scheme = A.Fake<Scheme>();
+            A.CallTo(() => scheme.CompetentAuthority).Returns(competentAuthority);
+
+            var producerCharges = ProducerCharges();
+            A.CallTo(() => xmlChargeBandCalculator.Calculate(file)).Returns(producerCharges);
+            A.CallTo(() => annualChargeDataAccess.GetAnnualChargeForComplianceYear(competentAuthorityId, 2026))
+                .Returns((decimal?)null);
+
+            totalCharge = 0;
+
+            // Act
+            totalChargeCalculator.TotalCalculatedCharges(file, scheme, 2026, true, ref totalCharge);
+
+            // Assert
+            Assert.Equal(300, totalCharge); // Only producer charges, annual charge was null
+        }
+
+        [Fact]
+        public void TotalCalculatedCharges_EAScheme_2027_AppliesUpliftedAnnualCharge_13948_13()
+        {
+            // Arrange - Specific test for the 3.8% inflation uplift from April 2026
+            var competentAuthorityId = Guid.NewGuid();
+            var competentAuthority = new UKCompetentAuthority(
+                competentAuthorityId,
+                "Environment Agency",
+                "EA",
+                A.Fake<Country>(),
+                "test@ea.gov.uk",
+                13948.13m);
+
+            var scheme = A.Fake<Scheme>();
+            A.CallTo(() => scheme.CompetentAuthority).Returns(competentAuthority);
+
+            var producerCharges = ProducerCharges();
+            A.CallTo(() => xmlChargeBandCalculator.Calculate(file)).Returns(producerCharges);
+            A.CallTo(() => annualChargeDataAccess.GetAnnualChargeForComplianceYear(competentAuthorityId, 2027))
+                .Returns(13948.13m);
+
+            totalCharge = 0;
+
+            // Act
+            totalChargeCalculator.TotalCalculatedCharges(file, scheme, 2027, true, ref totalCharge);
+
+            // Assert
+            Assert.Equal(300 + 13948.13m, totalCharge);
+            Assert.Equal(14248.13m, totalCharge);
+            A.CallTo(() => annualChargeDataAccess.GetAnnualChargeForComplianceYear(competentAuthorityId, 2027))
+                .MustHaveHappenedOnceExactly();
         }
 
         [Fact]
@@ -77,19 +294,7 @@
 
             A.CallTo(() => xmlChargeBandCalculator.Calculate(file)).Returns(producerCharges);
 
-            var result = totalChargeCalculator.TotalCalculatedCharges(file, Scheme(), 2019, true, ref totalCharge);
-
-            Assert.Equal(300, totalCharge);
-        }
-
-        [Fact]
-        public void TotalCalculatedCharges_GivenProducerChargesAndAnnualCharge_TotalShouldBeCalculated()
-        {
-            var producerCharges = ProducerCharges();
-
-            A.CallTo(() => xmlChargeBandCalculator.Calculate(file)).Returns(producerCharges);
-
-            var result = totalChargeCalculator.TotalCalculatedCharges(file, Scheme(), 2019, true, ref totalCharge);
+            var result = totalChargeCalculator.TotalCalculatedCharges(file, Scheme(), 2019, false, ref totalCharge);
 
             Assert.Equal(300, totalCharge);
         }
@@ -101,28 +306,17 @@
 
             A.CallTo(() => xmlChargeBandCalculator.Calculate(file)).Returns(producerCharges);
 
-            var result = totalChargeCalculator.TotalCalculatedCharges(file, Scheme(), 2019, A.Dummy<bool>(), ref totalCharge);
+            var result = totalChargeCalculator.TotalCalculatedCharges(file, Scheme(), 2019, false, ref totalCharge);
 
             Assert.Equal(producerCharges, result);
-        }
-
-        [Fact]
-        public void TotalCalculatedCharges_GivenSchemeDoesNotHaveAnnualChargeForComplianceYearAndBefore2019_TotalShouldNotContainAnnualCharge()
-        {
-            var scheme = Scheme();
-            totalCharge = 0;
-
-            var result = totalChargeCalculator.TotalCalculatedCharges(file, scheme, 2018, false, ref totalCharge);
-
-            Assert.Equal(totalCharge, 0);
         }
 
         private Scheme Scheme()
         {
             var scheme = A.Fake<Scheme>();
-            var competantAuthority = A.Fake<UKCompetentAuthority>();
-            A.CallTo(() => competantAuthority.AnnualChargeAmount).Returns(100);
-            A.CallTo(() => scheme.CompetentAuthority).Returns(competantAuthority);
+            var competentAuthority = A.Fake<UKCompetentAuthority>();
+            A.CallTo(() => competentAuthority.AnnualChargeAmount).Returns(100);
+            A.CallTo(() => scheme.CompetentAuthority).Returns(competentAuthority);
             return scheme;
         }
 
@@ -134,14 +328,6 @@
             byte[] xml = Encoding.ASCII.GetBytes(File.ReadAllText(new Uri(absoluteFilePath).LocalPath));
             ProcessXmlFile request = new ProcessXmlFile(A.Dummy<Guid>(), xml, "File name");
             return request;
-        }
-
-        private XmlChargeBandCalculator XmlChargeBandCalculator()
-        {
-            var xmlConverter = new XmlConverter(A.Fake<IWhiteSpaceCollapser>(), new Deserializer());
-
-            IProducerChargeBandCalculatorChooser producerChargerCalculator = A.Fake<IProducerChargeBandCalculatorChooser>();
-            return new XmlChargeBandCalculator(xmlConverter, producerChargerCalculator);
         }
 
         private Dictionary<string, ProducerCharge> ProducerCharges()

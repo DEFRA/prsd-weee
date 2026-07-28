@@ -131,6 +131,7 @@
                         <tbody class="govuk-table__body">
                             @if (Model.EvidenceNotesDataList.Any())
                             {
+                                var returnRouteValues = EA.Weee.Web.Extensions.ReturnUrlHelper.BuildReturnRouteValues(Context.Request.QueryString);
                                 foreach (var note in Model.EvidenceNotesDataList)
                                 {
                                     <tr class="govuk-table__row">
@@ -149,17 +150,17 @@
                                         <td class="govuk-table__cell">
                                             @if (@note.Type == NoteType.Transfer)
                                             {
-                                                @Html.NavigationRouteLink("View", "View transfer note " + @note.ReferenceDisplay, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), page = Model.EvidenceNotesDataList.PageNumber, queryString = EA.Weee.Web.Extensions.ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
+                                                @Html.NavigationRouteLink("View", "View transfer note " + @note.ReferenceDisplay, note.SchemeViewRouteName, EA.Weee.Web.Extensions.ReturnUrlHelper.MergeRouteValues(new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), page = Model.EvidenceNotesDataList.PageNumber }, returnRouteValues), null)
 
                                                 if (note.DisplayEditLink)
                                                 {
                                                     <br />
-                                                    @Html.NavigationRouteLink("Edit", "Edit returned transfer note " + @note.ReferenceDisplay, "Scheme_edit_transfer", new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, queryString = EA.Weee.Web.Extensions.ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
+                                                    @Html.NavigationRouteLink("Edit", "Edit returned transfer note " + @note.ReferenceDisplay, "Scheme_edit_transfer", EA.Weee.Web.Extensions.ReturnUrlHelper.MergeRouteValues(new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear }, returnRouteValues), null)
                                                 }
                                             }
                                             else
                                             {
-                                                @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, note.SchemeViewRouteName, new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), page = Model.EvidenceNotesDataList.PageNumber, queryString = EA.Weee.Web.Extensions.ReturnUrlHelper.TidyQueryString(@Context.Request.QueryString) }, null)
+                                                @Html.NavigationRouteLink("View", "View evidence note with reference ID " + @note.ReferenceDisplay, note.SchemeViewRouteName, EA.Weee.Web.Extensions.ReturnUrlHelper.MergeRouteValues(new { pcsId = Model.OrganisationId, evidenceNoteId = @note.Id, selectedComplianceYear = Model.ManageEvidenceNoteViewModel.SelectedComplianceYear, redirectTab = ManageEvidenceNotesDisplayOptions.ViewAndTransferEvidence.ToDisplayString(), page = Model.EvidenceNotesDataList.PageNumber }, returnRouteValues), null)
                                             }
                                         </td>
                                     </tr>
