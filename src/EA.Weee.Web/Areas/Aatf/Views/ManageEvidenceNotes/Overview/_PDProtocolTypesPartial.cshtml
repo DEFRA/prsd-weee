@@ -1,54 +1,67 @@
-﻿@{
-    ViewBag.Title = "ProtocolTypesProgressiveDisclosure";
-}
-
-<style>
-    #protocol-table th {
-        width: 33%;
-    }
-
-    @@media (max-width: 600px) {
-        #protocol-table tr {
-            display: flex;
-            flex-direction: column;
-        }
-        #protocol-table th {
-            width: 100%;
-            padding-top: 0.5em;
-            font-weight: 700;
-        }
-        #protocol-table td {
-            order: 2;
-            padding-top: 0.25em;
-        }
-    }
-    
-</style>
-
-
-<table id="protocol-table" role="presentation">
-    <tr>
-        <th class="govuk-!-text-align-left">Actual</th>
-        <td>(Tonnages are determined by weighing each category)</td>
-    </tr>
-    <tr>
-        <th class="govuk-!-text-align-left">LDA protocol</th>
-        <td>(Large domestic appliance protocol)</td>
-    </tr>
-    <tr>
-        <th class="govuk-!-text-align-left">SMW protocol</th>
-        <td>(Small mixed WEEE protocol)</td>
-    </tr>
-    <tr>
-        <th class="govuk-!-text-align-left">Site specific protocol</th>
-        <td>(also referred to as 'SSP')</td>
-    </tr>
-    <tr>
-        <th class="govuk-!-text-align-left">Reuse Network PWP </th>
-        <td>(Reuse Network Product Weight Protocol)</td>
-    </tr>
-    <tr>
-        <th class="govuk-!-text-align-left">Light iron protocol </th>
-        <td>(WEEE in light iron protocol)</td>
-    </tr>
-</table>
+﻿<details class="govuk-details">
+    <summary class="govuk-details__summary">
+        <span class="govuk-details__summary-text">
+            What are the different types of protocol?
+        </span>
+    </summary>
+    <div class="govuk-details__text">
+        <dl class="govuk-summary-list">
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Actual
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    (Tonnages are determined by weighing each category)
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Batteries in vapes
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    (Deduct the weight of batteries in vapes and electronic cigarettes)
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    LDA protocol
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    (Large domestic appliance protocol)
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Light iron protocol
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    (WEEE in light iron protocol)
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Reuse Network PWP
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    (Reuse Network Product Weight Protocol)
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    Site specific protocol
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    (also referred to as 'SSP')
+                </dd>
+            </div>
+            <div class="govuk-summary-list__row">
+                <dt class="govuk-summary-list__key">
+                    SMW protocol
+                </dt>
+                <dd class="govuk-summary-list__value">
+                    (Small mixed WEEE protocol)
+                </dd>
+            </div>
+        </dl>
+    </div>
+</details>

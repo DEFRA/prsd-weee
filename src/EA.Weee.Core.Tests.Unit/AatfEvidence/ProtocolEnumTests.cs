@@ -18,7 +18,7 @@
         public void Protocol_ShouldHaveValues()
         {
             var values = EnumHelper.GetValues(typeof(Protocol));
-            values.Count.Should().Be(6);
+            values.Count.Should().Be(7);
 
             values.Should().Contain(c => c.Key.Equals(1) && c.Value.Equals("Actual"));
             values.Should().Contain(c => c.Key.Equals(2) && c.Value.Equals("LDA protocol"));
@@ -26,6 +26,7 @@
             values.Should().Contain(c => c.Key.Equals(4) && c.Value.Equals("Site specific protocol"));
             values.Should().Contain(c => c.Key.Equals(5) && c.Value.Equals("Reuse network PWP"));
             values.Should().Contain(c => c.Key.Equals(6) && c.Value.Equals("Light iron protocol"));
+            values.Should().Contain(c => c.Key.Equals(7) && c.Value.Equals("Batteries in vapes"));
         }
     }
 }
