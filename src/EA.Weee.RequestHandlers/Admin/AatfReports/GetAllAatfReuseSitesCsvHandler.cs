@@ -42,7 +42,10 @@
             var csvWriter = csvWriterFactory.Create<AatfReuseSitesData>();
 
             csvWriter.DefineColumn(@"Appropriate authority", i => i.Abbreviation);
-            csvWriter.DefineColumn(@"WROS Pan Area Team", i => i.PanName);
+            if (request.ComplianceYear < 2026)
+            {
+                csvWriter.DefineColumn(@"WROS Pan Area Team", i => i.PanName);
+            }
             csvWriter.DefineColumn(@"EA Area", i => i.LaName);
             csvWriter.DefineColumn(@"Compliance year", i => i.ComplianceYear);
             csvWriter.DefineColumn(@"Quarter", i => i.Quarter);

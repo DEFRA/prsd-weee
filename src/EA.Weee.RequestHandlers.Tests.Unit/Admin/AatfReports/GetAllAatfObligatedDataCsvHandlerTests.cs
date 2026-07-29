@@ -1,17 +1,24 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.Reports
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data;
+    using System.Net;
+    using System.Runtime.Remoting.Contexts;
+    using System.Security;
+    using System.Threading.Tasks;
+    using AutoFixture;
     using Core.Admin;
     using Core.Shared;
     using DataAccess;
     using EA.Prsd.Core;
+    using EA.Weee.Core.Admin.AatfReports;
+    using EA.Weee.DataAccess.StoredProcedure;
     using EA.Weee.RequestHandlers.Shared;
     using FakeItEasy;
     using FluentAssertions;
     using RequestHandlers.Admin.Reports;
     using Requests.Admin.AatfReports;
-    using System;
-    using System.Security;
-    using System.Threading.Tasks;
     using Weee.Tests.Core;
     using Xunit;
     public class GetAllAatfObligatedDataCsvHandlerTests
@@ -147,6 +154,65 @@
             data.FileName.Should().Be("2019_B2C_AATF obligated WEEE data_01022019_1101.csv");
 
             SystemTime.Unfreeze();
+        }
+
+        [Fact]
+        public async Task GetAllAatfObligatedDataCsvHandler_Given2026_MatchingFileContent()
+        {
+            var authorization = new AuthorizationBuilder().AllowInternalAreaAccess().Build();
+            var context = A.Fake<WeeeContext>();
+            var commonDataAccess = A.Fake<ICommonDataAccess>();
+            var csvWriterFactory = A.Fake<CsvWriterFactory>();
+            const int complianceYear = 2026;
+            const string obligationType = "B2C";
+            const string aatfName = "A1";
+            SystemTime.Freeze(new DateTime(2026, 2, 1, 11, 1, 2));
+
+            DataTable dataTable = GetObligatedDataTable();
+
+            var handler = new GetAllAatfObligatedDataCsvHandler(authorization, context, csvWriterFactory, commonDataAccess);
+            var request = new GetAllAatfObligatedDataCsv(complianceYear, 1, obligationType, aatfName, null, null);
+
+            var storedProcedures = A.Fake<IStoredProcedures>();
+            A.CallTo(() => context.StoredProcedures).Returns(storedProcedures);
+            //A.CallTo(() => storedProcedures.GetAllAatfReuseSitesCsvData(request.ComplianceYear, request.AuthorityId, request.PanArea)).Returns(new List<AatfReuseSitesData> { csvData1, csvData2 });
+            A.CallTo(() => storedProcedures.GetAllAatfObligatedCsvData(request.ComplianceYear, request.AATFName, request.ObligationType, request.AuthorityId, request.PanArea, request.ColumnType)).Returns(dataTable);
+
+            // Act
+            var data = await handler.HandleAsync(request);
+
+            // Assert
+            data.FileContent.Should().Contain("Appropriate authority,EA Area,Compliance year");
+
+            SystemTime.Unfreeze();
+        }
+
+        private DataTable GetObligatedDataTable()
+        {
+            // Create DataTable
+            DataTable dataTable = new DataTable("AllAatfObligated");
+
+            // Add Columns
+            dataTable.Columns.Add("Appropriate authority", typeof(string));
+            dataTable.Columns.Add("WROS Pan Area Team", typeof(string));
+            dataTable.Columns.Add("EA Area", typeof(string));
+            dataTable.Columns.Add("Compliance year", typeof(int));
+            dataTable.Columns.Add("Quarter", typeof(int));
+            dataTable.Columns.Add("Submitted by", typeof(string));
+            dataTable.Columns.Add("Date submitted (GMT)", typeof(DateTime));
+            dataTable.Columns.Add("Organisation name", typeof(string));
+            dataTable.Columns.Add("Name of AATF", typeof(string));
+            dataTable.Columns.Add("Approval number", typeof(string));
+            dataTable.Columns.Add("Category", typeof(string));
+            dataTable.Columns.Add("Obligation type", typeof(string));
+            dataTable.Columns.Add("Total sent to another AATF / ATF (t)", typeof(decimal));
+            dataTable.Columns.Add("Total reused as a whole appliance (t)", typeof(decimal));
+            dataTable.Columns.Add("Total received on behalf of PCS(s) (t)", typeof(decimal));
+
+            // Add Data
+            dataTable.Rows.Add("aa", "WROS", "EA", 2026, 1, "Submitted", DateTime.Now, "Organisation", "AATF", "Approval", "Category", "Obligation", 1, 2, 3);
+
+            return dataTable;
         }
     }
 }

@@ -27,7 +27,7 @@
             $"{nameof(SiteAddressData)}.{nameof(AatfAddressData.CountryId)}",
             nameof(ApprovalNumber),
             nameof(CompetentAuthorityId),
-            nameof(PanAreaId),
+            //nameof(PanAreaId),
             nameof(LocalAreaId),
             nameof(StatusValue),
             nameof(SizeValue),
