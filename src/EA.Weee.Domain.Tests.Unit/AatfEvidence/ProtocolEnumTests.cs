@@ -18,8 +18,8 @@
             values.Should().Contain(c => c.Key.Equals(3) && c.Value.Equals("SmwProtocol"));
             values.Should().Contain(c => c.Key.Equals(4) && c.Value.Equals("SiteSpecificProtocol"));
             values.Should().Contain(c => c.Key.Equals(5) && c.Value.Equals("ReuseNetworkPwp"));
-            values.Should().Contain(c => c.Key.Equals(6) && c.Value.Equals("Light iron protocol"));
-            values.Should().Contain(c => c.Key.Equals(7) && c.Value.Equals("Batteries in vapes"));
+            values.Should().Contain(c => c.Key.Equals(6) && c.Value.Equals("LightIronProtocol"));
+            values.Should().Contain(c => c.Key.Equals(7) && c.Value.Equals("BatteriesInVapes"));
         }
     }
 }
