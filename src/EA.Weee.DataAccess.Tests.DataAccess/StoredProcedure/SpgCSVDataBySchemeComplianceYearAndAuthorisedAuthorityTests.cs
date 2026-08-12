@@ -538,10 +538,10 @@
                 var (_, directRegistrant1, registeredProducer1) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company", "WEE/AG48365JN", complianceYear);
 
                 var amounts1 = new List<DirectRegistrantHelper.EeeOutputAmountData>
-                {
-                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 123.456m, ObligationType = Domain.Obligation.ObligationType.B2C },
-                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C }
-                };
+        {
+            new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.LargeHouseholdAppliances, Amount = 123.456m, ObligationType = Domain.Obligation.ObligationType.B2C },
+            new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.ConsumerEquipment, Amount = 2m, ObligationType = Domain.Obligation.ObligationType.B2C }
+        };
 
                 var submission = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant1, registeredProducer1, complianceYear, amounts1, DirectProducerSubmissionStatus.Complete, SellingTechniqueType.Both.Value);
 
@@ -571,12 +571,17 @@
                 var (_, directRegistrant2, registeredProducer2) = DirectRegistrantHelper.CreateOrganisationWithRegisteredProducer(wrapper, "My company 2", "WEE/AG48365JX", complianceYear, "987654321", authorisedRep, brandNames);
 
                 var amounts2 = new List<DirectRegistrantHelper.EeeOutputAmountData>
-                {
-                    new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.MedicalDevices, Amount = 4.456m, ObligationType = Domain.Obligation.ObligationType.B2B }
-                };
+        {
+            new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.MedicalDevices, Amount = 4.456m, ObligationType = Domain.Obligation.ObligationType.B2B }
+        };
 
-                // not paid so should have null registered date
-                await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant2, registeredProducer2, complianceYear, amounts2, DirectProducerSubmissionStatus.Complete, SellingTechniqueType.IndirectSellingtoEndUser.Value);
+                // FIX: Set as paid so it appears in results (only Registered/Returned status are returned)
+                var submission2 = await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant2, registeredProducer2, complianceYear, amounts2, DirectProducerSubmissionStatus.Complete, SellingTechniqueType.IndirectSellingtoEndUser.Value);
+
+                var paidDate2 = new DateTime(2020, 2, 1);
+                var payment2 = await DirectRegistrantHelper.CreatePaymentSession(wrapper, submission2, paidDate2);
+                submission2.FinalPaymentSession = payment2;
+                submission2.PaymentFinished = true;
 
                 // should include removed
                 registeredProducer2.Remove();
@@ -842,7 +847,8 @@
                 result2.OverseasContactCountry.Should().Be("Azerbaijan");
                 result2.RemovedFromScheme.Should().Be("Yes");
                 result2.DateAmended.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
-                result2.DateRegistered.Should().BeNull();
+                result2.DateRegistered.Should().Be(paidDate2);
+                result2.BrandNames.Should().Be("brand name");
             }
         }
 
