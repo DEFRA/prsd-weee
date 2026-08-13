@@ -841,6 +841,7 @@
                 result2.OverseasContactCountry.Should().Be("Azerbaijan");
                 result2.RemovedFromScheme.Should().Be("Yes");
                 result2.DateAmended.Should().BeCloseTo(SystemTime.UtcNow, TimeSpan.FromMinutes(2));
+                result2.DateRegistered.Should().BeNull();
             }
         }
 
