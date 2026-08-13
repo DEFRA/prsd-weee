@@ -17,13 +17,8 @@
             Guard.ArgumentNotNull(() => source, source);
 
             var recipientId = source.ExistingModel != null ? source.ExistingModel.RecipientId : source.NoteData.RecipientOrganisationData.Id;
-            var rejectedReason = source.ExistingModel != null
-                ? source.ExistingModel.RejectedReason
-                : source.NoteData.RejectedReason;
-            var returnedReason = source.ExistingModel != null
-                ? source.ExistingModel.ReturnedReason
-                : source.NoteData.ReturnedReason;
-
+            var rejectedReason = source.ExistingModel != null ? source.ExistingModel.RejectedReason : source.NoteData.RejectedReason;
+            var returnedReason = source.ExistingModel != null ? source.ExistingModel.ReturnedReason : source.NoteData.ReturnedReason;
             var recipientName = source.Schemes.FirstOrDefault(s => s.Id == recipientId);
 
             var model = new EditEvidenceNoteViewModel
@@ -35,7 +30,7 @@
                 OrganisationId = source.ExistingModel?.OrganisationId ?? source.OrganisationId,
                 AatfId = source.ExistingModel?.AatfId ?? source.AatfId,
                 SchemeList = source.Schemes,
-                ProtocolList = new SelectList(EnumHelper.GetOrderedValuesByKey(typeof(Protocol)), "Key", "Value"),
+                ProtocolList = new SelectList(EnumHelper.GetOrderedNameByKey(typeof(Protocol)), "Key", "Value"),
                 WasteTypeList = new SelectList(EnumHelper.GetOrderedValues(typeof(WasteType)), "Key", "Value"),
                 RejectedReason = rejectedReason,
                 ReturnedReason = returnedReason,

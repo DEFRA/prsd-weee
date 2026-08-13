@@ -575,7 +575,6 @@
                     new DirectRegistrantHelper.EeeOutputAmountData { Category = WeeeCategory.MedicalDevices, Amount = 4.456m, ObligationType = Domain.Obligation.ObligationType.B2B }
                 };
 
-                // not paid so should have null registered date
                 await DirectRegistrantHelper.CreateSubmission(wrapper, directRegistrant2, registeredProducer2, complianceYear, amounts2, DirectProducerSubmissionStatus.Complete, SellingTechniqueType.IndirectSellingtoEndUser.Value);
 
                 // should include removed

@@ -85,11 +85,7 @@
 
     <div class="govuk-grid-column-full govuk-!-padding-top-3">
         <div class="govuk-!-padding-top-4">
-            @this.WeeeGds().CreateProgressiveDisclosure("What are the different types of protocol?",
-           @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_PDProtocolTypesPartial.cshtml").ToString(),
-           "Hidden content",
-           "Progressive disclosure",
-           "Protocol Types")
+            @Html.Partial("~/Areas/Aatf/Views/ManageEvidenceNotes/Overview/_PDProtocolTypesPartial.cshtml")
         </div>
 
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues)">
@@ -104,7 +100,7 @@
                 <button class="link-submit govuk-link govuk-link--no-visited-state govuk-!-padding-top-5" style="float: right" type="submit" name="Action" value="@ActionEnum.CopyAndPaste">Use copy and paste to populate the table</button>
             </div>
 
-            <label for="CategoryValues" aria-hidden="true" class="govuk-visually-hidden">hidden link for navigation to tonnage error</label> <input id="CategoryValues" type="hidden"/>
+            <label for="CategoryValues" aria-hidden="true" class="govuk-visually-hidden">hidden link for navigation to tonnage error</label> <input id="CategoryValues" type="hidden" />
             @Html.Gds().ValidationMessageFor(m => m.CategoryValues)
 
         </div>

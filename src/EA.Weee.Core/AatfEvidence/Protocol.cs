@@ -17,6 +17,8 @@
         [Display(Name = "Reuse network PWP")]
         ReuseNetworkPwp = 5,
         [Display(Name = "Light iron protocol")]
-        LightIronProtocol = 6
+        LightIronProtocol = 6,
+        [Display(Name = "Batteries in vapes")]
+        BatteriesInVapes = 7
     }
 }

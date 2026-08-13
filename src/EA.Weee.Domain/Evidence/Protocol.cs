@@ -6,6 +6,8 @@
         LdaProtocol = 2,
         SmwProtocol = 3,
         SiteSpecificProtocol = 4,
-        ReuseNetworkPwp = 5
+        ReuseNetworkPwp = 5,
+        LightIronProtocol = 6,
+        BatteriesInVapes = 7
     }
 }
