@@ -716,6 +716,23 @@
         {
             // Arrange
             var model = TestFixture.Create<EditEeeDataViewModel>();
+            model.CategoryValues.Clear();
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.LargeHouseholdAppliances));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.SmallHouseholdAppliances));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.ConsumerEquipment));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.LightingEquipment));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.ElectricalAndElectronicTools));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.ToysLeisureAndSports));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.MedicalDevices));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.MonitoringAndControlInstruments));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.AutomaticDispensers));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.DisplayEquipment));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.CoolingApplicancesContainingRefrigerants));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.GasDischargeLampsAndLedLightSources));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.PhotovoltaicPanels));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.VapesAndElectronicCigarettes));
+
             model.RedirectToCheckAnswers = true;
             var request = TestFixture.Create<EditEeeDataRequest>();
             A.CallTo(() => editEeeDataRequestCreator.ViewModelToRequest(model)).Returns(request);
@@ -1017,6 +1034,23 @@
         {
             // Arrange
             var model = TestFixture.Create<EditEeeDataViewModel>();
+            model.CategoryValues.Clear();
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.LargeHouseholdAppliances));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.SmallHouseholdAppliances));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.ITAndTelecommsEquipment));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.ConsumerEquipment));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.LightingEquipment));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.ElectricalAndElectronicTools));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.ToysLeisureAndSports));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.MedicalDevices));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.MonitoringAndControlInstruments));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.AutomaticDispensers));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.DisplayEquipment));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.CoolingApplicancesContainingRefrigerants));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.GasDischargeLampsAndLedLightSources));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.PhotovoltaicPanels));
+            model.CategoryValues.Add(new ProducerSubmissionCategoryValue(Core.DataReturns.WeeeCategory.VapesAndElectronicCigarettes));
+
             controller.ModelState.AddModelError("Test", "Test error");
 
             // Act
