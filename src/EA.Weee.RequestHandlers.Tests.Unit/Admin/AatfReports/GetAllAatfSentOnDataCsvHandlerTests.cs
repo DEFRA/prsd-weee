@@ -190,6 +190,22 @@
             data.FileContent.Should().Contain("2019,Q1,TestAatf4,WEE/AC0005ZT/ATF,T User,24/04/2019,1. Large Household Appliances,B2C,33");
         }
 
+        [Fact]
+        public async Task GetAatfAeReturnDataCSVHandler_For2026_MatchingFileContent()
+        {
+            const int complianceYear = 2026;
+
+            var sentOnDataSet = CreateDummyDataSet2026();
+
+            A.CallTo(() => storedProcedures.GetAllAatfSentOnDataCsv(A<int>._, A<string>._, A<Guid>._, A<Guid>._)).Returns(sentOnDataSet);
+
+            var request = new GetAllAatfSentOnDataCsv(complianceYear, string.Empty, A.Dummy<Guid>(), A.Dummy<Guid>());
+
+            var data = await handler.HandleAsync(request);
+
+            data.FileContent.Should().Contain("Appropriate authority,EA Area,Compliance year");
+        }
+
         internal DataSet CreateDummyDataSet()
         {
             var sentOnDataSet = new DataSet();
@@ -204,22 +220,55 @@
             obligatedDataTable.Columns.Add("Obligation");
             obligatedDataTable.Columns.Add("Total Sent to another AATF / ATF (t)");
 
-            for (var i = 0; i < 5; i++)
-            {
-                var row = obligatedDataTable.NewRow();
-                row[0] = 2019;
-                row[1] = "Q1";
-                row[2] = "TestAatf" + i;
-                row[3] = "WEE/AC0005ZT/ATF";
-                row[4] = "T User";
-                row[5] = "24/04/2019";
-                row[6] = "1. Large Household Appliances";
-                row[7] = "B2C";
-                row[8] = 33;
-                obligatedDataTable.Rows.Add(row);
-            }
+            var row = obligatedDataTable.NewRow();
+            row[0] = 2019;
+            row[1] = "Q1";
+            row[2] = "TestAatf";
+            row[3] = "WEE/AC0005ZT/ATF";
+            row[4] = "T User";
+            row[5] = "24/04/2019";
+            row[6] = "1. Large Household Appliances";
+            row[7] = "B2C";
+            row[8] = 33;
+            obligatedDataTable.Rows.Add(row);
 
             sentOnDataSet.Tables.Add(obligatedDataTable);
+
+            var addressDataTable = new DataTable();
+            addressDataTable.Columns.Add("SiteOperatorId");
+            addressDataTable.Columns.Add("SiteOperatorData");
+
+            sentOnDataSet.Tables.Add(addressDataTable);
+
+            return sentOnDataSet;
+        }
+
+        internal DataSet CreateDummyDataSet2026()
+        {
+            var sentOnDataSet = new DataSet();
+            
+            // Create DataTable
+            DataTable dataTable = new DataTable("AllAatfObligated");
+
+            // Add Columns
+            dataTable.Columns.Add("Appropriate authority", typeof(string));
+            dataTable.Columns.Add("WROS Pan Area Team", typeof(string));
+            dataTable.Columns.Add("EA Area", typeof(string));
+            dataTable.Columns.Add("Compliance year", typeof(int));
+            dataTable.Columns.Add("Quarter", typeof(int));
+            dataTable.Columns.Add("Submitted by", typeof(string));
+            dataTable.Columns.Add("Date submitted (GMT)", typeof(DateTime));
+            dataTable.Columns.Add("Organisation name", typeof(string));
+            dataTable.Columns.Add("Name of AATF", typeof(string));
+            dataTable.Columns.Add("Approval number", typeof(string));
+            dataTable.Columns.Add("Category", typeof(string));
+            dataTable.Columns.Add("Obligation type", typeof(string));
+            dataTable.Columns.Add("Total sent to another AATF / ATF (t)", typeof(decimal));
+
+            // Add Data
+            dataTable.Rows.Add("aa", "WROS", "EA", 2026, 1, "Submitted", DateTime.Now, "Organisation", "AATF", "Approval", "Category", "Obligation", 1);
+
+            sentOnDataSet.Tables.Add(dataTable);
 
             var addressDataTable = new DataTable();
             addressDataTable.Columns.Add("SiteOperatorId");

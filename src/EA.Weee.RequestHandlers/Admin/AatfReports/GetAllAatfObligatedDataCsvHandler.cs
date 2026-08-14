@@ -62,6 +62,13 @@
                 {
                     obligatedData.Columns.Remove("TonnageType");
                 }
+                if (request.ComplianceYear > 2025)
+                {
+                    if (obligatedData.Columns.Contains("WROS Pan Area Team"))
+                    {
+                        obligatedData.Columns.Remove("WROS Pan Area Team");
+                    }
+                }
             }
 
             var fileName = $"{request.ComplianceYear}";
