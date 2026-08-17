@@ -557,11 +557,14 @@
       <DependentUpon>AatfResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Admin\Controllers\Base\AdminBreadcrumbBaseController.cs" />
+    <Compile Include="Areas\Admin\Controllers\RemoveRecordsController.cs" />
     <Compile Include="Areas\Admin\Filters\AdminSmallProducerSubmissionSubmittedContextAttribute.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmReturnViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\OrganisationIdViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\PaymentDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ReturnedViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\RemoveRecords\RemoveRecordsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\RemoveRecords\InternalRemoveRecordsActivity.cs" />
     <Compile Include="Areas\Admin\ViewModels\SchemeReports\ProducersDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\SchemeReports\ProducersDataViewModelBase.cs" />
     <Compile Include="Areas\Producer\Filters\SmallProducerStartSubmissionContextAttribute.cs" />
@@ -1204,6 +1207,7 @@
     <Content Include="Views\Shared\Producer\ViewOrganisation\_OrganisationDetailsTabsBottomButtons.cshtml" />
     <Content Include="Views\Account\SessionSignedOut.cshtml" />
     <Content Include="Content\weee\_session-timeout.scss" />
+    <Content Include="Areas\Admin\Views\RemoveRecords\ChooseActivity.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
