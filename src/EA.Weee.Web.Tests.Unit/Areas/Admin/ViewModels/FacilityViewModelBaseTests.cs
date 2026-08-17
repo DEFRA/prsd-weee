@@ -50,17 +50,6 @@
         }
 
         [Fact]
-        public void RuleFor_CompetentAuthorityIsEA_PanAreaIsNull_ErrorShouldOccur()
-        {
-            var model = new OverriddenFacilityViewModelBase { CompetentAuthorityId = UKCompetentAuthorityAbbreviationType.EA, PanAreaId = null, LocalAreaId = Guid.NewGuid() };
-
-            var validationResult = model.Validate(new ValidationContext(model));
-
-            validationResult.Count().Should().Be(1);
-            validationResult.First().ErrorMessage.Should().Be("Enter WROS Pan Area Team");
-        }
-
-        [Fact]
         public void ValidationMessageDisplayOrder_IsAsExpected()
         {
             var expectedOrdering = new List<string>
@@ -75,7 +64,6 @@
                 "ApprovalNumber",
                 "CompetentAuthorityId",
                 "LocalAreaId",
-                "PanAreaId",
                 "StatusValue",
                 "SizeValue",
                 "ApprovalDate"
