@@ -49,6 +49,9 @@
             A.CallTo(() => builder.ProducerQuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._))
                 .Returns(null);
 
+            A.CallTo(() => builder.ProducerQuerySet.GetLatestProducerFromPreviousComplianceYears(A<string>._))
+                .Returns(null);
+
             var newProducerDetails = new producerType
             {
                 status = statusType.A,
