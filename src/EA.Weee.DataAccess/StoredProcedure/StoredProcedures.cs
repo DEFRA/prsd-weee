@@ -259,6 +259,43 @@
                 .ToListAsync();
         }
 
+        public async Task<List<int>> SpgSchemeComplianceYearsExceedingRetentionPeriod()
+        {
+            return await context.Database
+                .SqlQuery<int>("[PCS].[spgSchemeComplianceYearsExceedingRetentionPeriod]")
+                .ToListAsync();
+        }
+
+        public async Task<List<string>> SpgSchemeNamesForComplianceYear(int complianceYear)
+        {
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
+
+            return await context.Database
+                .SqlQuery<string>("[PCS].[spgSchemeNamesForComplianceYear] @ComplianceYear", complianceYearParameter)
+                .ToListAsync();
+        }
+
+        public async Task<List<SchemeDataExceedingRetentionPeriod>> SpgSchemeDataByNameAndComplianceYear(int? complianceYear, string schemeName)
+        {
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", (object)complianceYear ?? DBNull.Value);
+            var schemeNameParameter = new SqlParameter("@SchemeName", (object)schemeName ?? DBNull.Value);
+
+            try
+            {
+                return await context.Database
+                    .SqlQuery<SchemeDataExceedingRetentionPeriod>("[PCS].[spgSchemeDataByNameAndComplianceYear] @ComplianceYear, @SchemeName",
+                        complianceYearParameter,
+                        schemeNameParameter)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                var exs = ex;
+
+                return new List<SchemeDataExceedingRetentionPeriod>();
+            }
+        }
+
         public async Task<List<UkEeeCsvData>> SpgUKEEEDataByComplianceYear(int complianceYear)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);

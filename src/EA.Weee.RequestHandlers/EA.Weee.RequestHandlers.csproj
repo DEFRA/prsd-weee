@@ -151,6 +151,15 @@
     <Compile Include="Admin\DirectRegistrants\GetSmallProducerSubmissionByRegistrationNumberHandler.cs" />
     <Compile Include="Admin\GetAllAatfsForComplianceYearHandler.cs" />
     <Compile Include="Admin\GetAllNotesInternalRequestHandler.cs" />
+    <Compile Include="Admin\GetSchemesExceedingRetentionPeriod\GetSchemeDataByNameAndComplianceYearDataAccess.cs" />
+    <Compile Include="Admin\GetSchemesExceedingRetentionPeriod\GetSchemeDataByNameAndComplianceYearHandler.cs" />
+    <Compile Include="Admin\GetSchemesExceedingRetentionPeriod\GetSchemesForComplianceYearHandler.cs" />
+    <Compile Include="Admin\GetSchemesExceedingRetentionPeriod\GetSchemesForComplianceYearDataAccess.cs" />
+    <Compile Include="Admin\GetSchemesExceedingRetentionPeriod\GetSchemeComplianceYearsExceedingRetentionPeriodDataAccess.cs" />
+    <Compile Include="Admin\GetSchemesExceedingRetentionPeriod\GetSchemeComplianceYearsExceedingRetentionPeriodHandler.cs" />
+    <Compile Include="Admin\GetSchemesExceedingRetentionPeriod\IGetSchemeDataByNameAndComplianceYearDataAccess.cs" />
+    <Compile Include="Admin\GetSchemesExceedingRetentionPeriod\IGetSchemesForComplianceYearDataAccess.cs" />
+    <Compile Include="Admin\GetSchemesExceedingRetentionPeriod\IGetSchemeComplianceYearsExceedingRetentionPeriodDataAccess.cs" />
     <Compile Include="Admin\GetComplianceYearsFilterHandler.cs" />
     <Compile Include="Admin\GetEvidenceNoteForInternalUserRequestHandler.cs" />
     <Compile Include="Admin\GetEvidenceNoteTransfersForInternalUserRequestHandler.cs" />

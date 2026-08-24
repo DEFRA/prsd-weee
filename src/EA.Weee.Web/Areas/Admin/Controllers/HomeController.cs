@@ -131,7 +131,7 @@
                     }
 
                 case InternalUserActivity.RemoveRecords:
-                    return RedirectToAction("Index", "RemoveRecords");
+                    return RedirectToAction("ChooseActivity", "RemoveRecords");
 
                 default:
                     throw new NotSupportedException();

@@ -1,0 +1,122 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Admin
+@using EA.Weee.Requests.Admin
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using EA.Weee.Web.Infrastructure.Paging
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.RemoveRecords.RemovePCSRecordsFilterViewModel
+@{
+    ViewBag.Title = "Remove Records";
+}
+
+<header class="hgroup">
+    <h1 class="govuk-heading-l">
+        Remove Records
+    </h1>
+</header>
+
+@section main_content
+{
+    <div class="filter">
+        @Html.AntiForgeryToken()
+        <div class="govuk-label">Filter by:</div>
+        <br />
+        <table class="govuk-table">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td>
+                        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
+                            @Html.Gds().LabelFor(m => m.SelectedYear)
+                            @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
+                            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, new { @class = "govuk-!-width-one-half", autocomplete = "false" })
+                        </div>
+                    </td>
+                    <td>
+                        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedScheme)">
+                            @Html.Gds().LabelFor(m => m.SelectedScheme)
+                            @Html.Gds().ValidationMessageFor(m => m.SelectedScheme)
+                            @Html.Gds().DropDownListFor(m => m.SelectedScheme, Model.SchemeNames, new { @class = "govuk-!-width-one-half", autocomplete = "false" })
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="govuk-table govuk-!-width-one-quarter buttons">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td>
+                        @(this.WeeeGds().Submit("Apply", new { orderBy = Model.OrderBy }))
+                    </td>
+                    <td>
+                        <div class="left-cleared">
+                            @Html.ActionLink("Clear", "ClearFilter", new { orderBy = Model.OrderBy }, new { @class = "govuk-button cancel" })
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="govuk-form-group" id="pcsResults"></div>
+
+    <p class="left-cleared">
+        <a href="javascript:history.back();">Back</a>
+    </p>
+}
+
+@section scripts {
+    <script type="text/javascript">
+        $(document).ready(function () {
+            var selectedYear = $("#SelectedYear").val();
+            var selectedScheme = $("#SelectedScheme").val();
+            FetchPCSRecordsList(selectedYear, selectedScheme);
+        });
+
+        function FetchPCSRecordsList(selectedYear, selectedScheme) {
+            $.ajax({
+                url: '@Url.Action("FetchPCSRecordsList")',
+                type: 'POST',
+                cache: false,
+                data: { year: selectedYear, name: selectedScheme, __RequestVerificationToken: $("[name=__RequestVerificationToken]").val() },
+                success: function (data) {
+                    $('#pcsResults').html(data);
+                }
+            });
+        }
+
+        function FetchSchemeForComplainceYear(selectedYear) {
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("FetchSchemeForComplainceYear")',
+                cache: false,
+                data: { complianceYear: selectedYear, __RequestVerificationToken: $("[name=__RequestVerificationToken]").val() },
+                success: function (data) {
+                    // Clear options
+                    $("#SelectedScheme").find("option").remove();
+
+                    // Loop through JSON response
+                    $.each(data, function (index, item) {
+                        $('#SelectedScheme').append('<option value="' + item.Value + '">' + item.Text + '</option>');
+                    })
+
+                    var selectedScheme = $("#SelectedScheme").val();
+                    FetchPCSRecordsList(selectedYear, selectedScheme);
+                }
+            });
+        }
+
+        $("#SelectedYear").change(function () {
+
+            var selectedYear = $(this).val();
+            FetchSchemeForComplainceYear(selectedYear);
+        });
+
+        $("#SelectedScheme").change(function () {
+                var selectedScheme = $(this).val();
+                var selectedYear = $("#SelectedYear").val();
+                FetchPCSRecordsList(selectedYear, selectedScheme);
+            });
+    </script>
+}

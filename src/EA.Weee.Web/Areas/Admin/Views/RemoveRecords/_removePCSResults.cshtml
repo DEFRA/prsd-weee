@@ -1,0 +1,72 @@
+﻿@using System.Globalization
+@using EA.Weee.Requests.Shared
+@using EA.Weee.Web.Areas.Admin.ViewModels.RemoveRecords
+@model RemovePCSRecordsListViewModel
+
+<div id="submissionsGrid">
+    @if (Model.SchemeData.Any())
+    {
+        @Html.HiddenFor(m => m.SelectedYear, new { id = "ComplianceYear" })
+        @Html.HiddenFor(m => m.SelectedSchemeName, new { id = "SchemeName" })
+
+        <div class="table-hr"></div>
+        <table id="submissions" class="govuk-table prsd-table">
+            <caption class="govuk-visually-hidden">This table shows the submissions for the selected year and scheme.</caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    }
+                    <th class="govuk-table__header" scope="col">PCS name</th>
+                    <th class="govuk-table__header" scope="col">Approval number</th>
+                    <th class="govuk-table__header" scope="col">Compliance year</th>
+                    <th class="govuk-table__header" scope="col">Delete Record</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @foreach (var item in Model.SchemeData)
+                {
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@item.SchemeName</td>
+                        <td class="govuk-table__cell" style="text-align:left">@item.ApprovalNumber</td>
+                        <td class="govuk-table__cell">@item.ComplianceYear</td>
+                        <td class="govuk-table__cell" style="text-align:left">
+                            <div style="width:120px;">
+                                <a href="@Url.Action("ConfirmDeletion", new { id = item.SchemeId, complianceYear = Model.SelectedYear })">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+
+        <script type="text/javascript">
+            $("#date-descending, #date").click(function (event) {
+                event.preventDefault();
+                SortSubmissionResults('@SubmissionsHistoryOrderBy.SubmissionDateAscending');
+            })
+
+            $("#date-ascending").click(function (event) {
+                event.preventDefault();
+                SortSubmissionResults('@SubmissionsHistoryOrderBy.SubmissionDateDescending');
+            })
+
+            function SortSubmissionResults(orderBy) {
+                var selectedYear = $("#ComplianceYear").val()
+                var selectedScheme = $("#SchemeId").val()
+
+                $.ajax({
+                    url: '@Url.Action("GetSubmissionResults")',
+                    type: 'GET',
+                    cache: false,
+                    data: { year: selectedYear, schemeId: selectedScheme, orderBy: orderBy },
+                    success: function (data) {
+                        $('#submissionsGrid').replaceWith(data);
+                    }
+                });
+            }
+        </script>
+    }
+    else
+    {
+        <span class="govuk-body govuk-!-padding-bottom-8">No submissions have been made for the chosen compliance year and PCS.</span>
+    }
+</div>

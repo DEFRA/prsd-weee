@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.Home
+﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.RemoveRecords
 {
     using System.ComponentModel.DataAnnotations;
     using Web.ViewModels.Shared;

@@ -92,6 +92,9 @@
     <Compile Include="Admin\AddPaymentDetails.cs" />
     <Compile Include="Admin\DirectRegistrants\GetSmallProducerSubmissionByRegistrationNumber.cs" />
     <Compile Include="Admin\GetAllAatfsForComplianceYearRequest.cs" />
+    <Compile Include="Admin\GetSchemeDataExceedingRetentionPeriod.cs" />
+    <Compile Include="Admin\GetSchemesForComplianceYear.cs" />
+    <Compile Include="Admin\GetSchemeComplianceYearsExceedingRetentionPeriod.cs" />
     <Compile Include="Admin\Obligations\GetSchemesWithObligation.cs" />
     <Compile Include="Admin\RemoveSmallProducer.cs" />
     <Compile Include="Admin\Reports\GetSchemesWithObligationOrEvidence.cs" />
@@ -353,6 +356,10 @@
     <ProjectReference Include="..\EA.Weee.Core\EA.Weee.Core.csproj">
       <Project>{75efee66-9358-4de4-9a84-e7191eec7db8}</Project>
       <Name>EA.Weee.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\EA.Weee.DataAccess\EA.Weee.DataAccess.csproj">
+      <Project>{46300373-D7AE-40AA-BF96-3FC3889825A4}</Project>
+      <Name>EA.Weee.DataAccess</Name>
     </ProjectReference>
     <ProjectReference Include="..\EA.Weee.Domain\EA.Weee.Domain.csproj">
       <Project>{A987FFF6-5386-419E-AF0A-E6C74E3323CF}</Project>
