@@ -563,6 +563,7 @@
     <Compile Include="Areas\Admin\ViewModels\Producers\OrganisationIdViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\PaymentDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ReturnedViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\RemoveRecords\RemovePCSRecordsConfirmDeletionViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\RemoveRecords\PCSFilteringViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\RemoveRecords\RemovePCSRecordsListViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\RemoveRecords\RemovePCSRecordsFilterViewModel.cs" />
@@ -1213,6 +1214,7 @@
     <Content Include="Areas\Admin\Views\RemoveRecords\ChooseActivity.cshtml" />
     <Content Include="Areas\Admin\Views\RemoveRecords\RemovePCS.cshtml" />
     <Content Include="Areas\Admin\Views\RemoveRecords\_removePCSResults.cshtml" />
+    <Content Include="Areas\Admin\Views\RemoveRecords\ConfirmDeletion.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />

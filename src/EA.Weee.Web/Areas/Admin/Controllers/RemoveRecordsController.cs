@@ -224,9 +224,39 @@
         }
 
         [HttpGet]
-        private async Task<ActionResult> ConfirmDeletion(Guid id, int complianceYear)
+        public async Task<ActionResult> ConfirmDeletion(Guid id, int complianceYear)
         {
-            return View();
+            List<SchemeData> schemes = null;
+
+            using (var client = apiClient())
+            {
+                await SetBreadcrumb();
+
+                GetSchemesForComplianceYear getSchemesRequest = new GetSchemesForComplianceYear(FilterType.ApprovedOrWithdrawn, complianceYear);
+                schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
+            }
+
+            var PCSName = schemes.Where(s => s.Id == id).Select(s => s.SchemeName).FirstOrDefault();
+            var ApprovalNumber = schemes.Where(s => s.Id == id).Select(s => s.ApprovalName).FirstOrDefault();
+
+            RemovePCSRecordsConfirmDeletionViewModel model = new RemovePCSRecordsConfirmDeletionViewModel
+            {
+                SchemeId = id,
+                ComplianceYear = complianceYear,
+                PCSName  = PCSName,
+                ApprovalNumber = ApprovalNumber
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ConfirmDeletion(RemovePCSRecordsConfirmDeletionViewModel model)
+        {
+            // Code to make deletion
+
+            return View(model);
         }
 
         /// <summary>
