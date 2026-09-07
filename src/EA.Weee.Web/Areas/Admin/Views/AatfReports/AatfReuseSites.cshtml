@@ -32,7 +32,7 @@
         </div>
 
         <div class="govuk-form-group competent-authority-hidden">
-            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PanAreaId)">
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PanAreaId)" id="divPanAreaId">
                 @Html.Gds().LabelFor(m => m.PanAreaId)
                 @Html.Gds().DropDownListFor(m => m.PanAreaId, Model.PanAreaList, string.Empty, new { autocomplete = "false" })
             </div>
@@ -55,22 +55,33 @@
     <script type="text/javascript">
         function competentAuthoritySelection() {
             var competentAuthority = $("#CompetentAuthorityId option:selected").html();
+            var selectedYear = $("#SelectedYear option:selected").html();
 
             if (competentAuthority === "EA") {
                 $(".competent-authority-hidden").css("display", "block");
 
-                $('a[href*="PanAreaId"]').parent().css("display", "");
+                if (selectedYear < 2026) {
+                    $("#divPanAreaId").show();
+                }
+                else {
+                    $("#PanAreaId").val('');
+                    $("#divPanAreaId").hide();
+                }
             }
             else {
                 $(".competent-authority-hidden").css("display", "none");
                 $(".competent-authority-hidden").find("select").val('');
 
-                $('a[href*="PanAreaId"]').parent().css("display", "none");
+                $("#divPanAreaId").hide();
             }
         }
         competentAuthoritySelection();
 
         $("#CompetentAuthorityId").change(function () {
+            competentAuthoritySelection();
+        });
+
+        $("#SelectedYear").change(function () {
             competentAuthoritySelection();
         });
     </script>
