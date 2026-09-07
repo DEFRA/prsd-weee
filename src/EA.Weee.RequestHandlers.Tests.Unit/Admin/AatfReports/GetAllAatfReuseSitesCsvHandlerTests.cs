@@ -130,5 +130,48 @@
             data.FileContent.Should().Contain($"{csvData1.Abbreviation},{csvData1.PanName},{csvData1.LaName},{csvData1.ComplianceYear},{csvData1.Quarter},{csvData1.SubmittedBy},{csvData1.SubmittedDate},{csvData1.Name},{csvData1.ApprovalNumber},{csvData1.OrgName},{csvData1.SiteName},\"{csvData1.SiteAddress}\"");
             data.FileContent.Should().Contain($"{csvData2.Abbreviation},{csvData2.PanName},{csvData2.LaName},{csvData2.ComplianceYear},{csvData2.Quarter},{csvData2.SubmittedBy},{csvData2.SubmittedDate},{csvData2.Name},{csvData2.ApprovalNumber},{csvData2.OrgName},{csvData2.SiteName},\"{csvData2.SiteAddress}\"");
         }
+
+        [Fact]
+        public async Task HandleAsync_GivenComplianceYear2026_MatchingFileContent()
+        {
+            var storedProcedures = A.Fake<IStoredProcedures>();
+
+            A.CallTo(() => context.StoredProcedures).Returns(storedProcedures);
+
+            var csvData1 = new AatfReuseSitesData()
+            {
+                ComplianceYear = 2026,
+                Quarter = "Q1",
+                SubmittedBy = "Test User",
+                SubmittedDate = new DateTime(2019, 2, 1, 11, 1, 2),
+                OrgName = "Org 1",
+                Abbreviation = "EA",
+                PanName = "North",
+                LaName = "Surrey",
+                SiteName = "Test Site",
+                SiteAddress = "1 address, address2, town, county, UK-England"
+            };
+            var csvData2 = new AatfReuseSitesData()
+            {
+                ComplianceYear = 2026,
+                Quarter = "Q1",
+                SubmittedBy = "Test User",
+                SubmittedDate = new DateTime(2019, 2, 1, 11, 1, 2),
+                OrgName = "Org 1",
+                Abbreviation = "EA",
+                PanName = "North",
+                LaName = "Surrey",
+                SiteName = "Test Site 2",
+                SiteAddress = "1 address, address2, town, county, UK-England"
+            };
+
+            var request = new GetAllAatfReuseSitesCsv(2026, null, null);
+
+            A.CallTo(() => storedProcedures.GetAllAatfReuseSitesCsvData(request.ComplianceYear, request.AuthorityId, request.PanArea)).Returns(new List<AatfReuseSitesData> { csvData1, csvData2 });
+
+            var data = await handler.HandleAsync(request);
+
+            data.FileContent.Should().Contain("Appropriate authority,EA Area,Compliance year");
+        }
     }
 }

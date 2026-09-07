@@ -79,7 +79,7 @@
             nameof(ApprovalNumber),
             nameof(CompetentAuthorityId),
             nameof(LocalAreaId),
-            nameof(PanAreaId),
+            //nameof(PanAreaId),
             nameof(StatusValue),
             nameof(SizeValue),
             nameof(ApprovalDate)
@@ -120,11 +120,11 @@
                             new ValidationResult($"Enter EA Area", new List<string> { nameof(instance.LocalAreaId) }));
                     }
 
-                    if (instance.PanAreaId == null)
-                    {
-                        validationResults.Add(
-                            new ValidationResult($"Enter WROS Pan Area Team", new List<string> { nameof(instance.PanAreaId) }));
-                    }
+                    //if (instance.PanAreaId == null)
+                    //{
+                    //    validationResults.Add(
+                    //        new ValidationResult($"Enter WROS Pan Area Team", new List<string> { nameof(instance.PanAreaId) }));
+                    //}
                 }
             }
 

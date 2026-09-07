@@ -1,8 +1,10 @@
 ﻿namespace EA.Weee.XmlValidation.BusinessValidation.MemberRegistration.Rules.Producer
 {
-    using QuerySets;
     using System;
     using System.Threading.Tasks;
+    using System.Xml.Linq;
+    using EA.Weee.Domain.Producer;
+    using QuerySets;
     using Xml.MemberRegistration;
 
     public class ProducerChargeBandChange : IProducerChargeBandChange
@@ -22,26 +24,45 @@
 
             if (element.status == statusType.A)
             {
-                var existingProducer =
-                    querySet.GetLatestProducerForComplianceYearAndScheme(element.registrationNo, root.complianceYear, organisationId);
+                var existingProducer = querySet.GetLatestProducerForComplianceYearAndScheme(element.registrationNo, root.complianceYear, organisationId);
 
                 if (existingProducer != null)
                 {
-                    var existingChargeBandType = existingProducer.ChargeBandAmount.ChargeBand;
+                    result = GetRuleResult(root, element, existingProducer);
+                }
+                else
+                {
+                    existingProducer = querySet.GetLatestProducerFromPreviousComplianceYears(element.registrationNo);
 
-                    var producerCharge = Task.Run(() => producerChargeBandCalculatorChooser.GetProducerChargeBand(root, element)).Result;
-
-                    if (existingChargeBandType != producerCharge.ChargeBandAmount.ChargeBand)
+                    if (existingProducer != null)
                     {
-                        result = RuleResult.Fail(
-                           string.Format("The charge band of {0} {1} will change from '{2}' to '{3}'.",
-                              existingProducer.OrganisationName,
-                              existingProducer.RegisteredProducer.ProducerRegistrationNumber,
-                              existingChargeBandType,
-                               producerCharge.ChargeBandAmount.ChargeBand),
-                           Core.Shared.ErrorLevel.Warning);
+                        result = GetRuleResult(root, element, existingProducer);
                     }
                 }
+            }
+
+            return result;
+        }
+
+        private RuleResult GetRuleResult(schemeType root, producerType element, ProducerSubmission existingProducer)
+        {
+            var result = RuleResult.Pass();
+
+            var newProducer = Task.Run(() => producerChargeBandCalculatorChooser.GetProducerChargeBand(root, element)).Result;
+
+            var existingChargeBand = existingProducer.ChargeBandAmount.ChargeBand;
+
+            var newChargeBand = newProducer.ChargeBandAmount.ChargeBand;
+
+            if (existingChargeBand != newChargeBand)
+            {
+                result = RuleResult.Fail(
+                    string.Format("The charge band of {0} {1} will change from '{2}' to '{3}'.",
+                        existingProducer.OrganisationName,
+                        existingProducer.RegisteredProducer.ProducerRegistrationNumber,
+                        existingChargeBand,
+                        newChargeBand),
+                    Core.Shared.ErrorLevel.Warning);
             }
 
             return result;
