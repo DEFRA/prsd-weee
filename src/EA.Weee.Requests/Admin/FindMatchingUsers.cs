@@ -106,6 +106,22 @@
             /// Results with the order by criteria will sorted deterministically by user ID.
             /// </summary>
             RoleDescending,
+
+            /// <summary>
+            /// Order results by Last login date from oldest to newest.
+            /// Results within the same organisation will be sorted by full name from A to Z,
+            /// where full name is a concatenation of "[First name] [Surname]".
+            /// Results with the order by criteria will sorted deterministically by user ID.
+            /// </summary>
+            LastLoginDateAscending,
+
+            /// <summary>
+            /// Order results by Last login date from newest to oldest.
+            /// Results within the same organisation will be sorted by full name from A to Z,
+            /// where full name is a concatenation of "[First name] [Surname]".
+            /// Results with the order by criteria will sorted deterministically by user ID.
+            /// </summary>
+            LastLoginDateDescending,
         }
     }
 }

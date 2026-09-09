@@ -11,7 +11,8 @@ VALUES
 (3, 'SMW protocol'),
 (4, 'Site specific protocol'),
 (5, 'Reuse network PWP'),
-(6, 'Light iron protocol')
+(6, 'Light iron protocol'),
+(7, 'Batteries in vapes')
 
 INSERT INTO [Lookup].[EvidenceNoteProtocol] (Id , [Name])
 SELECT tmp.[Id], tmp.[NAME]

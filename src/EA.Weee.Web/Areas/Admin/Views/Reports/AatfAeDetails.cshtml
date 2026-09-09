@@ -36,7 +36,7 @@
         </div>
 
         <div class="govuk-form-group competent-authority-hidden">
-            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PanAreaId)">
+            <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.PanAreaId)" id="divPanArea">
                 @Html.Gds().LabelFor(m => m.PanAreaId)
                 @Html.Gds().DropDownListFor(m => m.PanAreaId, Model.PanAreaList, string.Empty, new { autocomplete = "false" })
             </div>
@@ -53,8 +53,11 @@
             If there is a large amount of data for your selected criteria, it may take a while to download your results
         </p>
 
-        @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", "Internal reports",
-                                                                   "Report download", "Download AATF / AE / PCS organisation details", new Dictionary<string, object> { { "class", "button" } }))
+        @(this.WeeeGds().SubmitWithEventTracking("Download (CSV)", 
+                                                 "Internal reports",
+                                                 "Report download", 
+                                                 "Download AATF / AE / PCS organisation details", 
+                                                 new Dictionary<string, object> { { "class", "button" } }))
     }
 
     <p>
@@ -68,17 +71,27 @@
     <script type="text/javascript">
         function competentAuthoritySelection() {
             var competentAuthority = $("#CompetentAuthorityId option:selected").html();
+            var complianceYear = $("#SelectedYear option:selected").val();
+            if (!$.isNumeric(complianceYear)) {
+                complianceYear = 0;
+            }
 
             if (competentAuthority === "EA") {
                 $(".competent-authority-hidden").css("display", "block");
 
-                $('a[href*="PanAreaId"]').parent().css("display", "");
+                if (complianceYear < 2026) {
+                    $('#divPanArea').show();
+                } else {
+                    $('#divPanArea').hide();
+                    $('#PanAreaId').val('');
+                }
                 $('a[href*="LocalAreaId"]').parent().css("display", "");
             }
             else {
                 $(".competent-authority-hidden").css("display", "none");
                 $(".competent-authority-hidden").find("select").val('');
 
+                $('#divPanArea').show();
                 $('a[href*="PanAreaId"]').parent().css("display", "none");
                 $('a[href*="LocalAreaId"]').parent().css("display", "none");
             }
@@ -86,6 +99,9 @@
         competentAuthoritySelection();
 
         $("#CompetentAuthorityId").change(function () {
+            competentAuthoritySelection();
+        });
+        $("#SelectedYear").change(function () {
             competentAuthoritySelection();
         });
 

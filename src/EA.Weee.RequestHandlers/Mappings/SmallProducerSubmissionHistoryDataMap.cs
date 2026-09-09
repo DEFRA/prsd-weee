@@ -103,9 +103,17 @@
 
         private static string MapTradingName(DirectProducerSubmissionHistory currentSubmission, Organisation organisation)
         {
-            return !string.IsNullOrWhiteSpace(currentSubmission.TradingName)
-                ? currentSubmission.TradingName
-                : organisation.TradingName;
+            // If the user has completed organisation details (BusinessAddressId is set),
+            // use the trading name they entered for this compliance year, even if blank/null.
+            // This preserves the user's explicit choice to leave it blank.
+            if (currentSubmission.BusinessAddressId.HasValue)
+            {
+                return currentSubmission.TradingName;
+            }
+            
+            // If organisation details haven't been completed yet for this compliance year,
+            // fall back to the root organisation's trading name for display purposes.
+            return organisation.TradingName;
         }
 
         private static SellingTechniqueType? MapSellingTechnique(DirectProducerSubmissionHistory currentSubmission)
