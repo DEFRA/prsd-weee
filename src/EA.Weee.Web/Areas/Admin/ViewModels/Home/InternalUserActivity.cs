@@ -15,5 +15,6 @@
         public const string CreateOrganisation = "Add new organisation";
         public const string ManageEvidenceNotes = "Manage evidence notes";
         public const string ViewPCSObligationAndEvidenceSummary = "View PCS obligation and evidence summary";
+        public const string RemoveRecords = "Remove records";
     }
 }

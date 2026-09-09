@@ -1,0 +1,136 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Admin
+@using EA.Weee.Requests.Admin
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using EA.Weee.Web.Infrastructure.Paging
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.RemoveRecords.RemovePCSRecordsFilterViewModel
+@{
+    ViewBag.Title = "Remove Records";
+}
+
+<header class="hgroup">
+    <h1 class="govuk-heading-l">
+        Remove PCS records
+    </h1>
+</header>
+
+@using (Html.BeginForm("RemovePCS", "RemoveRecords", FormMethod.Post))
+{
+    <div class="filter">
+        @Html.AntiForgeryToken()
+        <div class="govuk-label">Filter by:</div>
+        <br />
+        <table class="govuk-table">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td>
+                        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
+                            @Html.Gds().LabelFor(m => m.SelectedYear)
+                            @Html.Gds().ValidationMessageFor(m => m.SelectedYear)
+                            @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, new { @class = "govuk-!-width-one-half", autocomplete = "false" })
+                        </div>
+                    </td>
+                    <td>
+                        <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedScheme)">
+                            @Html.Gds().LabelFor(m => m.SelectedScheme)
+                            @Html.Gds().ValidationMessageFor(m => m.SelectedScheme)
+                            @Html.Gds().DropDownListFor(m => m.SelectedScheme, Model.SchemeNames, new { @class = "govuk-!-width-one-half", autocomplete = "false" })
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table class="govuk-table govuk-!-width-one-quarter buttons">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td>
+                        @(this.WeeeGds().Submit("Apply", new { sortOrder = Model.Results.SortOrder }))
+                    </td>
+                    <td>
+                        <div class="left-cleared">
+                            @Html.ActionLink("Clear", "RemovePCS", new { sortOrder = Model.Results.SortOrder }, new { @class = "govuk-button cancel" })
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="govuk-form-group" id="pcsResults">
+        <div class="table-hr"></div>
+        <table class="govuk-table prsd-table">
+            <caption class="govuk-visually-hidden">This table shows the PCS records for the selected year and scheme.</caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">PCS name</th>
+                    <th class="govuk-table__header" scope="col">Approval number</th>
+                    <th class="govuk-table__header" scope="col">
+                        <a href="@Url.Action("RemovePCS", new { sortOrder = "year", page = 1 })">Compliance Year</a>
+                    </th>
+                    <th class="govuk-table__header" scope="col">Delete Record</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @foreach (var item in Model.Results.SchemeData)
+                {
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@item.SchemeName</td>
+                        <td class="govuk-table__cell" style="text-align:left">@item.ApprovalNumber</td>
+                        <td class="govuk-table__cell">@item.ComplianceYear</td>
+                        <td class="govuk-table__cell" style="text-align:left">
+                            <div style="width:120px;">
+                                <a href="@Url.Action("ConfirmDeletion", new { id = item.SchemeId, complianceYear = item.ComplianceYear })">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    if (@Model.Results.SchemeData.PageCount > 1)
+    {
+        <div id="pager">
+            <div class="pager govuk-body">
+                @Html.Pager(Model.Results.SchemeData.PageSize, Model.Results.SchemeData.PageNumber, Model.Results.SchemeData.TotalItemCount).Options(o => o.Action("RemovePCS").RouteValues(new { sortOrder = Model.Results.SortOrder, selScheme = Model.SelectedScheme, selYear = Model.SelectedYear }))
+            </div>
+
+            <p class="govuk-body">Showing @Model.Results.SchemeData.ItemStart - @Model.Results.SchemeData.ItemEnd of @Model.Results.SchemeData.TotalItemCount</p>
+        </div>
+    }
+
+    <p>
+        <a href="@(Url.UrlFor<RemoveRecordsController>(a => a.ChooseActivity()))">Back</a>
+    </p>
+}
+
+@section scripts {
+    <script type="text/javascript">
+        $("#SelectedYear").change(function () {
+            var selectedYear = $(this).val();
+            $("#pcsResults").hide();
+            $("#pager").hide();
+
+            $.ajax({
+                type: "POST",
+                url: '@Url.Action("FetchSchemeForComplainceYear")',
+                cache: false,
+                data: { complianceYear: selectedYear, __RequestVerificationToken: $("[name=__RequestVerificationToken]").val() },
+                success: function (data) {
+                    // Clear options
+                    $("#SelectedScheme").find("option").remove();
+
+                    // Loop through JSON response
+                    $.each(data, function (index, item) {
+                        $('#SelectedScheme').append('<option value="' + item.Value + '">' + item.Text + '</option>');
+                    })
+
+                    var selectedScheme = $("#SelectedScheme").val();
+                }
+            });
+        });
+    </script>
+}

@@ -1,0 +1,64 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Admin
+@using EA.Weee.Requests.Admin
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using EA.Weee.Web.Infrastructure.Paging
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.RemoveRecords.RemovePCSRecordsConfirmDeletionViewModel
+@{
+    ViewBag.Title = "Confirm Deletion";
+}
+
+<header class="hgroup">
+    <h1 class="govuk-heading-l">
+        Are you sure you want to delete the following record?
+    </h1>
+</header>
+
+@using (Html.BeginForm("ConfirmDeletion", "RemoveRecords", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(m => m.SchemeId, new { id = "SchemeId" })
+
+    <table class="govuk-table prsd-table">
+        <caption class="govuk-visually-hidden">This table shows the PCS record selected for deletion.</caption>
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th class="govuk-table__header" scope="col">PCS name</th>
+                <th class="govuk-table__header" scope="col">Approval number</th>
+                <th class="govuk-table__header" scope="col">Compliance year</th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">@Model.PCSName</td>
+                <td class="govuk-table__cell" style="text-align:left">@Model.ApprovalNumber</td>
+                <td class="govuk-table__cell">@Model.ComplianceYear</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div class="filter">
+        <table class="govuk-table govuk-!-width-one-quarter buttons">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td>
+                        @(this.WeeeGds().Submit("Confirm deletion"))
+                    </td>
+                    <td>
+                        <div class="left-cleared">
+                            @Html.ActionLink("Cancel", "RemovePCS", null, new { @class = "govuk-button cancel" })
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}
+
+<p>
+    @Html.ActionLink("Back", "RemovePCS", null, null)
+</p>
+
