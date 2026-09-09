@@ -1,5 +1,8 @@
 ﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using EA.Weee.Web.Infrastructure.Paging
 @using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
 @model EA.Weee.Web.ViewModels.Shared.RadioButtonStringCollectionViewModel
 @{
     ViewBag.Title = "Choose Activity";
@@ -28,6 +31,10 @@
         </div>
 
         @(this.WeeeGds().Submit("Continue"))
+
+        <p>
+            <a href="@(Url.UrlFor<HomeController>(a => a.ChooseActivity()))">Back</a>
+        </p>
     }
 }
 

@@ -10,13 +10,10 @@
 
     public class GetSchemesForComplianceYear : IRequest<List<SchemeData>>
     {
-        public FilterType Filter { get; private set; }
+        public int? ComplianceYear { get; set; }
 
-        public int ComplianceYear { get; set; }
-
-        public GetSchemesForComplianceYear(FilterType filter, int complianceYear)
+        public GetSchemesForComplianceYear(int? complianceYear)
         {
-            Filter = filter;
             ComplianceYear = complianceYear;
         }
     }

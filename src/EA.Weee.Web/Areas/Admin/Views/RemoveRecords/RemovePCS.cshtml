@@ -16,7 +16,7 @@
     </h1>
 </header>
 
-@section main_content
+@using (Html.BeginForm("RemovePCS", "RemoveRecords", FormMethod.Post))
 {
     <div class="filter">
         @Html.AntiForgeryToken()
@@ -47,11 +47,11 @@
             <tbody class="govuk-table__body">
                 <tr class="govuk-table__row">
                     <td>
-                        @(this.WeeeGds().Submit("Apply", new { orderBy = Model.OrderBy }))
+                        @(this.WeeeGds().Submit("Apply", new { sortOrder = Model.Results.SortOrder }))
                     </td>
                     <td>
                         <div class="left-cleared">
-                            @Html.ActionLink("Clear", "ClearFilter", new { orderBy = Model.OrderBy }, new { @class = "govuk-button cancel" })
+                            @Html.ActionLink("Clear", "RemovePCS", new { sortOrder = Model.Results.SortOrder }, new { @class = "govuk-button cancel" })
                         </div>
                     </td>
                 </tr>
@@ -59,34 +59,61 @@
         </table>
     </div>
 
-    <div class="govuk-form-group" id="pcsResults"></div>
+    <div class="govuk-form-group" id="pcsResults">
+        <div class="table-hr"></div>
+        <table class="govuk-table prsd-table">
+            <caption class="govuk-visually-hidden">This table shows the PCS records for the selected year and scheme.</caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th class="govuk-table__header" scope="col">PCS name</th>
+                    <th class="govuk-table__header" scope="col">Approval number</th>
+                    <th class="govuk-table__header" scope="col">
+                        <a href="@Url.Action("RemovePCS", new { sortOrder = "year", page = 1 })">Compliance Year</a>
+                    </th>
+                    <th class="govuk-table__header" scope="col">Delete Record</th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @foreach (var item in Model.Results.SchemeData)
+                {
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell">@item.SchemeName</td>
+                        <td class="govuk-table__cell" style="text-align:left">@item.ApprovalNumber</td>
+                        <td class="govuk-table__cell">@item.ComplianceYear</td>
+                        <td class="govuk-table__cell" style="text-align:left">
+                            <div style="width:120px;">
+                                <a href="@Url.Action("ConfirmDeletion", new { id = item.SchemeId, complianceYear = item.ComplianceYear })">Delete</a>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
 
-    <p class="left-cleared">
-        <a href="javascript:history.back();">Back</a>
+    if (@Model.Results.SchemeData.PageCount > 1)
+    {
+        <div id="pager">
+            <div class="pager govuk-body">
+                @Html.Pager(Model.Results.SchemeData.PageSize, Model.Results.SchemeData.PageNumber, Model.Results.SchemeData.TotalItemCount).Options(o => o.Action("RemovePCS").RouteValues(new { sortOrder = Model.Results.SortOrder, selScheme = Model.SelectedScheme, selYear = Model.SelectedYear }))
+            </div>
+
+            <p class="govuk-body">Showing @Model.Results.SchemeData.ItemStart - @Model.Results.SchemeData.ItemEnd of @Model.Results.SchemeData.TotalItemCount</p>
+        </div>
+    }
+
+    <p>
+        <a href="@(Url.UrlFor<RemoveRecordsController>(a => a.ChooseActivity()))">Back</a>
     </p>
 }
 
 @section scripts {
     <script type="text/javascript">
-        $(document).ready(function () {
-            var selectedYear = $("#SelectedYear").val();
-            var selectedScheme = $("#SelectedScheme").val();
-            FetchPCSRecordsList(selectedYear, selectedScheme);
-        });
+        $("#SelectedYear").change(function () {
+            var selectedYear = $(this).val();
+            $("#pcsResults").hide();
+            $("#pager").hide();
 
-        function FetchPCSRecordsList(selectedYear, selectedScheme) {
-            $.ajax({
-                url: '@Url.Action("FetchPCSRecordsList")',
-                type: 'POST',
-                cache: false,
-                data: { year: selectedYear, name: selectedScheme, __RequestVerificationToken: $("[name=__RequestVerificationToken]").val() },
-                success: function (data) {
-                    $('#pcsResults').html(data);
-                }
-            });
-        }
-
-        function FetchSchemeForComplainceYear(selectedYear) {
             $.ajax({
                 type: "POST",
                 url: '@Url.Action("FetchSchemeForComplainceYear")',
@@ -102,21 +129,8 @@
                     })
 
                     var selectedScheme = $("#SelectedScheme").val();
-                    FetchPCSRecordsList(selectedYear, selectedScheme);
                 }
             });
-        }
-
-        $("#SelectedYear").change(function () {
-
-            var selectedYear = $(this).val();
-            FetchSchemeForComplainceYear(selectedYear);
         });
-
-        $("#SelectedScheme").change(function () {
-                var selectedScheme = $(this).val();
-                var selectedYear = $("#SelectedYear").val();
-                FetchPCSRecordsList(selectedYear, selectedScheme);
-            });
     </script>
 }

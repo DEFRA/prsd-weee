@@ -28,9 +28,11 @@
 
         Task<List<int>> SpgSchemeComplianceYearsExceedingRetentionPeriod();
 
-        Task<List<string>> SpgSchemeNamesForComplianceYear(int complianceYear);
+        Task<List<string>> SpgSchemeNamesForComplianceYear(int? complianceYear);
 
         Task<List<SchemeDataExceedingRetentionPeriod>> SpgSchemeDataByNameAndComplianceYear(int? complianceYear, string schemeName);
+
+        Task<int> SpgRemovePCSRecords(Guid schemeId, int complianceYear);
 
         Task<List<UkEeeCsvData>> SpgUKEEEDataByComplianceYear(int complianceYear);
 

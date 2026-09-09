@@ -9,6 +9,7 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Scheme;
     using EA.Weee.DataAccess;
+    using EA.Weee.DataAccess.Identity;
     using Prsd.Core.Mediator;
     using Requests;
     using Security;
@@ -20,6 +21,7 @@
         private readonly IMap<Scheme, SchemeData> schemeMap;
         private readonly WeeeContext context;
         private readonly IGetSchemesForComplianceYearDataAccess dataAccess;
+        private readonly IGetSchemeData getSchemeDataStub;
 
         public GetSchemesForComplianceYearHandler(
             IWeeeAuthorization authorization,
@@ -32,32 +34,43 @@
             this.context = context;
             this.dataAccess = dataAccess;
         }
+        public GetSchemesForComplianceYearHandler(
+            IWeeeAuthorization authorization,
+            IMap<Scheme, SchemeData> schemeMap,
+            WeeeContext context,
+            IGetSchemesForComplianceYearDataAccess dataAccess,
+            IGetSchemeData getSchemeDataStub)
+        {
+            this.authorization = authorization;
+            this.schemeMap = schemeMap;
+            this.context = context;
+            this.dataAccess = dataAccess;
+            this.getSchemeDataStub = getSchemeDataStub;
+        }
 
         public async Task<List<SchemeData>> HandleAsync(GetSchemesForComplianceYear request)
         {
             authorization.EnsureCanAccessInternalArea();
 
-            Func<Scheme, bool> filter;
-            switch (request.Filter)
-            {
-                case FilterType.Approved:
-                    filter = s => s.SchemeStatus == SchemeStatus.Approved;
-                    break;
-
-                case FilterType.ApprovedOrWithdrawn:
-                    filter = s => (s.SchemeStatus == SchemeStatus.Approved) || (s.SchemeStatus == SchemeStatus.Withdrawn);
-                    break;
-
-                default:
-                    throw new NotSupportedException();
-            }
-
             List<string> schemes = await dataAccess.GetItemsAsync(request.ComplianceYear);
 
-            return context.Schemes
-                .Where(t => schemes.Contains(t.SchemeName))
-                .Where(filter)
+            List<SchemeData> schemeData = GetSchemeData();
+
+            return schemeData
+                .Where(s => schemes.Contains(s.SchemeName))
                 .OrderBy(s => s.SchemeName)
+                .ToList();
+        }
+
+        public List<SchemeData> GetSchemeData()
+        {
+            if (getSchemeDataStub != null)
+            {
+                return getSchemeDataStub.GetSchemeData();
+            }
+
+            return context.Schemes
+                .ToList()
                 .Select(s => schemeMap.Map(s))
                 .ToList();
         }

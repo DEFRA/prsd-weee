@@ -8,6 +8,6 @@
 
     public interface IGetSchemesForComplianceYearDataAccess
     {
-        Task<List<string>> GetItemsAsync(int complianceYear);
+        Task<List<string>> GetItemsAsync(int? complianceYear);
     }
 }

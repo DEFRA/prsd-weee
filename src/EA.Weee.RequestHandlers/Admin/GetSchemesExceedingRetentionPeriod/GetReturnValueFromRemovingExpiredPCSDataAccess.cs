@@ -9,18 +9,18 @@
     using EA.Weee.DataAccess.StoredProcedure;
     using EA.Weee.RequestHandlers.Admin.GetSchemesExceedingRetentionPeriod;
 
-    public class GetSchemesForComplianceYearDataAccess : IGetSchemesForComplianceYearDataAccess
+    public class GetReturnValueFromRemovingPCSRecordsDataAccess : IGetReturnValueFromRemovingPCSRecordsDataAccess
     {
         private readonly WeeeContext context;
 
-        public GetSchemesForComplianceYearDataAccess(WeeeContext context)
+        public GetReturnValueFromRemovingPCSRecordsDataAccess(WeeeContext context)
         {
             this.context = context;
         }
 
-        public async Task<List<string>> GetItemsAsync(int? complianceYear)
+        public async Task<int> GetItemsAsync(Guid schemeId, int complianceYear)
         {
-            return await context.StoredProcedures.SpgSchemeNamesForComplianceYear(complianceYear);
+            return await context.StoredProcedures.SpgRemovePCSRecords(schemeId, complianceYear);
         }
     }
 }

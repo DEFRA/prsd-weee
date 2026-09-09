@@ -1213,8 +1213,8 @@
     <Content Include="Content\weee\_session-timeout.scss" />
     <Content Include="Areas\Admin\Views\RemoveRecords\ChooseActivity.cshtml" />
     <Content Include="Areas\Admin\Views\RemoveRecords\RemovePCS.cshtml" />
-    <Content Include="Areas\Admin\Views\RemoveRecords\_removePCSResults.cshtml" />
     <Content Include="Areas\Admin\Views\RemoveRecords\ConfirmDeletion.cshtml" />
+    <Content Include="Areas\Admin\Views\RemoveRecords\Deleted.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />

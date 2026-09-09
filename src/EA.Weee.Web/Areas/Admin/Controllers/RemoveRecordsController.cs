@@ -3,27 +3,19 @@
     using System;
     using System.Collections.Generic;
     using System.Linq;
-    using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web.Mvc;
     using Api.Client;
-    using AutoMapper;
     using Base;
     using EA.Prsd.Core.Web.ApiClient;
     using EA.Prsd.Core.Web.Mvc.Extensions;
     using EA.Weee.Core.Scheme;
-    using EA.Weee.DataAccess.StoredProcedure;
+    using EA.Weee.Core.Shared.Paging;
     using EA.Weee.Requests;
     using EA.Weee.Requests.Admin;
-    using EA.Weee.Requests.Admin.GetActiveComplianceYears;
-    using EA.Weee.Requests.Admin.Reports;
-    using EA.Weee.Requests.Scheme;
-    using EA.Weee.Requests.Shared;
     using EA.Weee.Web.Areas.Admin.ViewModels.RemoveRecords;
-    using EA.Weee.Web.Areas.Admin.ViewModels.Submissions;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
-    using Security;
     using static EA.Weee.Requests.Admin.GetSchemes;
 
     public class RemoveRecordsController : AdminController
@@ -33,6 +25,7 @@
         private const int DefaultPageSize = 5;
         private readonly BreadcrumbService breadcrumb;
         private const string AllPCSs = "All PCSs";
+        private const string AllYears = "All Years";
 
         public RemoveRecordsController(
             Func<IWeeeClient> apiClient,
@@ -83,48 +76,121 @@
             //viewModel.PossibleValues.Add(InternalRemoveRecordsActivity.RemoveAATF);
         }
 
-        /// <summary>
-        /// This method is used by both JS and non-JS users.
-        /// </summary>
-        /// <returns></returns>
         [HttpGet]
-        public async Task<ActionResult> RemovePCS()
+        public async Task<ActionResult> RemovePCS(string sortOrder = "none", int page = 1, int pageSize = 5, string selScheme = null, string selYear = null)
         {
             using (var client = apiClient())
             {
                 await SetBreadcrumb();
 
-                try
-                {
-                    //Get all the compliance years currently in database and set it to latest one.
-                    //Get all the approved PCSs
-                    List<int> allYears = await client.SendAsync(User.GetAccessToken(), new GetSchemeComplianceYearsExceedingRetentionPeriod());
-                    GetSchemesForComplianceYear getSchemesRequest = new GetSchemesForComplianceYear(FilterType.ApprovedOrWithdrawn, allYears[0]);
-                    List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
-                    List<string> allYearsStrings = allYears.ConvertAll(i => i.ToString());
-                    schemes.Insert(0, new SchemeData { Id = Guid.Empty, SchemeName = AllPCSs });
-                    schemes.Insert(0, new SchemeData { Id = Guid.Empty, SchemeName = String.Empty });
-                    allYearsStrings.Insert(0, null);
+                List<int> allYears = await client.SendAsync(User.GetAccessToken(), new GetSchemeComplianceYearsExceedingRetentionPeriod());
+                List<string> allYearsStrings = allYears.ConvertAll(i => i.ToString());
+                allYearsStrings.Insert(0, AllYears);
+                int? selectedYear = int.TryParse(selYear, out int parsedValue) ? parsedValue : (int?)null;
 
-                    RemovePCSRecordsFilterViewModel model = new RemovePCSRecordsFilterViewModel
-                    {
-                        ComplianceYears = new SelectList(allYearsStrings),
-                        SchemeNames = new SelectList(schemes, "SchemeName", "SchemeName"),
-                        SelectedYear = allYearsStrings.FirstOrDefault(),
-                        SelectedScheme = schemes.Count > 0 ? schemes.First().Id : Guid.Empty
-                    };
+                GetSchemesForComplianceYear getSchemesRequest = new GetSchemesForComplianceYear(null);
+                List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
+                schemes.Insert(0, new SchemeData { Id = Guid.Empty, SchemeName = AllPCSs });
 
-                    return View(model);
-                }
-                catch (ApiBadRequestException ex)
+                var selectedName = String.IsNullOrEmpty(selScheme) ? null : selScheme;
+                selectedName = (selectedName == Guid.Empty.ToString()) ? null : selectedName;
+
+                var request = new GetSchemeDataExceedingRetentionPeriod(selectedYear, selectedName);
+                var searchResults = await client.SendAsync(User.GetAccessToken(), request);
+                var totalRecords = searchResults.Count();
+
+                // SORTING
+                switch (sortOrder)
                 {
-                    this.HandleBadRequest(ex);
-                    if (ModelState.IsValid)
-                    {
-                        throw;
-                    }
-                    return View();
+                    case "year":
+                        searchResults = searchResults.OrderByDescending(r => r.ComplianceYear)
+                                                        .ThenBy(r => r.SchemeName).ToList();
+                        break;
+                    default:
+                        searchResults = searchResults.OrderBy(r => r.SchemeName).ToList();
+                        break;
                 }
+
+                var results = new RemovePCSRecordsListViewModel
+                {
+                    SelectedYear = AllYears,
+                    SelectedSchemeName = AllPCSs,
+                    SortOrder = sortOrder,
+                    SchemeData = searchResults.ToPagedList(page - 1, pageSize, totalRecords)
+                };
+
+                RemovePCSRecordsFilterViewModel model = new RemovePCSRecordsFilterViewModel
+                {
+                    ComplianceYears = new SelectList(allYearsStrings),
+                    SchemeNames = new SelectList(schemes, "Id", "SchemeName"),
+                    SelectedYear = allYearsStrings.FirstOrDefault(),
+                    SelectedScheme = String.Empty,
+                    Results = results
+                };
+
+                return View(model);
+            }
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RemovePCS(RemovePCSRecordsFilterViewModel model, string sortOrder = "none", int page = 1, int pageSize = 5)
+        {
+            using (var client = apiClient())
+            {
+                await SetBreadcrumb();
+
+                List<int> allYears = await client.SendAsync(User.GetAccessToken(), new GetSchemeComplianceYearsExceedingRetentionPeriod());
+                List<string> allYearsStrings = allYears.ConvertAll(i => i.ToString());
+                allYearsStrings.Insert(0, AllYears);
+                int? selectedYear = int.TryParse(model.SelectedYear, out int parsedValue) ? parsedValue : (int?)null;
+
+                GetSchemesForComplianceYear getSchemesRequest = new GetSchemesForComplianceYear(selectedYear);
+                List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
+                schemes.Insert(0, new SchemeData { Id = Guid.Empty, SchemeName = AllPCSs });
+
+                var selectedName = String.IsNullOrEmpty(model.SelectedScheme) ? null : model.SelectedScheme;
+                selectedName = (selectedName == AllPCSs) ? null : selectedName;
+
+                model.ComplianceYears = new SelectList(allYearsStrings);
+                model.SchemeNames = new SelectList(schemes, "Id", "SchemeName");
+                model.SelectedYear = selectedYear.ToString();
+                model.SelectedScheme = selectedName;
+
+                var request = new GetSchemeDataExceedingRetentionPeriod(selectedYear, selectedName);
+                var searchResults = await client.SendAsync(User.GetAccessToken(), request);
+                var totalRecords = searchResults.Count();
+
+                // SORTING
+                switch (sortOrder)
+                {
+                    case "year":
+                        searchResults = searchResults.OrderByDescending(r => r.ComplianceYear)
+                                                        .ThenBy(r => r.SchemeName).ToList();
+                        break;
+                    default:
+                        searchResults = searchResults.OrderBy(r => r.SchemeName).ToList();
+                        break;
+                }
+
+                if (selectedName == null) 
+                { 
+                    selectedName = AllPCSs; 
+                }
+
+                var results = new RemovePCSRecordsListViewModel
+                {
+                    SelectedYear = selectedYear.ToString() ?? AllYears,
+                    SelectedSchemeName = selectedName,
+                    SortOrder = sortOrder,
+                    SchemeData = searchResults.ToPagedList(page - 1, pageSize, totalRecords)
+                };
+
+                model.SelectedYear = selectedYear.ToString();
+                model.SelectedScheme = selectedName;
+                model.Results = results;
+
+                return View(model);
             }
         }
 
@@ -136,10 +202,9 @@
             {
                 try
                 {
-                    GetSchemesForComplianceYear getSchemesRequest = new GetSchemesForComplianceYear(FilterType.ApprovedOrWithdrawn, complianceYear);
+                    GetSchemesForComplianceYear getSchemesRequest = new GetSchemesForComplianceYear(complianceYear);
                     List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
                     schemes.Insert(0, new SchemeData { Id = Guid.Empty, SchemeName = AllPCSs });
-                    schemes.Insert(0, new SchemeData { Id = Guid.Empty, SchemeName = String.Empty });
                     IEnumerable<SelectListItem> schemeNames = new SelectList(schemes, "SchemeName", "SchemeName");
 
                     return Json(schemeNames, JsonRequestBehavior.AllowGet);
@@ -156,73 +221,6 @@
             }
         }
 
-        /// <summary>
-        /// This method is called using AJAX by JS-users.
-        /// </summary>
-        /// <param name="year"></param>
-        /// <param name="name"></param>
-        /// <returns>ActionResult</returns>
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public Task<ActionResult> FetchPCSRecordsList(int? year, string name)
-        {
-            return RetrievePCSRecordsList(year, name);
-        }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="year"></param>
-        /// <param name="name"></param>
-        /// <returns>ActionResult</returns>
-        /// <exception cref="InvalidOperationException"></exception>
-        /// <exception cref="ApiBadRequestException"></exception>
-        private async Task<ActionResult> RetrievePCSRecordsList(int? year, string name)
-        {
-            if (Request != null && !Request.IsAjaxRequest())
-            {
-                throw new InvalidOperationException();
-            }
-
-            if (!ModelState.IsValid)
-            {
-                return Json(null, JsonRequestBehavior.AllowGet);
-            }
-
-            using (var client = apiClient())
-            {
-                try
-                {
-                    if (year == 0)
-                    {
-                        year = null;
-                    }
-
-                    if (name == Guid.Empty.ToString() || String.IsNullOrEmpty(name) || name == AllPCSs)
-                    {
-                        name = null;
-                    }
-
-                    var request = new GetSchemeDataExceedingRetentionPeriod(year, name);
-                    var searchResults = await client.SendAsync(User.GetAccessToken(), request);
-
-                    var model = new RemovePCSRecordsListViewModel
-                    {
-                        SelectedYear = year,
-                        SelectedSchemeName = name,
-                        SchemeData = searchResults
-                    };
-
-                    return PartialView("_removePCSResults", model);
-                }
-                catch (ApiBadRequestException ex)
-                {
-                    this.HandleBadRequest(ex);
-                    throw;
-                }
-            }
-        }
-
         [HttpGet]
         public async Task<ActionResult> ConfirmDeletion(Guid id, int complianceYear)
         {
@@ -232,19 +230,19 @@
             {
                 await SetBreadcrumb();
 
-                GetSchemesForComplianceYear getSchemesRequest = new GetSchemesForComplianceYear(FilterType.ApprovedOrWithdrawn, complianceYear);
+                GetSchemesForComplianceYear getSchemesRequest = new GetSchemesForComplianceYear(complianceYear);
                 schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
             }
 
-            var PCSName = schemes.Where(s => s.Id == id).Select(s => s.SchemeName).FirstOrDefault();
-            var ApprovalNumber = schemes.Where(s => s.Id == id).Select(s => s.ApprovalName).FirstOrDefault();
+            var pcsName = schemes.Where(s => s.Id == id).Select(s => s.SchemeName).FirstOrDefault();
+            var approvalNumber = schemes.Where(s => s.Id == id).Select(s => s.ApprovalName).FirstOrDefault();
 
             RemovePCSRecordsConfirmDeletionViewModel model = new RemovePCSRecordsConfirmDeletionViewModel
             {
                 SchemeId = id,
                 ComplianceYear = complianceYear,
-                PCSName  = PCSName,
-                ApprovalNumber = ApprovalNumber
+                PCSName  = pcsName,
+                ApprovalNumber = approvalNumber
             };
 
             return View(model);
@@ -254,18 +252,59 @@
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ConfirmDeletion(RemovePCSRecordsConfirmDeletionViewModel model)
         {
-            // Code to make deletion
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            using (var client = apiClient())
+            {
+                try
+                {
+                    var request = new GetReturnValueFromRemovingPCSRecords(model.SchemeId, model.ComplianceYear);
+                    var result = await client.SendAsync(User.GetAccessToken(), request);
+                }
+                catch (ApiBadRequestException ex)
+                {
+                    this.HandleBadRequest(ex);
+                    return View(model);
+                }
+            }
+
+            return RedirectToAction("Deleted",
+                new { id = model.SchemeId, complianceYear = model.ComplianceYear });
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Deleted(Guid id, int complianceYear)
+        {
+            List<SchemeData> schemes = null;
+
+            using (var client = apiClient())
+            {
+                await SetBreadcrumb();
+
+                GetSchemes getSchemesRequest = new GetSchemes(FilterType.ApprovedOrWithdrawn);
+                schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
+            }
+
+            var pcsName = schemes.Where(s => s.Id == id).Select(s => s.SchemeName).FirstOrDefault();
+            var approvalNumber = schemes.Where(s => s.Id == id).Select(s => s.ApprovalName).FirstOrDefault();
+
+            RemovePCSRecordsConfirmDeletionViewModel model = new RemovePCSRecordsConfirmDeletionViewModel
+            {
+                SchemeId = id,
+                ComplianceYear = complianceYear,
+                PCSName = pcsName,
+                ApprovalNumber = approvalNumber
+            };
 
             return View(model);
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <returns></returns>
         private async Task SetBreadcrumb()
         {
-            breadcrumb.InternalActivity = "PCS Submissions history";
+            breadcrumb.InternalActivity = "Remove PCS records";
 
             await Task.Yield();
         }
