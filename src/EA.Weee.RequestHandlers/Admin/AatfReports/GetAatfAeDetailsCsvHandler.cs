@@ -56,7 +56,11 @@
             csvWriter.DefineColumn($"Appropriate authority", i => i.AppropriateAuthorityAbbr);
             if (!request.IsPublicRegister)
             {
-                csvWriter.DefineColumn($"WROS Pan Area Team", i => i.PanAreaTeam);
+                if (request.ComplianceYear < 2026) 
+                { 
+                    csvWriter.DefineColumn($"WROS Pan Area Team", i => i.PanAreaTeam); 
+                }
+
                 csvWriter.DefineColumn($"EA Area", i => i.EaArea);
                 csvWriter.DefineColumn($"AATF, AE or PCS?", i => i.RecordType);
                 csvWriter.DefineColumn($"Name", i => i.Name);

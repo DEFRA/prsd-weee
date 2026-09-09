@@ -41,8 +41,10 @@
         public void Map_GivenNotes_NotesShouldBeMapped()
         {
             //arrange
-            var notes = new List<Note>();
-            notes.Add(CreateNote());
+            var notes = new List<Note>
+            {
+                CreateNote(Domain.Evidence.Protocol.LdaProtocol)
+            };
 
             //act
             listOfEvidenceNoteDataMap.Map(notes);
@@ -63,10 +65,12 @@
 
             A.CallTo(() => mapper.Map<EvidenceNoteRowCriteriaMapper, EvidenceNoteData>(A<EvidenceNoteRowCriteriaMapper>._)).ReturnsNextFromSequence(evidenceNoteData.ToArray());
 
-            var notes = new List<Note>();
-            notes.Add(CreateNote());
-            notes.Add(CreateNote());
-            notes.Add(CreateNote());
+            var notes = new List<Note>
+            {
+                CreateNote(Domain.Evidence.Protocol.Actual),
+                CreateNote(Domain.Evidence.Protocol.LdaProtocol),
+                CreateNote(Domain.Evidence.Protocol.BatteriesInVapes)
+            };
 
             //act
             var result = listOfEvidenceNoteDataMap.Map(notes);
@@ -75,19 +79,18 @@
             result.Should().BeEquivalentTo(evidenceNoteData);
         }
 
-        private Note CreateNote()
+        private Note CreateNote(Domain.Evidence.Protocol protocolType)
         {
             var organisation = A.Fake<Organisation>();
             var recipientOrganisation = A.Fake<Organisation>();
             var startDate = DateTime.Now.AddDays(1);
             var endDate = DateTime.Now.AddDays(2);
             var wasteType = Domain.Evidence.WasteType.HouseHold;
-            var protocol = Domain.Evidence.Protocol.LdaProtocol;
             var aatf = A.Fake<Aatf>();
             var createdBy = TestFixture.Create<string>();
             var tonnages = TestFixture.CreateMany<NoteTonnage>();
 
-            var note = new Note(organisation, recipientOrganisation, startDate, endDate, wasteType, protocol, aatf, createdBy, tonnages.ToList());
+            var note = new Note(organisation, recipientOrganisation, startDate, endDate, wasteType, protocolType, aatf, createdBy, tonnages.ToList());
 
             return note;
         }

@@ -102,7 +102,7 @@
                         @Model.CompetentAuthority.Abbreviation
                     </td>
                 </tr>
-                @if (Model.HasPatArea)
+                @if (Model.HasPatArea && Model.ComplianceYear < 2026)
                 {
                     <tr class="govuk-table__row">
                         <th class="govuk-table__header" scope="row">WROS Pan Area Team</th>

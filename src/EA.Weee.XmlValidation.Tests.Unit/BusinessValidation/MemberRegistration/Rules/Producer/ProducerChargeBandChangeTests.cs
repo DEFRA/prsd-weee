@@ -138,6 +138,48 @@
             Assert.Contains(producerCharge.ChargeBandAmount.ChargeBand.ToString(), result.Message);
         }
 
+        [Fact]
+        public void Evaluate_Amendment_AndProducerExistsWithDifferentChargeBand_AndDifferentYear_FailAsWarning()
+        {
+            var evaluator = new ProducerChargeBandChangeEvaluator(producerChargeBandCalculatorChooser);
+
+            var fakeProducer = A.Fake<ProducerSubmission>();
+            var producerCharge = new ProducerCharge()
+            {
+                ChargeBandAmount = new ChargeBandAmount(Guid.Empty, 
+                                                        ChargeBand.B, 
+                                                        CompetentAuthorityType.England, 
+                                                        false, 
+                                                        AnnualTurnoverBand.Lessthanorequaltoonemillionpounds, 
+                                                        EEEPlacedOnMarketBand.Lessthan5TEEEplacedonmarket, 
+                                                        2016, 
+                                                        0, 
+                                                        DateTime.Now),
+                Amount = 0
+            };
+
+            ChargeBandAmount chargeBandAmount = new ChargeBandAmount(
+                new Guid("0B513437-2971-4C6C-B633-75216FAB6757"),
+                ChargeBand.E,
+                CompetentAuthorityType.England,
+                false,
+                AnnualTurnoverBand.Lessthanorequaltoonemillionpounds,
+                EEEPlacedOnMarketBand.Lessthan5TEEEplacedonmarket,
+                2016,
+                123,
+                DateTime.Now);
+
+            A.CallTo(() => fakeProducer.ChargeBandAmount).Returns(chargeBandAmount);
+            A.CallTo(() => producerChargeBandCalculatorChooser.GetProducerChargeBand(A<schemeType>._, A<producerType>._)).Returns(producerCharge);
+            A.CallTo(() => evaluator.QuerySet.GetLatestProducerForComplianceYearAndScheme(A<string>._, A<string>._, A<Guid>._)).Returns(null);
+            A.CallTo(() => evaluator.QuerySet.GetLatestProducerFromPreviousComplianceYears(A<string>._)).Returns(fakeProducer);
+
+            var result = evaluator.Evaluate(ChargeBand.B);
+
+            Assert.False(result.IsValid);
+            Assert.Equal(Core.Shared.ErrorLevel.Warning, result.ErrorLevel);
+        }
+
         private class ProducerChargeBandChangeEvaluator
         {
             public IProducerQuerySet QuerySet { get; private set; }

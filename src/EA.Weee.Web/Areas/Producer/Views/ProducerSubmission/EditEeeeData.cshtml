@@ -1,5 +1,6 @@
 ﻿
 @using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.DataReturns
 @using EA.Weee.Core.DataStandards
 @using EA.Weee.Web.Areas.Producer.Controllers
 @using EA.Weee.Web.RazorHelpers
@@ -38,6 +39,7 @@
         <p class="govuk-body">Please provide the amount of EEE in tonnes that you (or if you are an authorised representative your client) placed on the UK market in the previous year.</p>
         <p class="govuk-body">This is to be broken down by category and obligation type in the table below. The tonnages should be entered to three decimal places; for example, 211 kilograms should be entered as 0.211 tonnes.</p>
         <p class="govuk-body">Any B2B EEE that can be classed as dual use, is to be reported as B2C.</p>
+        <p class="govuk-body">Categories 14 and 15 are to be reported as B2C only.</p>
         <p class="govuk-body">If you have placed 5 tonnes or more of EEE on the UK market, you don't fit the definition of a 'small producer' and the option to register here is not available to you and you need to join a producer compliance scheme.</p>
 
         <label for="CategoryValues" aria-hidden="true" class="govuk-visually-hidden">hidden link for navigation to EEE tonnage error</label>
@@ -80,13 +82,26 @@
                                     @Html.TextBoxFor(m => m.CategoryValues[index].HouseHold, new { @class = "govuk-input tonnage-entry", aria_labelledby = "category-received-" + @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
                                 </div>
                             </td>
-                            <td class="govuk-table__cell">
-                                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[index], m => m.CategoryValues[index].NonHouseHold)">
-                                    <span class="govuk-visually-hidden" id="category-reused-@category.CategoryId">Non-Household (B2B) in tonnes for @category.CategoryDisplay</span>
-                                    @Html.Gds().ValidationMessageFor(m => m.CategoryValues[index].NonHouseHold)
-                                    @Html.TextBoxFor(m => m.CategoryValues[index].NonHouseHold, new { @class = "govuk-input tonnage-entry", aria_labelledby = "category-reused-" + @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
-                                </div>
-                            </td>
+                            @if ((WeeeCategory)category.CategoryId == WeeeCategory.PhotovoltaicPanels || (WeeeCategory)category.CategoryId == WeeeCategory.VapesAndElectronicCigarettes)
+                            {
+                                <td class="govuk-table__cell">
+                                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[index], m => m.CategoryValues[index].NonHouseHold)">
+                                        <span class="govuk-visually-hidden" id="category-reused-@category.CategoryId">Non-Household (B2B) in tonnes for @category.CategoryDisplay</span>
+                                        @Html.Gds().ValidationMessageFor(m => m.CategoryValues[index].NonHouseHold)
+                                        @Html.TextBoxFor(m => m.CategoryValues[index].NonHouseHold, new { @class = "govuk-input tonnage-entry text-input-disabled", @readonly = "readonly", aria_labelledby = "category-reused-" + @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                                    </div>
+                                </td>
+                            }
+                            else
+                            {
+                                <td class="govuk-table__cell">
+                                    <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.CategoryValues[index], m => m.CategoryValues[index].NonHouseHold)">
+                                        <span class="govuk-visually-hidden" id="category-reused-@category.CategoryId">Non-Household (B2B) in tonnes for @category.CategoryDisplay</span>
+                                        @Html.Gds().ValidationMessageFor(m => m.CategoryValues[index].NonHouseHold)
+                                        @Html.TextBoxFor(m => m.CategoryValues[index].NonHouseHold, new { @class = "govuk-input tonnage-entry", aria_labelledby = "category-reused-" + @category.CategoryId, autocomplete = "off", maxlength = CommonMaxFieldLengths.Tonnage })
+                                    </div>
+                                </td>
+                            }
                         </tr>
                     }
 
