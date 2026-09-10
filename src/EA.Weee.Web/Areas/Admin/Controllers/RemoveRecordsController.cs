@@ -42,6 +42,7 @@
         {
             RemoveRecordsViewModel viewModel = new RemoveRecordsViewModel();
             PopulateViewModelPossibleValues(viewModel);
+
             return View("ChooseActivity", viewModel);
         }
 
@@ -60,9 +61,6 @@
                 case InternalRemoveRecordsActivity.RemovePCS:
                     return RedirectToAction("RemovePCS");
 
-                //case InternalRemoveRecordsActivity.RemoveAATF:
-                //    return RedirectToAction("RemoveAATF");
-
                 default:
                     throw new NotSupportedException();
             }
@@ -70,14 +68,11 @@
 
         private void PopulateViewModelPossibleValues(RemoveRecordsViewModel viewModel)
         {
-            viewModel.PossibleValues = new List<string>();
-
-            viewModel.PossibleValues.Add(InternalRemoveRecordsActivity.RemovePCS);
-            //viewModel.PossibleValues.Add(InternalRemoveRecordsActivity.RemoveAATF);
+            viewModel.PossibleValues = new List<string>() { InternalRemoveRecordsActivity.RemovePCS, InternalRemoveRecordsActivity.RemoveAATF };
         }
 
         [HttpGet]
-        public async Task<ActionResult> RemovePCS(string sortOrder = "none", int page = 1, int pageSize = 5, string selScheme = null, string selYear = null)
+        public async Task<ActionResult> RemovePCS(int page = 1, string selScheme = null, string selYear = null)
         {
             using (var client = apiClient())
             {
@@ -92,31 +87,21 @@
                 List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
                 schemes.Insert(0, new SchemeData { Id = Guid.Empty, SchemeName = AllPCSs });
 
-                var selectedName = String.IsNullOrEmpty(selScheme) ? null : selScheme;
-                selectedName = (selectedName == Guid.Empty.ToString()) ? null : selectedName;
+                var selectedName = ((string.IsNullOrEmpty(selScheme)) || (selScheme == Guid.Empty.ToString()) || (selScheme == "AllPCSs")) ? null : selScheme;
 
                 var request = new GetSchemeDataExceedingRetentionPeriod(selectedYear, selectedName);
                 var searchResults = await client.SendAsync(User.GetAccessToken(), request);
                 var totalRecords = searchResults.Count();
 
-                // SORTING
-                switch (sortOrder)
-                {
-                    case "year":
-                        searchResults = searchResults.OrderByDescending(r => r.ComplianceYear)
-                                                        .ThenBy(r => r.SchemeName).ToList();
-                        break;
-                    default:
-                        searchResults = searchResults.OrderBy(r => r.SchemeName).ToList();
-                        break;
-                }
+                searchResults = searchResults.OrderBy(r => r.ComplianceYear)
+                                             .ThenBy(r => r.SchemeName)
+                                             .ToList();
 
                 var results = new RemovePCSRecordsListViewModel
                 {
                     SelectedYear = AllYears,
                     SelectedSchemeName = AllPCSs,
-                    SortOrder = sortOrder,
-                    SchemeData = searchResults.ToPagedList(page - 1, pageSize, totalRecords)
+                    SchemeData = searchResults.ToPagedList(page - 1, DefaultPageSize, totalRecords)
                 };
 
                 RemovePCSRecordsFilterViewModel model = new RemovePCSRecordsFilterViewModel
@@ -124,7 +109,7 @@
                     ComplianceYears = new SelectList(allYearsStrings),
                     SchemeNames = new SelectList(schemes, "Id", "SchemeName"),
                     SelectedYear = allYearsStrings.FirstOrDefault(),
-                    SelectedScheme = String.Empty,
+                    SelectedScheme = "AllPCSs",
                     Results = results
                 };
 
@@ -134,7 +119,7 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RemovePCS(RemovePCSRecordsFilterViewModel model, string sortOrder = "none", int page = 1, int pageSize = 5)
+        public async Task<ActionResult> RemovePCS(RemovePCSRecordsFilterViewModel model, int page = 1)
         {
             using (var client = apiClient())
             {
@@ -149,8 +134,7 @@
                 List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
                 schemes.Insert(0, new SchemeData { Id = Guid.Empty, SchemeName = AllPCSs });
 
-                var selectedName = String.IsNullOrEmpty(model.SelectedScheme) ? null : model.SelectedScheme;
-                selectedName = (selectedName == AllPCSs) ? null : selectedName;
+                var selectedName = ((string.IsNullOrEmpty(model.SelectedScheme)) || (model.SelectedScheme == Guid.Empty.ToString()) || (model.SelectedScheme == "AllPCSs")) ? null : model.SelectedScheme;
 
                 model.ComplianceYears = new SelectList(allYearsStrings);
                 model.SchemeNames = new SelectList(schemes, "Id", "SchemeName");
@@ -161,29 +145,20 @@
                 var searchResults = await client.SendAsync(User.GetAccessToken(), request);
                 var totalRecords = searchResults.Count();
 
-                // SORTING
-                switch (sortOrder)
-                {
-                    case "year":
-                        searchResults = searchResults.OrderByDescending(r => r.ComplianceYear)
-                                                        .ThenBy(r => r.SchemeName).ToList();
-                        break;
-                    default:
-                        searchResults = searchResults.OrderBy(r => r.SchemeName).ToList();
-                        break;
-                }
+                searchResults = searchResults.OrderBy(r => r.ComplianceYear)
+                                             .ThenBy(r => r.SchemeName)
+                                             .ToList();
 
-                if (selectedName == null) 
-                { 
-                    selectedName = AllPCSs; 
+                if (selectedName == null)
+                {
+                    selectedName = AllPCSs;
                 }
 
                 var results = new RemovePCSRecordsListViewModel
                 {
                     SelectedYear = selectedYear.ToString() ?? AllYears,
                     SelectedSchemeName = selectedName,
-                    SortOrder = sortOrder,
-                    SchemeData = searchResults.ToPagedList(page - 1, pageSize, totalRecords)
+                    SchemeData = searchResults.ToPagedList(page - 1, DefaultPageSize, totalRecords)
                 };
 
                 model.SelectedYear = selectedYear.ToString();
@@ -241,7 +216,7 @@
             {
                 SchemeId = id,
                 ComplianceYear = complianceYear,
-                PCSName  = pcsName,
+                PCSName = pcsName,
                 ApprovalNumber = approvalNumber
             };
 
