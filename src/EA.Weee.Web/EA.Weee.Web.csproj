@@ -557,6 +557,7 @@
       <DependentUpon>AatfResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Admin\Controllers\Base\AdminBreadcrumbBaseController.cs" />
+    <Compile Include="Areas\Admin\Controllers\Interfaces\RemoveRecordsInterfaces.cs" />
     <Compile Include="Areas\Admin\Controllers\RemoveRecordsController.cs" />
     <Compile Include="Areas\Admin\Filters\AdminSmallProducerSubmissionSubmittedContextAttribute.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmReturnViewModel.cs" />

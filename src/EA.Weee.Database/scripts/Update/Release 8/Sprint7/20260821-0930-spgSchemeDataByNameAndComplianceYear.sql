@@ -11,7 +11,7 @@ GO
 -- =============================================
 CREATE PROCEDURE [PCS].[spgSchemeDataByNameAndComplianceYear]
     @ComplianceYear INT NULL,
-	@SchemeName	NVARCHAR NULL
+	@SchemeName	NVARCHAR(70) NULL
 AS
 BEGIN
 	SET NOCOUNT ON;

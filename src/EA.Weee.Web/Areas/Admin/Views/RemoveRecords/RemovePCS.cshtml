@@ -16,6 +16,30 @@
     </h1>
 </header>
 
+<p class="govuk-body">
+    The PCS records displayed have exceeded the 7-year retention period and are now available for deletion from WEEE Online.
+</p>
+<p class="govuk-body">
+    The PCS information to be deleted from both the internal and external services include:
+</p>
+<ul class="govuk-list govuk-list--bullet">
+    <li>Member registration details</li>
+    <li>Member EEE data</li>
+    <li>WEEE data</li>
+    <li>Obligations data</li>
+    <li>Member registration charges records</li>
+</ul>
+<p class="govuk-body">
+    Upon clicking 'Delete' you will be asked if you wish to confirm the deletion
+</p>
+<div class="govuk-warning-text">
+    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+    <strong class="govuk-warning-text__text">
+        <span class="govuk-visually-hidden">Warning</span>
+        deleting a record is a permanent action. It cannot be undone.
+    </strong>
+</div>
+
 @using (Html.BeginForm(actionName: "RemovePCS", controllerName: "RemoveRecords", method: FormMethod.Post))
 {
     <div class="filter">
@@ -39,7 +63,7 @@
             </div>
         </div>
         <div class="govuk-grid-row">
-            <div class="govuk-grid-column-one-half">
+            <div class="govuk-grid-column-one-half govuk-form-group govuk-button-group">
                 @(this.WeeeGds().Submit("Filter"))
                 @Html.ActionLink("Clear filter", "RemovePCS", new { @class = "link-submit govuk-link" })
             </div>

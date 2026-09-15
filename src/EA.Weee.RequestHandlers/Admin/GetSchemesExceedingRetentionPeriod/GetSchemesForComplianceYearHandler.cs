@@ -1,19 +1,15 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetSchemesExceedingRetentionPeriod
 {
-    using System;
     using System.Collections.Generic;
-    using System.Data.Entity;
     using System.Linq;
     using System.Threading.Tasks;
     using Domain.Scheme;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Core.Scheme;
     using EA.Weee.DataAccess;
-    using EA.Weee.DataAccess.Identity;
     using Prsd.Core.Mediator;
     using Requests;
     using Security;
-    using static EA.Weee.Requests.Admin.GetSchemes;
 
     internal class GetSchemesForComplianceYearHandler : IRequestHandler<GetSchemesForComplianceYear, List<SchemeData>>
     {
@@ -34,6 +30,7 @@
             this.context = context;
             this.dataAccess = dataAccess;
         }
+
         public GetSchemesForComplianceYearHandler(
             IWeeeAuthorization authorization,
             IMap<Scheme, SchemeData> schemeMap,
@@ -56,10 +53,12 @@
 
             List<SchemeData> schemeData = GetSchemeData();
 
-            return schemeData
+            var results = schemeData
                 .Where(s => schemes.Contains(s.SchemeName))
                 .OrderBy(s => s.SchemeName)
                 .ToList();
+
+            return results;
         }
 
         public List<SchemeData> GetSchemeData()

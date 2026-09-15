@@ -11,6 +11,7 @@
     public class GetSchemeDataStub : IGetSchemeData
     {
         private List<SchemeData> schemeData;
+
         public GetSchemeDataStub(List<SchemeData> schemeData)
         {
             this.schemeData = schemeData;

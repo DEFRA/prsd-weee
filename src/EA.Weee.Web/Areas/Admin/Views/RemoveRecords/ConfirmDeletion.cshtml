@@ -16,11 +16,24 @@
     </h1>
 </header>
 
+<div class="govuk-warning-text">
+    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+    <strong class="govuk-warning-text__text">
+        <span class="govuk-visually-hidden">Warning</span>
+        deleting this record is a permanent action. It cannot be undone.
+    </strong>
+</div>
+
 @using (Html.BeginForm("ConfirmDeletion", "RemoveRecords", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
     @Html.HiddenFor(m => m.SchemeId, new { id = "SchemeId" })
+    @Html.HiddenFor(m => m.ComplianceYear, new { id = "ComplianceYear" })
+    @Html.HiddenFor(m => m.ApprovalNumber, new { id = "ApprovalNumber" })
+    @Html.HiddenFor(m => m.PCSName, new { id = "PCSName" })
+
+    @Html.Gds().ValidationSummary()
 
     <table class="govuk-table prsd-table">
         <caption class="govuk-visually-hidden">This table shows the PCS record selected for deletion.</caption>

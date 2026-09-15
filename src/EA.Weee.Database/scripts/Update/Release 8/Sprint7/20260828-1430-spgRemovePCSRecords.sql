@@ -5,13 +5,13 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 -- Create date: 2026 Aug 28
--- Modified date: 2026 Aug 28
+-- Modified date: 2026 Sep 11
 -- Description:	This stored procedure deletes data from multiple sources
 --				which match a given SchemeId and ComplianceYear
 -- =============================================
-CREATE PROCEDURE [PCS].[spgRemovePCSRecords]
-	@SchemeId		UNIQUEIDENTIFIER NULL,
-    @ComplianceYear INT NULL
+CREATE OR ALTER     PROCEDURE [PCS].[spgRemovePCSRecords]
+	@SchemeId		UNIQUEIDENTIFIER,
+    @ComplianceYear INT
 AS
 BEGIN
 	SET NOCOUNT ON;
@@ -19,10 +19,14 @@ BEGIN
 	BEGIN TRY
 		BEGIN TRANSACTION;
 
+		PRINT '@SchemeId = ' + CAST(@SchemeId AS NVARCHAR(40));
+		PRINT '@ComplianceYear = ' + CAST(@ComplianceYear AS NVARCHAR(10));
+		PRINT '';
+
 		/*==================================================================*/
 		/*	OBLIGATION SCHEME	*/
 		/*==================================================================*/
-		--* delete from ObligationSchemeAmount
+		PRINT 'delete from ObligationSchemeAmount';
 		DELETE osa
 		FROM
 			[PCS].[ObligationSchemeAmount] osa
@@ -33,20 +37,25 @@ BEGIN
 			os.SchemeId = @SchemeId
 		AND
 			os.ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 
-		--* delete from ObligationScheme
-		DELETE FROM
+		PRINT 'delete from ObligationScheme';
+		DELETE 
+		FROM
 			[PCS].[ObligationScheme]
 		WHERE
 			SchemeId = @SchemeId
 		AND
 			ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 
 
 		/*==================================================================*/
 		/*	MEMBER UPLOAD	*/
 		/*==================================================================*/
-		--* delete from AdditionalCompanyDetails
+		PRINT 'delete from AdditionalCompanyDetails';
 		DELETE acd
 		FROM
 			[Organisation].[AdditionalCompanyDetails] acd
@@ -66,12 +75,15 @@ BEGIN
 			mu.SchemeId = @SchemeId
 		AND
 			mu.ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 
-		--* drop FK_PaymentSession_DirectRegistrantId
+		PRINT 'drop FK_PaymentSession_DirectRegistrantId';
 		ALTER TABLE [Producer].[PaymentSession] 
 			DROP CONSTRAINT [FK_PaymentSession_DirectRegistrantId]
+		PRINT '';
 
-		--* delete from DirectRegistrant
+		PRINT 'delete from DirectRegistrant';
 		DELETE dr
 		FROM
 			[Producer].[DirectRegistrant] dr
@@ -88,26 +100,31 @@ BEGIN
 			mu.SchemeId = @SchemeId
 		AND
 			mu.ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 
 		/*---------------------------------------------------------------------------------*/
 		--NOT GOING TO DIRECT PRODUCER SUBMISSION 
 		--AS IT SHOULD BE COVERED BY REGISTERED PRODUCER
 		/*---------------------------------------------------------------------------------*/
 
-		--* create FK_PaymentSession_DirectRegistrantId
-		ALTER TABLE [Producer].[PaymentSession] 
+		PRINT 'create FK_PaymentSession_DirectRegistrantId';
+		ALTER TABLE [Producer].[PaymentSession] WITH NOCHECK
 			ADD CONSTRAINT [FK_PaymentSession_DirectRegistrantId] 
 			FOREIGN KEY([DirectRegistrantId])
 			REFERENCES [Producer].[DirectRegistrant] ([Id])
 
+		PRINT 'CHECK FK_PaymentSession_DirectRegistrantId';
 		ALTER TABLE [Producer].[PaymentSession] 
 			CHECK CONSTRAINT [FK_PaymentSession_DirectRegistrantId]
+		PRINT '';
 
-		--* drop FK_DirectProducerSubmission_CurrentSubmission
+		PRINT 'drop FK_DirectProducerSubmission_CurrentSubmission';
 		ALTER TABLE [Producer].[DirectProducerSubmission] 
 			DROP CONSTRAINT [FK_DirectProducerSubmission_CurrentSubmission];
+		PRINT '';
 
-		--* delete from DirectProducerSubmissionHistory
+		PRINT 'delete from DirectProducerSubmissionHistory';
 		DELETE dp
 		FROM
 			[Producer].[DirectProducerSubmissionHistory] dp
@@ -124,22 +141,26 @@ BEGIN
 			mu.SchemeId = @SchemeId
 		AND
 			mu.ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 	
 		/*---------------------------------------------------------------------------------*/
 		--NOT GOING TO DIRECT PRODUCER SUBMISSION 
 		--AS IT SHOULD BE COVERED BY REGISTERED PRODUCER
 		/*---------------------------------------------------------------------------------*/
 
-		--* create FK_DirectProducerSubmission_CurrentSubmission
-		ALTER TABLE [Producer].[DirectProducerSubmission] 
+		PRINT 'create FK_DirectProducerSubmission_CurrentSubmission';
+		ALTER TABLE [Producer].[DirectProducerSubmission] WITH NOCHECK
 			ADD CONSTRAINT [FK_DirectProducerSubmission_CurrentSubmission] 
 			FOREIGN KEY([CurrentSubmissionId])
 			REFERENCES [Producer].[DirectProducerSubmissionHistory] ([Id]);
 
+		PRINT 'CHECK FK_DirectProducerSubmission_CurrentSubmission';
 		ALTER TABLE [Producer].[DirectProducerSubmission] 
 			CHECK CONSTRAINT [FK_DirectProducerSubmission_CurrentSubmission];
+		PRINT '';
 
-		--* delete from BrandName
+		PRINT 'delete from BrandName';
 		DELETE bn
 		FROM
 			[Producer].[BrandName] bn
@@ -153,8 +174,10 @@ BEGIN
 			mu.SchemeId = @SchemeId
 		AND
 			mu.ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 
-		--* delete from SICCode
+		PRINT 'delete from SICCode';
 		DELETE sc
 		FROM
 			[Producer].[SICCode] sc
@@ -168,12 +191,15 @@ BEGIN
 			mu.SchemeId = @SchemeId
 		AND
 			mu.ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 
-		--* drop FK_RegisteredProducer_ProducerSubmission
+		PRINT 'drop FK_RegisteredProducer_ProducerSubmission';
 		ALTER TABLE [Producer].[RegisteredProducer] 
 			DROP CONSTRAINT [FK_RegisteredProducer_ProducerSubmission];
+		PRINT '';
 
-		--* delete from ProducerSubmission
+		PRINT 'delete from ProducerSubmission';
 		DELETE ps
 		FROM
 			[Producer].[ProducerSubmission] ps
@@ -184,20 +210,26 @@ BEGIN
 			mu.SchemeId = @SchemeId
 		AND
 			mu.ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 	
+		/*---------------------------------------------------------------------------------*/
 		--NOT GOING TO REGISTERED PRODUCER 
 		--AS IT HAS ITS OWN SCHEMEID AND COMPLIANCEYEAR
+		/*---------------------------------------------------------------------------------*/
 
-		--* create FK_RegisteredProducer_ProducerSubmission
-		ALTER TABLE [Producer].[RegisteredProducer] 
+		PRINT 'create FK_RegisteredProducer_ProducerSubmission';
+		ALTER TABLE [Producer].[RegisteredProducer] WITH NOCHECK
 			ADD	CONSTRAINT [FK_RegisteredProducer_ProducerSubmission] 
 			FOREIGN KEY([CurrentSubmissionId])
 			REFERENCES [Producer].[ProducerSubmission] ([Id]);
 
+		PRINT 'CHECK FK_RegisteredProducer_ProducerSubmission'
 		ALTER TABLE [Producer].[RegisteredProducer] 
 			CHECK CONSTRAINT [FK_RegisteredProducer_ProducerSubmission];
+		PRINT '';
 
-		--* delete from MemberUploadError
+		PRINT 'delete from MemberUploadError';
 		DELETE mue
 		FROM
 			[PCS].[MemberUploadError] mue
@@ -208,20 +240,23 @@ BEGIN
 			mu.SchemeId = @SchemeId
 		AND
 			mu.ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
 
-		--* delete from MemberUpload
+		PRINT 'delete from MemberUpload';
 		DELETE FROM
 			[PCS].[MemberUpload]
 		WHERE
 			SchemeId = @SchemeId
 		AND
 			ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 
 
 		/*==================================================================*/
 		/*	DATA RETURN UPLOAD	*/
 		/*==================================================================*/
-		--* delete from DataReturnUploadError
+		PRINT 'delete from DataReturnUploadError';
 		DELETE drue
 		FROM
 			[PCS].[DataReturnUploadError] drue
@@ -232,28 +267,33 @@ BEGIN
 			dru.SchemeId = @SchemeId
 		AND
 			dru.ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 
-		--* delete from DataReturnUpload
+		PRINT 'delete from DataReturnUpload';
 		DELETE FROM
 			[PCS].[DataReturnUpload]
 		WHERE
 			SchemeId = @SchemeId
 		AND
 			ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 
 
 		/*==================================================================*/
 		/*	DATA RETURN	*/
 		/*==================================================================*/
-		--* drop FK_DataReturnUpload_DataReturnVersion
+		PRINT 'drop FK_DataReturnUpload_DataReturnVersion';
 		ALTER TABLE [PCS].[DataReturnUpload] 
 			DROP CONSTRAINT [FK_DataReturnUpload_DataReturnVersion];
 
-		--* drop FK_DataReturn_DataReturnVersion
+		PRINT 'drop FK_DataReturn_DataReturnVersion';
 		ALTER TABLE [PCS].[DataReturn] 
 			DROP CONSTRAINT [FK_DataReturn_DataReturnVersion];
+		PRINT '';
 
-		--* delete from DataReturnVersion
+		PRINT 'delete from DataReturnVersion';
 		DELETE drv
 		FROM
 			[PCS].[DataReturnVersion] drv
@@ -264,44 +304,56 @@ BEGIN
 			dr.SchemeId = @SchemeId
 		AND
 			dr.ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 
+		/*---------------------------------------------------------------------------------*/
 		--NOT GOING TO DataReturnUpload 
 		--AS IT HAS ITS OWN SCHEMEID AND COMPLIANCEYEAR
+		/*---------------------------------------------------------------------------------*/
 
+		/*---------------------------------------------------------------------------------*/
 		--NOT GOING TO DataReturn 
 		--AS IT IS A BACKWARDS REFERENCE
+		/*---------------------------------------------------------------------------------*/
 
-		--* create FK_DataReturn_DataReturnVersion
-		ALTER TABLE [PCS].[DataReturn] 
+		PRINT 'create FK_DataReturn_DataReturnVersion';
+		ALTER TABLE [PCS].[DataReturn] WITH NOCHECK
 			ADD CONSTRAINT [FK_DataReturn_DataReturnVersion] 
 			FOREIGN KEY([CurrentDataReturnVersionId])
 			REFERENCES [PCS].[DataReturnVersion] ([Id]);
 
+		PRINT 'CHECK FK_DataReturn_DataReturnVersion';
 		ALTER TABLE [PCS].[DataReturn] 
 			CHECK CONSTRAINT [FK_DataReturn_DataReturnVersion];
+		PRINT '';
 
-		--* create FK_DataReturnUpload_DataReturnVersion
-		ALTER TABLE [PCS].[DataReturnUpload] 
+		PRINT 'create FK_DataReturnUpload_DataReturnVersion';
+		ALTER TABLE [PCS].[DataReturnUpload] WITH NOCHECK
 			ADD CONSTRAINT [FK_DataReturnUpload_DataReturnVersion] 
 			FOREIGN KEY([DataReturnVersionId])
 			REFERENCES [PCS].[DataReturnVersion] ([Id]);
 
+		PRINT 'CHECK FK_DataReturnUpload_DataReturnVersion';
 		ALTER TABLE [PCS].[DataReturnUpload] 
 			CHECK CONSTRAINT [FK_DataReturnUpload_DataReturnVersion];
+		PRINT '';
 
-		--* delete from DataReturn
+		PRINT 'delete from DataReturn';
 		DELETE FROM
 			[PCS].[DataReturn]
 		WHERE
 			SchemeId = @SchemeId
 		AND
 			ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 
 
 		/*==================================================================*/
 		/*	REGISTERED PRODUCER	*/
 		/*==================================================================*/
-		--* delete from EeeOutputReturnVersionAmount
+		PRINT 'delete from EeeOutputReturnVersionAmount';
 		DELETE eorva
 		FROM
 			[PCS].[EeeOutputReturnVersionAmount] eorva
@@ -315,8 +367,10 @@ BEGIN
 			rp.SchemeId = @SchemeId
 		AND
 			rp.ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 
-		--* delete from EeeOutputAmount
+		PRINT 'delete from EeeOutputAmount';
 		DELETE eoa
 		FROM
 			[PCS].[EeeOutputAmount] eoa
@@ -327,12 +381,15 @@ BEGIN
 			rp.SchemeId = @SchemeId
 		AND
 			rp.ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 
-		--* drop FK_DirectProducerSubmission_CurrentSubmission
+		PRINT 'drop FK_DirectProducerSubmission_CurrentSubmission';
 		ALTER TABLE [Producer].[DirectProducerSubmission] 
 			DROP CONSTRAINT [FK_DirectProducerSubmission_CurrentSubmission];
+		PRINT '';
 
-		--* delete from DirectProducerSubmissionHistory
+		PRINT 'delete from DirectProducerSubmissionHistory';
 		DELETE dpsh
 		FROM
 			[Producer].[DirectProducerSubmissionHistory] dpsh
@@ -346,24 +403,29 @@ BEGIN
 			rp.SchemeId = @SchemeId
 		AND
 			rp.ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 
 		--NOT GOING TO DirectProducerSubmission 
 		--AS IT IS A BACKWARDS REFERENCE
 
-		--* create FK_DirectProducerSubmission_CurrentSubmission
-		ALTER TABLE [Producer].[DirectProducerSubmission] 
+		PRINT 'create FK_DirectProducerSubmission_CurrentSubmission';
+		ALTER TABLE [Producer].[DirectProducerSubmission] WITH NOCHECK
 			ADD CONSTRAINT [FK_DirectProducerSubmission_CurrentSubmission] 
 			FOREIGN KEY([CurrentSubmissionId])
 			REFERENCES [Producer].[DirectProducerSubmissionHistory] ([Id]);
 
+		PRINT 'CHECK FK_DirectProducerSubmission_CurrentSubmission';
 		ALTER TABLE [Producer].[DirectProducerSubmission] 
 			CHECK CONSTRAINT [FK_DirectProducerSubmission_CurrentSubmission];
+		PRINT '';
 
-		--* drop FK_DirectProducerSubmission_FinalPaymentSessionId
+		PRINT 'drop FK_DirectProducerSubmission_FinalPaymentSessionId';
 		ALTER TABLE [Producer].[DirectProducerSubmission] 
 			DROP CONSTRAINT [FK_DirectProducerSubmission_FinalPaymentSessionId];
+		PRINT '';
 
-		--* delete from PaymentSession
+		PRINT 'delete from PaymentSession';
 		DELETE ps
 		FROM
 			[Producer].[PaymentSession] ps
@@ -377,20 +439,24 @@ BEGIN
 			rp.SchemeId = @SchemeId
 		AND
 			rp.ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 
 		--NOT GOING TO DirectProducerSubmission 
 		--AS IT IS A BACKWARDS REFERENCE
 
-		--* create FK_DirectProducerSubmission_FinalPaymentSessionId
-		ALTER TABLE [Producer].[DirectProducerSubmission] 
+		PRINT 'create FK_DirectProducerSubmission_FinalPaymentSessionId';
+		ALTER TABLE [Producer].[DirectProducerSubmission] WITH NOCHECK
 			ADD CONSTRAINT [FK_DirectProducerSubmission_FinalPaymentSessionId] 
 			FOREIGN KEY([FinalPaymentSessionId])
 			REFERENCES [Producer].[PaymentSession] ([Id]);
 
+		PRINT 'CHECK FK_DirectProducerSubmission_FinalPaymentSessionId';
 		ALTER TABLE [Producer].[DirectProducerSubmission] 
 			CHECK CONSTRAINT [FK_DirectProducerSubmission_FinalPaymentSessionId];
+		PRINT '';
 
-		--* delete from DirectProducerSubmission
+		PRINT 'delete from DirectProducerSubmission';
 		DELETE dps
 		FROM
 			[Producer].[DirectProducerSubmission] dps
@@ -401,12 +467,15 @@ BEGIN
 			rp.SchemeId = @SchemeId
 		AND
 			rp.ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 
-		--* drop FK_DirectProducerSubmission_CurrentSubmission
+		PRINT 'drop FK_DirectProducerSubmission_CurrentSubmission';
 		ALTER TABLE [Producer].[DirectProducerSubmission] 
 			DROP CONSTRAINT [FK_DirectProducerSubmission_CurrentSubmission];
+		PRINT '';
 
-		--* delete from DirectProducerSubmissionHistory
+		PRINT 'delete from DirectProducerSubmissionHistory';
 		DELETE dpsh
 		FROM
 			[Producer].[DirectProducerSubmissionHistory] dpsh
@@ -423,17 +492,21 @@ BEGIN
 			rp.SchemeId = @SchemeId
 		AND
 			rp.ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 
-		--* create FK_DirectProducerSubmission_CurrentSubmission
-		ALTER TABLE [Producer].[DirectProducerSubmission] 
+		PRINT 'create FK_DirectProducerSubmission_CurrentSubmission';
+		ALTER TABLE [Producer].[DirectProducerSubmission] WITH NOCHECK
 			ADD CONSTRAINT [FK_DirectProducerSubmission_CurrentSubmission] 
 			FOREIGN KEY([CurrentSubmissionId])
 			REFERENCES [Producer].[DirectProducerSubmissionHistory] ([Id]);
 
+		PRINT 'CHECK FK_DirectProducerSubmission_CurrentSubmission';
 		ALTER TABLE [Producer].[DirectProducerSubmission] 
 			CHECK CONSTRAINT [FK_DirectProducerSubmission_CurrentSubmission];
+		PRINT '';
 
-		--* delete from AdditionalCompanyDetails
+		PRINT 'delete from AdditionalCompanyDetails';
 		DELETE acd
 		FROM
 			[Organisation].[AdditionalCompanyDetails] acd
@@ -453,12 +526,15 @@ BEGIN
 			rp.SchemeId = @SchemeId
 		AND
 			rp.ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 
-		--* drop FK_PaymentSession_DirectRegistrantId
+		PRINT 'drop FK_PaymentSession_DirectRegistrantId';
 		ALTER TABLE [Producer].[PaymentSession] 
 			DROP CONSTRAINT [FK_PaymentSession_DirectRegistrantId]
+		PRINT '';
 
-		--* delete from DirectRegistrant
+		PRINT 'delete from DirectRegistrant';
 		DELETE dr
 		FROM
 			[Producer].[DirectRegistrant] dr
@@ -475,22 +551,26 @@ BEGIN
 			rp.SchemeId = @SchemeId
 		AND
 			rp.ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 
 		/*---------------------------------------------------------------------------------*/
 		--NOT GOING TO DIRECT PRODUCER SUBMISSION 
 		--AS IT SHOULD BE COVERED BY REGISTERED PRODUCER
 		/*---------------------------------------------------------------------------------*/
 
-		--* create FK_PaymentSession_DirectRegistrantId
-		ALTER TABLE [Producer].[PaymentSession] 
+		PRINT 'create FK_PaymentSession_DirectRegistrantId';
+		ALTER TABLE [Producer].[PaymentSession] WITH NOCHECK
 			ADD CONSTRAINT [FK_PaymentSession_DirectRegistrantId] 
 			FOREIGN KEY([DirectRegistrantId])
 			REFERENCES [Producer].[DirectRegistrant] ([Id])
 
+		PRINT 'CHECK FK_PaymentSession_DirectRegistrantId';
 		ALTER TABLE [Producer].[PaymentSession] 
 			CHECK CONSTRAINT [FK_PaymentSession_DirectRegistrantId]
+		PRINT '';
 
-		--* delete from BrandName
+		PRINT 'delete from BrandName';
 		DELETE bn
 		FROM
 			[Producer].[BrandName] bn
@@ -504,8 +584,10 @@ BEGIN
 			rp.SchemeId = @SchemeId
 		AND
 			rp.ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 
-		--* delete from SICCode
+		PRINT 'delete from SICCode';
 		DELETE sc
 		FROM
 			[Producer].[SICCode] sc
@@ -519,12 +601,15 @@ BEGIN
 			rp.SchemeId = @SchemeId
 		AND
 			rp.ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 
-		--* drop FK_RegisteredProducer_ProducerSubmission
+		PRINT 'drop FK_RegisteredProducer_ProducerSubmission';
 		ALTER TABLE [Producer].[RegisteredProducer] 
 			DROP CONSTRAINT [FK_RegisteredProducer_ProducerSubmission];
+		PRINT '';
 
-		--* delete from ProducerSubmission
+		PRINT 'delete from ProducerSubmission';
 		DELETE ps
 		FROM
 			[Producer].[ProducerSubmission] ps
@@ -535,34 +620,48 @@ BEGIN
 			rp.SchemeId = @SchemeId
 		AND
 			rp.ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 
+		/*---------------------------------------------------------------------------------*/
 		--NOT GOING TO RegisteredProducer 
 		--AS IT IS A BACKWARDS REFERENCE
+		/*---------------------------------------------------------------------------------*/
 
-		--* create FK_RegisteredProducer_ProducerSubmission
-		ALTER TABLE [Producer].[RegisteredProducer] 
+		PRINT 'create FK_RegisteredProducer_ProducerSubmission';
+		ALTER TABLE [Producer].[RegisteredProducer] WITH NOCHECK
 			ADD CONSTRAINT [FK_RegisteredProducer_ProducerSubmission] 
 			FOREIGN KEY([CurrentSubmissionId])
 			REFERENCES [Producer].[ProducerSubmission] ([Id]);
 
+		PRINT 'CHECK FK_RegisteredProducer_ProducerSubmission';
 		ALTER TABLE [Producer].[RegisteredProducer] 
 			CHECK CONSTRAINT [FK_RegisteredProducer_ProducerSubmission];
+		PRINT '';
 
-		--* delete from RegisteredProducer
+		PRINT 'delete from RegisteredProducer';
 		DELETE FROM
 			[Producer].[RegisteredProducer]
 		WHERE
 			SchemeId = @SchemeId
 		AND
 			ComplianceYear = @ComplianceYear;
+		PRINT 'Rows deleted: ' + CAST(@@ROWCOUNT AS VARCHAR(10));
+		PRINT '';
 
+		--ROLLBACK TRANSACTION;
 		COMMIT TRANSACTION;
 	END TRY
 	BEGIN CATCH
 		ROLLBACK TRANSACTION;
+
+		PRINT 'Error Number: ' + CAST(ERROR_NUMBER() AS VARCHAR(10));
+		PRINT 'Error Message: ' + ERROR_MESSAGE();
+		PRINT 'Error Line: ' + CAST(ERROR_LINE() AS VARCHAR(10));
 
 		RETURN -1;
 	END CATCH
 
 	RETURN 0;
 END
+GO

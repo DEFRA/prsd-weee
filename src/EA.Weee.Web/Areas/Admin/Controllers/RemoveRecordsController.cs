@@ -11,8 +11,10 @@
     using EA.Prsd.Core.Web.Mvc.Extensions;
     using EA.Weee.Core.Scheme;
     using EA.Weee.Core.Shared.Paging;
+    using EA.Weee.DataAccess.StoredProcedure;
     using EA.Weee.Requests;
     using EA.Weee.Requests.Admin;
+    using EA.Weee.Web.Areas.Admin.Controllers.Interfaces;
     using EA.Weee.Web.Areas.Admin.ViewModels.RemoveRecords;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
@@ -43,7 +45,7 @@
             RemoveRecordsViewModel viewModel = new RemoveRecordsViewModel();
             PopulateViewModelPossibleValues(viewModel);
 
-            return View("ChooseActivity", viewModel);
+            return View(viewModel);
         }
 
         [HttpPost]
@@ -74,99 +76,146 @@
         [HttpGet]
         public async Task<ActionResult> RemovePCS(int page = 1, string selScheme = null, string selYear = null)
         {
+            await SetBreadcrumb();
+            
+            RemovePCSRecordsFilterViewModel model = new RemovePCSRecordsFilterViewModel();
+
             using (var client = apiClient())
             {
-                await SetBreadcrumb();
+                // Get the list of years for the SelectList and add an "All items" option
+                var allYearsStrings = await GetAllYears(client);
 
-                List<int> allYears = await client.SendAsync(User.GetAccessToken(), new GetSchemeComplianceYearsExceedingRetentionPeriod());
-                List<string> allYearsStrings = allYears.ConvertAll(i => i.ToString());
-                allYearsStrings.Insert(0, AllYears);
-                int? selectedYear = int.TryParse(selYear, out int parsedValue) ? parsedValue : (int?)null;
+                // Get the selected item for the Years SelectList or null if the "All items" option is selected
+                var selectedYear = int.TryParse(selYear, out int parsedValue) ? parsedValue : (int?)null;
 
-                GetSchemesForComplianceYear getSchemesRequest = new GetSchemesForComplianceYear(null);
-                List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
-                schemes.Insert(0, new SchemeData { Id = Guid.Empty, SchemeName = AllPCSs });
+                // Get the list of Schemes for the SelectList and add an "All items" option
+                var schemes = await GetSchemesForYear(client, selectedYear);
 
-                var selectedName = ((string.IsNullOrEmpty(selScheme)) || (selScheme == Guid.Empty.ToString()) || (selScheme == "AllPCSs")) ? null : selScheme;
+                // Get the selected item for the Schemes SelectList or null if the "All items" option is selected
+                var selectedName = ((string.IsNullOrEmpty(selScheme)) || (selScheme == AllPCSs)) ? null : selScheme;
 
-                var request = new GetSchemeDataExceedingRetentionPeriod(selectedYear, selectedName);
-                var searchResults = await client.SendAsync(User.GetAccessToken(), request);
-                var totalRecords = searchResults.Count();
+                // Get the data for the results table using the selected items and sort the results
+                var searchResults = await GetSortedResults(client, selectedYear, selectedName);
 
-                searchResults = searchResults.OrderBy(r => r.ComplianceYear)
-                                             .ThenBy(r => r.SchemeName)
-                                             .ToList();
+                // Get the selected items for the SelectLists
+                var stringYear = selectedYear == null ? AllYears : selectedYear.ToString();
+                var stringName = String.IsNullOrEmpty(selectedName) ? AllPCSs : selectedName;
 
-                var results = new RemovePCSRecordsListViewModel
-                {
-                    SelectedYear = AllYears,
-                    SelectedSchemeName = AllPCSs,
-                    SchemeData = searchResults.ToPagedList(page - 1, DefaultPageSize, totalRecords)
-                };
-
-                RemovePCSRecordsFilterViewModel model = new RemovePCSRecordsFilterViewModel
-                {
-                    ComplianceYears = new SelectList(allYearsStrings),
-                    SchemeNames = new SelectList(schemes, "Id", "SchemeName"),
-                    SelectedYear = allYearsStrings.FirstOrDefault(),
-                    SelectedScheme = "AllPCSs",
-                    Results = results
-                };
-
-                return View(model);
+                // Populate the model
+                model = PopulateRemovePCSRecordsFilterViewModel(model, searchResults, schemes, allYearsStrings, page, stringYear, stringName);
             }
+
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> RemovePCS(RemovePCSRecordsFilterViewModel model, int page = 1)
         {
+            await SetBreadcrumb();
+
+            string selScheme = model.SelectedScheme;
+            string selYear = model.SelectedYear;
+
             using (var client = apiClient())
             {
-                await SetBreadcrumb();
+                // Get the list of years for the SelectList and add an "All items" option
+                var allYearsStrings = await GetAllYears(client);
 
-                List<int> allYears = await client.SendAsync(User.GetAccessToken(), new GetSchemeComplianceYearsExceedingRetentionPeriod());
-                List<string> allYearsStrings = allYears.ConvertAll(i => i.ToString());
-                allYearsStrings.Insert(0, AllYears);
-                int? selectedYear = int.TryParse(model.SelectedYear, out int parsedValue) ? parsedValue : (int?)null;
+                // Get the selected item for the Years SelectList or null if the "All items" option is selected
+                var selectedYear = int.TryParse(selYear, out int parsedValue) ? parsedValue : (int?)null;
 
-                GetSchemesForComplianceYear getSchemesRequest = new GetSchemesForComplianceYear(selectedYear);
-                List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
-                schemes.Insert(0, new SchemeData { Id = Guid.Empty, SchemeName = AllPCSs });
+                // Get the list of Schemes for the SelectList and add an "All items" option
+                var schemes = await GetSchemesForYear(client, selectedYear);
 
-                var selectedName = ((string.IsNullOrEmpty(model.SelectedScheme)) || (model.SelectedScheme == Guid.Empty.ToString()) || (model.SelectedScheme == "AllPCSs")) ? null : model.SelectedScheme;
+                // Get the selected item for the Schemes SelectList or null if the "All items" option is selected
+                var selectedName = ((string.IsNullOrEmpty(selScheme)) || (selScheme == AllPCSs)) ? null : selScheme;
 
-                model.ComplianceYears = new SelectList(allYearsStrings);
-                model.SchemeNames = new SelectList(schemes, "Id", "SchemeName");
-                model.SelectedYear = selectedYear.ToString();
-                model.SelectedScheme = selectedName;
+                // Get the data for the results table using the selected items and sort the results
+                var searchResults = await GetSortedResults(client, selectedYear, selectedName);
 
-                var request = new GetSchemeDataExceedingRetentionPeriod(selectedYear, selectedName);
-                var searchResults = await client.SendAsync(User.GetAccessToken(), request);
-                var totalRecords = searchResults.Count();
-
-                searchResults = searchResults.OrderBy(r => r.ComplianceYear)
-                                             .ThenBy(r => r.SchemeName)
-                                             .ToList();
-
-                if (selectedName == null)
-                {
-                    selectedName = AllPCSs;
-                }
-
-                var results = new RemovePCSRecordsListViewModel
-                {
-                    SelectedYear = selectedYear.ToString() ?? AllYears,
-                    SelectedSchemeName = selectedName,
-                    SchemeData = searchResults.ToPagedList(page - 1, DefaultPageSize, totalRecords)
-                };
-
-                model.SelectedYear = selectedYear.ToString();
-                model.SelectedScheme = selectedName;
-                model.Results = results;
-
-                return View(model);
+                // Populate the model
+                model = PopulateRemovePCSRecordsFilterViewModel(model, searchResults, schemes, allYearsStrings, page, selYear, selScheme);
             }
+
+            return View(model);
+        }
+
+        internal IGetAllYears GetAllYearsStub;
+        private async Task<List<string>> GetAllYears(IWeeeClient client)
+        {
+            if (GetAllYearsStub != null)
+            {
+                return GetAllYearsStub.GetAllYears(client);
+            }
+            
+            List<int> allYears = await client.SendAsync(User.GetAccessToken(), new GetSchemeComplianceYearsExceedingRetentionPeriod());
+            List<string> allYearsStrings = allYears.ConvertAll(i => i.ToString());
+            allYearsStrings.Insert(0, AllYears);
+
+            return allYearsStrings;
+        }
+
+        internal IGetSchemesForYear GetSchemesForYearStub;
+        private async Task<List<SchemeData>> GetSchemesForYear(IWeeeClient client, int? selectedYear)
+        {
+            if (GetSchemesForYearStub != null)
+            {
+                return GetSchemesForYearStub.GetSchemesForYear(client, selectedYear);
+            }
+            
+            GetSchemesForComplianceYear getSchemesRequest = new GetSchemesForComplianceYear(selectedYear);
+            List<SchemeData> schemes = await client.SendAsync(User.GetAccessToken(), getSchemesRequest);
+            schemes.Insert(0, new SchemeData { Id = Guid.Empty, SchemeName = AllPCSs });
+
+            return schemes;
+        }
+
+        internal IGetSortedResults GetSortedResultsStub;
+        private async Task<List<SchemeDataExceedingRetentionPeriod>> GetSortedResults(IWeeeClient client, int? selectedYear, string selectedName)
+        {
+            if (GetSortedResultsStub != null)
+            {
+                return GetSortedResultsStub.GetSortedResults(client, selectedYear, selectedName);
+            }
+            
+            var request = new GetSchemeDataExceedingRetentionPeriod(selectedYear, selectedName);
+            var searchResults = await client.SendAsync(User.GetAccessToken(), request);
+            searchResults = searchResults.OrderByDescending(r => r.ComplianceYear)
+                                         .ThenBy(r => r.SchemeName)
+                                         .ToList();
+
+            return searchResults;
+        }
+
+        internal IPopulateRemovePCSRecordsFilterViewModel PopulateRemovePCSRecordsFilterViewModelStub;
+        private RemovePCSRecordsFilterViewModel PopulateRemovePCSRecordsFilterViewModel(RemovePCSRecordsFilterViewModel model,
+            List<SchemeDataExceedingRetentionPeriod> data, 
+            List<SchemeData> schemes, 
+            List<string> allYearsStrings, 
+            int page, 
+            string selectedYear,
+            string selectedScheme)
+        {
+            if (PopulateRemovePCSRecordsFilterViewModelStub != null)
+            {
+                return PopulateRemovePCSRecordsFilterViewModelStub.PopulateRemovePCSRecordsFilterViewModel(model, data, schemes, allYearsStrings, page, selectedYear, selectedScheme);
+            }
+            
+            var results = new RemovePCSRecordsListViewModel
+            {
+                SelectedYear = selectedYear,
+                SelectedSchemeName = selectedScheme,
+                SchemeData = data.ToPagedList(page - 1, DefaultPageSize, data.Count())
+            };
+
+            model.ComplianceYears = new SelectList(allYearsStrings);
+            model.SchemeNames = new SelectList(schemes, "SchemeName", "SchemeName");
+            model.SelectedYear = selectedYear;
+            model.SelectedScheme = selectedScheme;
+            model.Results = results;
+
+            return model;
         }
 
         [HttpPost]
@@ -238,16 +287,26 @@
                 {
                     var request = new GetReturnValueFromRemovingPCSRecords(model.SchemeId, model.ComplianceYear);
                     var result = await client.SendAsync(User.GetAccessToken(), request);
+
+                    if (result == -1)
+                    {
+                        throw new Exception("There was a problem with the deletion.");
+                    }
                 }
                 catch (ApiBadRequestException ex)
                 {
                     this.HandleBadRequest(ex);
+                    ModelState.AddModelError(String.Empty, ex);
+                    return View(model);
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(String.Empty, "There was a problem with the deletion.");
                     return View(model);
                 }
             }
 
-            return RedirectToAction("Deleted",
-                new { id = model.SchemeId, complianceYear = model.ComplianceYear });
+            return RedirectToAction("Deleted", new { id = model.SchemeId, complianceYear = model.ComplianceYear });
         }
 
         [HttpGet]

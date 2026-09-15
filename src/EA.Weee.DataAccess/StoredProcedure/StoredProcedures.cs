@@ -278,8 +278,10 @@
 
         public async Task<List<SchemeDataExceedingRetentionPeriod>> SpgSchemeDataByNameAndComplianceYear(int? complianceYear, string schemeName)
         {
-            var complianceYearParameter = new SqlParameter("@ComplianceYear", (object)complianceYear ?? DBNull.Value);
-            var schemeNameParameter = new SqlParameter("@SchemeName", (object)schemeName ?? DBNull.Value);
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", SqlDbType.Int);
+            complianceYearParameter.Value = (object)complianceYear ?? DBNull.Value;
+            var schemeNameParameter = new SqlParameter("@SchemeName", SqlDbType.NVarChar, 70);
+            schemeNameParameter.Value = (object)schemeName ?? DBNull.Value;
 
             return await context.Database
                 .SqlQuery<SchemeDataExceedingRetentionPeriod>("[PCS].[spgSchemeDataByNameAndComplianceYear] @ComplianceYear, @SchemeName",

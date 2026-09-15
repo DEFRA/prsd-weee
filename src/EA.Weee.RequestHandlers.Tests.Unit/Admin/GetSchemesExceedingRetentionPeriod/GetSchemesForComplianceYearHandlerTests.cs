@@ -72,22 +72,20 @@
 
         private IGetSchemeData CreateFakeSchemeDataStub()
         {
-            //IGetSchemeData getSchemeData = A.Fake<IGetSchemeData>();
-
             schemeData1 = A.Fake<SchemeData>();
-            schemeData1.Name = "MCH";
+            schemeData1.SchemeName = "AAA";
 
             schemeData2 = A.Fake<SchemeData>();
-            schemeData2.Name = "ARB";
+            schemeData2.SchemeName = "BBB";
 
             schemeData3 = A.Fake<SchemeData>();
-            schemeData3.Name = "ZRS";
+            schemeData3.SchemeName = "CCC";
 
             schemeData4 = A.Fake<SchemeData>();
-            schemeData4.Name = "BBD";
+            schemeData4.SchemeName = "DDD";
 
             schemeData5 = A.Fake<SchemeData>();
-            schemeData5.Name = "HRT";
+            schemeData5.SchemeName = "EEE";
 
             var listSchemeData = new List<SchemeData>();
             listSchemeData.Add(schemeData1);
@@ -95,8 +93,6 @@
             listSchemeData.Add(schemeData3);
             listSchemeData.Add(schemeData4);
             listSchemeData.Add(schemeData5);
-
-            //A.CallTo(() => getSchemeData.GetSchemeData()).Returns(listSchemeData);
 
             IGetSchemeData getSchemeData = new GetSchemeDataStub(listSchemeData);
                 
@@ -107,9 +103,9 @@
         {
             IGetSchemesForComplianceYearDataAccess dataAccess = A.Fake<IGetSchemesForComplianceYearDataAccess>();
 
-            var schemeName1 = "HRT";
-            var schemeName2 = "ZRS";
-            var schemeName3 = "MCH";
+            var schemeName1 = "AAA";
+            var schemeName2 = "CCC";
+            var schemeName3 = "EEE";
 
             var results = new List<string>()
             {

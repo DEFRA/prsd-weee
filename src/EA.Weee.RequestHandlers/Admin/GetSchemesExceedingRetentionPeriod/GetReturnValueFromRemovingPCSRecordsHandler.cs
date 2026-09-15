@@ -31,9 +31,9 @@
         {
             authorization.EnsureCanAccessInternalArea();
 
-            int schemeData = await dataAccess.GetItemsAsync(request.SchemeId, request.ComplianceYear);
+            int result = await dataAccess.GetItemsAsync(request.SchemeId, request.ComplianceYear);
 
-            return schemeData;
+            return result;
         }
     }
 }

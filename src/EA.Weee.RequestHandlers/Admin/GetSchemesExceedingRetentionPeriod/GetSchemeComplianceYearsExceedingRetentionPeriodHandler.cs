@@ -34,9 +34,9 @@
         {
             authorization.EnsureCanAccessInternalArea();
 
-            var items = await dataAccess.GetItemsAsync();
+            var years = await dataAccess.GetItemsAsync();
 
-            return items;
+            return years;
         }
     }
 }
