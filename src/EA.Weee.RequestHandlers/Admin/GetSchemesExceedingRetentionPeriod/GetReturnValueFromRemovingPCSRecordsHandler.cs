@@ -1,15 +1,6 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetSchemesExceedingRetentionPeriod
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
     using System.Threading.Tasks;
-    using Domain.Scheme;
-    using EA.Prsd.Core.Mapper;
-    using EA.Weee.Core.Scheme;
-    using EA.Weee.DataAccess;
-    using EA.Weee.DataAccess.StoredProcedure;
     using EA.Weee.Requests;
     using Prsd.Core.Mediator;
     using Security;

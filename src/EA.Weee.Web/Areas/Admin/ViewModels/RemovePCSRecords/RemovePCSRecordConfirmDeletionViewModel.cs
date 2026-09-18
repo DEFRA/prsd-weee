@@ -1,11 +1,9 @@
-﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.RemoveRecords
+﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.RemovePCSRecords
 {
-    using EA.Weee.Core.Shared;
     using System;
     using System.ComponentModel;
-    using System.ComponentModel.DataAnnotations;
 
-    public class RemovePCSRecordsConfirmDeletionViewModel
+    public class RemovePCSRecordConfirmDeletionViewModel
     {
         public Guid SchemeId { get; set; }
 

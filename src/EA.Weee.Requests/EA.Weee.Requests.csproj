@@ -93,7 +93,7 @@
     <Compile Include="Admin\DirectRegistrants\GetSmallProducerSubmissionByRegistrationNumber.cs" />
     <Compile Include="Admin\GetAllAatfsForComplianceYearRequest.cs" />
     <Compile Include="Admin\GetSchemesExceedingRetentionPeriod\GetReturnValueFromRemovingPCSRecords.cs" />
-    <Compile Include="Admin\GetSchemesExceedingRetentionPeriod\GetSchemeDataExceedingRetentionPeriod.cs" />
+    <Compile Include="Admin\GetSchemesExceedingRetentionPeriod\GetSchemeDataExceedingRetentionPeriodRequest.cs" />
     <Compile Include="Admin\GetSchemesForComplianceYear.cs" />
     <Compile Include="Admin\GetSchemesExceedingRetentionPeriod\GetSchemeComplianceYearsExceedingRetentionPeriod.cs" />
     <Compile Include="Admin\Obligations\GetSchemesWithObligation.cs" />

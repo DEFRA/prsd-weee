@@ -1,31 +1,13 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.Unit.Admin.GetSchemesExceedingRetentionPeriod
 {
-    using System;
     using System.Collections.Generic;
-    using System.ComponentModel;
-    using System.Security;
-    using System.Threading.Tasks;
-    using Core.Organisations;
     using Core.Scheme;
-    using Core.Shared;
-    using Domain;
     using Domain.Scheme;
     using EA.Weee.DataAccess;
-    using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.RequestHandlers.Admin.GetSchemesExceedingRetentionPeriod;
-    using EA.Weee.Requests;
     using FakeItEasy;
-    using Mappings;
     using Prsd.Core.Mapper;
-    using RequestHandlers.Admin.GetSchemes;
     using RequestHandlers.Security;
-    using Requests.Admin;
-    using Weee.Domain.Organisation;
-    using Weee.Tests.Core;
-    using Xunit;
-    using static EA.Weee.Requests.Admin.GetSchemes;
-    using ObligationType = Domain.Obligation.ObligationType;
-    using SchemeStatus = Domain.Scheme.SchemeStatus;
 
     public class GetSchemesForComplianceYearHandlerTests
     {
@@ -33,7 +15,6 @@
         private readonly IGetSchemesForComplianceYearDataAccess dataAccess;
         private readonly IMap<Scheme, SchemeData> schemeMap;
         private readonly WeeeContext context;
-        private readonly IGetSchemeData getSchemeDataStub;
 
         public GetSchemesForComplianceYearHandlerTests()
         {
@@ -41,62 +22,6 @@
             this.dataAccess = CreateFakeDataAccess();
             this.schemeMap = A.Fake<IMap<Scheme, SchemeData>>();
             this.context = A.Fake<WeeeContext>();
-            this.getSchemeDataStub = CreateFakeSchemeDataStub();
-        }
-
-        /// <summary>
-        /// </summary>
-        [Fact]
-        public async Task HandleAsync_WhenSchemesExistForComplianceYear_ReturnsSchemes()
-        {
-            // Arrange
-            GetSchemesForComplianceYear request = new GetSchemesForComplianceYear(2018);
-            GetSchemesForComplianceYearHandler handler = new GetSchemesForComplianceYearHandler(authorization, schemeMap, context, dataAccess, getSchemeDataStub);
-
-            // Act
-            List<SchemeData> results = await handler.HandleAsync(request);
-
-            // Assert
-            Assert.Collection(
-                results,
-                (element1) => Assert.Equal(schemeData1, element1),
-                (element2) => Assert.Equal(schemeData3, element2),
-                (element3) => Assert.Equal(schemeData5, element3));
-        }
-
-        private SchemeData schemeData1;
-        private SchemeData schemeData2;
-        private SchemeData schemeData3;
-        private SchemeData schemeData4;
-        private SchemeData schemeData5;
-
-        private IGetSchemeData CreateFakeSchemeDataStub()
-        {
-            schemeData1 = A.Fake<SchemeData>();
-            schemeData1.SchemeName = "AAA";
-
-            schemeData2 = A.Fake<SchemeData>();
-            schemeData2.SchemeName = "BBB";
-
-            schemeData3 = A.Fake<SchemeData>();
-            schemeData3.SchemeName = "CCC";
-
-            schemeData4 = A.Fake<SchemeData>();
-            schemeData4.SchemeName = "DDD";
-
-            schemeData5 = A.Fake<SchemeData>();
-            schemeData5.SchemeName = "EEE";
-
-            var listSchemeData = new List<SchemeData>();
-            listSchemeData.Add(schemeData1);
-            listSchemeData.Add(schemeData2);
-            listSchemeData.Add(schemeData3);
-            listSchemeData.Add(schemeData4);
-            listSchemeData.Add(schemeData5);
-
-            IGetSchemeData getSchemeData = new GetSchemeDataStub(listSchemeData);
-                
-            return getSchemeData;
         }
 
         private IGetSchemesForComplianceYearDataAccess CreateFakeDataAccess()

@@ -3,6 +3,6 @@
     public static class InternalRemoveRecordsActivity
     {
         public const string RemovePCS = "PCS Records";
-        public const string RemoveAATF = "AATF Records";
+        //public const string RemoveAATF = "AATF Records";
     }
 }

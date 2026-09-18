@@ -7,7 +7,6 @@
     using System.Data.SqlClient;
     using System.Threading.Tasks;
     using Domain.Admin.AatfReports;
-    using EA.Weee.Domain.AatfReturn;
 
     public class StoredProcedures : IStoredProcedures
     {
@@ -241,7 +240,7 @@
             return result;
         }
 
-        public async Task<List<ProducerEeeCsvData>> SpgProducerEeeCsvData(int complianceYear, Guid? schemeId, string obligationType, 
+        public async Task<List<ProducerEeeCsvData>> SpgProducerEeeCsvData(int complianceYear, Guid? schemeId, string obligationType,
             bool directRegistrantFilter, bool filterBySchemes)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
@@ -292,21 +291,25 @@
 
         public async Task<int> SpgRemovePCSRecords(Guid schemeId, int complianceYear)
         {
-            var schemeIdParameter = new SqlParameter("@SchemeId", schemeId);
-            var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
-            var returnValue = new SqlParameter();
-            returnValue.Direction = ParameterDirection.ReturnValue;
+            using (var command = context.Database.Connection.CreateCommand())
+            {
+                command.CommandText = "[PCS].[spgRemovePCSRecords] @SchemeId, @ComplianceYear";
+                command.CommandTimeout = 180;
 
-            var cmd = context.Database.Connection.CreateCommand();
-            cmd.CommandText = "[PCS].[spgRemovePCSRecords] @SchemeId, @ComplianceYear";
-            cmd.Parameters.Add(schemeIdParameter);
-            cmd.Parameters.Add(complianceYearParameter);
-            cmd.Parameters.Add(returnValue);
-            cmd.CommandTimeout = 180;
-            await cmd.Connection.OpenAsync();
-            var result = await cmd.ExecuteNonQueryAsync();
+                command.Parameters.Add(new SqlParameter("@SchemeId", schemeId));
+                command.Parameters.Add(new SqlParameter("@ComplianceYear", complianceYear));
 
-            return (int)returnValue.Value;
+                var returnValue = new SqlParameter
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+
+                command.Parameters.Add(returnValue);
+                await command.Connection.OpenAsync();
+                await command.ExecuteNonQueryAsync();
+
+                return (int)returnValue.Value;
+            }
         }
 
         public async Task<List<UkEeeCsvData>> SpgUKEEEDataByComplianceYear(int complianceYear)
