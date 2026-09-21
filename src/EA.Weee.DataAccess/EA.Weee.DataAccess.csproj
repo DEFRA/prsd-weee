@@ -203,6 +203,7 @@
     <Compile Include="StoredProcedure\EvidenceStoredProcedures.cs" />
     <Compile Include="StoredProcedure\IEvidenceStoredProcedures.cs" />
     <Compile Include="StoredProcedure\MissingProducerDataCsvData.cs" />
+    <Compile Include="StoredProcedure\SchemeDataExceedingRetentionPeriod.cs" />
     <Compile Include="StoredProcedure\TransferNoteData.cs" />
     <Compile Include="StoredProcedure\ObligationAndEvidenceProgressSummaryData.cs" />
     <Compile Include="StoredProcedure\ObligationEvidenceSummaryTotalsData.cs" />

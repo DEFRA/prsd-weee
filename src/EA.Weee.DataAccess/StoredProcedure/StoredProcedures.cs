@@ -1,12 +1,12 @@
 ﻿namespace EA.Weee.DataAccess.StoredProcedure
 {
-    using Domain.Admin.AatfReports;
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Data.Common;
     using System.Data.SqlClient;
     using System.Threading.Tasks;
+    using Domain.Admin.AatfReports;
 
     public class StoredProcedures : IStoredProcedures
     {
@@ -240,7 +240,7 @@
             return result;
         }
 
-        public async Task<List<ProducerEeeCsvData>> SpgProducerEeeCsvData(int complianceYear, Guid? schemeId, string obligationType, 
+        public async Task<List<ProducerEeeCsvData>> SpgProducerEeeCsvData(int complianceYear, Guid? schemeId, string obligationType,
             bool directRegistrantFilter, bool filterBySchemes)
         {
             var complianceYearParameter = new SqlParameter("@ComplianceYear", complianceYear);
@@ -257,6 +257,59 @@
                     filterByDirectRegistrant,
                     filterByScheme)
                 .ToListAsync();
+        }
+
+        public async Task<List<int>> SpgSchemeComplianceYearsExceedingRetentionPeriod()
+        {
+            return await context.Database
+                .SqlQuery<int>("[PCS].[spgSchemeComplianceYearsExceedingRetentionPeriod]")
+                .ToListAsync();
+        }
+
+        public async Task<List<string>> SpgSchemeNamesForComplianceYear(int? complianceYear)
+        {
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", (object)complianceYear ?? DBNull.Value);
+
+            return await context.Database
+                .SqlQuery<string>("[PCS].[spgSchemeNamesForComplianceYear] @ComplianceYear", complianceYearParameter)
+                .ToListAsync();
+        }
+
+        public async Task<List<SchemeDataExceedingRetentionPeriod>> SpgSchemeDataByNameAndComplianceYear(int? complianceYear, string schemeName)
+        {
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", SqlDbType.Int);
+            complianceYearParameter.Value = (object)complianceYear ?? DBNull.Value;
+            var schemeNameParameter = new SqlParameter("@SchemeName", SqlDbType.NVarChar, 70);
+            schemeNameParameter.Value = (object)schemeName ?? DBNull.Value;
+
+            return await context.Database
+                .SqlQuery<SchemeDataExceedingRetentionPeriod>("[PCS].[spgSchemeDataByNameAndComplianceYear] @ComplianceYear, @SchemeName",
+                    complianceYearParameter,
+                    schemeNameParameter)
+                .ToListAsync();
+        }
+
+        public async Task<int> SpgRemovePCSRecords(Guid schemeId, int complianceYear)
+        {
+            using (var command = context.Database.Connection.CreateCommand())
+            {
+                command.CommandText = "[PCS].[spgRemovePCSRecords] @SchemeId, @ComplianceYear";
+                command.CommandTimeout = 180;
+
+                command.Parameters.Add(new SqlParameter("@SchemeId", schemeId));
+                command.Parameters.Add(new SqlParameter("@ComplianceYear", complianceYear));
+
+                var returnValue = new SqlParameter
+                {
+                    Direction = ParameterDirection.ReturnValue
+                };
+
+                command.Parameters.Add(returnValue);
+                await command.Connection.OpenAsync();
+                await command.ExecuteNonQueryAsync();
+
+                return (int)returnValue.Value;
+            }
         }
 
         public async Task<List<UkEeeCsvData>> SpgUKEEEDataByComplianceYear(int complianceYear)
