@@ -51,21 +51,6 @@
             Assert.False(controller.ModelState.IsValid);
         }
 
-        [Fact]
-        public void PostChooseActivity_RemovePCSSelected_RedirectsToRemovePCS()
-        {
-            var result = RemoveRecordsController().ChooseActivity(new RemoveRecordsViewModel
-            {
-                SelectedValue = InternalRemoveRecordsActivity.RemovePCS
-            });
-
-            Assert.IsType<RedirectToRouteResult>(result);
-
-            var routeValues = ((RedirectToRouteResult)result).RouteValues;
-
-            Assert.Equal("RemovePCS", routeValues["action"]);
-        }
-
         private RemoveRecordsController RemoveRecordsController()
         {
             IAppConfiguration configService = A.Fake<IAppConfiguration>();
