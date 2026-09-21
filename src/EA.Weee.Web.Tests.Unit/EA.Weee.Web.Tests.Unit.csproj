@@ -406,6 +406,7 @@
     <Compile Include="Areas\Admin\Controllers\ProducerSubmissionControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ManageEvidenceNotesControllerForVoidTests.cs" />
     <Compile Include="Areas\Admin\Controllers\ObligationsControllerViewObligationAndEvidenceSummaryTests.cs" />
+    <Compile Include="Areas\Admin\Controllers\RemovePCSRecordsControllerTests.cs" />
     <Compile Include="Areas\Admin\Controllers\RemoveRecordsControllerTests.cs" />
     <Compile Include="Areas\Admin\Mapping\ToViewModel\ViewAllTransferNotesMapTests.cs" />
     <Compile Include="Areas\Admin\Mapping\ToViewModel\ViewObligationsAndEvidenceSummaryViewModelMapTests.cs" />

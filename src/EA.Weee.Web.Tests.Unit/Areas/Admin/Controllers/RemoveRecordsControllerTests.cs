@@ -1,7 +1,6 @@
 ﻿namespace EA.Weee.Web.Tests.Unit.Areas.Admin.Controllers
 {
     using System.Web.Mvc;
-    using Api.Client;
     using EA.Weee.Web.Areas.Admin.ViewModels.RemoveRecords;
     using FakeItEasy;
     using FluentAssertions;
@@ -13,11 +12,16 @@
 
     public class RemoveRecordsControllerTests
     {
-        private readonly IWeeeClient weeeClient;
-
         public RemoveRecordsControllerTests()
         {
-            weeeClient = A.Fake<IWeeeClient>();
+        }
+
+        private RemoveRecordsController RemoveRecordsController()
+        {
+            IAppConfiguration configService = A.Fake<IAppConfiguration>();
+            var controller = new RemoveRecordsController();
+            new HttpContextMocker().AttachToController(controller);
+            return controller;
         }
 
         [Fact]
@@ -49,14 +53,6 @@
             Assert.IsType<ViewResult>(result);
             Assert.Equal(model, ((ViewResult)(result)).Model);
             Assert.False(controller.ModelState.IsValid);
-        }
-
-        private RemoveRecordsController RemoveRecordsController()
-        {
-            IAppConfiguration configService = A.Fake<IAppConfiguration>();
-            var controller = new RemoveRecordsController();
-            new HttpContextMocker().AttachToController(controller);
-            return controller;
         }
     }
 }

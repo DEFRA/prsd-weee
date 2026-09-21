@@ -16,7 +16,7 @@
     public class RemovePCSRecordsController : AdminController
     {
         private readonly Func<IWeeeClient> apiClient;
-        private const int pageSize = 5;
+        private const int pageSize = 10;
         private readonly BreadcrumbService breadcrumb;
 
         public RemovePCSRecordsController(Func<IWeeeClient> apiClient, BreadcrumbService breadcrumb)
@@ -64,8 +64,8 @@
             using (var client = apiClient())
             {
                 var complianceYears = await GetAllYears(client);
-
                 var selectedYear = model.SelectedYear == "0" ? (int?)null : Convert.ToInt32(model.SelectedYear);
+
                 var selectedName = string.IsNullOrEmpty(model.SelectedScheme) || model.SelectedScheme == "All PCSs" ? null : model.SelectedScheme;
                 var schemeList = await GetSchemesForYear(client, null);
 
