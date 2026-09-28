@@ -74,5 +74,30 @@
 
             return result;
         }
+
+        public async Task<bool> CanOrganisationBeDeleted(Guid aatfId)
+        {
+            var aatf = await aatfDataAccess.GetDetails(aatfId);
+
+            var status = await getOrganisationDeletionStatus.Validate(aatf.Organisation.Id,
+                                                                      aatf.ComplianceYear,
+                                                                      aatf.FacilityType);
+
+            if (await aatfDataAccess.HasAatfOrganisationOtherAeOrAatf(aatf))
+            {
+                return false;
+            }
+
+            var hasReturns = status.HasFlag(CanOrganisationBeDeletedFlags.HasReturns);
+            var hasScheme = status.HasFlag(CanOrganisationBeDeletedFlags.HasScheme);
+            var hasMultipleOfFacility = status.HasFlag(CanOrganisationBeDeletedFlags.HasMultipleOfFacility);
+
+            if (hasReturns || hasScheme || hasMultipleOfFacility)
+            {
+                return true;
+            }
+
+            return true;
+        }
     }
 }

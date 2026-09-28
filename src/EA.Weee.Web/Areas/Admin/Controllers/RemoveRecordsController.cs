@@ -8,14 +8,12 @@
 
     public class RemoveRecordsController : AdminController
     {
-        public RemoveRecordsController()
-        {
-        }
+        private static readonly IList<string> PossibleActivities = new List<string> { InternalRemoveRecordsActivity.RemovePCS, InternalRemoveRecordsActivity.RemoveAATF, InternalRemoveRecordsActivity.RemoveAE };
 
         [HttpGet]
         public ActionResult ChooseActivity()
         {
-            RemoveRecordsViewModel viewModel = new RemoveRecordsViewModel();
+            var viewModel = new RemoveRecordsViewModel();
             PopulateViewModelPossibleValues(viewModel);
 
             return View(viewModel);
@@ -28,22 +26,32 @@
             if (!ModelState.IsValid)
             {
                 PopulateViewModelPossibleValues(viewModel);
+
                 return View(viewModel);
             }
+            return RedirectToActivity(viewModel.SelectedValue);
+        }
 
-            switch (viewModel.SelectedValue)
+        private ActionResult RedirectToActivity(string selectedValue)
+        {
+            switch (selectedValue)
             {
                 case InternalRemoveRecordsActivity.RemovePCS:
                     return RedirectToAction("Index", "RemovePCSRecords");
 
-                default:
-                    throw new NotSupportedException();
+                case InternalRemoveRecordsActivity.RemoveAATF:
+                    return RedirectToAction("Index", "RemoveAATFRecords");
+
+                case InternalRemoveRecordsActivity.RemoveAE:
+                    return RedirectToAction("Index", "RemoveAERecords");
+
+                default: throw new NotSupportedException($"Unsupported remove-records activity: {selectedValue}");
             }
         }
 
-        private void PopulateViewModelPossibleValues(RemoveRecordsViewModel viewModel)
+        private static void PopulateViewModelPossibleValues(RemoveRecordsViewModel viewModel)
         {
-            viewModel.PossibleValues = new List<string>() { InternalRemoveRecordsActivity.RemovePCS };
+            viewModel.PossibleValues = PossibleActivities;
         }
     }
 }

@@ -700,5 +700,35 @@
                    complianceYearParameter, quarterParameter, obligationTypeParameter)
                .ToListAsync();
         }
+
+        public async Task<int> SpgRemoveAATFRecords(Guid aatfId)
+        {
+            using (var command = context.Database.Connection.CreateCommand())
+            {
+                command.CommandText = "[AATF].[DeleteAatf]";
+                command.CommandType = CommandType.StoredProcedure;
+                command.CommandTimeout = 180;
+
+                command.Parameters.Add(
+                    new SqlParameter("@AatfId", SqlDbType.UniqueIdentifier)
+                    {
+                        Value = aatfId
+                    });
+
+                var returnValue = new SqlParameter
+                {
+                    ParameterName = "@ReturnValue",
+                    SqlDbType = SqlDbType.Int,
+                    Direction = ParameterDirection.ReturnValue
+                };
+
+                command.Parameters.Add(returnValue);
+
+                await command.Connection.OpenAsync();
+                await command.ExecuteNonQueryAsync();
+
+                return (int)returnValue.Value;
+            }
+        }
     }
 }
