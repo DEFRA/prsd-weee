@@ -1,11 +1,8 @@
 ﻿namespace EA.Weee.RequestHandlers.Aatf
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Linq;
-    using System.Linq.Expressions;
-    using System.Threading.Tasks;
+    using EA.Prsd.Core;
+    using EA.Prsd.Core.Domain;
+    using EA.Prsd.Core.Domain.Auditing;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.DataAccess;
@@ -13,20 +10,29 @@
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.DataReturns;
     using EA.Weee.RequestHandlers.Factories;
+    using System;
+    using System.Collections.Generic;
+    using System.Data.Entity;
+    using System.Linq;
+    using System.Linq.Expressions;
+    using System.Threading.Tasks;
 
     public class AatfDataAccess : IAatfDataAccess
     {
         private readonly WeeeContext context;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IQuarterWindowFactory quarterWindowFactory;
+        private readonly IUserContext userContext;
 
         public AatfDataAccess(WeeeContext context,
             IGenericDataAccess genericDataAccess,
-            IQuarterWindowFactory quarterWindowFactory)
+            IQuarterWindowFactory quarterWindowFactory,
+            IUserContext userContext)
         {
             this.context = context;
             this.genericDataAccess = genericDataAccess;
             this.quarterWindowFactory = quarterWindowFactory;
+            this.userContext = userContext;
         }
 
         public async Task<List<Aatf>> GetAatfsForOrganisation(Guid organisationId)
@@ -242,7 +248,7 @@
         {
             var latestAatf = await context.Aatfs
                 .Where(r => r.AatfId == aatfId)
-                .OrderByDescending(r => r.ComplianceYear).FirstOrDefaultAsync();                   
+                .OrderByDescending(r => r.ComplianceYear).FirstOrDefaultAsync();
 
             return latestAatf != null && latestAatf.Id.Equals(id);
         }
@@ -250,6 +256,21 @@
         public async Task<bool> HasEvidenceNotes(Guid aatfId)
         {
             return await context.Notes.AnyAsync(x => x.AatfId == aatfId);
+        }
+
+        public async Task RemoveAatfRetenctionDataById(Aatf aatf)
+        {
+            var resultVal = await context.StoredProcedures.SpgRemoveAATFRecords(aatf.Id);
+
+            if (resultVal == 0)
+            {
+                var userId = userContext.UserId;
+                var strOriginalValue = "{'AATFId':" + aatf.Id + ",'Name':" + aatf.Name + ",'ComplianceYear':" + aatf.ComplianceYear + "}";
+                var auditLog = new AuditLog(userId, SystemTime.UtcNow, EventType.Deleted, "[PCS].[RemoveAATFRecord]", aatf.Id, strOriginalValue, null);
+                context.Set<AuditLog>().Add(auditLog);
+
+                await context.SaveChangesAsync();
+            }
         }
     }
 }

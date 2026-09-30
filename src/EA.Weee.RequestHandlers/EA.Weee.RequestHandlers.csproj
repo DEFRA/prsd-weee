@@ -181,6 +181,13 @@
     <Compile Include="Admin\Obligations\GetSchemesWithObligationHandler.cs" />
     <Compile Include="Admin\Obligations\GetObligationComplianceYearsHandler.cs" />
     <Compile Include="Admin\AddPaymentDetailsHandler.cs" />
+    <Compile Include="Admin\RemoveAATFRecords\DeleteAnAatfByIdHandler.cs" />
+    <Compile Include="Admin\RemoveAATFRecords\GetAatfRetentionPeriodComplianceYearsDataAccess.cs" />
+    <Compile Include="Admin\RemoveAATFRecords\GetAatfRetentionPeriodComplianceYearsHandler.cs" />
+    <Compile Include="Admin\RemoveAATFRecords\GetAatfRetentionPeriodDataListHandler.cs" />
+    <Compile Include="Admin\RemoveAATFRecords\GetAatfsRetentionPeriodDataAccess.cs" />
+    <Compile Include="Admin\RemoveAATFRecords\IGetAatfRetentionPeriodComplianceYearsDataAccess.cs" />
+    <Compile Include="Admin\RemoveAATFRecords\IGetAatfsRetentionPeriodDataAccess.cs" />
     <Compile Include="Mappings\AdditionalCompanyDetailsAddressDataMap.cs" />
     <Compile Include="Mappings\AuthorisedRepresentitiveDataMap.cs" />
     <Compile Include="Mappings\AatfSimpleMapObject.cs" />
