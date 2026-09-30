@@ -1,12 +1,13 @@
 ﻿namespace EA.Weee.DataAccess.StoredProcedure
 {
+    using Domain.Admin.AatfReports;
     using System;
     using System.Collections.Generic;
     using System.Data;
     using System.Data.Common;
     using System.Data.SqlClient;
+    using System.Linq;
     using System.Threading.Tasks;
-    using Domain.Admin.AatfReports;
 
     public class StoredProcedures : IStoredProcedures
     {
@@ -275,18 +276,30 @@
                 .ToListAsync();
         }
 
-        public async Task<List<SchemeDataExceedingRetentionPeriod>> SpgSchemeDataByNameAndComplianceYear(int? complianceYear, string schemeName)
+        public async Task<List<SchemeDataExceedingRetentionPeriod>> SpgSchemeDataByNameAndComplianceYear(int? complianceYear, string schemeName, string userId)
         {
-            var complianceYearParameter = new SqlParameter("@ComplianceYear", SqlDbType.Int);
-            complianceYearParameter.Value = (object)complianceYear ?? DBNull.Value;
-            var schemeNameParameter = new SqlParameter("@SchemeName", SqlDbType.NVarChar, 70);
-            schemeNameParameter.Value = (object)schemeName ?? DBNull.Value;
+            var userCompetentAuthority = context.CompetentAuthorityUsers.SingleOrDefault(x => x.UserId == userId);
 
-            return await context.Database
-                .SqlQuery<SchemeDataExceedingRetentionPeriod>("[PCS].[spgSchemeDataByNameAndComplianceYear] @ComplianceYear, @SchemeName",
-                    complianceYearParameter,
-                    schemeNameParameter)
-                .ToListAsync();
+            var complianceYearParameter = new SqlParameter("@ComplianceYear", SqlDbType.Int)
+            {
+                Value = (object)complianceYear ?? DBNull.Value
+            };
+
+            var schemeNameParameter = new SqlParameter("@SchemeName", SqlDbType.NVarChar, 70)
+            {
+                Value = (object)schemeName ?? DBNull.Value
+            };
+
+            var competentAuthorityParameter = new SqlParameter("@CompetentAuthorityId", SqlDbType.UniqueIdentifier, 150)
+            {
+                Value = (object)userCompetentAuthority?.CompetentAuthorityId ?? DBNull.Value
+            };
+
+            return await context.Database.SqlQuery<SchemeDataExceedingRetentionPeriod>("[PCS].[spgSchemeDataByNameAndComplianceYear] @ComplianceYear, @SchemeName, @CompetentAuthorityId",
+                                                                                        complianceYearParameter,
+                                                                                        schemeNameParameter,
+                                                                                        competentAuthorityParameter)
+                                        .ToListAsync();
         }
 
         public async Task<int> SpgRemovePCSRecords(Guid schemeId, int complianceYear)

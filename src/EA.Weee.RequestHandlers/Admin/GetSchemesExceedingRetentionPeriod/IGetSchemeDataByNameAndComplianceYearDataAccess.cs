@@ -1,14 +1,12 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetSchemesExceedingRetentionPeriod
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Text;
-    using System.Threading.Tasks;
     using EA.Weee.DataAccess.StoredProcedure;
+    using EA.Weee.Requests;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public interface IGetSchemeDataByNameAndComplianceYearDataAccess
     {
-        Task<List<SchemeDataExceedingRetentionPeriod>> GetItemsAsync(int? complianceYear, string schemeName);
+        Task<List<SchemeDataExceedingRetentionPeriod>> GetItemsAsync(GetSchemeDataExceedingRetentionPeriodRequest request);
     }
 }

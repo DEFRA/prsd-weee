@@ -1,13 +1,10 @@
 ﻿namespace EA.Weee.RequestHandlers.Admin.GetSchemesExceedingRetentionPeriod
 {
-    using System;
-    using System.Collections.Generic;
-    using System.Data.Entity;
-    using System.Threading.Tasks;
-    using EA.Weee.Core.Constants;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.StoredProcedure;
-    using EA.Weee.RequestHandlers.Admin.GetSchemesExceedingRetentionPeriod;
+    using EA.Weee.Requests;
+    using System.Collections.Generic;
+    using System.Threading.Tasks;
 
     public class GetSchemeDataByNameAndComplianceYearDataAccess : IGetSchemeDataByNameAndComplianceYearDataAccess
     {
@@ -18,9 +15,9 @@
             this.context = context;
         }
 
-        public async Task<List<SchemeDataExceedingRetentionPeriod>> GetItemsAsync(int? complianceYear, string schemeName)
+        public async Task<List<SchemeDataExceedingRetentionPeriod>> GetItemsAsync(GetSchemeDataExceedingRetentionPeriodRequest request)
         {
-            return await context.StoredProcedures.SpgSchemeDataByNameAndComplianceYear(complianceYear, schemeName);
+            return await context.StoredProcedures.SpgSchemeDataByNameAndComplianceYear(request.ComplianceYear, request.SchemeName, request.UserId);
         }
     }
 }

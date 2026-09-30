@@ -10,10 +10,13 @@
 
         public string SchemeName { get; set; }
 
-        public GetSchemeDataExceedingRetentionPeriodRequest(int? complianceYear, string schemeName)
+        public string UserId { get; set; }
+
+        public GetSchemeDataExceedingRetentionPeriodRequest(int? complianceYear, string schemeName, string userId)
         {
             ComplianceYear = complianceYear;
             SchemeName = schemeName;
+            UserId = userId;
         }
     }
 }
