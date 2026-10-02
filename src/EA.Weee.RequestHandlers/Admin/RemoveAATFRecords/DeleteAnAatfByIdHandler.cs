@@ -2,13 +2,10 @@
 {
     using EA.Prsd.Core.Mediator;
     using EA.Weee.DataAccess;
-    using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.RequestHandlers.Aatf;
-    using EA.Weee.RequestHandlers.Admin.Aatf;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin.RemoveAATFRecords;
     using EA.Weee.Security;
-    using System;
     using System.Threading.Tasks;
 
     public class DeleteAnAatfByIdHandler : IRequestHandler<DeleteAnAatfById, bool>
@@ -16,20 +13,15 @@
         private readonly IWeeeAuthorization authorization;
         private readonly IAatfDataAccess aatfDataAccess;
         private readonly WeeeContext context;
-        private readonly IGetAatfDeletionStatus getAatfDeletionStatus;
-        private readonly IOrganisationDataAccess organisationDataAccess;
 
-        public DeleteAnAatfByIdHandler(IWeeeAuthorization authorization, IAatfDataAccess aatfDataAccess, WeeeContext context,
-                                       IGetAatfDeletionStatus getAatfDeletionStatus, IOrganisationDataAccess organisationDataAccess)
+        public DeleteAnAatfByIdHandler(IWeeeAuthorization authorization, IAatfDataAccess aatfDataAccess, WeeeContext context)
         {
             this.authorization = authorization;
             this.aatfDataAccess = aatfDataAccess;
             this.context = context;
-            this.getAatfDeletionStatus = getAatfDeletionStatus;
-            this.organisationDataAccess = organisationDataAccess;
         }
 
-        public async Task<bool> HandleAsync(DeleteAnAatfById message)
+        public async Task<bool> HandleAsync(DeleteAnAatfById deleteAnAatfById)
         {
             authorization.EnsureCanAccessInternalArea();
             authorization.EnsureUserInRole(Roles.InternalAdmin);
@@ -38,28 +30,17 @@
             {
                 try
                 {
-                    var canDeleteOrgDetails = await getAatfDeletionStatus.CanOrganisationBeDeleted(message.AatfId);
-                    var aatf = await aatfDataAccess.GetDetails(message.AatfId);
+                    var aatf = await aatfDataAccess.GetDetails(deleteAnAatfById.AatfId);
 
                     await aatfDataAccess.RemoveAatfRetenctionDataById(aatf);
 
-                    if (canDeleteOrgDetails)
-                    {
-                        await organisationDataAccess.Delete(aatf.OrganisationId);
-                    }
-
                     transaction.Commit();
                 }
-                catch (Exception ex)
+                catch
                 {
                     transaction.Rollback();
 
-                    if (ex.InnerException != null)
-                    {
-                        throw ex.InnerException;
-                    }
-
-                    throw;
+                    return false;
                 }
                 finally
                 {

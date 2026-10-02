@@ -709,25 +709,29 @@
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandTimeout = 180;
 
-                command.Parameters.Add(
-                    new SqlParameter("@AatfId", SqlDbType.UniqueIdentifier)
-                    {
-                        Value = aatfId
-                    });
-
-                var returnValue = new SqlParameter
+                command.Parameters.Add(new SqlParameter("@AatfId", SqlDbType.UniqueIdentifier)
                 {
-                    ParameterName = "@ReturnValue",
-                    SqlDbType = SqlDbType.Int,
+                    Value = aatfId
+                });
+
+                var returnValue = new SqlParameter("@ReturnValue", SqlDbType.Int)
+                {
                     Direction = ParameterDirection.ReturnValue
                 };
 
                 command.Parameters.Add(returnValue);
 
-                await command.Connection.OpenAsync();
+                // Important: attach the command to the existing EF transaction
+                command.Transaction = context.Database.CurrentTransaction?.UnderlyingTransaction;
+
+                if (command.Connection.State != ConnectionState.Open)
+                {
+                    await command.Connection.OpenAsync();
+                }
+
                 await command.ExecuteNonQueryAsync();
 
-                return (int)returnValue.Value;
+                return returnValue.Value == DBNull.Value ? 0 : Convert.ToInt32(returnValue.Value);
             }
         }
     }
