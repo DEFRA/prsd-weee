@@ -5,8 +5,6 @@
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Shared.Paging;
-    using EA.Weee.Requests;
-    using EA.Weee.Requests.Admin.Aatf;
     using EA.Weee.Requests.Admin.RemoveAATFRecords;
     using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
@@ -19,6 +17,7 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
+    [AuthorizeInternalClaims(Claims.InternalAdmin)]
     public class RemoveAATFRecordsController : AdminController
     {
         private readonly Func<IWeeeClient> apiClient;
