@@ -4,6 +4,7 @@
     using System.Threading.Tasks;
     using EA.Weee.DataAccess;
     using EA.Weee.DataAccess.StoredProcedure;
+    using EA.Weee.Requests;
 
     public class GetSchemeDataByNameAndComplianceYearDataAccess : IGetSchemeDataByNameAndComplianceYearDataAccess
     {
@@ -14,9 +15,9 @@
             this.context = context;
         }
 
-        public async Task<List<SchemeDataExceedingRetentionPeriod>> GetItemsAsync(int? complianceYear, string schemeName)
+        public async Task<List<SchemeDataExceedingRetentionPeriod>> GetItemsAsync(GetSchemeDataExceedingRetentionPeriodRequest request)
         {
-            return await context.StoredProcedures.SpgSchemeDataByNameAndComplianceYear(complianceYear, schemeName);
+            return await context.StoredProcedures.SpgSchemeDataByNameAndComplianceYear(request.ComplianceYear, request.SchemeName, request.UserId);
         }
     }
 }

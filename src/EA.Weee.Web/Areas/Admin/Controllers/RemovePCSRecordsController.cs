@@ -114,54 +114,25 @@
 
                 if (result == 0)
                 {
-                    return RedirectToAction("Deleted", new
-                    {
-                        schemeId = model.SchemeId,
-                        schemeName = model.PCSName,
-                        approvalNumber = model.ApprovalNumber,
-                        complianceYear = model.ComplianceYear
-                    });
+                    return RedirectToAction("Deleted", model);
                 }
                 else
                 {
-                    return RedirectToAction("DeleteFailure", new
-                    {
-                        schemeId = model.SchemeId,
-                        schemeName = model.PCSName,
-                        approvalNumber = model.ApprovalNumber,
-                        complianceYear = model.ComplianceYear
-                    });
+                    return RedirectToAction("DeleteFailure", model);
                 }
             }
         }
 
         [HttpGet]
-        public ActionResult Deleted(Guid schemeId, string schemeName, string approvalNumber, int complianceYear)
+        public ActionResult Deleted(RemovePCSRecordConfirmDeletionViewModel model)
         {
-            var model = GenerateRemovePCSRecordConfirmDeletion(schemeId, schemeName, approvalNumber, complianceYear);
-
             return View(model);
         }
 
         [HttpGet]
-        public ActionResult DeleteFailure(Guid schemeId, string schemeName, string approvalNumber, int complianceYear)
+        public ActionResult DeleteFailure(RemovePCSRecordConfirmDeletionViewModel model)
         {
-            var model = GenerateRemovePCSRecordConfirmDeletion(schemeId, schemeName, approvalNumber, complianceYear);
-
             return View(model);
-        }
-
-        private RemovePCSRecordConfirmDeletionViewModel GenerateRemovePCSRecordConfirmDeletion(Guid schemeId, string schemeName, string approvalNumber, int complianceYear)
-        {
-            var model = new RemovePCSRecordConfirmDeletionViewModel
-            {
-                SchemeId = schemeId,
-                ComplianceYear = complianceYear,
-                PCSName = schemeName,
-                ApprovalNumber = approvalNumber
-            };
-
-            return model;
         }
 
         private async Task SetBreadcrumb()
@@ -194,7 +165,8 @@
 
         private async Task<IPagedList<RemovePCSRowViewModel>> GetPCSResults(IWeeeClient client, int? selectedYear, string selectedName, int pageNumber)
         {
-            var request = new GetSchemeDataExceedingRetentionPeriodRequest(selectedYear, selectedName);
+            var userId = User.GetUserId();
+            var request = new GetSchemeDataExceedingRetentionPeriodRequest(selectedYear, selectedName, userId);
             var searchResults = await client.SendAsync(User.GetAccessToken(), request);
 
             var result = searchResults.OrderBy(r => r.ComplianceYear)

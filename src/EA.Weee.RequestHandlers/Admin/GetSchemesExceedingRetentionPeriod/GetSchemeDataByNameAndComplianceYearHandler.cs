@@ -24,7 +24,7 @@
         {
             authorization.EnsureCanAccessInternalArea();
 
-            List<SchemeDataExceedingRetentionPeriod> schemeData = await dataAccess.GetItemsAsync(request.ComplianceYear, request.SchemeName);
+            List<SchemeDataExceedingRetentionPeriod> schemeData = await dataAccess.GetItemsAsync(request);
 
             return schemeData;
         }
