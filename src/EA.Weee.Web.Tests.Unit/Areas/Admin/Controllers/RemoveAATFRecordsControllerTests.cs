@@ -76,24 +76,25 @@
         public async Task PostIndex_RemoveAATFRecords()
         {
             // Arrange
-            BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
-
             A.CallTo(() => apiClient.SendAsync(
-                A<string>._,
-                A<GetAatfRetentionPeriodComplianceYears>._))
+                    A<string>._,
+                    A<GetAatfRetentionPeriodComplianceYears>._))
                 .Returns(new List<int> { 2018, 2017, 2016 });
 
-            Func<IWeeeClient> weeeClientFunc = A.Fake<Func<IWeeeClient>>();
-            A.CallTo(() => weeeClientFunc()).Returns(apiClient);
-
-            RemoveAatfsViewModel model = new RemoveAatfsViewModel();
+            var model = new RemoveAatfsViewModel
+            {
+                AatfStatuses = new List<Core.AatfReturn.AatfStatus>(),
+                ComplianceYearList = new List<int> { 2018, 2017, 2016 }
+            };
 
             // Act
-            ActionResult result = await controller.Index(model, 1);
+            var result = await controller.Index(model, 1);
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Same(model, viewResult.Model);
+            var viewModel = Assert.IsType<RemoveAatfsViewModel>(viewResult.Model);
+
+            Assert.Equal(model.ComplianceYearList, viewModel.ComplianceYearList);
         }
 
         [Fact]
