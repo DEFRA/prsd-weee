@@ -1,0 +1,75 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Admin
+@using EA.Weee.Requests.Admin
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using EA.Weee.Web.Infrastructure.Paging
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.RemoveAATFRecords.RemoveAATFRecordConfirmViewModel
+@{
+    ViewBag.Title = "Confirm Deletion";
+}
+
+<header class="hgroup">
+    <h1 class="govuk-heading-l">
+        Are you sure you want to delete the following record?
+    </h1>
+</header>
+
+<div class="govuk-warning-text">
+    <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+    <strong class="govuk-warning-text__text">
+        <span class="govuk-visually-hidden">Warning</span>
+        Please note that deleting this record is permanent and cannot be undone.
+    </strong>
+</div>
+
+@using (Html.BeginForm("ConfirmDeletion", "RemoveAATFRecords", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    @Html.HiddenFor(m => m.AATFId)
+    @Html.HiddenFor(m => m.ComplianceYear)
+    @Html.HiddenFor(m => m.ApprovalNumber)
+    @Html.HiddenFor(m => m.Name)
+    @Html.HiddenFor(m => m.Status)
+
+    @Html.Gds().ValidationSummary()
+
+    <table class="govuk-table">
+        <caption class="govuk-table__caption govuk-table__caption--m">This table shows the PCS record selected for deletion.</caption>
+        <thead class="govuk-table__head">
+            <tr class="govuk-table__row">
+                <th scope="col" class="govuk-table__header">Name of AATF</th>
+                <th scope="col" class="govuk-table__header">Approval number</th>
+                <th scope="col" class="govuk-table__header">Compliance year</th>
+                <th scope="col" class="govuk-table__header">Status</th>
+            </tr>
+        </thead>
+        <tbody class="govuk-table__body">
+            <tr class="govuk-table__row">
+                <td class="govuk-table__cell">@Model.Name</td>
+                <td class="govuk-table__cell">@Model.ApprovalNumber</td>
+                <td class="govuk-table__cell">@Model.ComplianceYear</td>
+                <td class="govuk-table__cell">@Model.Status</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div>
+        <table class="govuk-table govuk-!-width-one-quarter buttons">
+            <tbody class="govuk-table__body">
+                <tr class="govuk-table__row">
+                    <td>
+                        @(this.WeeeGds().Submit("Confirm"))
+                    </td>
+                    <td>
+                        <div class="left-cleared">
+                            @Html.ActionLink("Cancel", "Index", null, new { @class = "govuk-button cancel" })
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+}

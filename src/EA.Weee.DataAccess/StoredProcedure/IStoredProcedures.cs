@@ -72,5 +72,7 @@
         Task<List<AatfAeDetailsData>> GetAatfAeDetailsCsvData(int complianceYear, int facilityType, Guid? authority, Guid? area, Guid? panArea);
 
         Task<List<PcsAatfComparisonDataCsvData>> GetPcsAatfComparisonDataCsvData(int complianceYear, int? quarter, string obligationType);
+
+        Task<int> SpgRemoveAATFRecords(Guid aatfId);
     }
 }
