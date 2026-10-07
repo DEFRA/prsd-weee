@@ -561,6 +561,7 @@
     <Compile Include="Areas\Admin\Controllers\RemovePCSRecordsController.cs" />
     <Compile Include="Areas\Admin\Controllers\RemoveRecordsController.cs" />
     <Compile Include="Areas\Admin\Filters\AdminSmallProducerSubmissionSubmittedContextAttribute.cs" />
+    <Compile Include="Areas\Admin\RemoveAERecordsController.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmReturnViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\OrganisationIdViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\PaymentDetailsViewModel.cs" />
@@ -1234,6 +1235,7 @@
     <Content Include="Areas\Admin\Views\RemoveAATFRecords\ConfirmDeletion.cshtml" />
     <Content Include="Areas\Admin\Views\RemoveAATFRecords\Deleted.cshtml" />
     <Content Include="Areas\Admin\Views\RemoveAATFRecords\DeleteFailure.cshtml" />
+    <Content Include="Areas\Admin\Views\RemoveAERecords\Index.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />

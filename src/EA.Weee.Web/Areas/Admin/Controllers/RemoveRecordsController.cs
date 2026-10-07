@@ -11,7 +11,8 @@
         private static readonly IList<string> PossibleActivities = new List<string>
         {
             InternalRemoveRecordsActivity.RemovePCS,
-            InternalRemoveRecordsActivity.RemoveAATF
+            InternalRemoveRecordsActivity.RemoveAATF,
+            InternalRemoveRecordsActivity.RemoveAE
         };
 
         [HttpGet]
