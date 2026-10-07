@@ -41,7 +41,7 @@
             else
             {
                 // No year supplied - show current year and previous 6 years
-                var startYear = DateTime.UtcNow.Year - 5;
+                var startYear = DateTime.UtcNow.Year - 7;
 
                 query = query.Where(x => x.ComplianceYear <= startYear);
             }
