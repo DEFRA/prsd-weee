@@ -8,7 +8,11 @@
 
     public class RemoveRecordsController : AdminController
     {
-        private static readonly IList<string> PossibleActivities = new List<string> { InternalRemoveRecordsActivity.RemovePCS, InternalRemoveRecordsActivity.RemoveAATF, InternalRemoveRecordsActivity.RemoveAE };
+        private static readonly IList<string> PossibleActivities = new List<string>
+        {
+            InternalRemoveRecordsActivity.RemovePCS,
+            InternalRemoveRecordsActivity.RemoveAATF
+        };
 
         [HttpGet]
         public ActionResult ChooseActivity()
