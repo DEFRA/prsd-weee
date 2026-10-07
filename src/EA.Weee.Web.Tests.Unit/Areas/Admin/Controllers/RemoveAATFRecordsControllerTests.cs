@@ -3,11 +3,9 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.Admin.RemoveAATFRecords;
-    using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.RemoveAATFRecords;
-    using EA.Weee.Web.Filters;
     using EA.Weee.Web.Services;
     using FakeItEasy;
     using FluentAssertions;
@@ -37,12 +35,6 @@
         {
             typeof(AatfController).Should().BeDerivedFrom<AdminController>();
         }
-
-        //[Fact]
-        //public void ControllerMustHaveAuthorizeClaimsAttribute()
-        //{
-        //    typeof(RemoveAATFRecordsController).Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
-        //}
 
         [Fact]
         public async Task GetIndex_RemoveAATFRecords()
