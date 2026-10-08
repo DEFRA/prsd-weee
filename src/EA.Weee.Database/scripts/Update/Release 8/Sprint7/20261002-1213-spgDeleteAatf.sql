@@ -199,17 +199,25 @@ BEGIN
 
 		------------------------------------------------------------
 		-- 17. Delete Return
-		-- Only delete Return if no other AATF references it.
+		-- Only delete Return if:
+		--   1. No other AATF references it
+		--   2. No other Return references it as ParentId
 		------------------------------------------------------------
 		DELETE R
-		FROM [AATF].[Return] R
-		INNER JOIN @ReturnIds RI ON R.Id = RI.ReturnId
-		WHERE NOT EXISTS
-		(
-			SELECT 1
-			FROM [AATF].[ReturnAatf] RA
-			WHERE RA.ReturnId = R.Id
-		);
+			FROM [AATF].[Return] R
+			INNER JOIN @ReturnIds RI ON R.Id = RI.ReturnId
+			WHERE NOT EXISTS
+			(
+				SELECT 1
+				FROM [AATF].[ReturnAatf] RA
+				WHERE RA.ReturnId = R.Id
+			)
+			AND NOT EXISTS
+			(
+				SELECT 1
+				FROM [AATF].[Return] ChildReturn
+				WHERE ChildReturn.ParentId = R.Id
+			);
 
 		------------------------------------------------------------
 		-- 18. Delete AATF

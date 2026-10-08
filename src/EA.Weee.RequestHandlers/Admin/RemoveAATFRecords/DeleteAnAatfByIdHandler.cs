@@ -5,7 +5,6 @@
     using EA.Weee.RequestHandlers.Aatf;
     using EA.Weee.RequestHandlers.Security;
     using EA.Weee.Requests.Admin.RemoveAATFRecords;
-    using EA.Weee.Security;
     using System.Threading.Tasks;
 
     public class DeleteAnAatfByIdHandler : IRequestHandler<DeleteAnAatfById, bool>
@@ -24,7 +23,6 @@
         public async Task<bool> HandleAsync(DeleteAnAatfById deleteAnAatfById)
         {
             authorization.EnsureCanAccessInternalArea();
-            authorization.EnsureUserInRole(Roles.InternalAdmin);
 
             using (var transaction = context.Database.BeginTransaction())
             {

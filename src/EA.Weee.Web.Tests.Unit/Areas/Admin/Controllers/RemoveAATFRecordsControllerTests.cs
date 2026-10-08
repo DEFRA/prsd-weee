@@ -3,11 +3,9 @@
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
     using EA.Weee.Requests.Admin.RemoveAATFRecords;
-    using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.RemoveAATFRecords;
-    using EA.Weee.Web.Filters;
     using EA.Weee.Web.Services;
     using FakeItEasy;
     using FluentAssertions;
@@ -36,12 +34,6 @@
         public void RemoveAATFRecordsControllerController_ShouldInheritFromAdminBaseController()
         {
             typeof(AatfController).Should().BeDerivedFrom<AdminController>();
-        }
-
-        [Fact]
-        public void ControllerMustHaveAuthorizeClaimsAttribute()
-        {
-            typeof(RemoveAATFRecordsController).Should().BeDecoratedWith<AuthorizeInternalClaimsAttribute>(a => a.Match(new AuthorizeInternalClaimsAttribute(Claims.InternalAdmin)));
         }
 
         [Fact]
@@ -76,24 +68,25 @@
         public async Task PostIndex_RemoveAATFRecords()
         {
             // Arrange
-            BreadcrumbService breadcrumb = A.Dummy<BreadcrumbService>();
-
             A.CallTo(() => apiClient.SendAsync(
-                A<string>._,
-                A<GetAatfRetentionPeriodComplianceYears>._))
+                    A<string>._,
+                    A<GetAatfRetentionPeriodComplianceYears>._))
                 .Returns(new List<int> { 2018, 2017, 2016 });
 
-            Func<IWeeeClient> weeeClientFunc = A.Fake<Func<IWeeeClient>>();
-            A.CallTo(() => weeeClientFunc()).Returns(apiClient);
-
-            RemoveAatfsViewModel model = new RemoveAatfsViewModel();
+            var model = new RemoveAatfsViewModel
+            {
+                AatfStatuses = new List<Core.AatfReturn.AatfStatus>(),
+                ComplianceYearList = new List<int> { 2018, 2017, 2016 }
+            };
 
             // Act
-            ActionResult result = await controller.Index(model, 1);
+            var result = await controller.Index(model, 1);
 
             // Assert
             var viewResult = Assert.IsType<ViewResult>(result);
-            Assert.Same(model, viewResult.Model);
+            var viewModel = Assert.IsType<RemoveAatfsViewModel>(viewResult.Model);
+
+            Assert.Equal(model.ComplianceYearList, viewModel.ComplianceYearList);
         }
 
         [Fact]

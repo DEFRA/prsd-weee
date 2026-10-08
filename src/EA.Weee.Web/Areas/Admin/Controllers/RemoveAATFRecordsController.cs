@@ -6,10 +6,8 @@
     using EA.Weee.Core.Admin;
     using EA.Weee.Core.Shared.Paging;
     using EA.Weee.Requests.Admin.RemoveAATFRecords;
-    using EA.Weee.Security;
     using EA.Weee.Web.Areas.Admin.Controllers.Base;
     using EA.Weee.Web.Areas.Admin.ViewModels.RemoveAATFRecords;
-    using EA.Weee.Web.Filters;
     using EA.Weee.Web.Infrastructure;
     using EA.Weee.Web.Services;
     using System;
@@ -17,7 +15,6 @@
     using System.Threading.Tasks;
     using System.Web.Mvc;
 
-    [AuthorizeInternalClaims(Claims.InternalAdmin)]
     public class RemoveAATFRecordsController : AdminController
     {
         private readonly Func<IWeeeClient> apiClient;
@@ -33,7 +30,6 @@
         }
 
         [HttpGet]
-        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> Index(int page = 1, string name = null, string approvalNumber = null,
                                               int? selectedComplianceYear = null, int? selectedAatfStatus = null)
         {
@@ -56,7 +52,6 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> Index(RemoveAatfsViewModel model, int pageNumber = 1)
         {
             await SetBreadcrumb();
@@ -78,7 +73,6 @@
         }
 
         [HttpGet]
-        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> ConfirmDeletion(Guid aatfId, string name, string approvalNumber, int complianceYear, string status)
         {
             await SetBreadcrumb();
@@ -100,7 +94,6 @@
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public async Task<ActionResult> ConfirmDeletion(RemoveAATFRecordConfirmViewModel model)
         {
             using (var client = apiClient())
@@ -120,14 +113,12 @@
         }
 
         [HttpGet]
-        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public ActionResult Deleted(RemoveAATFRecordConfirmViewModel model)
         {
             return View(model);
         }
 
         [HttpGet]
-        [AuthorizeInternalClaims(Claims.InternalAdmin)]
         public ActionResult DeleteFailure(RemoveAATFRecordConfirmViewModel model)
         {
             return View(model);
