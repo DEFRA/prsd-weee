@@ -5,22 +5,23 @@
 @using EA.Weee.Web.Infrastructure.Paging
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.RemoveAATFRecords.RemoveAATFRecordConfirmViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.RemoveAATFOrAeRecords.RemoveAatfOrAeRecordConfirmViewModel
 @{
-    ViewBag.Title = "Delete Failure";
+    ViewBag.Title = "Record Deleted";
+    var facilityType = Model.FacilityType.ToString().ToUpperInvariant();
 }
 
-<div class="govuk-panel govuk-panel--confirmation" style="background-color: #ca3535!important">
+<div class="govuk-panel govuk-panel--confirmation">
     <div class="govuk-panel__body">
-        The following AATF record remains undeleted in the WEEE Online service. Please contact the system administrator.
+        The following @facilityType record has been deleted from the WEEE Online service
     </div>
 </div>
 
 <table class="govuk-table">
-    <caption class="govuk-table__caption govuk-table__caption--m">This table shows the AATF record selected for deletion.</caption>
+    <caption class="govuk-table__caption govuk-table__caption--m">This table shows the @facilityType record selected for deletion.</caption>
     <thead class="govuk-table__head">
         <tr class="govuk-table__row">
-            <th scope="col" class="govuk-table__header">Name of AATF</th>
+            <th scope="col" class="govuk-table__header">Name of @facilityType</th>
             <th scope="col" class="govuk-table__header">Approval number</th>
             <th scope="col" class="govuk-table__header">Compliance year</th>
             <th scope="col" class="govuk-table__header">Status</th>
@@ -37,5 +38,5 @@
 </table>
 
 <p>
-    @Html.ActionLink("Go to Remove AATF Records", "Index")
+    @Html.ActionLink("Go to Remove " + facilityType + " Records", "Index", new { facilityType = Model.FacilityType })
 </p>

@@ -118,18 +118,21 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="BodyTextDesc1" xml:space="preserve">
-    <value>The AATF records displayed have exceeded the 7-year retention period and are now available for deletion from WEEE Online.</value>
+    <value>The {0} records displayed have exceeded the 7-year retention period and are now available for deletion from WEEE Online.</value>
   </data>
   <data name="BodyTextDesc2" xml:space="preserve">
-    <value>The AATF information to be deleted from both the internal and external services.</value>
+    <value>The {0} information to be deleted from both the internal and external services.</value>
   </data>
   <data name="BodyTextDesc3" xml:space="preserve">
     <value>Upon clicking 'Delete' you will be asked if you wish to confirm the deletion</value>
   </data>
   <data name="Header" xml:space="preserve">
-    <value>Remove AATF records</value>
+    <value>Remove {0} records</value>
+  </data>
+  <data name="NameOfLabel" xml:space="preserve">
+    <value>Name Of {0}</value>
   </data>
   <data name="Title" xml:space="preserve">
-    <value>Remove AATF records</value>
+    <value>Remove {0} records</value>
   </data>
 </root>

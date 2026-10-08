@@ -5,9 +5,10 @@
 @using EA.Weee.Web.Infrastructure.Paging
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
-@model EA.Weee.Web.Areas.Admin.ViewModels.RemoveAATFRecords.RemoveAATFRecordConfirmViewModel
+@model EA.Weee.Web.Areas.Admin.ViewModels.RemoveAATFOrAeRecords.RemoveAatfOrAeRecordConfirmViewModel
 @{
     ViewBag.Title = "Confirm Deletion";
+    var facilityType = Model.FacilityType.ToString().ToUpperInvariant();
 }
 
 <header class="hgroup">
@@ -24,7 +25,7 @@
     </strong>
 </div>
 
-@using (Html.BeginForm("ConfirmDeletion", "RemoveAATFRecords", FormMethod.Post))
+@using (Html.BeginForm("ConfirmDeletion", "RemoveAatfOrAeRecords", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
 
@@ -33,14 +34,15 @@
     @Html.HiddenFor(m => m.ApprovalNumber)
     @Html.HiddenFor(m => m.Name)
     @Html.HiddenFor(m => m.Status)
+    @Html.HiddenFor(m => m.FacilityType)
 
     @Html.Gds().ValidationSummary()
 
     <table class="govuk-table">
-        <caption class="govuk-table__caption govuk-table__caption--m">This table shows the AATF record selected for deletion.</caption>
+        <caption class="govuk-table__caption govuk-table__caption--m">This table shows the @facilityType record selected for deletion.</caption>
         <thead class="govuk-table__head">
             <tr class="govuk-table__row">
-                <th scope="col" class="govuk-table__header">Name of AATF</th>
+                <th scope="col" class="govuk-table__header">Name of @facilityType</th>
                 <th scope="col" class="govuk-table__header">Approval number</th>
                 <th scope="col" class="govuk-table__header">Compliance year</th>
                 <th scope="col" class="govuk-table__header">Status</th>
@@ -65,7 +67,7 @@
                     </td>
                     <td>
                         <div class="left-cleared">
-                            @Html.ActionLink("Cancel", "Index", null, new { @class = "govuk-button cancel" })
+                            @Html.ActionLink("Cancel", "Index", new { facilityType = Model.FacilityType }, new { @class = "govuk-button cancel" })
                         </div>
                     </td>
                 </tr>

@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.RequestHandlers.Admin.RemoveAATFRecords
+﻿namespace EA.Weee.RequestHandlers.Admin.RemoveAATFOrAeRecords
 {
     using Domain.AatfReturn;
     using EA.Weee.Core.Admin;
@@ -9,19 +9,21 @@
     using System.Linq;
     using System.Threading.Tasks;
 
-    internal class GetAatfsRetentionPeriodDataAccess : IGetAatfsRetentionPeriodDataAccess
+    internal class GetAatfOrAeRetentionPeriodDataAccess : IGetAatfOrAeRetentionPeriodDataAccess
     {
         private readonly WeeeContext context;
-        public GetAatfsRetentionPeriodDataAccess(WeeeContext context)
+        public GetAatfOrAeRetentionPeriodDataAccess(WeeeContext context)
         {
             this.context = context;
         }
 
-        public async Task<List<Aatf>> GetFilteredAatfs(RemoveAATFFilter filter)
+        public async Task<List<Aatf>> GetFilteredAatfs(RemoveAatfOrAeFilter filter)
         {
             var userCompetentAuthority = context.CompetentAuthorityUsers.Where(x => x.UserId == filter.UserId).SingleOrDefault();
+            var facilityTypeVal = (filter.FacilityType == Core.AatfReturn.FacilityType.Aatf) ? 1 : 2;
 
-            var query = context.Aatfs.Where(x => x.CompetentAuthority.Id.Equals(userCompetentAuthority.CompetentAuthorityId) && x.FacilityType.Value.Equals(1));
+            var query = context.Aatfs.Where(x => x.CompetentAuthority.Id.Equals(userCompetentAuthority.CompetentAuthorityId) &&
+                                                 x.FacilityType.Value.Equals(facilityTypeVal));
 
             if (!string.IsNullOrWhiteSpace(filter.Name))
             {
@@ -41,7 +43,7 @@
             else
             {
                 // No year supplied - show current year and previous 6 years
-                var startYear = DateTime.UtcNow.Year - 7;
+                var startYear = DateTime.UtcNow.Year - filter.RetenctionPeriod;
 
                 query = query.Where(x => x.ComplianceYear <= startYear);
             }

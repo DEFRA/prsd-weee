@@ -557,17 +557,16 @@
       <DependentUpon>AatfResources.resx</DependentUpon>
     </Compile>
     <Compile Include="Areas\Admin\Controllers\Base\AdminBreadcrumbBaseController.cs" />
-    <Compile Include="Areas\Admin\Controllers\RemoveAATFRecordsController.cs" />
+    <Compile Include="Areas\Admin\Controllers\RemoveAatfOrAeRecordsController.cs" />
     <Compile Include="Areas\Admin\Controllers\RemovePCSRecordsController.cs" />
     <Compile Include="Areas\Admin\Controllers\RemoveRecordsController.cs" />
     <Compile Include="Areas\Admin\Filters\AdminSmallProducerSubmissionSubmittedContextAttribute.cs" />
-    <Compile Include="Areas\Admin\RemoveAERecordsController.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmReturnViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\OrganisationIdViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\PaymentDetailsViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ReturnedViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\RemoveAATFRecords\RemoveAATFRecordConfirmViewModel.cs" />
-    <Compile Include="Areas\Admin\ViewModels\RemoveAATFRecords\RemoveAatfsViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\RemoveAatfOrAeRecords\RemoveAatfOrAeRecordConfirmViewModel.cs" />
+    <Compile Include="Areas\Admin\ViewModels\RemoveAatfOrAeRecords\RemoveAatfOrAeViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\RemovePCSRecords\RemovePCSRecordConfirmDeletionViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\RemovePCSRecords\RemovePCSRecordsListViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\RemovePCSRecords\RemovePCSRecordsViewModel.cs" />
@@ -576,7 +575,7 @@
     <Compile Include="Areas\Admin\ViewModels\RemoveRecords\InternalRemoveRecordsActivity.cs" />
     <Compile Include="Areas\Admin\ViewModels\SchemeReports\ProducersDataViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\SchemeReports\ProducersDataViewModelBase.cs" />
-    <Compile Include="Areas\Admin\Views\RemoveAATFRecords\Index.Designer.cs">
+    <Compile Include="Areas\Admin\Views\RemoveAatfOrAeRecords\Index.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>Index.resx</DependentUpon>
@@ -1231,11 +1230,10 @@
     <Content Include="Areas\Admin\Views\RemovePCSRecords\ConfirmDeletion.cshtml" />
     <Content Include="Areas\Admin\Views\RemovePCSRecords\Deleted.cshtml" />
     <Content Include="Areas\Admin\Views\RemovePCSRecords\DeleteFailure.cshtml" />
-    <Content Include="Areas\Admin\Views\RemoveAATFRecords\Index.cshtml" />
-    <Content Include="Areas\Admin\Views\RemoveAATFRecords\ConfirmDeletion.cshtml" />
-    <Content Include="Areas\Admin\Views\RemoveAATFRecords\Deleted.cshtml" />
-    <Content Include="Areas\Admin\Views\RemoveAATFRecords\DeleteFailure.cshtml" />
-    <Content Include="Areas\Admin\Views\RemoveAERecords\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\RemoveAatfOrAeRecords\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\RemoveAatfOrAeRecords\ConfirmDeletion.cshtml" />
+    <Content Include="Areas\Admin\Views\RemoveAatfOrAeRecords\Deleted.cshtml" />
+    <Content Include="Areas\Admin\Views\RemoveAatfOrAeRecords\DeleteFailure.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />
@@ -2299,7 +2297,7 @@
       <LastGenOutput>AatfResources.Designer.cs</LastGenOutput>
       <CustomToolNamespace>Resources.Aatf</CustomToolNamespace>
     </EmbeddedResource>
-    <EmbeddedResource Include="Areas\Admin\Views\RemoveAATFRecords\Index.resx">
+    <EmbeddedResource Include="Areas\Admin\Views\RemoveAatfOrAeRecords\Index.resx">
       <Generator>PublicResXFileCodeGenerator</Generator>
       <LastGenOutput>Index.Designer.cs</LastGenOutput>
     </EmbeddedResource>

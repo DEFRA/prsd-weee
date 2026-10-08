@@ -1,10 +1,11 @@
-﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.RemoveAATFRecords
+﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.RemoveAATFOrAeRecords
 {
+    using EA.Weee.Core.AatfReturn;
     using System;
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
 
-    public class RemoveAATFRecordConfirmViewModel
+    public class RemoveAatfOrAeRecordConfirmViewModel
     {
         public Guid AATFId { get; set; }
 
@@ -19,5 +20,7 @@
 
         [DisplayName("Status")]
         public string Status { get; set; }
+
+        public FacilityType FacilityType { get; set; }
     }
 }
