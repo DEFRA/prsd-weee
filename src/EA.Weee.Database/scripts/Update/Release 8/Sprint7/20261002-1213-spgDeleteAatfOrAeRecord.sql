@@ -1,9 +1,9 @@
-﻿/****** Object:  StoredProcedure [AATF].[DeleteAatf]    Script Date: 02/10/2026 11:11:03 ******/
+﻿/****** Object:  StoredProcedure [AATF].[DeleteAatfOrAeRecord]    Script Date: 02/10/2026 11:11:03 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE OR ALTER PROCEDURE [AATF].[DeleteAatf]
+CREATE OR ALTER PROCEDURE [AATF].[DeleteAatfOrAeRecord]
 	@AatfId UNIQUEIDENTIFIER
 AS
 BEGIN
