@@ -241,6 +241,7 @@
     <Compile Include="Admin\Aatf\DeleteAatfHandlerTests.cs" />
     <Compile Include="Admin\Aatf\GetAatfDeletionStatusTests.cs" />
     <Compile Include="Admin\Aatf\GetOrganisationDeletionStatusTests.cs" />
+    <Compile Include="Admin\DeleteAatfOrAeByIdHandlerTests.cs" />
     <Compile Include="Admin\DirectRegistrants\GetSmallProducerSubmissionByRegistrationNumberHandlerTests.cs" />
     <Compile Include="Admin\DirectRegistrants\ReturnSmallProducerSubmissionHandlerTests.cs" />
     <Compile Include="Admin\GetActiveComplianceYears\GetAatfActiveComplianceYearsHandlerTests.cs" />

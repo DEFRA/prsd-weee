@@ -4,6 +4,7 @@
     using System.Collections.Generic;
     using System.Web.Mvc;
     using Base;
+    using EA.Weee.Core.AatfReturn;
     using EA.Weee.Web.Areas.Admin.ViewModels.RemoveRecords;
 
     public class RemoveRecordsController : AdminController
@@ -11,7 +12,8 @@
         private static readonly IList<string> PossibleActivities = new List<string>
         {
             InternalRemoveRecordsActivity.RemovePCS,
-            InternalRemoveRecordsActivity.RemoveAATF
+            InternalRemoveRecordsActivity.RemoveAATF,
+            InternalRemoveRecordsActivity.RemoveAE
         };
 
         [HttpGet]
@@ -44,10 +46,10 @@
                     return RedirectToAction("Index", "RemovePCSRecords");
 
                 case InternalRemoveRecordsActivity.RemoveAATF:
-                    return RedirectToAction("Index", "RemoveAATFRecords");
+                    return RedirectToAction("Index", "RemoveAatfOrAeRecords", new { facilityType = FacilityType.Aatf });
 
                 case InternalRemoveRecordsActivity.RemoveAE:
-                    return RedirectToAction("Index", "RemoveAERecords");
+                    return RedirectToAction("Index", "RemoveAatfOrAeRecords", new { facilityType = FacilityType.Ae });
 
                 default: throw new NotSupportedException($"Unsupported remove-records activity: {selectedValue}");
             }

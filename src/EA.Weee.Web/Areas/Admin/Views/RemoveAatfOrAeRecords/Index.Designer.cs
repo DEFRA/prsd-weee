@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace EA.Weee.Web.Areas.Admin.Views.RemoveAATFRecords {
+namespace EA.Weee.Web.Areas.Admin.Views.RemoveAatfOrAeRecords {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace EA.Weee.Web.Areas.Admin.Views.RemoveAATFRecords {
         public static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("EA.Weee.Web.Areas.Admin.Views.RemoveAATFRecords.Index", typeof(Index).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("EA.Weee.Web.Areas.Admin.Views.RemoveAatfOrAeRecords.Index", typeof(Index).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,7 +61,7 @@ namespace EA.Weee.Web.Areas.Admin.Views.RemoveAATFRecords {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The AATF records displayed have exceeded the 7-year retention period and are now available for deletion from WEEE Online..
+        ///   Looks up a localized string similar to The {0} records displayed have exceeded the 7-year retention period and are now available for deletion from WEEE Online..
         /// </summary>
         public static string BodyTextDesc1 {
             get {
@@ -70,7 +70,7 @@ namespace EA.Weee.Web.Areas.Admin.Views.RemoveAATFRecords {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The AATF information to be deleted from both the internal and external services..
+        ///   Looks up a localized string similar to The {0} information to be deleted from both the internal and external services..
         /// </summary>
         public static string BodyTextDesc2 {
             get {
@@ -88,7 +88,7 @@ namespace EA.Weee.Web.Areas.Admin.Views.RemoveAATFRecords {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remove AATF records.
+        ///   Looks up a localized string similar to Remove {0} records.
         /// </summary>
         public static string Header {
             get {
@@ -97,7 +97,16 @@ namespace EA.Weee.Web.Areas.Admin.Views.RemoveAATFRecords {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Remove AATF records.
+        ///   Looks up a localized string similar to Name Of {0}.
+        /// </summary>
+        public static string NameOfLabel {
+            get {
+                return ResourceManager.GetString("NameOfLabel", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove {0} records.
         /// </summary>
         public static string Title {
             get {

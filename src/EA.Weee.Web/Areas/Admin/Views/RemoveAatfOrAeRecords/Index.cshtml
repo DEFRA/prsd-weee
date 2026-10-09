@@ -5,10 +5,11 @@
 @using EA.Weee.Web.Infrastructure.Paging
 @using EA.Weee.Web.RazorHelpers
 @using MvcNavigationHelpers
-@using Resource = EA.Weee.Web.Areas.Admin.Views.RemoveAATFRecords.Index
-@model EA.Weee.Web.Areas.Admin.ViewModels.RemoveAATFRecords.RemoveAatfsViewModel
+@using Resource = EA.Weee.Web.Areas.Admin.Views.RemoveAatfOrAeRecords.Index
+@model EA.Weee.Web.Areas.Admin.ViewModels.RemoveAATFOrAeRecords.RemoveAatfOrAeViewModel
 @{
-    ViewBag.Title = Resource.Title;
+    ViewBag.Title = @Html.Raw(string.Format(Resource.Title, Model.FacilityType.ToString().ToUpperInvariant()));
+    var facilityType = Model.FacilityType.ToString().ToUpperInvariant();
 }
 
 <div class="govuk-grid-row" style="margin-top: 30px;">
@@ -19,31 +20,33 @@
 
 <header class="hgroup">
     <h1 class="govuk-heading-l" style="margin-top: 0px;">
-        @Resource.Header
+        @Html.Raw(string.Format(Resource.Title, facilityType))
     </h1>
 </header>
 
 <p class="govuk-body">
-    @Resource.BodyTextDesc1
+    @Html.Raw(string.Format(Resource.BodyTextDesc1, facilityType))
 </p>
 <p class="govuk-body">
-    @Resource.BodyTextDesc2
+    @Html.Raw(string.Format(Resource.BodyTextDesc2, facilityType))
 </p>
 
 <p class="govuk-body">
     @Resource.BodyTextDesc3
 </p>
 
-@using (Html.BeginForm(actionName: "Index", controllerName: "RemoveAATFRecords", method: FormMethod.Post))
+@using (Html.BeginForm(actionName: "Index", controllerName: "RemoveAatfOrAeRecords", method: FormMethod.Post))
 {
     <div class="filter" style=" border: 0px solid #fff !important">
         @Html.AntiForgeryToken()
+        @Html.HiddenFor(m => m.FacilityType)
+        @Html.HiddenFor(m => m.RetentionPeriod)
 
         <div class="govuk-label">Filter by:</div>
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
                 <div class="govuk-form-group">
-                    <Label class="govuk-label form-label" for="Filter_Name">Name of AATF</Label>
+                    <Label class="govuk-label form-label" for="Filter_Name">@Html.Raw(string.Format(Resource.NameOfLabel, facilityType))</Label>
                     @Html.TextBoxFor(m => m.Name, new { @class = "govuk-!-width-three-quarters form-control govuk-input" })
                 </div>
             </div>
@@ -78,10 +81,8 @@
         <div class="govuk-grid-row">
             <div class="govuk-grid-column-one-half">
                 <div class="govuk-form-group govuk-button-group" style="margin-top: 30px">
-
                     @this.WeeeGds().Button("Filter", new { name = "ActionFilter", id = "filter-apply-button" }, secondaryButton: false, filterButton: true)
-
-                    @Html.ActionLink("Clear filter", "Index", new { @class = "link-submit govuk-link govuk-link--no-visited-state" })
+                    @Html.ActionLink("Clear filter", "Index", new { facilityType = Model.FacilityType }, new { @class = "link-submit govuk-link govuk-link--no-visited-state" })
                 </div>
             </div>
         </div>
@@ -91,10 +92,10 @@
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-full">
         <table class="govuk-table">
-            <caption class="govuk-table__caption govuk-table__caption--l govuk-visually-hidden">Name of AATF</caption>
+            <caption class="govuk-table__caption govuk-table__caption--l govuk-visually-hidden">@Html.Raw(string.Format(Resource.NameOfLabel, facilityType))</caption>
             <thead class="govuk-table__head">
                 <tr class="govuk-table__row">
-                    <th scope="col" class="govuk-table__header">Name of AATF</th>
+                    <th scope="col" class="govuk-table__header">@Html.Raw(string.Format(Resource.NameOfLabel, facilityType))</th>
                     <th scope="col" class="govuk-table__header">Approval number</th>
                     <th scope="col" class="govuk-table__header">Compliance year</th>
                     <th scope="col" class="govuk-table__header">Status</th>
@@ -124,7 +125,8 @@
                                     name = item.Name,
                                     approvalNumber = item.ApprovalNumber,
                                     complianceYear = item.ComplianceYear,
-                                    status = item.AatfStatus
+                                    status = item.AatfStatus,
+                                    facilityType = Model.FacilityType
                                 })">Delete</a>
                             </td>
                         </tr>
@@ -144,7 +146,8 @@
                                     name = Model.Name,
                                     approvalNumber = Model.ApprovalNumber,
                                     selectedComplianceYear = Model.SelectedComplianceYear,
-                                    selectedAatfStatus = Model.SelectedAatfStatus
+                                    selectedAatfStatus = Model.SelectedAatfStatus,
+                                    facilityType = Model.FacilityType
                                 }))
                 </div>
 

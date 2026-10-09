@@ -1,4 +1,4 @@
-﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.RemoveAATFRecords
+﻿namespace EA.Weee.Web.Areas.Admin.ViewModels.RemoveAATFOrAeRecords
 {
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Core.Shared.Paging;
@@ -7,8 +7,12 @@
     using System.ComponentModel;
     using System.ComponentModel.DataAnnotations;
 
-    public class RemoveAatfsViewModel
+    public class RemoveAatfOrAeViewModel
     {
+        public RemoveAatfOrAeViewModel()
+        {
+        }
+
         [Display(Name = "Name of AATF")]
         public string Name { get; set; }
 
@@ -32,8 +36,8 @@
 
         public Guid? SelectedAATF { get; set; }
 
-        public RemoveAatfsViewModel()
-        {
-        }
+        public FacilityType FacilityType { get; set; }
+
+        public int RetentionPeriod { get; set; }
     }
 }

@@ -1,10 +1,10 @@
 ﻿namespace EA.Weee.Core.Admin
 {
-    using System;
+    using EA.Weee.Core.AatfReturn;
 
-    public class RemoveAATFFilter
+    public class RemoveAatfOrAeFilter
     {
-        public RemoveAATFFilter()
+        public RemoveAatfOrAeFilter()
         {
         }
 
@@ -17,5 +17,9 @@
         public int? SelectedStatus { get; set; }
 
         public string UserId { get; set; }
+
+        public FacilityType FacilityType { get; set; }
+
+        public int RetenctionPeriod { get; set; }
     }
 }
