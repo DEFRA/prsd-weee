@@ -37,6 +37,34 @@
         }
 
         [Fact]
+        public void Encode_ValueContainingEmbeddedDoubleQuote_SurroundedInDoubleQuotesAndEmbeddedQuoteIsDoubled()
+        {
+            // Arrange
+            string rawValue = "The \"Best\" Company Ltd";
+
+            // Act
+            string encodedValue = CsvWriter<object>.Encode(rawValue);
+
+            // Assert
+            string expectedValue = "\"The \"\"Best\"\" Company Ltd\"";
+            Assert.Equal(expectedValue, encodedValue);
+        }
+
+        [Fact]
+        public void Encode_ValueContainingCommaAndEmbeddedDoubleQuote_SurroundedInDoubleQuotesAndEmbeddedQuoteIsDoubled()
+        {
+            // Arrange
+            string rawValue = "\"EURO-FRYZ\" S.C. DOROTA FALBORSKA, IZABELA DYLEWSKA, SŁAWOMIR POŻYCKI";
+
+            // Act
+            string encodedValue = CsvWriter<object>.Encode(rawValue);
+
+            // Assert
+            string expectedValue = "\"\"\"EURO-FRYZ\"\" S.C. DOROTA FALBORSKA, IZABELA DYLEWSKA, SŁAWOMIR POŻYCKI\"";
+            Assert.Equal(expectedValue, encodedValue);
+        }
+
+        [Fact]
         public void Encode_ValueContainingLineBreaks_LineBreaksAreReplacedBySpaces()
         {
             // Arrage
@@ -158,6 +186,59 @@ lines.";
                 "Column 1" + Environment.NewLine +
                 "=\"01234 555 555\"" + Environment.NewLine +
                 "=\"The man said \"\"Hello World\"\" to the dog.\"" + Environment.NewLine;
+
+            Assert.Equal(expectedValue, csv);
+        }
+
+        [Fact]
+        public void CsvWriter_WithFormatAsTextAndCommaOrQuote_IsNotDoubleEncoded()
+        {
+            // Arrange
+            // This test guards against regressions where a formatAsText value (which is already
+            // fully escaped and wrapped as an Excel formula by CsvColumn.GetData) is passed through
+            // CsvWriter.Encode a second time, which would incorrectly wrap it in an additional layer
+            // of quotes and double its escaped quote characters.
+            CsvWriter<string> writer = new CsvWriter<string>(A.Dummy<IExcelSanitizer>());
+
+            writer.DefineColumn("Column 1", x => x, true);
+
+            List<string> data = new List<string>() { "01234, 555 555", "The \"Best\" Company, Ltd" };
+
+            // Act
+            string csv = writer.Write(data);
+
+            // Assert
+            string expectedValue =
+                "Column 1" + Environment.NewLine +
+                "=\"01234, 555 555\"" + Environment.NewLine +
+                "=\"The \"\"Best\"\" Company, Ltd\"" + Environment.NewLine;
+
+            Assert.Equal(expectedValue, csv);
+        }
+
+        [Fact]
+        public void CsvWriter_WithNonFormatAsTextValueContainingEmbeddedQuote_ValueIsEscapedInOutput()
+        {
+            // Arrange
+            // This test guards against regressions of the bug where a plain (non-formatAsText)
+            // column value containing a comma and an embedded double quote, such as a producer's
+            // registered company name, was not escaped correctly and corrupted the CSV output.
+            CsvWriter<string> writer = new CsvWriter<string>(A.Dummy<IExcelSanitizer>());
+
+            writer.DefineColumn("Producer name", x => x);
+
+            List<string> data = new List<string>()
+            {
+                "\"EURO-FRYZ\" S.C. DOROTA FALBORSKA, IZABELA DYLEWSKA, SŁAWOMIR POŻYCKI"
+            };
+
+            // Act
+            string csv = writer.Write(data);
+
+            // Assert
+            string expectedValue =
+                "Producer name" + Environment.NewLine +
+                "\"\"\"EURO-FRYZ\"\" S.C. DOROTA FALBORSKA, IZABELA DYLEWSKA, SŁAWOMIR POŻYCKI\"" + Environment.NewLine;
 
             Assert.Equal(expectedValue, csv);
         }
