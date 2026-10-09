@@ -718,7 +718,7 @@
         {
             using (var command = context.Database.Connection.CreateCommand())
             {
-                command.CommandText = "[AATF].[DeleteAatf]";
+                command.CommandText = "[AATF].[DeleteAatfOrAeRecord]";
                 command.CommandType = CommandType.StoredProcedure;
                 command.CommandTimeout = 180;
 
