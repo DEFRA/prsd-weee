@@ -62,7 +62,7 @@
             <div class="govuk-grid-column-one-half">
                 <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedComplianceYear)">
                     @Html.Gds().LabelFor(m => m.SelectedComplianceYear, false)
-                    @Html.Gds().DropDownListFor(m => m.SelectedComplianceYear, new SelectList(Model.ComplianceYearList), string.Empty, new { autocomplete = "false", @class = "govuk-!-width-three-quarters" }, false, false)
+                    @Html.Gds().DropDownListFor(m => m.SelectedComplianceYear, new SelectList(Model.ComplianceYearList), "All Years", new { autocomplete = "false", @class = "govuk-!-width-three-quarters" }, false, false)
                 </div>
             </div>
             <div class="govuk-grid-column-one-half">
@@ -70,7 +70,7 @@
                     @Html.Gds().LabelFor(m => m.SelectedAatfStatus, false)
                     @Html.Gds().DropDownListFor(m => m.SelectedAatfStatus,
                                                 Model.AatfStatuses.Select(x => new SelectListItem() { Text = x.DisplayName, Value = x.Value.ToString() }),
-                                                string.Empty,
+                                                "All Status",
                                                 new { autocomplete = "false", @class = "govuk-!-width-three-quarters" },
                                                 false,
                                                 false)
