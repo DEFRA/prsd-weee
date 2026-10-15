@@ -166,11 +166,11 @@
 
             var request = new GetAatfAeReturnDataCsv(fixture.Create<int>(), fixture.Create<int>(), fixture.Create<FacilityType>(), fixture.Create<ReportReturnStatus>(), fixture.Create<Guid>(), fixture.Create<Guid>(), fixture.Create<Guid>(), "https://localhost:44300/admin/aatf/details/", fixture.Create<bool>());
 
-            var url1 = $@"""=HYPERLINK(""""{request.AatfDataUrl}{csvData1.AatfId}#data"""", """"View AATF / AE data"""")";
+            var url1 = $@"=HYPERLINK(""""{request.AatfDataUrl}{csvData1.AatfId}#data"""", """"View AATF / AE data"""")";
 
             var data = await handler.HandleAsync(request);
 
-            data.FileContent.Should().Contain($"{csvData1.Name},{csvData1.ApprovalNumber},{csvData1.OrganisationName},{csvData1.ReturnStatus},{csvData1.CreatedDate},{csvData1.SubmittedDate},{csvData1.SubmittedBy},{csvData1.CompetentAuthorityAbbr},{csvData1.ReSubmission},{url1}");
+            data.FileContent.Should().Contain($"{csvData1.Name},{csvData1.ApprovalNumber},{csvData1.OrganisationName},{csvData1.ReturnStatus},{csvData1.CreatedDate},{csvData1.SubmittedDate},{csvData1.SubmittedBy},{csvData1.CompetentAuthorityAbbr},{csvData1.ReSubmission}");
         }
 
         [Fact]

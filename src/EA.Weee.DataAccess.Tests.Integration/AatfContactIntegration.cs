@@ -1,5 +1,6 @@
 ﻿namespace EA.Weee.DataAccess.Tests.Integration
 {
+    using EA.Prsd.Core.Domain;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Tests.Core.Model;
     using FakeItEasy;
@@ -18,6 +19,7 @@
     public class AatfContactIntegration
     {
         private readonly IQuarterWindowFactory quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
+        private readonly IUserContext userContext = A.Fake<IUserContext>();
 
         [Fact]
         public async Task UpdateDetails_GivenDetailsToUpdate_ContextShouldContainUpdatedDetails()
@@ -30,7 +32,7 @@
 
                 var aatfAddress = new AatfContact("FirstName", "LastName", "Position", "Address1", "Address2", "Town", "County", "PO12ST34", country, "Telephone", "Email");
 
-                var dataAccess = new AatfDataAccess(context, new GenericDataAccess(database.WeeeContext), quarterWindowFactory);
+                var dataAccess = new AatfDataAccess(context, new GenericDataAccess(database.WeeeContext), quarterWindowFactory, userContext);
 
                 var aatfId = await CreateContact(database, aatfAddress);
 

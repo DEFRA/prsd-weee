@@ -36,5 +36,7 @@
         Task<List<Aatf>> GetAatfsForOrganisation(Guid organisationId);
 
         Task<bool> HasEvidenceNotes(Guid aatfId);
+
+        Task RemoveAatfRetenctionDataById(Aatf aatfId);
     }
 }

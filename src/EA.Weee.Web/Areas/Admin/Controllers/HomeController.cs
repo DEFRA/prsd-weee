@@ -104,6 +104,7 @@
                     {
                         return RedirectToAction("SubmissionsHistory", "Submissions");
                     }
+
                 case InternalUserActivity.ViewReports:
                     return RedirectToAction("ChooseReport", "Reports");
 
@@ -128,6 +129,9 @@
                             return RedirectToAction("SelectAuthority", "Charge");
                         }
                     }
+
+                case InternalUserActivity.RemoveRecords:
+                    return RedirectToAction("ChooseActivity", "RemoveRecords");
 
                 default:
                     throw new NotSupportedException();
@@ -163,6 +167,7 @@
             viewModel.PossibleValues.Add(InternalUserActivity.ManageAes);
             viewModel.PossibleValues.Add(InternalUserActivity.ManageUsers);
             viewModel.PossibleValues.Add(InternalUserActivity.ViewReports);
+            viewModel.PossibleValues.Add(InternalUserActivity.RemoveRecords);
         }
     }
 }

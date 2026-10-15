@@ -1,0 +1,146 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Admin
+@using EA.Weee.Requests.Admin
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using EA.Weee.Web.Infrastructure.Paging
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@using Resource = EA.Weee.Web.Areas.Admin.Views.RemovePCSRecords.Index
+@model EA.Weee.Web.Areas.Admin.ViewModels.RemovePCSRecords.RemovePCSRecordsViewModel
+@{
+    ViewBag.Title = Resource.Titile;
+}
+
+<div class="govuk-grid-row" style="margin-top: 30px;">
+    <div class="govuk-grid-column-one-half">
+        @(this.WeeeGds().BackLink(@Url.UrlFor<RemoveRecordsController>(a => a.ChooseActivity())))
+    </div>
+</div>
+
+<header class="hgroup">
+    <h1 class="govuk-heading-l" style="margin-top: 0px;">
+        @Resource.Header
+    </h1>
+</header>
+
+<p class="govuk-body">
+    @Resource.BodyTextDesc1
+</p>
+<p class="govuk-body">
+    @Resource.BodyTextDesc2
+</p>
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-one-half">
+        <ul class="govuk-list govuk-list--bullet">
+            <li>Member registration details</li>
+            <li>Member EEE data</li>
+            <li>WEEE data</li>
+        </ul>
+    </div>
+    <div class="govuk-grid-column-one-half">
+        <ul class="govuk-list govuk-list--bullet">
+            <li>Obligations data</li>
+            <li>Member registration charges records</li>
+        </ul>
+    </div>
+</div>
+
+<p class="govuk-body">
+    @Resource.BodyTextDesc3
+</p>
+
+@using (Html.BeginForm(actionName: "Index", controllerName: "RemovePCSRecords", method: FormMethod.Post))
+{
+    <div class="filter" style=" border: 0px solid #fff !important">
+        @Html.AntiForgeryToken()
+        @Html.Hidden(Model.SelectedYear)
+        @Html.Hidden(Model.SelectedScheme)
+
+        <div class="govuk-label">Filter by:</div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedYear)">
+                    @Html.Gds().LabelFor(m => m.SelectedYear)
+                    @Html.Gds().DropDownListFor(m => m.SelectedYear, Model.ComplianceYears, new { @class = "govuk-!-width-one-half", autocomplete = "false" })
+                </div>
+            </div>
+            <div class="govuk-grid-column-one-half">
+                <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.SelectedScheme)">
+                    @Html.Gds().LabelFor(m => m.SelectedScheme)
+                    @Html.Gds().DropDownListFor(m => m.SelectedScheme, Model.SchemeNames, new { @class = "govuk-!-width-one-half", autocomplete = "false" })
+                </div>
+            </div>
+        </div>
+        <div class="govuk-grid-row">
+            <div class="govuk-grid-column-one-half">
+                <div class="govuk-form-group govuk-button-group" style="margin-top: 30px">
+
+                    @this.WeeeGds().Button("Filter", new { name = "ActionFilter", id = "filter-apply-button" }, secondaryButton: false, filterButton: true)
+
+                    @Html.ActionLink("Clear filter", "Index", new { @class = "link-submit govuk-link govuk-link--no-visited-state" })
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+        <table class="govuk-table">
+            <caption class="govuk-table__caption govuk-table__caption--l govuk-visually-hidden">@Resource.TableCaption</caption>
+            <thead class="govuk-table__head">
+                <tr class="govuk-table__row">
+                    <th scope="col" class="govuk-table__header">@Resource.PCSName</th>
+                    <th scope="col" class="govuk-table__header">@Resource.ApprovalNumber</th>
+                    <th scope="col" class="govuk-table__header">@Resource.ComplianceYear</th>
+                    <th scope="col" class="govuk-table__header"></th>
+                </tr>
+            </thead>
+            <tbody class="govuk-table__body">
+                @if (Model.PCSSchemeData == null || Model.PCSSchemeData.Count() == 0)
+                {
+                    <tr class="govuk-table__row">
+                        <td class="govuk-table__cell govuk-table__caption--s" colspan="3">No records are available.</td>
+                    </tr>
+                }
+                else
+                {
+                    foreach (var item in Model.PCSSchemeData)
+                    {
+                        <tr class="govuk-table__row">
+                            <td class="govuk-table__cell">@item.SchemeName</td>
+                            <td class="govuk-table__cell">@item.ApprovalNumber</td>
+                            <td class="govuk-table__cell">@item.ComplianceYear</td>
+                            <td class="govuk-table__cell">
+                                <a href="@Url.Action("ConfirmDeletion", new
+                                {
+                                    schemeId = item.SchemeId,
+                                    schemeName = item.SchemeName,
+                                    approvalNumber = item.ApprovalNumber,
+                                    complianceYear = item.ComplianceYear,
+                                })">Delete</a>
+                            </td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+
+        @if (@Model.PCSSchemeData.PageCount > 1)
+        {
+            <div id="pager">
+                <div class="pager govuk-body">
+                    @Html.Pager(Model.PCSSchemeData.PageSize,
+                                Model.PCSSchemeData.PageNumber,
+                                Model.PCSSchemeData.TotalItemCount).Options(o => o.Action("Index").RouteValues(new
+                                     {
+                                         selScheme = Model.SelectedScheme,
+                                                                                                                     selYear = Model.SelectedYear
+                                     }))
+                </div>
+
+                <p class="govuk-body">Showing @Model.PCSSchemeData.ItemStart - @Model.PCSSchemeData.ItemEnd of @Model.PCSSchemeData.TotalItemCount</p>
+            </div>
+        }
+    </div>
+</div>
