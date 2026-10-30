@@ -1,9 +1,9 @@
-﻿/****** Object:  StoredProcedure [AATF].[DeleteAatfOrAeRecord]    Script Date: 02/10/2026 11:11:03 ******/
+﻿/****** Object:  StoredProcedure [AATF].[DeleteAatfOrAeRecord]    Script Date: 30/10/2026 09:35:01 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
-CREATE OR ALTER PROCEDURE [AATF].[DeleteAatfOrAeRecord]
+CREATE OR ALTER   PROCEDURE [AATF].[DeleteAatfOrAeRecord]
 	@AatfId UNIQUEIDENTIFIER
 AS
 BEGIN
@@ -19,10 +19,16 @@ BEGIN
 		------------------------------------------------------------
 		DECLARE @ContactId UNIQUEIDENTIFIER;
 		DECLARE @SiteAddressId UNIQUEIDENTIFIER;
+		DECLARE @OrganisationId UNIQUEIDENTIFIER;
+		DECLARE @ComplianceYear INT;
+		DECLARE @FacilityType INT;
 
 		SELECT
 			@ContactId = ContactId,
-			@SiteAddressId = SiteAddressId
+			@SiteAddressId = SiteAddressId,
+			@OrganisationId = OrganisationId,
+			@ComplianceYear = ComplianceYear,
+			@FacilityType = FacilityType
 		FROM [AATF].[AATF]
 		WHERE Id = @AatfId;
 
@@ -32,14 +38,29 @@ BEGIN
 		------------------------------------------------------------
 		DECLARE @ReturnIds TABLE
 		(
-			ReturnId UNIQUEIDENTIFIER PRIMARY KEY
+			Id UNIQUEIDENTIFIER PRIMARY KEY
 		);
 
-		INSERT INTO @ReturnIds (ReturnId)
-			SELECT DISTINCT ReturnId
-			FROM [AATF].[ReturnAatf]
-			WHERE AatfId = @AatfId;
+		INSERT INTO @ReturnIds (Id)
+		SELECT ReturnId
+		FROM [AATF].[ReturnAatf]
+		WHERE AatfId = @AatfId
 
+		UNION
+
+		SELECT R.Id
+		FROM [AATF].[Return] R
+		WHERE R.OrganisationId = @OrganisationId
+		  AND R.ComplianceYear = @ComplianceYear
+		  AND R.FacilityType = @FacilityType
+		  AND NOT EXISTS
+		  (
+			  SELECT 1
+			  FROM [AATF].[ReturnAatf] RA
+			  WHERE RA.ReturnId = R.Id
+				AND RA.AatfId = @AatfId
+		  );
+			
 		------------------------------------------------------------
 		-- 1 Delete NoteStatusHistory
 		------------------------------------------------------------
@@ -330,7 +351,7 @@ BEGIN
 		INSERT INTO @ReturnReportOnIds (Id)
 			SELECT RRO.Id
 			FROM [AATF].[ReturnReportOn] RRO
-			INNER JOIN @ReturnIds RI ON RRO.ReturnId = RI.ReturnId;
+			INNER JOIN @ReturnIds RI ON RRO.ReturnId = RI.Id;
 
 		-- Step 2: Delete audit log records
 		DELETE AL
@@ -356,13 +377,7 @@ BEGIN
 		INSERT INTO @NonObligatedWeeeIds (Id)
 			SELECT [NOW].Id
 			FROM [AATF].[NonObligatedWeee] [NOW]
-			INNER JOIN @ReturnIds RI ON [NOW].ReturnId = RI.ReturnId
-			WHERE NOT EXISTS
-			(
-				SELECT 1
-				FROM [AATF].[ReturnAatf] RA
-				WHERE RA.ReturnId = RI.ReturnId AND RA.AatfId <> @AatfId
-			);
+			INNER JOIN @ReturnIds RI ON [NOW].ReturnId = RI.Id;
 
 		-- Step 2: Delete audit log records
 		DELETE AL
@@ -388,13 +403,7 @@ BEGIN
 		INSERT INTO @ReturnSchemeIds (Id)
 			SELECT RS.Id
 			FROM [AATF].[ReturnScheme] RS
-			INNER JOIN @ReturnIds RI ON RS.ReturnId = RI.ReturnId
-			WHERE NOT EXISTS
-			(
-				SELECT 1
-				FROM [AATF].[ReturnAatf] RA
-				WHERE RA.ReturnId = RI.ReturnId AND RA.AatfId <> @AatfId
-			);
+			INNER JOIN @ReturnIds RI ON RS.ReturnId = RI.Id;
 
 		-- Step 2: Delete audit log records
 		DELETE AL
@@ -447,19 +456,7 @@ BEGIN
 		INSERT INTO @ReturnDeleteIds (Id)
 			SELECT R.Id
 			FROM [AATF].[Return] R
-			INNER JOIN @ReturnIds RI ON R.Id = RI.ReturnId
-			WHERE NOT EXISTS
-			(
-				SELECT 1
-				FROM [AATF].[ReturnAatf] RA
-				WHERE RA.ReturnId = R.Id
-			)
-			AND NOT EXISTS
-			(
-				SELECT 1
-				FROM [AATF].[Return] ChildReturn
-				WHERE ChildReturn.ParentId = R.Id
-			);
+			INNER JOIN @ReturnIds RI ON R.Id = RI.Id;
 
 		-- Step 2: Delete audit log records
 		DELETE AL
@@ -468,9 +465,11 @@ BEGIN
 		WHERE AL.TableName = '[AATF].[Return]';
 
 		-- Step 3: Delete Return records
-		DELETE R
-		FROM [AATF].[Return] R
-		INNER JOIN @ReturnDeleteIds T ON T.Id = R.Id;
+		DELETE 
+		FROM [AATF].[Return] 
+		WHERE OrganisationId = @OrganisationId AND 
+			  ComplianceYear = @ComplianceYear AND
+			  FacilityType = @FacilityType;
 
 		------------------------------------------------------------
 		-- 17 Delete AATF
