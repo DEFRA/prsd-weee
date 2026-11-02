@@ -26,6 +26,14 @@
         Task<List<ProducerEeeCsvData>> SpgProducerEeeCsvData(int complianceYear, Guid? schemeId, string obligationType,
             bool directRegistrantFilter, bool filterBySchemes);
 
+        Task<List<int>> SpgSchemeComplianceYearsExceedingRetentionPeriod();
+
+        Task<List<string>> SpgSchemeNamesForComplianceYear(int? complianceYear);
+
+        Task<List<SchemeDataExceedingRetentionPeriod>> SpgSchemeDataByNameAndComplianceYear(int? complianceYear, string schemeName, string userId);
+
+        Task<int> SpgRemovePCSRecords(Guid schemeId, int complianceYear);
+
         Task<List<UkEeeCsvData>> SpgUKEEEDataByComplianceYear(int complianceYear);
 
         Task<List<UkNonObligatedWeeeReceivedData>> GetUkNonObligatedWeeeReceivedByComplianceYear(int complianceYear);
@@ -64,5 +72,7 @@
         Task<List<AatfAeDetailsData>> GetAatfAeDetailsCsvData(int complianceYear, int facilityType, Guid? authority, Guid? area, Guid? panArea);
 
         Task<List<PcsAatfComparisonDataCsvData>> GetPcsAatfComparisonDataCsvData(int complianceYear, int? quarter, string obligationType);
+
+        Task<int> SpgRemoveAATFRecords(Guid aatfId);
     }
 }
