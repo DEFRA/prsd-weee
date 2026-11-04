@@ -147,5 +147,7 @@
 
         [DefaultValue(5)]
         public int SessionTimeoutWarningInMinutes { get; set; }
+
+        public int RetentionPeriod { get; set; }
     }
 }
