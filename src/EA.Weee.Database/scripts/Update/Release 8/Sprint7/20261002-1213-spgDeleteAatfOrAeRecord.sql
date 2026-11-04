@@ -444,7 +444,7 @@ BEGIN
 		------------------------------------------------------------
 		-- 16 Delete Return
 		-- Only delete Return if:
-		--   1. No other AATF references it
+		--   1. No AATF references it
 		--   2. No other Return references it as ParentId
 		------------------------------------------------------------
 		DECLARE @ReturnDeleteIds TABLE
@@ -452,24 +452,37 @@ BEGIN
 			Id UNIQUEIDENTIFIER PRIMARY KEY
 		);
 
-		-- Step 1: Capture IDs eligible for deletion
+		-- Step 1: Identify eligible Return records
 		INSERT INTO @ReturnDeleteIds (Id)
-			SELECT R.Id
-			FROM [AATF].[Return] R
-			INNER JOIN @ReturnIds RI ON R.Id = RI.Id;
+		SELECT R.Id
+		FROM [AATF].[Return] R
+		INNER JOIN @ReturnIds RI
+			ON RI.Id = R.Id
+		WHERE NOT EXISTS
+		(
+			SELECT 1
+			FROM [AATF].[ReturnAatf] RA
+			WHERE RA.ReturnId = R.Id
+		)
+		AND NOT EXISTS
+		(
+			SELECT 1
+			FROM [AATF].[Return] ChildReturn
+			WHERE ChildReturn.ParentId = R.Id
+		);
 
 		-- Step 2: Delete audit log records
 		DELETE AL
 		FROM [Auditing].[AuditLog] AL
-		INNER JOIN @ReturnDeleteIds T ON T.Id = AL.RecordId
+		INNER JOIN @ReturnDeleteIds T
+			ON T.Id = AL.RecordId
 		WHERE AL.TableName = '[AATF].[Return]';
 
-		-- Step 3: Delete Return records
-		DELETE 
-		FROM [AATF].[Return] 
-		WHERE OrganisationId = @OrganisationId AND 
-			  ComplianceYear = @ComplianceYear AND
-			  FacilityType = @FacilityType;
+		-- Step 3: Delete only eligible Return records
+		DELETE R
+		FROM [AATF].[Return] R
+		INNER JOIN @ReturnDeleteIds T
+			ON T.Id = R.Id;
 
 		------------------------------------------------------------
 		-- 17 Delete AATF
