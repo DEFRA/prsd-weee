@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Admin.DeleteAatf
 {
     using AutoFixture;
+    using EA.Prsd.Core.Domain;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.Domain.DataReturns;
@@ -30,11 +31,13 @@
     {
         private readonly Fixture fixture;
         private readonly IQuarterWindowFactory quarterWindowFactory;
+        private readonly IUserContext userContext;
 
         public AatfDataAccessTests()
         {
             fixture = new Fixture();
             quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
+            userContext = A.Fake<IUserContext>();
         }
 
         [Fact]
@@ -42,7 +45,7 @@
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
-                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory, userContext);
                 var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
                 var aatfDoNotDelete = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
@@ -67,7 +70,7 @@
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
-                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory, userContext);
                 var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
                 var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, databaseWrapper.Model.AspNetUsers.First().Id,
@@ -106,7 +109,7 @@
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
-                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory, userContext);
                 var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
                 var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, databaseWrapper.Model.AspNetUsers.First().Id, null);
@@ -126,7 +129,7 @@
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
-                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory, userContext);
                 var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
                 var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, databaseWrapper.Model.AspNetUsers.First().Id, null);
@@ -146,7 +149,7 @@
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
-                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory, userContext);
                 var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
                 var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, databaseWrapper.Model.AspNetUsers.First().Id, null);
@@ -166,7 +169,7 @@
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
-                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory, userContext);
                 var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
                 var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, databaseWrapper.Model.AspNetUsers.First().Id,
@@ -203,7 +206,7 @@
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
-                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory, userContext);
                 var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
                 var ae = ObligatedWeeeIntegrationCommon.CreateAe(databaseWrapper, organisation);
                 var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, databaseWrapper.Model.AspNetUsers.First().Id,
@@ -231,7 +234,7 @@
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
-                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory, userContext);
 
                 var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
                 var ae = ObligatedWeeeIntegrationCommon.CreateAe(databaseWrapper, organisation);
@@ -266,7 +269,7 @@
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
-                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory, userContext);
 
                 var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
@@ -302,7 +305,7 @@
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
-                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory, userContext);
 
                 var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
@@ -342,7 +345,7 @@
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
-                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory, userContext);
 
                 var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
@@ -398,7 +401,7 @@
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
-                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory, userContext);
 
                 var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
@@ -454,7 +457,7 @@
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
-                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory, userContext);
                 var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
                 var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, databaseWrapper.Model.AspNetUsers.First().Id,
@@ -509,7 +512,7 @@
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
-                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory, userContext);
                 var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
                 var @return = ObligatedWeeeIntegrationCommon.CreateReturn(organisation, databaseWrapper.Model.AspNetUsers.First().Id,
@@ -564,7 +567,7 @@
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
-                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory, userContext);
                 var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
                 var aatf2 = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
@@ -625,7 +628,7 @@
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
-                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory, userContext);
                 var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
                 var aatf2 = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
@@ -714,7 +717,7 @@
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
-                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory, userContext);
                 var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
                 var aatf2 = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
@@ -787,7 +790,7 @@
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
-                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory, userContext);
 
                 var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
                 var ae = ObligatedWeeeIntegrationCommon.CreateAe(databaseWrapper, organisation);
@@ -828,7 +831,7 @@
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
-                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory, userContext);
                 var organisation = Domain.Organisation.Organisation.CreateSoleTrader(fixture.Create<string>());
                 var aatf = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
                 var aatf2 = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
@@ -930,7 +933,7 @@
 
                 await databaseWrapper.WeeeContext.SaveChangesAsync();
 
-                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory, userContext);
                 var note = new Domain.Evidence.Note(organisation1, recipientOrganisation, DateTime.Now, DateTime.Now, Domain.Evidence.WasteType.HouseHold, Domain.Evidence.Protocol.Actual, aatf1, databaseWrapper.WeeeContext.GetCurrentUser().ToString(), new List<NoteTonnage>());
                 var note1 = NoteCommon.CreateNote(databaseWrapper, organisation1, recipientOrganisation, aatf1, WasteType.HouseHold, Protocol.Actual);
                 databaseWrapper.WeeeContext.Notes.Add(note1);
@@ -946,7 +949,7 @@
             var aatfId = Guid.NewGuid();
             using (var databaseWrapper = new DatabaseWrapper())
             {
-                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory, userContext);
                 var result = await aatfDataAccess.HasEvidenceNotes(aatfId);
                 result.Should().BeFalse();
             }

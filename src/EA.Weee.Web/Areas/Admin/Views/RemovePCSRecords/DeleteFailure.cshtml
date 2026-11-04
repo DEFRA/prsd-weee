@@ -1,0 +1,39 @@
+﻿@using EA.Prsd.Core.Web.Mvc.RazorHelpers
+@using EA.Weee.Core.Admin
+@using EA.Weee.Requests.Admin
+@using EA.Weee.Web.Areas.Admin.Controllers
+@using EA.Weee.Web.Infrastructure.Paging
+@using EA.Weee.Web.RazorHelpers
+@using MvcNavigationHelpers
+@model EA.Weee.Web.Areas.Admin.ViewModels.RemovePCSRecords.RemovePCSRecordConfirmDeletionViewModel
+@{
+    ViewBag.Title = "Delete Failure";
+}
+
+<div class="govuk-panel govuk-panel--confirmation" style="background-color: #ca3535!important">
+    <div class="govuk-panel__body">
+        The following PCS record remains undeleted in the WEEE Online service. Please contact the system administrator.
+    </div>
+</div>
+
+<table class="govuk-table">
+    <caption class="govuk-table__caption govuk-table__caption--m">This table shows the PCS record selected for deletion.</caption>
+    <thead class="govuk-table__head">
+        <tr class="govuk-table__row">
+            <th scope="col" class="govuk-table__header">PCS name</th>
+            <th scope="col" class="govuk-table__header">Approval number</th>
+            <th scope="col" class="govuk-table__header">Compliance year</th>
+        </tr>
+    </thead>
+    <tbody class="govuk-table__body">
+        <tr class="govuk-table__row">
+            <td class="govuk-table__cell">@Model.PCSName</td>
+            <td class="govuk-table__cell">@Model.ApprovalNumber</td>
+            <td class="govuk-table__cell">@Model.ComplianceYear</td>
+        </tr>
+    </tbody>
+</table>
+
+<p>
+    @Html.ActionLink("Go to Remove PCS Records", "Index")
+</p>

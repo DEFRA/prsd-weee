@@ -685,6 +685,12 @@ input[type="file"].form-control {
     }
 }
 
+.buttons {
+    .cancel {
+        background-color: govuk-colour('dark-grey')
+    }
+}
+
 .aatf-details-associated-table-cell {
     border-bottom: 0px;
     padding: 10px 0px 10px 0px
