@@ -5,6 +5,7 @@
     using Domain.User;
     using EA.Weee.Email;
     using EA.Weee.RequestHandlers.Shared;
+    using EA.Weee.RequestHandlers.Users.UserPasswordHistories;
     using Identity;
     using Microsoft.AspNet.Identity;
     using Microsoft.AspNet.Identity.EntityFramework;
@@ -26,19 +27,22 @@
         private readonly IWeeeEmailService emailService;
         private readonly IGetAdminUserDataAccess getAdminUserDataAccess;
         private readonly IGetMessageBannerDataAccess messageBannerDataAccess;
+        private readonly IUserPasswordHistoriesDataAccess userPasswordHistoriesDataAccess;
 
         public UnauthenticatedUserController(
             ApplicationUserManager userManager,
             IUserContext userContext,
             IWeeeEmailService emailService,
             IGetAdminUserDataAccess getAdminUserDataAccess,
-            IGetMessageBannerDataAccess messageBannerDataAccess)
+            IGetMessageBannerDataAccess messageBannerDataAccess,
+            IUserPasswordHistoriesDataAccess userPasswordHistoriesDataAccess)
         {
             this.userManager = userManager;
             this.userContext = userContext;
             this.emailService = emailService;
             this.getAdminUserDataAccess = getAdminUserDataAccess;
             this.messageBannerDataAccess = messageBannerDataAccess;
+            this.userPasswordHistoriesDataAccess = userPasswordHistoriesDataAccess;
         }
 
         [HttpPost]
@@ -103,14 +107,19 @@
 
             var result = await userManager.CreateAsync(user, model.Password);
 
-            if (!result.Succeeded)
+            if (result.Succeeded)
             {
-                return GetErrorResult(result);
+                var isSuccess = await userPasswordHistoriesDataAccess.AddUserPasswordHistories(user.Id, user.PasswordHash);
+
+                if (isSuccess)
+                {
+                    await SendActivationEmail(user.Id, user.Email, model.ActivationBaseUrl);
+
+                    return Ok(user.Id);
+                }
             }
 
-            await SendActivationEmail(user.Id, user.Email, model.ActivationBaseUrl);
-
-            return Ok(user.Id);
+            return GetErrorResult(result);
         }
 
         [HttpPost]

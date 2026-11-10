@@ -64,6 +64,8 @@
 
         public virtual DbSet<User> Users { get; set; }
 
+        public virtual DbSet<UserPasswordHistories> UserPasswordHistories { get; set; }
+
         public virtual DbSet<Country> Countries { get; set; }
 
         public virtual DbSet<OrganisationUser> OrganisationUsers { get; set; }

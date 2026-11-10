@@ -3,19 +3,22 @@
     using Api.Client;
     using Api.Client.Entities;
     using Authorization;
+    using Azure.Core;
     using EA.Weee.Core.Routing;
+    using EA.Weee.Requests.Organisations.DirectRegistrant;
+    using EA.Weee.Requests.Users;
     using EA.Weee.Web.Controllers.Base;
     using Extensions;
     using Infrastructure;
     using Prsd.Core.Web.ApiClient;
     using Prsd.Core.Web.Mvc.Extensions;
+    using Prsd.Core.Web.OAuth;
     using Services;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Threading.Tasks;
     using System.Web.Mvc;
-    using Prsd.Core.Web.OAuth;
     using ViewModels.Account;
 
     [Authorize]
@@ -29,7 +32,7 @@
 
         public AccountController(Func<IWeeeClient> apiClient,
             IWeeeAuthorization weeeAuthorization,
-            IExternalRouteService externalRouteService, 
+            IExternalRouteService externalRouteService,
             Func<IOAuthClientCredentialClient> apiClientCredential,
             IAppConfiguration appConfiguration)
         {
@@ -196,18 +199,30 @@
 
             using (var client = apiClient())
             {
-                var passwordResetData = new PasswordResetData
-                {
-                    Password = model.Password,
-                    Token = token,
-                    UserId = id
-                };
-
                 try
                 {
+                    var passwordResetData = new PasswordResetData
+                    {
+                        Password = model.Password,
+                        Token = token,
+                        UserId = id
+                    };
+
+                    // Check last 5 passwords
+                    var responseToken = await apiClientCredential().GetClientCredentialsAsync();
+                    bool passwordUsed = await client.SendAsync(responseToken.AccessToken, new GetUserPasswordHistory(passwordResetData.UserId, passwordResetData.Password));
+
+                    if (passwordUsed)
+                    {
+                        ModelState.AddModelError("Password", "You cannot reuse any of your last 5 passwords.");
+
+                        return View(model);
+                    }
+
                     var response = await apiClientCredential().GetClientCredentialsAsync();
 
                     bool result = await client.User.ResetPasswordAsync(passwordResetData, response.AccessToken);
+
                     return View(!result ? "ResetPasswordExpired" : "ResetPasswordComplete");
                 }
                 catch (ApiBadRequestException ex)
@@ -263,7 +278,7 @@
                 return View(model);
             }
             var access = await apiClientCredential().GetClientCredentialsAsync();
-            
+
             using (var client = apiClient())
             {
                 ResetPasswordRoute route = externalRouteService.ExternalUserResetPasswordRoute;

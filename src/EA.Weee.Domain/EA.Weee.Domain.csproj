@@ -188,6 +188,7 @@
     <Compile Include="Organisation\OrganisationUser.cs" />
     <Compile Include="Scheme\SchemeAnnualDataAvailability.cs" />
     <Compile Include="Security\Role.cs" />
+    <Compile Include="User\UserPasswordHistories.cs" />
     <Compile Include="User\UserStatus.cs" />
     <Compile Include="Producer\Partner.cs" />
     <Compile Include="Scheme\Scheme.cs" />

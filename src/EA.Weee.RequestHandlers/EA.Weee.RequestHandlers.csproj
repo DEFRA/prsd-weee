@@ -678,6 +678,9 @@
     <Compile Include="Users\UpdateOrganisationUserStatus\IUpdateOrganisationUserStatusDataAccess.cs" />
     <Compile Include="Users\UpdateOrganisationUserStatus\UpdateOrganisationUserStatusDataAccess.cs" />
     <Compile Include="Users\UpdateOrganisationUserStatus\UpdateOrganisationUserStatusHandler.cs" />
+    <Compile Include="Users\UserPasswordHistories\IUserPasswordHistoriesDataAccess.cs" />
+    <Compile Include="Users\UserPasswordHistories\UserPasswordHistoriesDataAccess.cs" />
+    <Compile Include="Users\UserPasswordHistories\GetUserPasswordHistoryHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\EA.Prsd.Core.Autofac\EA.Prsd.Core.Autofac.csproj">
