@@ -2,22 +2,26 @@
     "use strict";
 
     const $sessionDialog = $("#prsd-timeout-dialog, .prsd-timeout-overlay");
+
     let defaultTimeOutInMinutes;
     let warningTimeInMinutes;
     let sessionTimeoutInSeconds;
     let warningTimeInSeconds;
+
     let sessionWarningTimer;
     let sessionLogoutTimer;
     let countdownTimer;
-    let urlPrefix = "";
+
     let eventBound = false;
     let sessionStartTime;
-    function getUrl(endpoint) {
-        const baseUrl = location.protocol + '//' + location.host;
-        const prefix = urlPrefix || '';
-        const path = location.pathname.split('/')[1];
+    let isLoggingOut = false;
 
-        return location.host.includes('uat')
+    function getUrl(endpoint) {
+        const baseUrl = location.protocol + "//" + location.host;
+        const prefix = urlPrefix || "";
+        const path = location.pathname.split("/")[1];
+
+        return location.host.includes("uat")
             ? `${baseUrl}/${path}/${prefix}${endpoint}`
             : `${baseUrl}/${prefix}${endpoint}`;
     }
@@ -25,23 +29,29 @@
     function startSessionTimeout() {
         clearTimeout(sessionWarningTimer);
         clearTimeout(sessionLogoutTimer);
+        clearInterval(countdownTimer);
 
+        isLoggingOut = false;
         sessionStartTime = Date.now();
 
-        sessionWarningTimer = setTimeout(showSessionWarning,
+        sessionWarningTimer = setTimeout(
+            showSessionWarning,
             (sessionTimeoutInSeconds - warningTimeInSeconds) * 1000
         );
 
-        sessionLogoutTimer = setTimeout(logout,
+        sessionLogoutTimer = setTimeout(
+            logout,
             sessionTimeoutInSeconds * 1000
         );
     }
 
     function showSessionWarning() {
-        sessionStartTime = Date.now(); // reset start for warning countdown
+        sessionStartTime = Date.now();
+
         setTimeValue(warningTimeInSeconds);
         $sessionDialog.show();
-        startCountdown() // ✅ start countdown
+
+        startCountdown();
     }
 
     function startCountdown() {
@@ -61,7 +71,7 @@
     }
 
     function setTimeValue(remainingTimeInSeconds) {
-        $("#prsd-timeout-countdown").html(formatTime(remainingTimeInSeconds));
+        $("#prsd-timeout-countdown").text(formatTime(remainingTimeInSeconds));
     }
 
     function closeSessionWarning() {
@@ -70,24 +80,41 @@
     }
 
     async function post(url) {
-        const token = $('input[name="__RequestVerificationToken"]').val();
-        const formData = new URLSearchParams();
-        formData.append("__RequestVerificationToken", token);
+        const token = $('input[name="__RequestVerificationToken"]').first().val();
+
+        if (!token) {
+            console.error("Anti-forgery token is missing.");
+            return false;
+        }
 
         try {
-            await $.post({
-                url,
-                data: formData.toString(),
-                contentType: 'application/x-www-form-urlencoded;charset=UTF-8'
+            await $.ajax({
+                url: url,
+                type: "POST",
+                data: {
+                    __RequestVerificationToken: token
+                },
+                contentType: "application/x-www-form-urlencoded; charset=UTF-8"
             });
+
+            return true;
         } catch (error) {
-            console.error('Error posting data', error);
+            console.error("Error posting data", error);
+            return false;
         }
     }
 
     async function logout() {
-        const logOffUrl = getUrl('Account/SignOut');
-        const signOutUrl = getUrl('Account/SessionSignedOut');
+        if (isLoggingOut) return;
+
+        isLoggingOut = true;
+
+        clearTimeout(sessionWarningTimer);
+        clearTimeout(sessionLogoutTimer);
+        clearInterval(countdownTimer);
+
+        const logOffUrl = getUrl("Account/SignOut");
+        const signOutUrl = getUrl("Account/SessionSignedOut");
 
         await post(logOffUrl);
         document.location.href = signOutUrl;
@@ -104,6 +131,7 @@
     function formatTime(seconds) {
         const mins = Math.floor(seconds / 60);
         const secs = seconds % 60;
+
         return mins > 0 ? `${mins} minute(s) and ${secs} second(s)` : `${secs} second(s)`;
     }
 
@@ -119,17 +147,23 @@
         $("#signoutFormAdmin").toggle(isInternal);
 
         if (!eventBound) {
-            $("#prsd-timeout-keep-signin-btn").click(async () => {
-                const extendSessionUrl = getUrl('Account/ExtendSession');
-                await post(extendSessionUrl);
+            $("#prsd-timeout-keep-signin-btn").on(
+                "click",
+                async function (event) {
+                    event.preventDefault();
 
-                clearTimeout(sessionWarningTimer);
-                clearTimeout(sessionLogoutTimer);
-                clearInterval(countdownTimer);
+                    const extendSessionUrl = getUrl("Account/ExtendSession");
 
-                startSessionTimeout(); // restart everything cleanly
-                closeSessionWarning();
-            });
+                    const success = await post(extendSessionUrl);
+
+                    if (!success) {
+                        return;
+                    }
+
+                    closeSessionWarning();
+                    startSessionTimeout();
+                }
+            );
 
             eventBound = true;
         }
