@@ -1,6 +1,6 @@
-﻿IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = '[Identity].[UserPasswordHistories]')
+﻿IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = '[Identity].[PasswordHistories]')
 BEGIN
-    CREATE TABLE [Identity].[UserPasswordHistories]
+    CREATE TABLE [Identity].[PasswordHistories]
     (
         Id BIGINT IDENTITY(1,1) PRIMARY KEY,
         UserId NVARCHAR(128) NOT NULL,
@@ -12,6 +12,6 @@ BEGIN
             REFERENCES [Identity].[AspNetUsers](Id)
     );
 
-    CREATE INDEX IX_UserPasswordHistories_UserId_CreatedDate
-    ON [Identity].[UserPasswordHistories] (UserId, CreatedDate DESC);
+    CREATE INDEX IX_PasswordHistories_UserId_CreatedDate
+    ON [Identity].[PasswordHistories] (UserId, CreatedDate DESC);
 END

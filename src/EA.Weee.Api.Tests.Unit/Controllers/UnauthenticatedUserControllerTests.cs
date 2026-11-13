@@ -11,7 +11,6 @@
     using EA.Weee.DataAccess.Identity;
     using EA.Weee.Email;
     using EA.Weee.RequestHandlers.Shared;
-    using EA.Weee.RequestHandlers.Users.UserPasswordHistories;
     using FakeItEasy;
     using FluentAssertions;
     using Microsoft.AspNet.Identity;
@@ -59,7 +58,7 @@
             IWeeeEmailService emailService = A.Fake<IWeeeEmailService>();
             IGetAdminUserDataAccess getAdminUserDataAccess = A.Dummy<IGetAdminUserDataAccess>();
             IGetMessageBannerDataAccess messageBannerDataAccess = A.Dummy<IGetMessageBannerDataAccess>();
-            IUserPasswordHistoriesDataAccess passwordHistoriesDataAccess = A.Dummy<IUserPasswordHistoriesDataAccess>();
+            IPasswordHistoryService passwordHistoryService = A.Dummy<IPasswordHistoryService>();
 
             UnauthenticatedUserController controller = new UnauthenticatedUserController(
                 userManager,
@@ -67,7 +66,7 @@
                 emailService,
                 getAdminUserDataAccess,
                 messageBannerDataAccess,
-                passwordHistoriesDataAccess);
+                passwordHistoryService);
 
             InternalUserCreationData model = new InternalUserCreationData()
             {
@@ -111,7 +110,7 @@
             IWeeeEmailService emailService = A.Fake<IWeeeEmailService>();
             IGetAdminUserDataAccess getAdminUserDataAccess = A.Dummy<IGetAdminUserDataAccess>();
             IGetMessageBannerDataAccess messageBannerDataAccess = A.Dummy<IGetMessageBannerDataAccess>();
-            IUserPasswordHistoriesDataAccess passwordHistoriesDataAccess = A.Dummy<IUserPasswordHistoriesDataAccess>();
+            IPasswordHistoryService passwordHistoryService = A.Dummy<IPasswordHistoryService>();
 
             UnauthenticatedUserController controller = new UnauthenticatedUserController(
                 userManager,
@@ -119,7 +118,7 @@
                 emailService,
                 getAdminUserDataAccess,
                 messageBannerDataAccess,
-                passwordHistoriesDataAccess);
+                passwordHistoryService);
 
             ExternalUserCreationData model = new ExternalUserCreationData()
             {
@@ -451,7 +450,7 @@
 
             public IGetMessageBannerDataAccess MessageBannerDataAccess = A.Dummy<IGetMessageBannerDataAccess>();
 
-            public IUserPasswordHistoriesDataAccess PasswordHistoriesDataAccess = A.Dummy<IUserPasswordHistoriesDataAccess>();
+            public IPasswordHistoryService PasswordHistoryService = A.Dummy<IPasswordHistoryService>();
 
             public UnauthenticatedUserControllerBuilder()
             {
@@ -460,7 +459,7 @@
                 EmailService = A.Fake<IWeeeEmailService>();
                 GetAdminUserDataAccess = A.Fake<IGetAdminUserDataAccess>();
                 MessageBannerDataAccess = A.Fake<IGetMessageBannerDataAccess>();
-                PasswordHistoriesDataAccess = A.Fake<IUserPasswordHistoriesDataAccess>();
+                PasswordHistoryService = A.Fake<IPasswordHistoryService>();
             }
 
             public UnauthenticatedUserController Build()
@@ -470,7 +469,7 @@
                                                          EmailService, 
                                                          GetAdminUserDataAccess, 
                                                          MessageBannerDataAccess,
-                                                         PasswordHistoriesDataAccess);
+                                                         PasswordHistoryService);
             }
         }
     }

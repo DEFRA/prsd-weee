@@ -3,11 +3,11 @@
     using EA.Weee.Domain.User;
     using System.Data.Entity.ModelConfiguration;
 
-    internal class UserPasswordHistoriesMapping : EntityTypeConfiguration<UserPasswordHistories>
+    internal class PasswordHistoriesMapping : EntityTypeConfiguration<PasswordHistory>
     {
-        public UserPasswordHistoriesMapping()
+        public PasswordHistoriesMapping()
         {
-            ToTable("UserPasswordHistories", "Identity");
+            ToTable("PasswordHistories", "Identity");
 
             Property(x => x.Id).HasColumnName("Id").IsRequired();
             Property(x => x.UserId).HasColumnName("UserId").IsRequired().HasMaxLength(128);

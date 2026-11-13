@@ -344,7 +344,6 @@
     <Compile Include="Users\GetOrganisationUser.cs" />
     <Compile Include="Users\GetManageableOrganisationUsers\GetManageableOrganisationUsers.cs" />
     <Compile Include="Users\GetUserData.cs" />
-    <Compile Include="Users\GetUserPasswordHistory.cs" />
     <Compile Include="Users\UpdateOrganisationUserStatus.cs" />
   </ItemGroup>
   <ItemGroup>

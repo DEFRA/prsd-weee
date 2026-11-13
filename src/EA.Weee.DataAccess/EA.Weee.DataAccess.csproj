@@ -190,7 +190,7 @@
     <Compile Include="Mappings\FacilityTypeMapping.cs" />
     <Compile Include="Mappings\RoleMapping.cs" />
     <Compile Include="Mappings\ReturnStatusMapping.cs" />
-    <Compile Include="Mappings\UserPasswordHistoriesMapping.cs" />
+    <Compile Include="Mappings\PasswordHistoriesMapping.cs" />
     <Compile Include="Mappings\WeeeCollectedReturnVersionMapping.cs" />
     <Compile Include="Mappings\WeeeDeliveredReturnVersionMapping.cs" />
     <Compile Include="Specification\ISpecification.cs" />
