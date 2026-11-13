@@ -26,19 +26,22 @@
         private readonly IWeeeEmailService emailService;
         private readonly IGetAdminUserDataAccess getAdminUserDataAccess;
         private readonly IGetMessageBannerDataAccess messageBannerDataAccess;
+        private readonly IPasswordHistoryService passwordHistoryService;
 
         public UnauthenticatedUserController(
             ApplicationUserManager userManager,
             IUserContext userContext,
             IWeeeEmailService emailService,
             IGetAdminUserDataAccess getAdminUserDataAccess,
-            IGetMessageBannerDataAccess messageBannerDataAccess)
+            IGetMessageBannerDataAccess messageBannerDataAccess,
+            IPasswordHistoryService passwordHistoryService)
         {
             this.userManager = userManager;
             this.userContext = userContext;
             this.emailService = emailService;
             this.getAdminUserDataAccess = getAdminUserDataAccess;
             this.messageBannerDataAccess = messageBannerDataAccess;
+            this.passwordHistoryService = passwordHistoryService;
         }
 
         [HttpPost]
@@ -103,14 +106,19 @@
 
             var result = await userManager.CreateAsync(user, model.Password);
 
-            if (!result.Succeeded)
+            if (result.Succeeded)
             {
-                return GetErrorResult(result);
+                var isSuccess = await passwordHistoryService.AddUserPasswordHistories(user.Id, user.PasswordHash);
+
+                if (isSuccess)
+                {
+                    await SendActivationEmail(user.Id, user.Email, model.ActivationBaseUrl);
+
+                    return Ok(user.Id);
+                }
             }
 
-            await SendActivationEmail(user.Id, user.Email, model.ActivationBaseUrl);
-
-            return Ok(user.Id);
+            return GetErrorResult(result);
         }
 
         [HttpPost]
@@ -205,11 +213,29 @@
 
             try
             {
-                result = await userManager.ResetPasswordAsync(model.UserId.ToString(), model.Token, model.Password);
+                var userId = model.UserId.ToString().Trim();
 
-                if (!result.Succeeded)
+                var user = userManager.FindById(userId);
+
+                // Check last 5 passwords
+                if (await passwordHistoryService.IsPasswordPreviouslyUsed(user, model.Password))
                 {
-                    return GetErrorResult(result);
+                    ModelState.AddModelError("NewPassword", "You cannot reuse any of your last 5 passwords.");
+
+                    return BadRequest(ModelState);
+                }
+
+                // Save current password hash in history
+                var isAddedPasswordToHash = await passwordHistoryService.AddUserPasswordHistories(userId, model.Password);
+
+                if (isAddedPasswordToHash)
+                {
+                    result = await userManager.ResetPasswordAsync(model.UserId.ToString(), model.Token, model.Password);
+
+                    if (!result.Succeeded)
+                    {
+                        return GetErrorResult(result);
+                    }
                 }
             }
             catch (InvalidOperationException)

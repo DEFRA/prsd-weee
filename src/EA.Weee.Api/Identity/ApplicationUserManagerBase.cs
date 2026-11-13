@@ -2,7 +2,6 @@
 {
     using Microsoft.AspNet.Identity;
     using System;
-    using System.Security.Claims;
     using System.Threading.Tasks;
     using System.Web;
     using Prsd.Core.Domain;
@@ -13,7 +12,7 @@
     /// </summary>
     /// <typeparam name="TUser"></typeparam>
     public abstract class ApplicationUserManagerBase<TUser> : UserManager<TUser>
-        where TUser : class, Microsoft.AspNet.Identity.IUser<string>
+        where TUser : class, IUser<string>
     {
         private readonly ISecurityEventAuditor auditSecurityEventService;
         private readonly IUserContext userContext;

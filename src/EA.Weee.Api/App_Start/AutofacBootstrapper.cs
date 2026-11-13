@@ -58,6 +58,7 @@
 
             builder.RegisterType<PaymentsJob>().AsSelf().InstancePerLifetimeScope();
             builder.RegisterType<PaymentsService>().As<IPaymentsService>().InstancePerLifetimeScope();
+            builder.RegisterType<PasswordHistoryService>().As<IPasswordHistoryService>().InstancePerRequest();
 
             return builder.Build();
         }

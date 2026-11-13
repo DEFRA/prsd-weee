@@ -47,7 +47,7 @@
             // Configure validation logic for passwords
             PasswordValidator = new PasswordValidator
             {
-                RequiredLength = 8,
+                RequiredLength = 12,
                 RequireNonLetterOrDigit = false,
                 RequireDigit = true,
                 RequireLowercase = true,

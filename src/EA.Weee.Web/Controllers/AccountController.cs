@@ -29,7 +29,7 @@
 
         public AccountController(Func<IWeeeClient> apiClient,
             IWeeeAuthorization weeeAuthorization,
-            IExternalRouteService externalRouteService, 
+            IExternalRouteService externalRouteService,
             Func<IOAuthClientCredentialClient> apiClientCredential,
             IAppConfiguration appConfiguration)
         {
@@ -263,7 +263,7 @@
                 return View(model);
             }
             var access = await apiClientCredential().GetClientCredentialsAsync();
-            
+
             using (var client = apiClient())
             {
                 ResetPasswordRoute route = externalRouteService.ExternalUserResetPasswordRoute;
