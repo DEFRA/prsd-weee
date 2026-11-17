@@ -70,14 +70,19 @@
 
             var result = await userManager.CreateAsync(user, model.Password);
 
-            if (!result.Succeeded)
+            if (result.Succeeded)
             {
-                return GetErrorResult(result);
+                var isSuccess = await passwordHistoryService.AddUserPasswordHistories(user.Id, user.PasswordHash);
+
+                if (isSuccess)
+                {
+                    await SendActivationEmail(user.Id, user.Email, model.ActivationBaseUrl);
+
+                    return Ok(user.Id);
+                }
             }
 
-            await SendActivationEmail(user.Id, user.Email, model.ActivationBaseUrl);
-
-            return Ok(user.Id);
+            return GetErrorResult(result);
         }
 
         [HttpPost]
