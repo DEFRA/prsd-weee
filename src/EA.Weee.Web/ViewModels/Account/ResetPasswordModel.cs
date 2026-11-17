@@ -7,7 +7,8 @@
     {
         [Required(ErrorMessage = "Enter password")]
         [DataType(DataType.Password)]
-        [StringLength(maximumLength: CommonMaxFieldLengths.Password, ErrorMessage = "Password must be at least {2} characters long", MinimumLength = 8)]
+        [StringLength(maximumLength: CommonMaxFieldLengths.Password, MinimumLength = 12, ErrorMessage = "Password must be at least {2} characters long")]
+        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{12,}$", ErrorMessage = "Password must contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 special character.")]
         [Display(Name = "Create your new password")]
         public string Password { get; set; }
 

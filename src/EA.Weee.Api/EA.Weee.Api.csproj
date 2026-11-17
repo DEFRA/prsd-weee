@@ -400,7 +400,9 @@
     <Compile Include="HangfireServices\PaymentsJob.cs" />
     <Compile Include="HangfireServices\PaymentsService.cs" />
     <Compile Include="Identity\ApplicationUserManagerBase.cs" />
+    <Compile Include="Identity\IPasswordHistoryService.cs" />
     <Compile Include="Identity\ISecurityEventAuditor.cs" />
+    <Compile Include="Identity\PasswordHistoryService.cs" />
     <Compile Include="Identity\SecurityEventService.cs" />
     <Compile Include="IdSrv\AspNetIdentityUserService.cs" />
     <Compile Include="IdSrv\ClaimsTransformationOptionsFactory.cs" />
