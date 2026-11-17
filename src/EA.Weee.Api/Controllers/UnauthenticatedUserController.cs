@@ -214,7 +214,6 @@
             try
             {
                 var userId = model.UserId.ToString().Trim();
-
                 var user = userManager.FindById(userId);
 
                 // Check last 5 passwords
@@ -225,17 +224,17 @@
                     return BadRequest(ModelState);
                 }
 
-                // Save current password hash in history
-                var isAddedPasswordToHash = await passwordHistoryService.AddUserPasswordHistories(userId, model.Password);
+                result = await userManager.ResetPasswordAsync(model.UserId.ToString(), model.Token, model.Password);
 
-                if (isAddedPasswordToHash)
+                if (result.Succeeded)
                 {
-                    result = await userManager.ResetPasswordAsync(model.UserId.ToString(), model.Token, model.Password);
-
-                    if (!result.Succeeded)
-                    {
-                        return GetErrorResult(result);
-                    }
+                    // Save current password hash in history
+                    await passwordHistoryService.AddUserPasswordHistories(userId, user.PasswordHash);
+                    return Ok(result.Succeeded);
+                }
+                else
+                {
+                    return GetErrorResult(result);
                 }
             }
             catch (InvalidOperationException)
@@ -245,8 +244,6 @@
                 ModelState.AddModelError(string.Empty, "User not recognised");
                 return BadRequest(ModelState);
             }
-
-            return Ok(result.Succeeded);
         }
 
         [HttpPost]

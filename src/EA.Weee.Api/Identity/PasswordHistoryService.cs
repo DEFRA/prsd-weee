@@ -34,8 +34,9 @@
             }
 
             // Check previous 5 passwords
+            string userId = user.Id.ToString();
             var previousPasswords = await context.PasswordHistories
-                                                 .Where(x => x.UserId == user.Id)
+                                                 .Where(x => x.UserId == userId)
                                                  .OrderByDescending(x => x.CreatedDate)
                                                  .Take(5)
                                                  .ToListAsync();
