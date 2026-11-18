@@ -3,18 +3,19 @@
     using AutoFixture;
     using Core.AatfReturn;
     using DataAccess;
+    using DataAccess.DataAccess;
     using Domain;
     using Domain.AatfReturn;
     using Domain.Organisation;
+    using EA.Prsd.Core.Domain;
     using FakeItEasy;
     using FluentAssertions;
+    using RequestHandlers.Aatf;
     using RequestHandlers.AatfReturn;
     using RequestHandlers.Factories;
     using System;
     using System.Collections.Generic;
     using System.Threading.Tasks;
-    using DataAccess.DataAccess;
-    using RequestHandlers.Aatf;
     using Weee.Tests.Core;
     using Xunit;
     using FacilityType = Domain.AatfReturn.FacilityType;
@@ -27,6 +28,8 @@
         private readonly DbContextHelper dbContextHelper;
         private readonly IGenericDataAccess genericDataAccess;
         private readonly IQuarterWindowFactory quarterWindowFactory;
+        private readonly IUserContext userContext;
+
         public AatfDataAccessTests()
         {
             fixture = new Fixture();
@@ -34,8 +37,9 @@
             dbContextHelper = new DbContextHelper();
             genericDataAccess = A.Fake<IGenericDataAccess>();
             quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
+            userContext = A.Fake<IUserContext>();
 
-            dataAccess = new AatfDataAccess(context, genericDataAccess, quarterWindowFactory);
+            dataAccess = new AatfDataAccess(context, genericDataAccess, quarterWindowFactory, userContext);
         }
 
         [Fact]

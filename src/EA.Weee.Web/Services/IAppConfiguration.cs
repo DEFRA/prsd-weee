@@ -113,5 +113,7 @@
         int SessionTimeoutInMinutes { get; set; }
 
         int SessionTimeoutWarningInMinutes { get; set; }
+
+        int RetentionPeriod { get; set; }
     }
 }

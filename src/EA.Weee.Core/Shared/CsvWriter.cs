@@ -50,7 +50,7 @@
             {
                 foreach (T item in items)
                 {
-                    string[] values = columns.Select(c => Encode(c.GetData(item))).ToArray();
+                    string[] values = columns.Select(c => c.IsFormatAsText ? c.GetData(item) : Encode(c.GetData(item))).ToArray();
                     string valuesString = string.Join(",", values);
                     sb.AppendLine(valuesString);
                 }
@@ -59,19 +59,25 @@
             return sb.ToString();
         }
 
+        /// <summary>
+        /// Encodes a raw value so that it is safe to include in a CSV file.
+        /// Values containing a comma or a double quote are wrapped in double quotes,
+        /// and any double quotes already present in the value are escaped by doubling
+        /// them, in line with RFC 4180.
+        /// </summary>
         public static string Encode(string value)
         {
-            if (value.Contains(","))
-            {
-                value = string.Concat("\"", value, "\"");
-            }
-
             value = value.Replace("\r\n", " ");
             value = value.Replace("\n\n", " ");
             value = value.Replace("\r", " ");
             value = value.Replace("\n", " ");
 
             value = value.Trim();
+
+            if (value.Contains(",") || value.Contains("\""))
+            {
+                value = string.Concat("\"", value.Replace("\"", "\"\""), "\"");
+            }
 
             return value;
         }
@@ -90,6 +96,11 @@
             private readonly Func<T, object> func;
             private readonly bool formatAsText;
             private readonly IExcelSanitizer excelSanitizer;
+
+            public bool IsFormatAsText
+            {
+                get { return formatAsText; }
+            }
 
             public CsvColumn(string title, Func<T, object> func, bool formatAsText, IExcelSanitizer excelSanitizer)
             {

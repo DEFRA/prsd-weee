@@ -7,5 +7,7 @@
     public interface IGetAatfDeletionStatus
     {
         Task<CanAatfBeDeletedFlags> Validate(Guid aatfId);
+
+        Task<bool> CanOrganisationBeDeleted(Guid aatfId);
     }
 }

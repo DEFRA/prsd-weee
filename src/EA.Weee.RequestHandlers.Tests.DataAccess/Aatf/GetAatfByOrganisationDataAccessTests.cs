@@ -1,6 +1,7 @@
 ﻿namespace EA.Weee.RequestHandlers.Tests.DataAccess.Aatf
 {
     using AutoFixture;
+    using EA.Prsd.Core.Domain;
     using EA.Weee.DataAccess.DataAccess;
     using EA.Weee.Domain.AatfReturn;
     using EA.Weee.RequestHandlers.Aatf;
@@ -18,11 +19,13 @@
     {
         private readonly Fixture fixture;
         private readonly IQuarterWindowFactory quarterWindowFactory;
+        private readonly IUserContext userContext;
 
         public GetAatfByOrganisationDataAccessTests()
         {
             fixture = new Fixture();
             quarterWindowFactory = A.Fake<IQuarterWindowFactory>();
+            userContext = A.Fake<IUserContext>();
         }
 
         [Fact]
@@ -30,7 +33,7 @@
         {
             using (var databaseWrapper = new DatabaseWrapper())
             {
-                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory);
+                var aatfDataAccess = new AatfDataAccess(databaseWrapper.WeeeContext, GetGenericDataAccess(databaseWrapper), quarterWindowFactory, userContext);
                 var organisation = Organisation.CreateSoleTrader(fixture.Create<string>());
 
                 var aatf1 = ObligatedWeeeIntegrationCommon.CreateAatf(databaseWrapper, organisation);
