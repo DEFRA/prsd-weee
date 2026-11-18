@@ -37,28 +37,34 @@
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Name)">
             @Html.Gds().LabelFor(m => m.Name)
             @Html.Gds().ValidationMessageFor(m => m.Name)
-            @Html.Gds().TextBoxFor(m => m.Name, new {  @maxlength = CommonMaxFieldLengths.FirstName })
+            @Html.Gds().TextBoxFor(m => m.Name, new { @maxlength = CommonMaxFieldLengths.FirstName })
         </div>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Surname)">
             @Html.Gds().LabelFor(m => m.Surname)
             @Html.Gds().ValidationMessageFor(m => m.Surname)
-            @Html.Gds().TextBoxFor(m => m.Surname, new {  @maxlength = CommonMaxFieldLengths.LastName })
+            @Html.Gds().TextBoxFor(m => m.Surname, new { @maxlength = CommonMaxFieldLengths.LastName })
         </div>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Email)">
             @Html.Gds().LabelFor(m => m.Email)
             @Html.Gds().ValidationMessageFor(m => m.Email)
-            @Html.Gds().TextBoxFor(m => m.Email, new {  @maxlength = CommonMaxFieldLengths.EmailAddress })
+            @Html.Gds().TextBoxFor(m => m.Email, new { @maxlength = CommonMaxFieldLengths.EmailAddress })
         </div>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.Password)">
             @Html.Gds().LabelFor(m => m.Password)
             @Html.Gds().ValidationMessageFor(m => m.Password)
-            <p class="form-hint text">Your password has to be at least 12 characters long and must contain at least 1 lower-case letter, 1 upper-case letter, 1 number and 1 special character.</p>
-            @Html.Gds().PasswordFor(m => m.Password, new {  @maxlength = CommonMaxFieldLengths.Password })
+            <p class="form-hint text">
+                At least 12 characters long <br />
+                At least 1 lower-case letter<br />
+                At least 1 upper-case letter<br />
+                At least 1 numerical value<br />
+                At least 1 special character (e.g. !, ?, &#64;, #)
+            </p>
+            @Html.Gds().PasswordFor(m => m.Password, new { @maxlength = CommonMaxFieldLengths.Password })
         </div>
         <div class="govuk-form-group @Html.Gds().FormGroupClass(m => m.ConfirmPassword)">
             @Html.Gds().LabelFor(m => m.ConfirmPassword)
             @Html.Gds().ValidationMessageFor(m => m.ConfirmPassword)
-            @Html.Gds().PasswordFor(m => m.ConfirmPassword, new {  @maxlength = CommonMaxFieldLengths.Password })
+            @Html.Gds().PasswordFor(m => m.ConfirmPassword, new { @maxlength = CommonMaxFieldLengths.Password })
         </div>
 
         @(this.WeeeGds().Submit("Create a user account"))

@@ -158,23 +158,20 @@
             foreach (var modelError in modelErrors)
             {
                 string fieldName = modelError.FieldId;
-                if (!string.IsNullOrEmpty(System.Web.Mvc.HtmlHelper.IdAttributeDotReplacement))
+                if (!string.IsNullOrEmpty(HtmlHelper.IdAttributeDotReplacement))
                 {
-                    fieldName = fieldName.Replace(".", System.Web.Mvc.HtmlHelper.IdAttributeDotReplacement);
-                    fieldName = fieldName.Replace("[", System.Web.Mvc.HtmlHelper.IdAttributeDotReplacement);
-                    fieldName = fieldName.Replace("]", System.Web.Mvc.HtmlHelper.IdAttributeDotReplacement);
+                    fieldName = fieldName.Replace(".", HtmlHelper.IdAttributeDotReplacement);
+                    fieldName = fieldName.Replace("[", HtmlHelper.IdAttributeDotReplacement);
+                    fieldName = fieldName.Replace("]", HtmlHelper.IdAttributeDotReplacement);
 
-                    if (fieldName.Length > 0
-                        && fieldName.Contains(System.Web.Mvc.HtmlHelper.IdAttributeDotReplacement)
-                        && char.IsLower(fieldName.ElementAt(0)))
+                    if (fieldName.Length > 0 && fieldName.Contains(HtmlHelper.IdAttributeDotReplacement) && char.IsLower(fieldName.ElementAt(0)))
                     {
                         fieldName = fieldName[0].ToString().ToUpper() + fieldName.Substring(1);
                     }
                 }
 
                 errorListBuilder.AppendLine("<li>");
-                errorListBuilder.AppendFormat("<a href=\"#{0}\">{1}</a>", fieldName,
-                    modelError.ModelError.ErrorMessage);
+                errorListBuilder.AppendFormat("<a href=\"#{0}\" style='white-space: pre;'>{1}</a>", fieldName, modelError.ModelError.ErrorMessage);
                 errorListBuilder.AppendLine("</li>");
             }
 

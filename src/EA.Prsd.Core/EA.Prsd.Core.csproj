@@ -2,7 +2,7 @@
 <Project ToolsVersion="Current" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-	  <LangVersion>11.0</LangVersion>
+    <LangVersion>11.0</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -94,6 +94,7 @@
     <Compile Include="SystemTime.cs" />
     <Compile Include="Validation\HttpPostedFileTypeAttribute.cs" />
     <Compile Include="Validation\MustBeTrueAttribute.cs" />
+    <Compile Include="Validation\PasswordComplexityAttribute.cs" />
     <Compile Include="Validation\RequiredIfOtherValueNotNullAttribute.cs" />
     <Compile Include="Validation\RequiredIfAttribute.cs" />
     <Compile Include="Validation\RequiredIfPropertiesEqualAttribute.cs" />

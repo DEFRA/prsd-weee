@@ -27,8 +27,8 @@
         public string Email { get; set; }
 
         [Required]
-        [StringLength(maximumLength: CommonMaxFieldLengths.Password, MinimumLength = 12, ErrorMessage = "Password must be at least {2} characters long")]
-        [RegularExpression(@"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^a-zA-Z0-9]).{12,}$", ErrorMessage = "Password must contain at least 1 lowercase letter, 1 uppercase letter, 1 number, and 1 special character.")]
+        [StringLength(CommonMaxFieldLengths.Password)]
+        [PasswordComplexity]
         [DataType(DataType.Password)]
         [Display(Name = "Password")]
         public string Password { get; set; }
