@@ -34,7 +34,7 @@
 
         [Required(ErrorMessage = "Enter EEE brand names")]
         [StringLength(CommonMaxFieldLengths.ExtraLongDefaultString)]
-        [DisplayName("If you are registering as an authorised representative of a non-UK established organisation, enter the brands they place on the market.")]
+        [DisplayName("EEE brand names")]
         public string EEEBrandNames { get; set; }
 
         [DisplayName("Organisation type")]

@@ -141,4 +141,7 @@
   <data name="BrandNamesDescription" xml:space="preserve">
     <value>Enter EEE brand names that you place on the UK market</value>
   </data>
+  <data name="BrandsNamesText" xml:space="preserve">
+    <value>If you are registering as an authorised representative of a non-UK established organisation, enter the brands they place on the market.</value>
+  </data>
 </root>

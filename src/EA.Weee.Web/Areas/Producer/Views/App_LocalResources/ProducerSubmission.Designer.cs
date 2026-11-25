@@ -70,6 +70,15 @@ namespace Resources.ProducerSubmission {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to If you are registering as an authorised representative of a non-UK established organisation, enter the brands they place on the market..
+        /// </summary>
+        public static string BrandsNamesText {
+            get {
+                return ResourceManager.GetString("BrandsNamesText", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Discard changes.
         /// </summary>
         public static string DiscardChanges {

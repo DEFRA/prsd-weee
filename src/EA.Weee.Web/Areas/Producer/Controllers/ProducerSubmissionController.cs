@@ -1,5 +1,11 @@
 ﻿namespace EA.Weee.Web.Areas.Producer.Controllers
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Diagnostics;
+    using System.Linq;
+    using System.Threading.Tasks;
+    using System.Web.Mvc;
     using EA.Prsd.Core.Helpers;
     using EA.Prsd.Core.Mapper;
     using EA.Weee.Api.Client;
@@ -21,11 +27,6 @@
     using EA.Weee.Web.Requests.Base;
     using EA.Weee.Web.Services;
     using EA.Weee.Web.Services.Caching;
-    using System;
-    using System.Collections.Generic;
-    using System.Linq;
-    using System.Threading.Tasks;
-    using System.Web.Mvc;
 
     [AuthorizeRouteClaims("directRegistrantId", WeeeClaimTypes.DirectRegistrantAccess)]
     [OutputCache(NoStore = true, Duration = 0, VaryByParam = "None")]
