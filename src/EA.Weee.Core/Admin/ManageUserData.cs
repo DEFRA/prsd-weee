@@ -38,5 +38,7 @@
         public DateTime? LastLoginDate { get; set; }
 
         public DateTime? UserCreated { get; set; }
+
+        public DateTime PasswordChangedDate { get; set; }
     }
 }

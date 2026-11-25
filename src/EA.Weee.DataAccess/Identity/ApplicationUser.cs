@@ -11,6 +11,7 @@
         public string FirstName { get; set; }
         public string Surname { get; set; }
         public DateTime? LastLoginDate { get; set; }
+        public DateTime PasswordChangedDate { get; set; }
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
         {

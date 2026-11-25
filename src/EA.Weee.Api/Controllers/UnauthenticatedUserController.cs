@@ -59,6 +59,7 @@
                 Email = model.Email,
                 FirstName = model.FirstName,
                 Surname = model.Surname,
+                PasswordChangedDate = DateTime.UtcNow
             };
 
             user.Claims.Add(new IdentityUserClaim
@@ -100,6 +101,7 @@
                 Email = model.Email,
                 FirstName = model.FirstName,
                 Surname = model.Surname,
+                PasswordChangedDate = DateTime.UtcNow
             };
 
             user.Claims.Add(new IdentityUserClaim

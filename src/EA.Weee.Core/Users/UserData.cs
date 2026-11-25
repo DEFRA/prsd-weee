@@ -13,5 +13,7 @@
         public string Email { get; set; }
 
         public DateTime? LastLoginDate { get; set; }
+
+        public DateTime PasswordChangedDate { get; set; }
     }
 }
