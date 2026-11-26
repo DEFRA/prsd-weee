@@ -56,7 +56,7 @@
 
             // Configure user lockout defaults
             UserLockoutEnabledByDefault = true;
-            DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(5);
+            DefaultAccountLockoutTimeSpan = TimeSpan.FromMinutes(30);
             MaxFailedAccessAttemptsBeforeLockout = 5;
 
             IDataProtector dataProtector = dataProtectionProvider.Create("ASP.NET Identity");

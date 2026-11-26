@@ -83,8 +83,12 @@
             {
                 case OidcConstants.AuthorizeErrors.AccessDenied:
                     return "Access denied";
+
                 case OidcConstants.TokenErrors.InvalidGrant:
-                    return "Incorrect email address or password";
+                    return "Incorrect email address or password. " +
+                           "Your account will be locked for 30 minutes if you incorrectly enter your email address or password 5 consecutive times. " +
+                           "You will not be able to reset your password during this time.";
+
                 case OidcConstants.AuthorizeResponse.Error:
                 case OidcConstants.TokenErrors.UnsupportedGrantType:
                 case OidcConstants.TokenErrors.InvalidClient:

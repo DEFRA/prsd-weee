@@ -171,7 +171,7 @@
                 }
 
                 errorListBuilder.AppendLine("<li>");
-                errorListBuilder.AppendFormat("<a href=\"#{0}\" style='white-space: pre;'>{1}</a>", fieldName, modelError.ModelError.ErrorMessage);
+                errorListBuilder.AppendFormat("<a href=\"#{0}\">{1}</a>", fieldName, modelError.ModelError.ErrorMessage);
                 errorListBuilder.AppendLine("</li>");
             }
 
