@@ -188,6 +188,7 @@
     <Compile Include="Admin\RemoveAATFOrAeRecords\GetAatfOrAeRetentionPeriodDataAccess.cs" />
     <Compile Include="Admin\RemoveAATFOrAeRecords\IGetAatfOrAeRetentionPeriodComplianceYearsDataAccess.cs" />
     <Compile Include="Admin\RemoveAATFOrAeRecords\IGetAatfOrAeRetentionPeriodDataAccess.cs" />
+    <Compile Include="Admin\ValidateUserPasswordChangeDateHandler.cs" />
     <Compile Include="Mappings\AdditionalCompanyDetailsAddressDataMap.cs" />
     <Compile Include="Mappings\AuthorisedRepresentitiveDataMap.cs" />
     <Compile Include="Mappings\AatfSimpleMapObject.cs" />

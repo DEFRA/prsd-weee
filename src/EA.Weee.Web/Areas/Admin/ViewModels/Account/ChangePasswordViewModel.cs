@@ -11,6 +11,12 @@
 
         [Required]
         [StringLength(CommonMaxFieldLengths.Password)]
+        [DataType(DataType.Password)]
+        [Display(Name = "Enter your old password")]
+        public string OldPassword { get; set; }
+
+        [Required]
+        [StringLength(CommonMaxFieldLengths.Password)]
         [PasswordComplexity]
         [DataType(DataType.Password)]
         [Display(Name = "Create your new password")]

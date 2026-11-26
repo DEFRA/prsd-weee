@@ -1238,6 +1238,8 @@
     <Content Include="Areas\Admin\Views\RemoveAatfOrAeRecords\DeleteFailure.cshtml" />
     <Content Include="Views\Account\ChangePassword.cshtml" />
     <Content Include="Views\Account\ChangePasswordComplete.cshtml" />
+    <Content Include="Areas\Admin\Views\Home\ChangePassword.cshtml" />
+    <Content Include="Areas\Admin\Views\Home\ChangePasswordComplete.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />

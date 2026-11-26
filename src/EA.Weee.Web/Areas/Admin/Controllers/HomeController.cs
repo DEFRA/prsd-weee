@@ -3,8 +3,10 @@
     using Api.Client;
     using Base;
     using Core.Shared;
+    using EA.Weee.Api.Client.Entities;
     using EA.Weee.Core.AatfReturn;
     using EA.Weee.Security;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Account;
     using EA.Weee.Web.Areas.Admin.ViewModels.Producers;
     using Infrastructure;
     using Services;
@@ -39,16 +41,64 @@
                 switch (userStatus)
                 {
                     case UserStatus.Active:
-                        return RedirectToAction("ChooseActivity", "Home");
+                        {
+                            var isValidPasswordChange = await client.SendAsync(User.GetAccessToken(), new ValidateUserPasswordChangeDate(User.GetUserId()));
+                            if (isValidPasswordChange)
+                            {
+                                return RedirectToAction("ChangePassword", new { userId = User.GetUserId() });
+                            }
+                            return RedirectToAction("ChooseActivity", "Home");
+                        }
+
                     case UserStatus.Inactive:
                     case UserStatus.Pending:
                     case UserStatus.Rejected:
                         return RedirectToAction("InternalUserAuthorisationRequired", "Account", new { userStatus });
+
                     default:
-                        throw new NotSupportedException(
-                            $"Cannot determine result for user with status '{userStatus}'");
+                        throw new NotSupportedException($"Cannot determine result for user with status '{userStatus}'");
                 }
             }
+        }
+
+        [HttpGet]
+        public ActionResult ChangePassword(Guid userId)
+        {
+            var model = new ChangePasswordViewModel()
+            {
+                UserId = userId
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            using (var client = apiClient())
+            {
+                var passwordResetData = new ChangePasswordRequest
+                {
+                    OldPassword = model.OldPassword,
+                    NewPassword = model.Password,
+                    UserId = model.UserId
+                };
+
+                bool result = await client.User.ChangePasswordAsync(passwordResetData, User.GetAccessToken());
+
+                if (result)
+                {
+                    return View("ChangePasswordComplete");
+                }
+            }
+
+            return View(model);
         }
 
         [HttpGet]
@@ -158,7 +208,7 @@
             {
                 viewModel.PossibleValues.Add(InternalUserActivity.ManagePcsObligations);
             }
-           
+
             if (configuration.EnableInvoicing)
             {
                 viewModel.PossibleValues.Add(InternalUserActivity.ManagePcsCharges);

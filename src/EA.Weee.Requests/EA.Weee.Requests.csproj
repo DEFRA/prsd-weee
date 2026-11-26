@@ -102,6 +102,7 @@
     <Compile Include="Admin\RemoveAATFOrAeRecords\GetAatfOrAeRetentionPeriodData.cs" />
     <Compile Include="Admin\RemoveSmallProducer.cs" />
     <Compile Include="Admin\Reports\GetSchemesWithObligationOrEvidence.cs" />
+    <Compile Include="Admin\ValidateUserPasswordChangeDate.cs" />
     <Compile Include="Organisations\DirectRegistrant\CompleteMigratedOrganisationTransaction.cs" />
     <Compile Include="Organisations\DirectRegistrant\ContinueOrganisationRegistrationRequest.cs" />
     <Compile Include="Organisations\DirectRegistrant\GetSmallProducerDirectRegistrantChargeRequest.cs" />
