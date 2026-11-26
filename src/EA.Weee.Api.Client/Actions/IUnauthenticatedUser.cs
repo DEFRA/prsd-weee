@@ -22,5 +22,7 @@
         Task<bool> IsPasswordResetTokenValidAsync(PasswordResetData model, string accessToken);
 
         Task<MessageBannerDataResult> GetMessageBannerAsync(string accessToken);
+
+        Task<bool> ChangePasswordAsync(ChangePasswordRequest passwordResetData, string accessToken);
     }
 }

@@ -561,6 +561,7 @@
     <Compile Include="Areas\Admin\Controllers\RemovePCSRecordsController.cs" />
     <Compile Include="Areas\Admin\Controllers\RemoveRecordsController.cs" />
     <Compile Include="Areas\Admin\Filters\AdminSmallProducerSubmissionSubmittedContextAttribute.cs" />
+    <Compile Include="Areas\Admin\ViewModels\Account\ChangePasswordViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\ConfirmReturnViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\OrganisationIdViewModel.cs" />
     <Compile Include="Areas\Admin\ViewModels\Producers\PaymentDetailsViewModel.cs" />
@@ -666,6 +667,7 @@
     <Compile Include="Areas\Producer\ViewModels\EditContactDetailsViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\CheckAnswersViewModel.cs" />
     <Compile Include="Areas\Producer\ViewModels\RegisteredResultModel.cs" />
+    <Compile Include="ViewModels\Account\ChangePasswordViewModel.cs" />
     <Compile Include="ViewModels\Organisation\Mapping\ToViewModel\RepresentingCompaniesViewModelMap.cs" />
     <Compile Include="ViewModels\Organisation\Mapping\ToViewModel\RepresentingCompaniesViewModelMapSource.cs" />
     <Compile Include="ViewModels\Organisation\RepresentingCompany.cs" />
@@ -1234,6 +1236,8 @@
     <Content Include="Areas\Admin\Views\RemoveAatfOrAeRecords\ConfirmDeletion.cshtml" />
     <Content Include="Areas\Admin\Views\RemoveAatfOrAeRecords\Deleted.cshtml" />
     <Content Include="Areas\Admin\Views\RemoveAatfOrAeRecords\DeleteFailure.cshtml" />
+    <Content Include="Views\Account\ChangePassword.cshtml" />
+    <Content Include="Views\Account\ChangePasswordComplete.cshtml" />
     <None Include="Views\Shared\_EvidenceNotesFilters.cshtml" />
     <Content Include="App_Readme\Elmah.FallbackErrorLog.txt" />
     <Content Include="Areas\Admin\Views\Reports\ChooseReport.cshtml" />

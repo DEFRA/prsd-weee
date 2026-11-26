@@ -48,6 +48,6 @@
 
         public DateTime? UserCreated { get; private set; }
 
-        public DateTime PasswordChangedDate { get; private set; }
+        public DateTime PasswordChangedDate { get; set; }
     }
 }

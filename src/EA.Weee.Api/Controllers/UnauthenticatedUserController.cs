@@ -343,5 +343,46 @@
 
             return Ok(messageBannerDataResult);
         }
+
+        [HttpPost]
+        [Route("ChangePassword")]
+        public async Task<IHttpActionResult> ChangePassword(ChangePasswordRequest model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var userId = model.UserId.ToString().Trim();
+            var user = await userManager.FindByIdAsync(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            // Check whether the new password was used previously
+            var isPasswordReused = await passwordHistoryService.IsPasswordPreviouslyUsed(user, model.NewPassword);
+
+            if (isPasswordReused)
+            {
+                ModelState.AddModelError(nameof(model.NewPassword), "You cannot reuse any of your last 5 passwords.");
+
+                return BadRequest(ModelState);
+            }
+
+            // Change password
+            var result = await userManager.ChangePasswordAsync(userId, model.OldPassword, model.NewPassword);
+
+            if (!result.Succeeded)
+            {
+                return GetErrorResult(result);
+            }
+
+            // Update password change date and History
+            var isUserDataUpdated = await passwordHistoryService.UpdatePasswordChangeDateAndHistory(userId, user.PasswordHash);
+
+            return Ok(isUserDataUpdated);
+        }
     }
 }

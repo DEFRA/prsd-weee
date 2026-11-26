@@ -22,7 +22,7 @@
         private readonly WeeeContext context;
 
         protected ApplicationUserManager()
-            : base(null, null, null, null)
+            : base(null, null, null)
         {
         }
 
@@ -32,9 +32,8 @@
             IDataProtectionProvider dataProtectionProvider,
             ConfigurationService configurationService,
             WeeeContext context,
-            IUserContext userContext,
-            ApplicationUserManager userManager)
-            : base(store, auditSecurityEventService, userContext, userManager)
+            IUserContext userContext)
+            : base(store, auditSecurityEventService, userContext)
         {
             this.configurationService = configurationService;
             this.context = context;

@@ -133,6 +133,7 @@
     <Compile Include="ApiClientModule.cs" />
     <Compile Include="AddressLookupClient.cs" />
     <Compile Include="CompaniesHouseClient.cs" />
+    <Compile Include="Entities\ChangePasswordRequest.cs" />
     <Compile Include="Entities\ErrorData.cs" />
     <Compile Include="Entities\ExternalUserCreationData.cs" />
     <Compile Include="Entities\InternalUserCreationData.cs" />

@@ -39,6 +39,7 @@
                 FirstName = u.FirstName,
                 Id = u.Id,
                 Surname = u.Surname,
+                PasswordChangedDate = u.PasswordChangedDate
             }).SingleOrDefaultAsync(u => u.Id == query.Id);
         }
     }

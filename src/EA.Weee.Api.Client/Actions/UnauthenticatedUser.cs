@@ -94,6 +94,14 @@
             return await response.CreateResponseAsync<bool>();
         }
 
+        public async Task<bool> ChangePasswordAsync(ChangePasswordRequest passwordResetData, string accessToken)
+        {
+            httpClient.SetBearerToken(accessToken);
+            var response = await httpClient.PostAsJsonAsync(Controller + "ChangePassword", passwordResetData);
+
+            return await response.CreateResponseAsync<bool>();
+        }
+
         public async Task<PasswordResetRequestResult> ResetPasswordRequestAsync(PasswordResetRequest passwordResetRequest, string accessToken)
         {
             httpClient.SetBearerToken(accessToken);

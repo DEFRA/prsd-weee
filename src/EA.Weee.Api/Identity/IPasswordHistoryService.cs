@@ -8,5 +8,7 @@
         Task<bool> IsPasswordPreviouslyUsed(ApplicationUser user, string newPassword);
 
         Task<bool> AddUserPasswordHistories(string userId, string passwordHash);
+
+        Task<bool> UpdatePasswordChangeDateAndHistory(string userId, string passwordHash);
     }
 }

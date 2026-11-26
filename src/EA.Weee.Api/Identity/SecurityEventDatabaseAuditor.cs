@@ -4,6 +4,7 @@
     using Microsoft.AspNet.Identity;
     using Newtonsoft.Json;
     using System;
+    using System.Data;
     using System.Data.SqlClient;
     using System.Threading.Tasks;
 
@@ -39,6 +40,8 @@
 
         public async Task PasswordReset(string userId)
         {
+            await UpdatePasswordLastChanged(userId);
+
             await LogEvent(3, "PasswordReset", userId, null);
         }
 
@@ -86,6 +89,25 @@
                     cm.Parameters.AddWithValue("@Data", (object)data ?? DBNull.Value);
 
                     await cm.ExecuteNonQueryAsync();
+                }
+            }
+        }
+
+        private async Task UpdatePasswordLastChanged(string userId)
+        {
+            Guard.ArgumentNotNullOrEmpty(() => userId, userId);
+
+            using (SqlConnection con = new SqlConnection(connectionString))
+            {
+                using (SqlCommand cmd = new SqlCommand("[Identity].[UpdatePasswordChangedDate]", con))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+
+                    cmd.Parameters.Add("@UserId", SqlDbType.NVarChar, 128).Value = userId;
+                    cmd.Parameters.Add("@PasswordChangedDate", SqlDbType.DateTime).Value = DateTime.UtcNow;
+
+                    con.Open();
+                    await cmd.ExecuteNonQueryAsync();
                 }
             }
         }

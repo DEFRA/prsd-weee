@@ -20,6 +20,12 @@
             hasher = new PasswordHasher();
         }
 
+        /// <summary>
+        /// This method checks whether the user is using the last 5 passwords.
+        /// </summary>
+        /// <param name="user"></param>
+        /// <param name="newPassword"></param>
+        /// <returns></returns>
         public async Task<bool> IsPasswordPreviouslyUsed(ApplicationUser user, string newPassword)
         {
             // Check current password
@@ -44,6 +50,12 @@
             return previousPasswords.Any(x => hasher.VerifyHashedPassword(x.PasswordHash, newPassword) != PasswordVerificationResult.Failed);
         }
 
+        /// <summary>
+        /// This method to add user password histories table data.
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="passwordHash"></param>
+        /// <returns></returns>
         public async Task<bool> AddUserPasswordHistories(string userId, string passwordHash)
         {
             var passwordHistories = new PasswordHistory()
@@ -54,6 +66,41 @@
             };
 
             context.PasswordHistories.Add(passwordHistories);
+
+            await context.SaveChangesAsync();
+
+            return true;
+        }
+
+        /// <summary>
+        /// This method is to update User Password change date and Password Histories table
+        /// </summary>
+        /// <param name="userId"></param>
+        /// <param name="passwordHash"></param>
+        /// <returns></returns>
+        public async Task<bool> UpdatePasswordChangeDateAndHistory(string userId, string passwordHash)
+        {
+            var user = await context.Users.FirstOrDefaultAsync(x => x.Id == userId);
+
+            if (user == null)
+            {
+                return false;
+            }
+
+            var currentDate = DateTime.UtcNow;
+
+            // Update password changed date
+            user.PasswordChangedDate = currentDate;
+
+            // Save previous password hash in history
+            var passwordHistory = new PasswordHistory
+            {
+                UserId = userId,
+                PasswordHash = passwordHash,
+                CreatedDate = currentDate
+            };
+
+            context.PasswordHistories.Add(passwordHistory);
 
             await context.SaveChangesAsync();
 

@@ -283,5 +283,47 @@
                 }
             }
         }
+
+        [HttpGet]
+        public ActionResult ChangePassword(Guid userId)
+        {
+            var model = new ChangePasswordViewModel()
+            {
+                UserId = userId
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            using (var client = apiClient())
+            {
+                var response = await apiClientCredential().GetClientCredentialsAsync();
+
+                var passwordResetData = new ChangePasswordRequest
+                {
+                    OldPassword = model.OldPassword,
+                    NewPassword = model.Password,
+                    UserId = model.UserId
+                };
+
+                bool result = await client.User.ChangePasswordAsync(passwordResetData, response.AccessToken);
+
+                if (result)
+                {
+                    return View("ChangePasswordComplete");
+                }
+            }
+
+            return View(model);
+        }
     }
 }

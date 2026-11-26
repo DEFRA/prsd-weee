@@ -8,6 +8,7 @@
     using EA.Weee.Core.Helpers;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using EA.Weee.Requests.Shared;
+    using EA.Weee.Requests.Users;
     using EA.Weee.Web.ViewModels.Organisation.Mapping.ToViewModel;
     using Infrastructure;
     using System;
@@ -32,6 +33,10 @@
         [HttpGet]
         public async Task<ActionResult> Index()
         {
+            if (await IsUserPasswordChangedDateValid())
+            {
+                return RedirectToAction("ChangePassword", "Account", new { userId = User.GetUserId() });
+            }
             return await ShowOrganisations();
         }
 
@@ -127,6 +132,21 @@
             return organisations
                 .Where(o => o.Organisation.OrganisationStatus == OrganisationStatus.Complete)
                 .OrderBy(o => o.Organisation.OrganisationName);
+        }
+
+        private async Task<bool> IsUserPasswordChangedDateValid()
+        {
+            using (var client = apiClient())
+            {
+                var userData = await client.SendAsync(User.GetAccessToken(), new GetUserData(User.GetUserId()));
+
+                if (userData != null && userData.PasswordChangedDate < DateTime.UtcNow.AddMonths(-6))
+                {
+                    return true;
+                }
+
+                return false;
+            }
         }
 
         /// <summary>

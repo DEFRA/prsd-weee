@@ -16,15 +16,11 @@
     {
         private readonly ISecurityEventAuditor auditSecurityEventService;
         private readonly IUserContext userContext;
-        private readonly ApplicationUserManager userManager;
 
-        public ApplicationUserManagerBase(IUserStore<TUser> store, ISecurityEventAuditor auditSecurityEventService,
-            IUserContext userContext, ApplicationUserManager userManager)
-            : base(store)
+        public ApplicationUserManagerBase(IUserStore<TUser> store, ISecurityEventAuditor auditSecurityEventService, IUserContext userContext) : base(store)
         {
             this.auditSecurityEventService = auditSecurityEventService;
             this.userContext = userContext;
-            this.userManager = userManager;
         }
 
         public override async Task<IdentityResult> CreateAsync(TUser user)
@@ -53,13 +49,6 @@
 
             if (result.Succeeded)
             {
-                var user = userManager.FindById(userId);
-                if (user != null)
-                {
-                    user.PasswordChangedDate = DateTime.UtcNow;
-
-                    await userManager.UpdateAsync(user);
-                }
                 await auditSecurityEventService.PasswordReset(userId);
             }
 
