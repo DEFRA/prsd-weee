@@ -2,9 +2,11 @@
 {
     using AutoFixture;
     using EA.Prsd.Core.Mapper;
+    using EA.Prsd.Core.Mediator;
     using EA.Weee.Api.Client;
     using EA.Weee.Core.Organisations;
     using EA.Weee.Core.Shared;
+    using EA.Weee.Core.Users;
     using EA.Weee.Requests.Organisations;
     using EA.Weee.Requests.Organisations.DirectRegistrant;
     using EA.Weee.Requests.Shared;
@@ -56,6 +58,11 @@
                     }
                 });
 
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<UserData>>._)).Returns(new UserData()
+            {
+                PasswordChangedDate = DateTime.UtcNow,
+            });
+
             OrganisationController controller = new OrganisationController(() => weeeClient, mapper);
 
             // Act
@@ -104,6 +111,11 @@
                         }
                     }
                 });
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<UserData>>._)).Returns(new UserData()
+            {
+                PasswordChangedDate = DateTime.UtcNow,
+            });
 
             OrganisationController controller = new OrganisationController(() => weeeClient, mapper);
 
@@ -159,6 +171,11 @@
                     }
                 });
 
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<UserData>>._)).Returns(new UserData()
+            {
+                PasswordChangedDate = DateTime.UtcNow,
+            });
+
             OrganisationController controller = new OrganisationController(() => weeeClient, mapper);
 
             // Act
@@ -188,6 +205,11 @@
             IWeeeClient weeeClient = A.Fake<IWeeeClient>();
             A.CallTo(() => weeeClient.SendAsync(A<string>._, A<GetUserOrganisationsByStatus>._))
                 .Returns(new List<OrganisationUserData>());
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<UserData>>._)).Returns(new UserData()
+            {
+                PasswordChangedDate = DateTime.UtcNow,
+            });
 
             OrganisationController controller = new OrganisationController(() => weeeClient, mapper);
 
@@ -238,6 +260,11 @@
                         }
                     }
                 });
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<UserData>>._)).Returns(new UserData()
+            {
+                PasswordChangedDate = DateTime.UtcNow,
+            });
 
             OrganisationController controller = new OrganisationController(() => weeeClient, mapper);
 
@@ -291,6 +318,11 @@
                         }
                     }
                 });
+
+            A.CallTo(() => weeeClient.SendAsync(A<string>._, A<IRequest<UserData>>._)).Returns(new UserData()
+            {
+                PasswordChangedDate = DateTime.UtcNow,
+            });
 
             OrganisationController controller = new OrganisationController(() => weeeClient, mapper);
 
