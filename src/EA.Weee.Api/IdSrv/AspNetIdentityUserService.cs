@@ -264,39 +264,64 @@ namespace EA.Weee.Api.IdSrv
 
             ctx.AuthenticateResult = null;
 
-            if (UserManager.SupportsUserPassword)
+            if (!UserManager.SupportsUserPassword)
             {
-                var user = await FindUserAsync(username);
-                if (user != null)
+                return;
+            }
+
+            var user = await FindUserAsync(username);
+
+            if (user == null)
+            {
+                ctx.AuthenticateResult = new AuthenticateResult("Incorrect email address or password. Your account will be locked for 30 minutes " +
+                                                                "if you incorrectly enter your email address or password 5 consecutive times. " +
+                                                                "You will not be able to reset your password during this time.");
+                return;
+            }
+
+            if (UserManager.SupportsUserLockout && await UserManager.IsLockedOutAsync(user.Id))
+            {
+                var lockoutEndDate = await UserManager.GetLockoutEndDateAsync(user.Id);
+
+                if (lockoutEndDate != DateTime.MinValue)
                 {
-                    if (UserManager.SupportsUserLockout &&
-                        await UserManager.IsLockedOutAsync(user.Id))
-                    {
-                        return;
-                    }
-
-                    if (await UserManager.CheckPasswordAsync(user, password))
-                    {
-                        if (UserManager.SupportsUserLockout)
-                        {
-                            await UserManager.ResetAccessFailedCountAsync(user.Id);
-                        }
-
-                        var result = await PostAuthenticateLocalAsync(user, message);
-                        if (result == null)
-                        {
-                            var claims = await GetClaimsForAuthenticateResult(user);
-                            result = new AuthenticateResult(user.Id.ToString(),
-                                await GetDisplayNameForAccountAsync(user.Id), claims);
-                        }
-
-                        ctx.AuthenticateResult = result;
-                    }
-                    else if (UserManager.SupportsUserLockout)
-                    {
-                        await UserManager.AccessFailedAsync(user.Id);
-                    }
+                    var errorMessage = $"Your account is locked until {lockoutEndDate.ToString("dd/MM/yyyy HH:mm")} UTC.";
+                    ctx.AuthenticateResult = new AuthenticateResult(errorMessage);
                 }
+                else
+                {
+                    ctx.AuthenticateResult = new AuthenticateResult("Your account is locked. Please try again in 30 minutes.");
+                }
+                return;
+            }
+
+            if (await UserManager.CheckPasswordAsync(user, password))
+            {
+                if (UserManager.SupportsUserLockout)
+                {
+                    await UserManager.ResetAccessFailedCountAsync(user.Id);
+                }
+
+                var result = await PostAuthenticateLocalAsync(user, message);
+                if (result == null)
+                {
+                    var claims = await GetClaimsForAuthenticateResult(user);
+
+                    result = new AuthenticateResult(user.Id.ToString(), await GetDisplayNameForAccountAsync(user.Id), claims);
+                }
+
+                ctx.AuthenticateResult = result;
+            }
+            else
+            {
+                if (UserManager.SupportsUserLockout)
+                {
+                    await UserManager.AccessFailedAsync(user.Id);
+                }
+
+                ctx.AuthenticateResult = new AuthenticateResult("Incorrect email address or password. Your account will be locked for 30 minutes " +
+                                                                "if you incorrectly enter your email address or password 5 consecutive times. " +
+                                                                "You will not be able to reset your password during this time.");
             }
         }
 

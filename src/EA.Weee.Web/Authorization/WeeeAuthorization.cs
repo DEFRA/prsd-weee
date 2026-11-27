@@ -3,6 +3,7 @@
     using IdentityModel;
     using Infrastructure;
     using Microsoft.Owin.Security;
+    using Newtonsoft.Json.Linq;
     using Prsd.Core.Web.OAuth;
     using Prsd.Core.Web.OpenId;
     using Security;
@@ -46,7 +47,15 @@
 
                 if (response.AccessToken == null)
                 {
-                    return LoginResult.Fail(ParseLoginError(response.Error));
+                    string errorDescription = string.Empty;
+
+                    if (!string.IsNullOrEmpty(response.Raw))
+                    {
+                        var json = JObject.Parse(response.Raw);
+                        errorDescription = (string)json["error_description"];
+                    }
+
+                    return LoginResult.Fail(errorDescription);
                 }
 
                 authenticationManager.SignIn(new AuthenticationProperties { IsPersistent = rememberMe }, response.GenerateUserIdentity());
