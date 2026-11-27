@@ -278,8 +278,7 @@
             // Assert
             A.CallTo(() => apiClient.User.ChangePasswordAsync(
                 A<ChangePasswordRequest>.That.Matches(x =>
-                    x.UserId == userId,
-                "test-token"))
+                    x.UserId == userId), "test-token"))
                 .MustHaveHappenedOnceExactly();
         }
     }

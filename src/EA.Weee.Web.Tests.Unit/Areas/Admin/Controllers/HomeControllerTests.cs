@@ -347,6 +347,149 @@
             Assert.Equal("SubmissionsHistory", redirectToRouteResult.RouteValues["action"]);
         }
 
+        [Fact]
+        public void HttpGet_ChangePassword_ReturnsViewWithCorrectUserId()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+
+            // Act
+            var result = HomeController().ChangePassword(userId);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            var model = Assert.IsType<ChangePasswordViewModel>(viewResult.Model);
+
+            Assert.Equal(userId, model.UserId);
+        }
+
+        [Fact]
+        public async Task HttpPost_ChangePassword_ModelIsInvalid_ReturnsViewWithModel()
+        {
+            // Arrange
+            var controller = HomeController();
+
+            var model = new ChangePasswordViewModel
+            {
+                UserId = Guid.NewGuid()
+            };
+
+            controller.ModelState.AddModelError("Password", "Password is required");
+
+            // Act
+            var result = await controller.ChangePassword(model);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+
+            Assert.Same(model, viewResult.Model);
+
+            A.CallTo(() => apiClient.User)
+                .MustNotHaveHappened();
+        }
+
+        [Fact]
+        public async Task HttpPost_ChangePassword_ModelIsValid_AndPasswordChangeSuccessful_ReturnsChangePasswordCompleteView()
+        {
+            // Arrange
+            var user = A.Fake<IUnauthenticatedUser>();
+
+            A.CallTo(() => apiClient.User).Returns(user);
+
+            A.CallTo(() => user.ChangePasswordAsync(
+                A<ChangePasswordRequest>._, A<string>._))
+                .Returns(true);
+
+            var model = new ChangePasswordViewModel
+            {
+                UserId = Guid.NewGuid(),
+                OldPassword = A.Dummy<string>(),
+                Password = A.Dummy<string>()
+            };
+
+            var controller = HomeController();
+
+            // Act
+            var result = await controller.ChangePassword(model);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+
+            Assert.Equal("ChangePasswordComplete", viewResult.ViewName);
+        }
+
+        [Fact]
+        public async Task HttpPost_ChangePassword_ModelIsValid_AndPasswordChangeUnsuccessful_ReturnsViewWithModel()
+        {
+            // Arrange
+            var user = A.Fake<IUnauthenticatedUser>();
+
+            A.CallTo(() => apiClient.User).Returns(user);
+
+            A.CallTo(() => user.ChangePasswordAsync(
+                A<ChangePasswordRequest>._, A<string>._))
+                .Returns(false);
+
+            var model = new ChangePasswordViewModel
+            {
+                UserId = Guid.NewGuid(),
+                OldPassword = A.Dummy<string>(),
+                Password = A.Dummy<string>()
+            };
+
+            // Act
+            var result = await HomeController().ChangePassword(model);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+
+            Assert.Same(model, viewResult.Model);
+        }
+
+        [Fact]
+        public async Task HttpPost_ChangePassword_ModelIsValid_SubmitsCorrectPasswordChangeData()
+        {
+            // Arrange
+            var user = A.Fake<IUnauthenticatedUser>();
+
+            var userId = Guid.NewGuid();
+
+            var model = new ChangePasswordViewModel
+            {
+                UserId = userId,
+                OldPassword = A.Dummy<string>(),
+                Password = A.Dummy<string>()
+            };
+
+            A.CallTo(() => apiClient.User).Returns(user);
+
+            ChangePasswordRequest actualRequest = null;
+            string actualAccessToken = null;
+
+            A.CallTo(() => user.ChangePasswordAsync(
+                A<ChangePasswordRequest>._, A<string>._))
+                .Invokes((ChangePasswordRequest request, string accessToken) =>
+                {
+                    actualRequest = request;
+                    actualAccessToken = accessToken;
+                })
+                .Returns(true);
+
+            var controller = HomeController();
+
+            // Act
+            await controller.ChangePassword(model);
+
+            // Assert
+            Assert.NotNull(actualRequest);
+            Assert.Equal(userId, actualRequest.UserId);
+            Assert.Equal(A.Dummy<string>(), actualRequest.OldPassword);
+            Assert.Equal(A.Dummy<string>(), actualRequest.NewPassword);
+
+            A.CallTo(() => user.ChangePasswordAsync(A<ChangePasswordRequest>._, A<string>._))
+             .MustHaveHappenedOnceExactly();
+        }
+
         private HomeController HomeController()
         {
             IAppConfiguration configuration = A.Fake<IAppConfiguration>();
