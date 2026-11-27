@@ -179,5 +179,108 @@
 
             controller.ExtendSession();
         }
+
+        [Fact]
+        public void ChangePassword_ShouldReturnViewWithCorrectUserId()
+        {
+            // Arrange
+            var controller = AccountController();
+            var userId = Guid.NewGuid();
+
+            // Act
+            var result = controller.ChangePassword(userId);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+
+            var model = Assert.IsType<ChangePasswordViewModel>(viewResult.Model);
+
+            Assert.Equal(userId, model.UserId);
+        }
+
+        [Fact]
+        public async Task ChangePassword_InvalidModelState_ReturnsView()
+        {
+            // Arrange
+            var model = new ChangePasswordViewModel();
+            var controller = AccountController();
+            controller.ModelState.AddModelError("Password", "Password is required");
+
+            // Act
+            var result = await controller.ChangePassword(model);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ChangePassword", viewResult.ViewName);
+            Assert.Same(model, viewResult.Model);
+        }
+
+        [Fact]
+        public async Task ChangePassword_ModelIsValid_AndPasswordChangeSuccessful_ReturnsChangePasswordCompleteView()
+        {
+            // Arrange
+            var model = new ChangePasswordViewModel
+            {
+                UserId = Guid.NewGuid(),
+                OldPassword = A.Dummy<string>(),
+                Password = A.Dummy<string>()
+            };
+
+            A.CallTo(() => apiClient.User.ChangePasswordAsync(A<ChangePasswordRequest>._, A<string>._)).Returns(true);
+
+            // Act
+            var result = await AccountController().ChangePassword(model);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Equal("ChangePasswordComplete", viewResult.ViewName);
+        }
+
+        [Fact]
+        public async Task ChangePassword_ModelIsValid_AndPasswordChangeUnsuccessful_ReturnsViewWithModel()
+        {
+            // Arrange
+            var model = new ChangePasswordViewModel
+            {
+                UserId = Guid.NewGuid(),
+                OldPassword = A.Dummy<string>(),
+                Password = A.Dummy<string>()
+            };
+
+            A.CallTo(() => apiClient.User.ChangePasswordAsync(A<ChangePasswordRequest>._, A<string>._)).Returns(false);
+
+            // Act
+            var result = await AccountController().ChangePassword(model);
+
+            // Assert
+            var viewResult = Assert.IsType<ViewResult>(result);
+            Assert.Same(model, viewResult.Model);
+        }
+
+        [Fact]
+        public async Task ChangePassword_ModelIsValid_CallsApiWithCorrectPasswordChangeRequest()
+        {
+            // Arrange
+            var userId = Guid.NewGuid();
+
+            var model = new ChangePasswordViewModel
+            {
+                UserId = userId,
+                OldPassword = A.Dummy<string>(),
+                Password = A.Dummy<string>()
+            };
+
+            A.CallTo(() => apiClient.User.ChangePasswordAsync(A<ChangePasswordRequest>._, A<string>._)).Returns(true);
+
+            // Act
+            await AccountController().ChangePassword(model);
+
+            // Assert
+            A.CallTo(() => apiClient.User.ChangePasswordAsync(
+                A<ChangePasswordRequest>.That.Matches(x =>
+                    x.UserId == userId,
+                "test-token"))
+                .MustHaveHappenedOnceExactly();
+        }
     }
 }
