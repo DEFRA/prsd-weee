@@ -2,7 +2,10 @@
 {
     using Api.Client;
     using Core.Shared;
+    using EA.Weee.Api.Client.Actions;
+    using EA.Weee.Api.Client.Entities;
     using EA.Weee.Core.AatfReturn;
+    using EA.Weee.Web.Areas.Admin.ViewModels.Account;
     using FakeItEasy;
     using FluentAssertions;
     using Prsd.Core.Mediator;
